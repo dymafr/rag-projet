@@ -1,0 +1,16 @@
+{
+  "name": "rhea",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "premier-rag": "node --env-file=.env premier-rag.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0",
+    "@huggingface/transformers": "^4.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "typescript": "^7.0.2"
+  }
+}
