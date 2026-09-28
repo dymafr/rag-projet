@@ -41,7 +41,8 @@ const reponse = await client.messages.create({
   system:
     "Tu es Rhéa, l'assistant RH de Kalyo. Réponds uniquement à partir des extraits fournis. " +
     "Cite les extraits utilisés avec leur numéro, par exemple [1]. " +
-    "Si les extraits ne permettent pas de répondre, dis-le.",
+    "Si les extraits ne permettent pas de répondre, dis-le. " +
+    "Réponds en quelques phrases, en texte brut, sans Markdown.",
   messages: [{ role: "user", content: prompt }],
 });
 for (const bloc of reponse.content) {
