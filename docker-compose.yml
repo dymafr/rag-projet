@@ -1,0 +1,22 @@
+# Base de données de Rhéa : PostgreSQL avec l'extension pgvector, pour le développement local.
+# Démarrage : npm run db:up. Arrêt : npm run db:down (les données sont conservées dans le volume).
+services:
+  db:
+    image: pgvector/pgvector:pg18
+    environment:
+      POSTGRES_USER: rhea
+      POSTGRES_PASSWORD: rhea # identifiants de développement local uniquement
+      POSTGRES_DB: rhea
+    ports:
+      - "5432:5432"
+    volumes:
+      - donnees:/var/lib/postgresql
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rhea -d rhea"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+volumes:
+  donnees:
