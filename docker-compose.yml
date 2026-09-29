@@ -8,12 +8,12 @@ services:
       POSTGRES_PASSWORD: rhea # identifiants de développement local uniquement
       POSTGRES_DB: rhea
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432" # accessible depuis votre machine seulement
     volumes:
       - donnees:/var/lib/postgresql
       - ./db/init:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U rhea -d rhea"]
+      test: ["CMD-SHELL", "pg_isready -h localhost -U rhea -d rhea"]
       interval: 2s
       timeout: 3s
       retries: 15
