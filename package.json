@@ -16,7 +16,8 @@
     "similarite": "node --env-file=.env src/outils/essai-similarite.ts",
     "test": "node --test",
     "essai:embeddings": "node --env-file=.env src/outils/essai-embeddings.ts",
-    "multilingue": "node --env-file=.env src/outils/essai-multilingue.ts"
+    "multilingue": "node --env-file=.env src/outils/essai-multilingue.ts",
+    "chercher": "node --env-file=.env src/outils/chercher.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
