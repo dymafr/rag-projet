@@ -65,8 +65,8 @@ await verifier("base de données", async () => {
     .query<{ pg: string; vector: string | null }>(
       "SELECT current_setting('server_version') AS pg, (SELECT extversion FROM pg_extension WHERE extname = 'vector') AS vector",
     )
-    .catch((erreur: Error) => {
-      throw new Error(`${erreur.message} (la base est-elle lancée ? npm run db:up)`);
+    .catch((erreur: NodeJS.ErrnoException) => {
+      throw new Error(`${erreur.message || erreur.code} (la base est-elle lancée ? npm run db:up)`);
     });
   if (!rows[0].vector) throw new Error("extension vector absente de la base");
   return `PostgreSQL ${rows[0].pg}, pgvector ${rows[0].vector}`;

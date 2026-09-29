@@ -10,7 +10,7 @@ Kalyo est une entreprise de services numériques **fictive** : 180 salariés, de
 | `groupe/` | La politique voyages du groupe Ostrane, en anglais | PDF, et métadonnées en YAML |
 | `intranet/` | Quinze pages de l'intranet | HTML, métadonnées dans les balises `<meta name="kalyo:…">` |
 | `faq/` | La FAQ RH | Markdown, métadonnées dans l'en-tête YAML |
-| `tickets/` | Cent tickets RH, avec la réponse du service RH | JSON |
+| `tickets/` | Cent tickets RH : 95 traités, avec la réponse du service RH, et 5 en cours | JSON |
 | `soldes/` | Les salariés fictifs et leurs soldes de congés et de RTT | SQL |
 
 ## Métadonnées
