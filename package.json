@@ -14,7 +14,8 @@
     "corpus": "node src/outils/inventaire-corpus.ts",
     "carte": "node --env-file=.env src/outils/carte-des-sens.ts",
     "similarite": "node --env-file=.env src/outils/essai-similarite.ts",
-    "test": "node --test"
+    "test": "node --test",
+    "essai:embeddings": "node --env-file=.env src/outils/essai-embeddings.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

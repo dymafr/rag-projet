@@ -1,7 +1,7 @@
 // Carte des sens : les questions de la FAQ, projetées en deux dimensions pour voir les sujets proches se regrouper.
 // Lancement : npm run carte (écrit carte-des-sens.svg à la racine du projet)
 import { readFile, writeFile } from "node:fs/promises";
-import { pipeline } from "@huggingface/transformers";
+import { vectoriser } from "../embeddings/fournisseurs.ts";
 
 // 1. Les questions de la FAQ, et un thème pour chacune, qui donnera la couleur du point
 const faq = await readFile("corpus/faq/faq-rh.md", "utf8");
@@ -15,10 +15,8 @@ const THEMES: [string, RegExp, string][] = [
 ];
 const themeDe = (question: string) => THEMES.find(([, motif]) => motif.test(question))!;
 
-// 2. Un vecteur par question, calculé par le modèle d'embedding local de .env
-const extraire = await pipeline("feature-extraction", process.env.EMBEDDING_MODEL!, { dtype: "q8" });
-const tenseur = await extraire(questions.map((q) => "query: " + q), { pooling: "mean", normalize: true });
-const vecteurs: number[][] = tenseur.tolist();
+// 2. Un vecteur par question, calculé par le fournisseur d'embeddings choisi dans .env
+const vecteurs = await vectoriser(questions, "requete");
 
 // 3. Analyse en composantes principales (ACP) : on cherche les deux directions dans lesquelles
 // les points s'étalent le plus, puis on projette chaque vecteur sur ces deux directions

@@ -9,6 +9,7 @@ const Schema = z
     LLM_MODEL: z.string().min(1, "indiquez le modèle qui rédige les réponses"),
     EMBEDDING_PROVIDER: z.enum(["transformers", "openai", "voyage", "ollama"]).default("transformers"),
     EMBEDDING_MODEL: z.string().min(1, "indiquez le modèle d'embedding"),
+    EMBEDDING_DIMENSIONS: z.coerce.number().int().positive().optional(), // taille réduite des vecteurs, si le modèle le permet
     ANTHROPIC_API_KEY: z.string().optional(),
     OPENAI_API_KEY: z.string().optional(),
     VOYAGE_API_KEY: z.string().optional(),
@@ -24,6 +25,10 @@ const Schema = z
       if (!env[cle]) {
         ctx.addIssue({ code: "custom", path: [cle], message: `clé requise, car le fournisseur ${fournisseur} est utilisé` });
       }
+    }
+    // Transformers.js renvoie toujours la dimension native du modèle
+    if (env.EMBEDDING_DIMENSIONS && env.EMBEDDING_PROVIDER === "transformers") {
+      ctx.addIssue({ code: "custom", path: ["EMBEDDING_DIMENSIONS"], message: "non pris en charge avec transformers : retirez la ligne" });
     }
   });
 
