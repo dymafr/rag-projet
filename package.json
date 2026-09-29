@@ -12,7 +12,9 @@
     "essai:pgvector": "node --env-file=.env src/outils/essai-pgvector.ts",
     "essai:ollama": "node --env-file=.env src/outils/essai-ollama.ts",
     "corpus": "node src/outils/inventaire-corpus.ts",
-    "carte": "node --env-file=.env src/outils/carte-des-sens.ts"
+    "carte": "node --env-file=.env src/outils/carte-des-sens.ts",
+    "similarite": "node --env-file=.env src/outils/essai-similarite.ts",
+    "test": "node --test"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
