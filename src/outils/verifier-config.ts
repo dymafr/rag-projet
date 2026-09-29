@@ -5,6 +5,7 @@ import OpenAI from "openai";
 import { pipeline } from "@huggingface/transformers";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
+import { conseilOllama, ollama } from "../ollama.ts";
 
 async function verifier(nom: string, test: () => Promise<string>) {
   try {
@@ -31,6 +32,10 @@ async function vecteurDeTest(): Promise<number[]> {
     const donnees = (await reponse.json()) as { data: { embedding: number[] }[] };
     return donnees.data[0].embedding;
   }
+  if (config.EMBEDDING_PROVIDER === "ollama") {
+    const reponse = await ollama.embeddings.create({ model: config.EMBEDDING_MODEL, input: "test" }).catch(conseilOllama);
+    return reponse.data[0].embedding;
+  }
   const extraire = await pipeline("feature-extraction", config.EMBEDDING_MODEL, { dtype: "q8" });
   const tenseur = await extraire(["test"], { pooling: "mean", normalize: true });
   return tenseur.tolist()[0];
@@ -47,6 +52,7 @@ console.log(
 // 1. Le modèle qui rédige les réponses existe-t-il, et la clé y donne-t-elle accès ?
 await verifier("modèle de génération", async () => {
   if (config.LLM_PROVIDER === "openai") return (await new OpenAI().models.retrieve(config.LLM_MODEL)).id;
+  if (config.LLM_PROVIDER === "ollama") return (await ollama.models.retrieve(config.LLM_MODEL).catch(conseilOllama)).id;
   return (await new Anthropic().models.retrieve(config.LLM_MODEL)).display_name;
 });
 
