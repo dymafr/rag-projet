@@ -11,7 +11,8 @@
     "db:psql": "docker compose exec db psql -U rhea -d rhea",
     "essai:pgvector": "node --env-file=.env src/outils/essai-pgvector.ts",
     "essai:ollama": "node --env-file=.env src/outils/essai-ollama.ts",
-    "corpus": "node src/outils/inventaire-corpus.ts"
+    "corpus": "node src/outils/inventaire-corpus.ts",
+    "carte": "node --env-file=.env src/outils/carte-des-sens.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
