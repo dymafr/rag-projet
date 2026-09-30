@@ -19,7 +19,8 @@
     "multilingue": "node --env-file=.env src/outils/essai-multilingue.ts",
     "chercher": "node --env-file=.env src/outils/chercher.ts",
     "extraire": "node src/outils/extraire.ts",
-    "pdf:brut": "node src/outils/pdf-brut.ts"
+    "pdf:brut": "node src/outils/pdf-brut.ts",
+    "tickets": "node src/outils/tickets.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
