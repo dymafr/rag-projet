@@ -63,6 +63,59 @@ export const texteDe = (ligne: Ligne) => ligne.morceaux.map((m) => m.texte).join
 // Recolle deux lignes. Un trait d'union en fin de ligne se recolle sans espace : « POL-TP- » puis « 01 »
 export const recoller = (debut: string, suite: string) => (debut.endsWith("-") ? debut + suite : `${debut} ${suite}`);
 
+// En-têtes et pieds de page : le texte répété sur chaque page
+
+// Les nombres sont remplacés : « Page 2 / 5 » et « Page 3 / 5 » ont la même signature
+const signature = (ligne: Ligne) => texteDe(ligne).replace(/\d+/g, "#");
+// Seules les deux premières et les deux dernières lignes d'une page peuvent être un en-tête ou un pied de page
+const bords = (page: Page) => [...page.slice(0, 2), ...page.slice(-2)];
+
+// Retire les lignes de bord qui reviennent sur au moins la moitié des pages (et au moins deux)
+export function retirerRepetitions(pages: Page[]): Page[] {
+  const frequences = new Map<string, number>();
+  for (const page of pages) {
+    for (const s of new Set(bords(page).map(signature))) frequences.set(s, (frequences.get(s) ?? 0) + 1);
+  }
+  const seuil = Math.max(2, pages.length / 2);
+  const repetees = new Set([...frequences].filter(([, n]) => n >= seuil).map(([s]) => s));
+  return pages.map((page) => page.filter((ligne) => !(bords(page).includes(ligne) && repetees.has(signature(ligne)))));
+}
+
+// Tableaux : des lignes dont les groupes de mots commencent aux mêmes abscisses, celles des colonnes
+
+// Une cellule commence à l'abscisse de sa colonne, à 3 points près
+const colonneDe = (x: number, colonnes: number[]) => colonnes.findIndex((c) => Math.abs(c - x) < 3);
+
+// Si un tableau commence à la ligne « debut » : son Markdown, et l'indice de la ligne qui le suit.
+// L'en-tête donne les colonnes ; les lignes suivantes en font partie tant que leurs groupes de mots
+// commencent tous sur une colonne, avec la même taille de police
+export function lireTableau(lignes: Ligne[], debut: number): { markdown: string; fin: number } | undefined {
+  const entete = lignes[debut];
+  const colonnes = entete.morceaux.map((m) => m.x);
+  if (colonnes.length < 2) return undefined;
+  const aligne = (l: Ligne) => l.taille === entete.taille && l.morceaux.every((m) => colonneDe(m.x, colonnes) >= 0);
+
+  const rangees: string[][] = [];
+  let fin = debut;
+  for (; fin < lignes.length && aligne(lignes[fin]); fin++) {
+    const ligne = lignes[fin];
+    // Un écart vertical plus grand qu'entre deux lignes d'un paragraphe : nouvelle rangée.
+    // Sinon, la ligne continue les cellules de la rangée précédente (texte sur plusieurs lignes)
+    if (fin === debut || lignes[fin - 1].y - ligne.y >= 1.6 * ligne.taille) rangees.push(colonnes.map(() => ""));
+    const rangee = rangees.at(-1)!;
+    for (const m of ligne.morceaux) {
+      const c = colonneDe(m.x, colonnes);
+      rangee[c] = rangee[c] ? recoller(rangee[c], m.texte) : m.texte;
+    }
+  }
+  // Un vrai tableau a, sous son en-tête, une rangée d'au moins deux cellules remplies
+  if (rangees.length < 2 || rangees[1].filter(Boolean).length < 2) return undefined;
+  const enMarkdown = (cellules: string[]) => `| ${cellules.join(" | ")} |`;
+  const [titres, ...corps] = rangees;
+  const markdown = [enMarkdown(titres), enMarkdown(titres.map(() => "---")), ...corps.map(enMarkdown)].join("\n");
+  return { markdown, fin };
+}
+
 // La taille du texte courant : celle qui porte le plus de caractères
 function tailleDuCorps(lignes: Ligne[]): number {
   const caracteres = new Map<number, number>();
@@ -71,9 +124,12 @@ function tailleDuCorps(lignes: Ligne[]): number {
 }
 
 // Deux lignes font partie du même bloc si elles ont la même taille et se suivent de près :
-// moins de 1,6 fois la taille de la police entre elles (entre deux paragraphes, l'écart est plus grand)
-function suite(precedente: Ligne | undefined, ligne: Ligne): boolean {
-  return !!precedente && precedente.taille === ligne.taille && precedente.y - ligne.y < 1.6 * ligne.taille;
+// moins de 1,6 fois la taille de la police entre elles (entre deux paragraphes, l'écart est plus grand).
+// D'une page à l'autre, l'écart ne veut plus rien dire : le bloc continue si sa phrase n'est pas finie
+function suite(precedente: Ligne | undefined, ligne: Ligne, nouvellePage: boolean): boolean {
+  if (!precedente || precedente.taille !== ligne.taille) return false;
+  if (nouvellePage) return !/[.:;!?][\s)»]*$/.test(texteDe(precedente)); // ponctuation finale, éventuellement suivie d'espaces, de ) ou de »
+  return precedente.y - ligne.y < 1.6 * ligne.taille;
 }
 
 // Les lignes deviennent du Markdown : titres repérés à leur taille, paragraphes recollés, listes à puces
@@ -85,12 +141,23 @@ export function versMarkdown(pages: Page[]): string {
   const titres = [...new Set(lignes.map((l) => l.taille))].filter((t) => t > corps).sort((a, b) => b - a);
 
   const blocs: string[] = [];
+  let precedente: Ligne | undefined;
   for (const page of pages) {
-    let precedente: Ligne | undefined; // on ne recolle jamais d'une page à l'autre
-    for (const ligne of page) {
+    for (let i = 0; i < page.length; i++) {
+      const tableau = lireTableau(page, i);
+      if (tableau) {
+        const [entete, , ...rangees] = tableau.markdown.split("\n");
+        // Un tableau coupé par un saut de page : son en-tête est répété en haut de la page suivante
+        if (i === 0 && blocs.at(-1)?.startsWith(`${entete}\n`)) blocs.push([blocs.pop(), ...rangees].join("\n"));
+        else blocs.push(tableau.markdown);
+        i = tableau.fin - 1; // on reprend à la ligne qui suit le tableau
+        precedente = undefined;
+        continue;
+      }
+      const ligne = page[i];
       const texte = texteDe(ligne);
       const niveau = titres.indexOf(ligne.taille) + 1;
-      if (suite(precedente, ligne)) {
+      if (suite(precedente, ligne, i === 0)) {
         blocs.push(recoller(blocs.pop()!, texte));
       } else if (niveau > 0) {
         blocs.push(`${"#".repeat(Math.min(niveau, 4))} ${texte}`);
@@ -108,5 +175,5 @@ export function versMarkdown(pages: Page[]): string {
 export async function pdfVersMarkdown(chemin: string): Promise<string> {
   const pages = await lirePdf(chemin);
   if (estScanne(pages)) throw new Error(`${chemin} : PDF scanné, sans texte à extraire (il faut un OCR)`);
-  return versMarkdown(pages);
+  return versMarkdown(retirerRepetitions(pages));
 }
