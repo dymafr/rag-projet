@@ -17,19 +17,24 @@
     "test": "node --test",
     "essai:embeddings": "node --env-file=.env src/outils/essai-embeddings.ts",
     "multilingue": "node --env-file=.env src/outils/essai-multilingue.ts",
-    "chercher": "node --env-file=.env src/outils/chercher.ts"
+    "chercher": "node --env-file=.env src/outils/chercher.ts",
+    "extraire": "node src/outils/extraire.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
     "@huggingface/transformers": "^4.3.0",
+    "@joplin/turndown-plugin-gfm": "^1.0.68",
+    "cheerio": "^1.2.0",
     "openai": "^7.23.0",
     "pg": "^8.23.0",
     "pgvector": "^0.3.0",
+    "turndown": "^7.2.4",
     "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/node": "^26.6.3",
     "@types/pg": "^8.23.1",
+    "@types/turndown": "^5.0.6",
     "typescript": "^7.0.2"
   }
 }
