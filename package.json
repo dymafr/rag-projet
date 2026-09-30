@@ -20,7 +20,8 @@
     "chercher": "node --env-file=.env src/outils/chercher.ts",
     "extraire": "node src/outils/extraire.ts",
     "pdf:brut": "node src/outils/pdf-brut.ts",
-    "tickets": "node src/outils/tickets.ts"
+    "tickets": "node src/outils/tickets.ts",
+    "documents": "node src/outils/documents.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
