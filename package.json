@@ -21,7 +21,8 @@
     "extraire": "node src/outils/extraire.ts",
     "pdf:brut": "node src/outils/pdf-brut.ts",
     "tickets": "node src/outils/tickets.ts",
-    "documents": "node src/outils/documents.ts"
+    "documents": "node src/outils/documents.ts",
+    "metadonnees": "node src/outils/metadonnees.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
@@ -33,6 +34,7 @@
     "pgvector": "^0.3.0",
     "turndown": "^7.2.4",
     "unpdf": "^1.8.1",
+    "yaml": "^2.9.1",
     "zod": "^4.6.5"
   },
   "devDependencies": {

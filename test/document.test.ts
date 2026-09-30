@@ -11,7 +11,13 @@ test("un même texte s'écrit toujours avec les mêmes caractères", () => {
   assert.equal(empreinte(normaliser("Congés  payés\r\n")), empreinte(normaliser("Congés payés")));
 });
 
-const doc = (id: string, texte: string): Document => ({ id, source: `${id}.pdf`, titre: id, texte, metadonnees: {} });
+const doc = (id: string, texte: string): Document => ({
+  id,
+  source: `${id}.pdf`,
+  titre: id,
+  texte,
+  metadonnees: { id, titre: id, type: "accord", date_effet: "2026-03-01", acces: "tous", langue: "fr", site: ["lyon"] },
+});
 
 test("un doublon est écarté, deux versions d'un accord sont gardées", () => {
   const { uniques, doublons } = dedoublonner([

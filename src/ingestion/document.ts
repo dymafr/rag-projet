@@ -1,12 +1,13 @@
 // Le modèle commun : quel que soit son format d'origine, chaque source devient un Document
 import { createHash } from "node:crypto";
+import type { Metadonnees } from "./metadonnees.ts";
 
 export type Document = {
   id: string; // l'identifiant cité dans les réponses : POL-NF-01, TK-2026-0038…
   source: string; // d'où il vient : le fichier, et pour un ticket, sa place dans le fichier
   titre: string;
   texte: string; // en Markdown
-  metadonnees: Record<string, unknown>;
+  metadonnees: Metadonnees;
 };
 
 // Un même texte doit toujours s'écrire avec les mêmes caractères
