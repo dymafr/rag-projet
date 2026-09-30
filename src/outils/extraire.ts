@@ -4,6 +4,7 @@ import { readFile, stat } from "node:fs/promises";
 import { extname } from "node:path";
 import { htmlVersMarkdown } from "../ingestion/html.ts";
 import { separerEntete } from "../ingestion/markdown.ts";
+import { pdfVersMarkdown } from "../ingestion/pdf.ts";
 
 // Chaque format a son extracteur ; tous rendent du Markdown
 async function extraire(chemin: string): Promise<string> {
@@ -12,6 +13,8 @@ async function extraire(chemin: string): Promise<string> {
       return htmlVersMarkdown(await readFile(chemin, "utf8"));
     case ".md":
       return separerEntete(await readFile(chemin, "utf8")).texte;
+    case ".pdf":
+      return pdfVersMarkdown(chemin);
     default:
       throw new Error(`${chemin} : format non pris en charge`);
   }

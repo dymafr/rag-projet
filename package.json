@@ -18,7 +18,8 @@
     "essai:embeddings": "node --env-file=.env src/outils/essai-embeddings.ts",
     "multilingue": "node --env-file=.env src/outils/essai-multilingue.ts",
     "chercher": "node --env-file=.env src/outils/chercher.ts",
-    "extraire": "node src/outils/extraire.ts"
+    "extraire": "node src/outils/extraire.ts",
+    "pdf:brut": "node src/outils/pdf-brut.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
@@ -29,6 +30,7 @@
     "pg": "^8.23.0",
     "pgvector": "^0.3.0",
     "turndown": "^7.2.4",
+    "unpdf": "^1.8.1",
     "zod": "^4.6.5"
   },
   "devDependencies": {
