@@ -23,7 +23,8 @@
     "tickets": "node src/outils/tickets.ts",
     "documents": "node src/outils/documents.ts",
     "metadonnees": "node src/outils/metadonnees.ts",
-    "ingest": "node src/outils/ingest.ts"
+    "ingest": "node src/outils/ingest.ts",
+    "decouper": "node --env-file=.env src/outils/decouper.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
