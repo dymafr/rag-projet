@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import type { Document } from "../src/ingestion/document.ts";
 import { decouperFixe } from "../src/decoupage/fixe.ts";
 import { enCaracteres } from "../src/decoupage/mesure.ts";
-import { blocs, decouperDocument, redecouper, sections } from "../src/decoupage/structure.ts";
+import { blocs, collerIntroductions, decouperDocument, redecouper, sections } from "../src/decoupage/structure.ts";
 
 const phrase = "Un repas avec un client est remboursé dans la limite de 45 euros à Paris.";
 
@@ -78,12 +78,47 @@ test("un chunk ne mélange jamais deux sections et tient dans la taille", () => 
   assert.deepEqual(
     chunks.map((chunk) => [chunk.id, chunk.titres.at(-1), chunk.texte]),
     [
-      ["POL-XX-01#1", "Article 1. Objet", "Premier paragraphe.\n\nDeuxième paragraphe."],
-      ["POL-XX-01#2", "Article 2. Repas", "Vingt euros."],
+      ["POL-XX-01#1", "Article 1. Objet", "## Article 1. Objet\n\nPremier paragraphe.\n\nDeuxième paragraphe."],
+      ["POL-XX-01#2", "Article 2. Repas", "## Article 2. Repas\n\nVingt euros."],
     ],
   );
   assert.ok(chunks.every((chunk) => chunk.taille <= 100));
   // un texte sans titre, comme un ticket : rattaché au titre du document
   const ticket = decouperDocument(doc("TK-1", "Question : où poser un CP ?"), 100, enCaracteres);
   assert.deepEqual(ticket.map((chunk) => chunk.titres), [["Politique de test"]]);
+});
+
+test("un tableau trop grand est coupé entre deux rangées, et chaque morceau garde la ligne des titres", () => {
+  const tableau = "| Dépense | Paris | Autres villes |\n| --- | --- | --- |\n| Repas avec un client | 45 € | 35 € |\n| Repas seul | 20 € | 20 € |\n| Nuit d'hôtel | 130 € | 95 € |";
+  assert.deepEqual(redecouper(tableau, 110, enCaracteres), [
+    "| Dépense | Paris | Autres villes |\n| --- | --- | --- |\n| Repas avec un client | 45 € | 35 € |",
+    "| Dépense | Paris | Autres villes |\n| --- | --- | --- |\n| Repas seul | 20 € | 20 € |",
+    "| Dépense | Paris | Autres villes |\n| --- | --- | --- |\n| Nuit d'hôtel | 130 € | 95 € |",
+  ]);
+});
+
+test("un tableau annoncé par une phrase garde la phrase et la ligne des titres dans chaque morceau", () => {
+  const bloc = "Les plafonds sont les suivants :\n| Dépense | Paris |\n| --- | --- |\n| Repas avec un client | 45 € |\n| Nuit d'hôtel | 130 € |";
+  assert.deepEqual(redecouper(bloc, 100, enCaracteres), [
+    "Les plafonds sont les suivants :\n| Dépense | Paris |\n| --- | --- |\n| Repas avec un client | 45 € |",
+    "Les plafonds sont les suivants :\n| Dépense | Paris |\n| --- | --- |\n| Nuit d'hôtel | 130 € |",
+  ]);
+});
+
+test("une liste reste avec la phrase qui l'annonce, même coupée en deux", () => {
+  const liste = collerIntroductions(["À la fin de votre contrat, vous recevez :", "- le certificat de travail ;\n- le solde de tout compte ;\n- l'attestation employeur."]);
+  assert.equal(liste.length, 1);
+  assert.deepEqual(redecouper(liste[0], 100, enCaracteres), [
+    "À la fin de votre contrat, vous recevez :\n- le certificat de travail ;\n- le solde de tout compte ;",
+    "À la fin de votre contrat, vous recevez :\n- l'attestation employeur.",
+  ]);
+  // une liste numérotée aussi
+  const etapes = collerIntroductions(["Pour poser un congé :", "1. ouvrez l'outil RH ;\n2. choisissez les dates ;\n3. envoyez la demande."]);
+  const morceaux = redecouper(etapes[0], 60, enCaracteres);
+  assert.ok(morceaux.length > 1 && morceaux.every((morceau) => /^Pour poser un congé :\n\d\. /.test(morceau)));
+});
+
+test("une réponse de la FAQ garde sa question", () => {
+  const faq = "# FAQ RH\n## Quel est le plafond pour un repas avec un client ?\n45 € par personne à Paris et 35 € dans les autres villes.";
+  assert.equal(decouperDocument(doc("FAQ-RH", faq), 200, enCaracteres)[0].texte.split("\n")[0], "## Quel est le plafond pour un repas avec un client ?");
 });
