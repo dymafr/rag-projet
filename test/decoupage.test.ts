@@ -6,6 +6,7 @@ import { decouperFixe } from "../src/decoupage/fixe.ts";
 import { enCaracteres } from "../src/decoupage/mesure.ts";
 import { blocs, collerIntroductions, decouperDocument, redecouper, sections } from "../src/decoupage/structure.ts";
 import { contextualiser, texteAVectoriser } from "../src/decoupage/contexte.ts";
+import { parentsEtEnfants, phrasesEtFenetres } from "../src/decoupage/parents.ts";
 import type { Llm } from "../src/llm.ts";
 
 const phrase = "Un repas avec un client est remboursé dans la limite de 45 euros à Paris.";
@@ -137,6 +138,33 @@ test("chaque chunk reçoit son contexte, et le document ouvre chaque prompt", as
   assert.deepEqual(chunks.map((chunk) => chunk.contexte), ["Contexte de ## Article 1", "Contexte de ## Article 2"]);
   assert.ok(debuts.every((debut) => debut === `<document>\n${document.texte}\n</document>`)); // le même début : il peut être mis en cache
   assert.deepEqual(usage, { entree: 200, enCache: 80, sortie: 10 });
+});
+
+test("parent-enfant : chaque petit enfant rend sa section entière", () => {
+  const texte = "# Politique de test\n## Article 6. Repas\nUn repas seul : 20 €.\n\nUn repas avec un client : 45 € à Paris.\n## Article 7. Hôtel\nUne nuit : 95 €.";
+  const enfants = parentsEtEnfants(doc("POL-XX-01", texte), 40, enCaracteres);
+  assert.deepEqual(
+    enfants.map((e) => [e.id, e.texte, e.rendu]),
+    [
+      ["POL-XX-01#1.1", "Un repas seul : 20 €.", "## Article 6. Repas\n\nUn repas seul : 20 €.\n\nUn repas avec un client : 45 € à Paris."],
+      ["POL-XX-01#1.2", "Un repas avec un client : 45 € à Paris.", "## Article 6. Repas\n\nUn repas seul : 20 €.\n\nUn repas avec un client : 45 € à Paris."],
+      ["POL-XX-01#2.1", "Une nuit : 95 €.", "## Article 7. Hôtel\n\nUne nuit : 95 €."],
+    ],
+  );
+});
+
+test("fenêtre de phrases : chaque phrase rend ses voisines, sans déborder sur la section suivante", () => {
+  const texte = "## Article 8. Train\nLe train se prend en 2de classe. La 1re classe est possible si elle coûte moins cher. Réservez tôt.\n## Article 9. Voiture\nLe barème fiscal s'applique.";
+  const morceaux = phrasesEtFenetres(doc("POL-XX-01", texte), 1, enCaracteres);
+  assert.deepEqual(
+    morceaux.map((m) => [m.texte, m.rendu]),
+    [
+      ["Le train se prend en 2de classe.", "Le train se prend en 2de classe. La 1re classe est possible si elle coûte moins cher."],
+      ["La 1re classe est possible si elle coûte moins cher.", "Le train se prend en 2de classe. La 1re classe est possible si elle coûte moins cher. Réservez tôt."],
+      ["Réservez tôt.", "La 1re classe est possible si elle coûte moins cher. Réservez tôt."],
+      ["Le barème fiscal s'applique.", "Le barème fiscal s'applique."],
+    ],
+  );
 });
 
 test("une réponse de la FAQ garde sa question", () => {

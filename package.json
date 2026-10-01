@@ -25,7 +25,8 @@
     "metadonnees": "node src/outils/metadonnees.ts",
     "ingest": "node src/outils/ingest.ts",
     "decouper": "node --env-file=.env src/outils/decouper.ts",
-    "contextualiser": "node --env-file=.env src/outils/contextualiser.ts"
+    "contextualiser": "node --env-file=.env src/outils/contextualiser.ts",
+    "comparer": "node --env-file=.env src/outils/comparer.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
