@@ -1,6 +1,6 @@
 // Découper le corpus en chunks, ou un seul document pour voir où tombent les coupures
 // Lancement : npm run decouper (tout le corpus, écrit donnees/chunks.jsonl)
-//             npm run decouper -- POL-NF-01 (un document ; --strategie fixe, --taille, --chevauchement, --unite caracteres)
+//             npm run decouper -- POL-NF-01 (un document ; --strategie fixe ou semantique, --taille, --chevauchement, --unite caracteres)
 import { writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import { config } from "../config.ts";
@@ -8,12 +8,14 @@ import type { Chunk } from "../decoupage/chunk.ts";
 import { lireDocuments } from "../decoupage/corpus.ts";
 import { decouperFixe } from "../decoupage/fixe.ts";
 import { enCaracteres, mesureDuModele } from "../decoupage/mesure.ts";
+import { decouperSemantique } from "../decoupage/semantique.ts";
 import { decouperDocument } from "../decoupage/structure.ts";
+import { vectoriser } from "../embeddings/fournisseurs.ts";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
   options: {
-    strategie: { type: "string", default: "structure" }, // structure ou fixe
+    strategie: { type: "string", default: "structure" }, // structure, fixe ou semantique
     taille: { type: "string", default: "300" },
     chevauchement: { type: "string", default: "0" },
     unite: { type: "string", default: "tokens" }, // tokens ou caracteres
@@ -26,6 +28,9 @@ const chevauchement = Number(values.chevauchement);
 const modele = values.unite === "caracteres" ? { mesure: enCaracteres, limite: Infinity, estimee: false } : await mesureDuModele(config);
 const unite = values.unite === "caracteres" ? "caractères" : modele.estimee ? "tokens (estimés)" : "tokens";
 const apercu = (texte: string) => texte.replace(/\n+/g, " ↵ ");
+const secondes = (debut: number) => ((performance.now() - debut) / 1000).toFixed(1);
+// Un chunk qui contient un titre ailleurs qu'au début mélange deux sections
+const melangeDesSections = (texte: string) => /\n#{1,6} /.test(texte);
 const documents = await lireDocuments();
 
 if (positionals[0]) {
@@ -45,6 +50,14 @@ if (positionals[0]) {
     const total = chunks.reduce((somme, chunk) => somme + modele.mesure(chunk), 0);
     const surcout = Math.round((100 * (total - tailleDocument)) / tailleDocument);
     console.log(`\n${chunks.length} chunks, ${total} ${unite} au total pour un document de ${tailleDocument} (${surcout >= 0 ? "+" : ""}${surcout} %)`);
+  } else if (values.strategie === "semantique") {
+    const debut = performance.now();
+    const { morceaux, phrases } = await decouperSemantique(document.texte, vectoriser, { taille, mesure: modele.mesure });
+    console.log(`\nDécoupage sémantique : ${phrases} phrases vectorisées en ${secondes(debut)} s, coupure aux 10 % d'écarts les plus grands`);
+    morceaux.forEach((morceau, i) => {
+      console.log(`#${i + 1}  ${modele.mesure(morceau)} ${unite}  « ${apercu(morceau.slice(0, 45))}… »  …  « …${apercu(morceau.slice(-45))} »`);
+    });
+    console.log(`\n${morceaux.length} chunks, dont ${morceaux.filter(melangeDesSections).length} qui mélangent deux sections`);
   } else {
     const chunks = decouperDocument(document, taille, modele.mesure);
     console.log(`\nDécoupage structurel : ${taille} ${unite} au plus`);
@@ -54,14 +67,27 @@ if (positionals[0]) {
     }
     console.log(`\n${chunks.length} chunks`);
   }
+} else if (values.strategie === "semantique") {
+  // Tout le corpus en découpage sémantique : ce que ça coûte (rien n'est écrit)
+  const debut = performance.now();
+  let phrases = 0;
+  const morceaux: string[] = [];
+  for (const document of documents) {
+    const resultat = await decouperSemantique(document.texte, vectoriser, { taille, mesure: modele.mesure });
+    phrases += resultat.phrases;
+    morceaux.push(...resultat.morceaux);
+  }
+  console.log(`${documents.length} documents, ${morceaux.length} chunks sémantiques en ${secondes(debut)} s, après ${phrases} phrases vectorisées`);
+  console.log(`Chunks qui mélangent deux sections : ${morceaux.filter(melangeDesSections).length}`);
 } else {
   // Tout le corpus : les chunks de chaque document, écrits dans donnees/chunks.jsonl
   const debut = performance.now();
   const chunks: Chunk[] = documents.flatMap((document) => decouperDocument(document, taille, modele.mesure));
   await writeFile("donnees/chunks.jsonl", chunks.map((chunk) => `${JSON.stringify(chunk)}\n`).join(""));
   const tailles = chunks.map((chunk) => chunk.taille).sort((a, b) => a - b);
-  console.log(`${documents.length} documents, ${chunks.length} chunks écrits dans donnees/chunks.jsonl en ${((performance.now() - debut) / 1000).toFixed(1)} s`);
+  console.log(`${documents.length} documents, ${chunks.length} chunks écrits dans donnees/chunks.jsonl en ${secondes(debut)} s`);
   console.log(`Taille des chunks (${unite}) : ${tailles[0]} au plus petit, ${tailles[tailles.length >> 1]} en médiane, ${tailles[tailles.length - 1]} au plus grand`);
   const tropGrands = chunks.filter((chunk) => chunk.taille > taille);
   console.log(`Au-dessus de ${taille} : ${tropGrands.length}${tropGrands.map((chunk) => ` ${chunk.id}`).join("")}`);
+  console.log(`Chunks qui mélangent deux sections : ${chunks.filter((chunk) => melangeDesSections(chunk.texte)).length}`);
 }

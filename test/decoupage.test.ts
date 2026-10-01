@@ -7,6 +7,7 @@ import { enCaracteres } from "../src/decoupage/mesure.ts";
 import { blocs, collerIntroductions, decouperDocument, redecouper, sections } from "../src/decoupage/structure.ts";
 import { contextualiser, texteAVectoriser } from "../src/decoupage/contexte.ts";
 import { parentsEtEnfants, phrasesEtFenetres } from "../src/decoupage/parents.ts";
+import { decouperSemantique } from "../src/decoupage/semantique.ts";
 import type { Llm } from "../src/llm.ts";
 
 const phrase = "Un repas avec un client est remboursé dans la limite de 45 euros à Paris.";
@@ -165,6 +166,15 @@ test("fenêtre de phrases : chaque phrase rend ses voisines, sans déborder sur 
       ["Le barème fiscal s'applique.", "Le barème fiscal s'applique."],
     ],
   );
+});
+
+test("le découpage sémantique coupe là où le sens change d'une phrase à la suivante", async () => {
+  // Un faux modèle : les phrases sur les repas pointent dans une direction, les autres dans une autre
+  const vectoriser = async (textes: string[]) => textes.map((t) => (t.includes("repas") ? [1, 0] : [0, 1]));
+  const texte = "Un repas seul : 20 €. Un repas avec un client : 45 €. Le train se prend en 2de classe. Le taxi est l'exception.";
+  const { morceaux, phrases } = await decouperSemantique(texte, vectoriser, { taille: 200, mesure: enCaracteres });
+  assert.equal(phrases, 4); // un vecteur par phrase
+  assert.deepEqual(morceaux, ["Un repas seul : 20 €. Un repas avec un client : 45 €.", "Le train se prend en 2de classe. Le taxi est l'exception."]);
 });
 
 test("une réponse de la FAQ garde sa question", () => {
