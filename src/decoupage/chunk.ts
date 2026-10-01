@@ -5,4 +5,5 @@ export type Chunk = {
   titres: string[]; // le chemin de titres de sa section, du titre du document jusqu'au plus proche
   texte: string; // en Markdown
   taille: number; // mesurée comme le modèle d'embedding la mesure, en tokens
+  contexte?: string; // une ou deux phrases qui situent le chunk dans son document, rédigées par un LLM
 };

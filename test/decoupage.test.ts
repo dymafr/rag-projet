@@ -5,6 +5,8 @@ import type { Document } from "../src/ingestion/document.ts";
 import { decouperFixe } from "../src/decoupage/fixe.ts";
 import { enCaracteres } from "../src/decoupage/mesure.ts";
 import { blocs, collerIntroductions, decouperDocument, redecouper, sections } from "../src/decoupage/structure.ts";
+import { contextualiser, texteAVectoriser } from "../src/decoupage/contexte.ts";
+import type { Llm } from "../src/llm.ts";
 
 const phrase = "Un repas avec un client est remboursé dans la limite de 45 euros à Paris.";
 
@@ -116,6 +118,25 @@ test("une liste reste avec la phrase qui l'annonce, même coupée en deux", () =
   const etapes = collerIntroductions(["Pour poser un congé :", "1. ouvrez l'outil RH ;\n2. choisissez les dates ;\n3. envoyez la demande."]);
   const morceaux = redecouper(etapes[0], 60, enCaracteres);
   assert.ok(morceaux.length > 1 && morceaux.every((morceau) => /^Pour poser un congé :\n\d\. /.test(morceau)));
+});
+
+test("on vectorise le chemin de titres, le contexte, puis le chunk", () => {
+  const chunk = { id: "POL-NF-01#6", document: "POL-NF-01", titres: ["Politique notes de frais", "Article 5. Plafonds"], texte: "## Article 5. Plafonds\n\n| … |", taille: 10 };
+  assert.equal(texteAVectoriser(chunk), "Politique notes de frais > Article 5. Plafonds\n\n## Article 5. Plafonds\n\n| … |");
+  assert.equal(texteAVectoriser({ ...chunk, contexte: "Les plafonds de repas." }), "Politique notes de frais > Article 5. Plafonds\n\nLes plafonds de repas.\n\n## Article 5. Plafonds\n\n| … |");
+});
+
+test("chaque chunk reçoit son contexte, et le document ouvre chaque prompt", async () => {
+  const debuts: string[] = [];
+  const llm: Llm = async (debut, fin) => {
+    debuts.push(debut);
+    return { texte: ` Contexte de ${fin.match(/<chunk>\n(.*)\n/)![1]} `, usage: { entree: 100, enCache: debuts.length > 1 ? 80 : 0, sortie: 5 } };
+  };
+  const document = doc("POL-XX-01", "# Politique de test\n## Article 1\nPremier.\n## Article 2\nSecond.");
+  const { chunks, usage } = await contextualiser(document, decouperDocument(document, 100, enCaracteres), llm);
+  assert.deepEqual(chunks.map((chunk) => chunk.contexte), ["Contexte de ## Article 1", "Contexte de ## Article 2"]);
+  assert.ok(debuts.every((debut) => debut === `<document>\n${document.texte}\n</document>`)); // le même début : il peut être mis en cache
+  assert.deepEqual(usage, { entree: 200, enCache: 80, sortie: 10 });
 });
 
 test("une réponse de la FAQ garde sa question", () => {
