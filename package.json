@@ -28,7 +28,8 @@
     "contextualiser": "node --env-file=.env src/outils/contextualiser.ts",
     "comparer": "node --env-file=.env src/outils/comparer.ts",
     "indexer": "node --env-file=.env src/outils/indexer.ts",
-    "mesurer:index": "node --env-file=.env src/outils/mesurer-index.ts"
+    "mesurer:index": "node --env-file=.env src/outils/mesurer-index.ts",
+    "rechercher": "node --env-file=.env src/outils/rechercher.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
