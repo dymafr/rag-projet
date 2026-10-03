@@ -29,7 +29,8 @@
     "comparer": "node --env-file=.env src/outils/comparer.ts",
     "indexer": "node --env-file=.env src/outils/indexer.ts",
     "mesurer:index": "node --env-file=.env src/outils/mesurer-index.ts",
-    "rechercher": "node --env-file=.env src/outils/rechercher.ts"
+    "rechercher": "node --env-file=.env src/outils/rechercher.ts",
+    "enregistrer": "node --env-file=.env src/outils/enregistrer-exemples.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
@@ -45,6 +46,8 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "@electric-sql/pglite-pgvector": "^0.0.9",
     "@types/node": "^26.6.3",
     "@types/pg": "^8.23.1",
     "@types/turndown": "^5.0.6",
