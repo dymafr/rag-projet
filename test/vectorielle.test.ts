@@ -15,3 +15,9 @@ test("requete numérote chaque filtre après le vecteur de la question", () => {
   assert.match(sql, /WHERE sites && \$2 AND type = ANY\(\$3\) AND langue = \$4/);
   assert.deepEqual(valeurs, ["[0.6,0.8]", ["nantes"], ["faq", "politique"], "fr"]);
 });
+
+test("requete garde la version en vigueur à la date demandée, avec une seule valeur pour les deux comparaisons", () => {
+  const { sql, valeurs } = requete([0.6, 0.8], 5, { enVigueurLe: "2026-01-15" });
+  assert.match(sql, /WHERE date_effet <= \$2 AND \(date_fin IS NULL OR date_fin > \$2\)/);
+  assert.deepEqual(valeurs, ["[0.6,0.8]", "2026-01-15"]);
+});

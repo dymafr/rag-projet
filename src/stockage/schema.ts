@@ -16,7 +16,8 @@ export async function creerTable(base: Base, dimension: number, stockage: Stocka
       acces text NOT NULL,         -- tous, manager ou rh
       langue text NOT NULL,        -- fr ou en
       sites text[] NOT NULL,       -- lyon, nantes
-      date_effet date NOT NULL,
+      date_effet date NOT NULL,    -- à partir de quand le document s'applique
+      date_fin date,               -- à partir de quand un texte plus récent le remplace (vide : toujours en vigueur)
       embedding ${stockage}(${dimension}) NOT NULL
     )`);
 }

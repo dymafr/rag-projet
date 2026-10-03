@@ -6,7 +6,7 @@ import { texteAVectoriser } from "../decoupage/contexte.ts";
 import { lireChunks, lireDocuments } from "../decoupage/corpus.ts";
 import { pool } from "../db.ts";
 import { vectoriser } from "../embeddings/fournisseurs.ts";
-import { insererParLots, ligne } from "../stockage/chunks.ts";
+import { dateDeFin, insererParLots, ligne } from "../stockage/chunks.ts";
 import { creerIndex, creerTable } from "../stockage/schema.ts";
 
 const { values } = parseArgs({
@@ -43,9 +43,14 @@ await creerTable(pool, dimension, stockage);
 
 // 3. Insérer les lignes par lots
 debut = performance.now();
-const lignes = chunks.map((chunk, i) => ligne(chunk, documentDe(chunk.document), vecteurs[i]));
+const lignes = chunks.map((chunk, i) => {
+  const document = documentDe(chunk.document);
+  return ligne(chunk, document, vecteurs[i], dateDeFin(document, documents));
+});
 const requetes = await insererParLots(pool, lignes, lot);
 console.log(`${lignes.length} lignes insérées en ${secondes(debut)} s, en ${requetes} requêtes INSERT`);
+const remplaces = chunks.filter((chunk) => dateDeFin(documentDe(chunk.document), documents) !== null);
+console.log(`Chunks d'un document remplacé par un texte plus récent : ${remplaces.length}`);
 
 // 4. Créer l'index une fois la table remplie : le construire en une fois va plus vite que l'enrichir ligne à ligne
 debut = performance.now();

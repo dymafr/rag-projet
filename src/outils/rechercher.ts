@@ -1,5 +1,6 @@
 // Chercher dans PostgreSQL les chunks les plus proches d'une question, avec des filtres sur les métadonnées
 // Lancement : npm run rechercher -- "votre question" [--k 5] [--site lyon] [--type politique] [--langue fr] [--plan]
+//             [--date 2026-01-15] (les règles en vigueur ce jour-là ; par défaut aujourd'hui) [--toutes-versions]
 //             options de démonstration : --index (passer par l'index HNSW, comme sur une grande table), --sans-iteratif
 import { parseArgs } from "node:util";
 import { pool } from "../db.ts";
@@ -13,6 +14,8 @@ const { values, positionals } = parseArgs({
     site: { type: "string", multiple: true }, // --site lyon --site nantes
     type: { type: "string", multiple: true }, // --type politique --type accord
     langue: { type: "string" },
+    date: { type: "string", default: new Date().toLocaleDateString("sv-SE") }, // aujourd'hui, à l'heure locale (sv-SE écrit AAAA-MM-JJ)
+    "toutes-versions": { type: "boolean", default: false }, // garder aussi les textes remplacés
     plan: { type: "boolean", default: false }, // afficher comment PostgreSQL a mené la recherche
     index: { type: "boolean", default: false },
     "sans-iteratif": { type: "boolean", default: false },
@@ -25,6 +28,11 @@ if (!Number.isInteger(k) || k < 1) {
   process.exit(1);
 }
 const filtres: Filtres = { sites: values.site, types: values.type, langue: values.langue };
+if (!/^\d{4}-\d{2}-\d{2}$/.test(values.date)) {
+  console.error(`--date attend une date au format AAAA-MM-JJ, pas « ${values.date} »`);
+  process.exit(1);
+}
+if (!values["toutes-versions"]) filtres.enVigueurLe = values.date;
 const apercu = (texte: string) => texte.replace(/\n+/g, " ↵ ").slice(0, 70);
 
 const client = await pool.connect(); // une seule connexion : les réglages SET valent pour les requêtes qui suivent
