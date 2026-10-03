@@ -20,3 +20,11 @@ export async function creerTable(base: Base, dimension: number, stockage: Stocka
       embedding ${stockage}(${dimension}) NOT NULL
     )`);
 }
+
+// L'index HNSW : un graphe où chaque vecteur est relié à ses voisins proches. La recherche le parcourt
+// au lieu de comparer la question à chaque ligne. m et ef_construction gardent ici les valeurs par défaut de pgvector.
+// Un index HNSW accepte 2 000 dimensions au plus en vector, 4 000 en halfvec
+export async function creerIndex(base: Base, stockage: Stockage = "vector") {
+  await base.query(`CREATE INDEX IF NOT EXISTS chunks_embedding_idx ON chunks
+    USING hnsw (embedding ${stockage}_cosine_ops) WITH (m = 16, ef_construction = 64)`);
+}

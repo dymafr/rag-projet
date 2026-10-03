@@ -7,7 +7,7 @@ import { lireChunks, lireDocuments } from "../decoupage/corpus.ts";
 import { pool } from "../db.ts";
 import { vectoriser } from "../embeddings/fournisseurs.ts";
 import { insererParLots, ligne } from "../stockage/chunks.ts";
-import { creerTable } from "../stockage/schema.ts";
+import { creerIndex, creerTable } from "../stockage/schema.ts";
 
 const { values } = parseArgs({
   options: {
@@ -46,6 +46,11 @@ debut = performance.now();
 const lignes = chunks.map((chunk, i) => ligne(chunk, documentDe(chunk.document), vecteurs[i]));
 const requetes = await insererParLots(pool, lignes, lot);
 console.log(`${lignes.length} lignes insérées en ${secondes(debut)} s, en ${requetes} requêtes INSERT`);
+
+// 4. Créer l'index une fois la table remplie : le construire en une fois va plus vite que l'enrichir ligne à ligne
+debut = performance.now();
+await creerIndex(pool, stockage);
+console.log(`Index HNSW créé en ${secondes(debut)} s`);
 
 const { rows } = await pool.query("SELECT pg_size_pretty(pg_total_relation_size('chunks')) AS taille");
 console.log(`Table chunks, colonne embedding en ${stockage}(${dimension}) : ${rows[0].taille} sur le disque`);

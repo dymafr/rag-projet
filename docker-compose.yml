@@ -3,6 +3,7 @@
 services:
   db:
     image: pgvector/pgvector:pg18
+    shm_size: 1gb # mémoire partagée du conteneur (64 Mo par défaut) : un gros index construit en parallèle en a besoin
     environment:
       POSTGRES_USER: rhea
       POSTGRES_PASSWORD: rhea # identifiants de développement local uniquement
