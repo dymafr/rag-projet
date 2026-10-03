@@ -4,8 +4,9 @@
 //             options de démonstration : --index (passer par l'index HNSW, comme sur une grande table), --sans-iteratif
 import { parseArgs } from "node:util";
 import { pool } from "../db.ts";
-import { vectoriser } from "../embeddings/fournisseurs.ts";
+import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
 import { chercher, requete, type Filtres } from "../recherche/vectorielle.ts";
+import { lireIndexation } from "../stockage/schema.ts";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -41,6 +42,15 @@ const client = await pool.connect(); // une seule connexion : les réglages SET 
 // comme il le ferait de lui-même sur une grande table
 if (values.index) await client.query("SET enable_seqscan = off");
 if (values["sans-iteratif"]) await client.query("SET hnsw.iterative_scan = off");
+
+// La question doit être vectorisée par le modèle qui a calculé les vecteurs de la base
+const indexation = await lireIndexation(client);
+if (indexation && indexation.modele !== nomDuModele()) {
+  console.error(`La base a été indexée avec ${indexation.modele}, le projet est réglé sur ${nomDuModele()} : relancez npm run indexer -- --reconstruire`);
+  client.release();
+  await pool.end();
+  process.exit(1);
+}
 
 const [vecteur] = await vectoriser([question], "requete");
 const debut = performance.now();

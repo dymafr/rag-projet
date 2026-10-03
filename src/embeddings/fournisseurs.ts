@@ -85,3 +85,6 @@ export function creerEmbedder(reglages: Reglages = config): Embedder {
 
 // L'embedder configuré dans .env, celui qu'utilise tout le projet
 export const vectoriser = creerEmbedder();
+
+// Le nom complet du modèle configuré : deux noms différents donnent des vecteurs qui ne se comparent pas
+export const nomDuModele = (r: Reglages = config) => [r.EMBEDDING_PROVIDER, r.EMBEDDING_MODEL, r.EMBEDDING_DIMENSIONS].filter(Boolean).join(" ");

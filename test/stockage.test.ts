@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Document } from "../src/ingestion/document.ts";
-import { dateDeFin, insererParLots, ligne, parametres } from "../src/stockage/chunks.ts";
+import { dateDeFin, empreintes, insererParLots, ligne, parametres } from "../src/stockage/chunks.ts";
 
 // L'accord télétravail et l'avenant qui le remplace, réduits à leurs métadonnées
 const accord: Document = {
@@ -45,8 +45,19 @@ test("parametres numérote les valeurs d'un lot, ligne après ligne", () => {
 test("ligne met le chunk, les métadonnées de son document et le vecteur dans l'ordre des colonnes", () => {
   const chunk = { id: "POL-TT-02#4", document: "POL-TT-02", titres: ["Avenant n° 2 à l'accord télétravail"], texte: "…", taille: 80 };
   const valeurs = ligne(chunk, avenant, [0.5, -0.25], null);
-  assert.equal(valeurs.length, 12);
-  assert.deepEqual(valeurs.slice(5), ["accord", "tous", "fr", ["lyon", "nantes"], "2026-03-01", null, "[0.5,-0.25]"]);
+  assert.equal(valeurs.length, 14);
+  assert.deepEqual(valeurs.slice(5, 11), ["accord", "tous", "fr", ["lyon", "nantes"], "2026-03-01", null]);
+  assert.match(String(valeurs[11]), /^[0-9a-f]{64}$/); // les deux empreintes, en SHA-256
+  assert.match(String(valeurs[12]), /^[0-9a-f]{64}$/);
+  assert.equal(valeurs[13], "[0.5,-0.25]");
+});
+
+test("empreintes : un changement de métadonnées ne touche pas l'empreinte du texte vectorisé", () => {
+  const chunk = { id: "POL-TT-01#8", document: "POL-TT-01", titres: ["Accord d'entreprise relatif au télétravail"], texte: "…", taille: 80 };
+  const avant = empreintes(chunk, accord, null);
+  const apres = empreintes(chunk, accord, "2026-03-01"); // l'avenant arrive : l'accord reçoit une date de fin
+  assert.equal(apres.empreinte, avant.empreinte);
+  assert.notEqual(apres.empreinte_meta, avant.empreinte_meta);
 });
 
 test("dateDeFin : un document remplacé cesse de s'appliquer quand son remplaçant entre en vigueur", () => {
@@ -63,7 +74,7 @@ test("insererParLots envoie une requête INSERT par lot", async () => {
       return { rows: [] };
     },
   };
-  const lignes = Array.from({ length: 5 }, (_, i) => Array<number>(12).fill(i));
+  const lignes = Array.from({ length: 5 }, (_, i) => Array<number>(14).fill(i));
   assert.equal(await insererParLots(fausseBase, lignes, 2), 3);
-  assert.deepEqual(requetes.map((valeurs) => valeurs.length), [24, 24, 12]); // 2 lignes, 2 lignes, puis 1 ligne de 12 valeurs
+  assert.deepEqual(requetes.map((valeurs) => valeurs.length), [28, 28, 14]); // 2 lignes, 2 lignes, puis 1 ligne de 14 valeurs
 });
