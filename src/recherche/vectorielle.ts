@@ -7,6 +7,7 @@ export type Filtres = {
   types?: string[]; // politique, accord, faq, intranet ou ticket
   langue?: string; // fr ou en
   enVigueurLe?: string; // une date, AAAA-MM-JJ : seulement les documents qui s'appliquaient ce jour-là
+  acces?: string[]; // tous, manager ou rh : qui a le droit de lire le document
 };
 
 export type Resultat = { id: string; document: string; titres: string[]; texte: string; score: number };
@@ -24,6 +25,7 @@ export function requete(vecteur: number[], k: number, filtres: Filtres = {}) {
   if (filtres.langue) filtrer((p) => `langue = ${p}`, filtres.langue);
   // En vigueur à cette date : le document s'applique déjà, et aucun texte plus récent ne l'a encore remplacé
   if (filtres.enVigueurLe) filtrer((p) => `date_effet <= ${p} AND (date_fin IS NULL OR date_fin > ${p})`, filtres.enVigueurLe);
+  if (filtres.acces?.length) filtrer((p) => `acces = ANY(${p})`, filtres.acces);
   const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
   // <=> est la distance cosinus : trier sur elle, en ordre croissant, permet à PostgreSQL d'utiliser l'index HNSW
   const sql = `SELECT id, document, titres, texte, 1 - (embedding <=> $1) AS score
