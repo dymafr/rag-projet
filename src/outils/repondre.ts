@@ -4,7 +4,7 @@
 import { parseArgs } from "node:util";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
-import { ligneDeSource, numerosCites } from "../generation/citations.ts";
+import { ligneDeSource, numerosDesSources, verifierCitations } from "../generation/citations.ts";
 import { creerGenerateur, type Generation } from "../generation/generateur.ts";
 import { assembler, BUDGET_PASSAGES, estimerTokens, PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { repondreEnJson } from "../generation/structure.ts";
@@ -54,11 +54,18 @@ const { texte, usage, citations = [] } = generation;
 const duree = ((performance.now() - debut) / 1000).toFixed(1);
 console.log(`Rhéa (${config.LLM_PROVIDER}, prompt v${systeme.version} ${systeme.empreinte}, ${prompt.passages.length} passages) en ${duree} s :\n`);
 console.log(texte.trim());
-const cites = [...new Set([...numerosCites(texte, prompt.passages), ...citations.map((c) => c.numero)])].sort((a, b) => a - b);
+const cites = numerosDesSources(texte, citations, prompt.passages);
+// Avec Claude, ou en JSON, chaque citation donne l'extrait qu'elle dit tirer du passage : on vérifie qu'il y figure
+const verifiees = verifierCitations(citations, prompt.passages);
 console.log(`\nSources citées :${cites.length === 0 ? " aucune" : ""}`);
 for (const n of cites) {
   console.log(`  ${ligneDeSource(n, prompt.passages[n - 1])}`);
-  // Avec Claude, ou en JSON, chaque citation donne aussi l'extrait qu'elle dit tirer du passage
-  for (const c of citations.filter((c) => c.numero === n)) console.log(`      « ${apercu(c.texteCite)} »`);
+  const siennes = verifiees.filter((c) => c.numero === n);
+  if (siennes.length === 0) console.log("      (aucun extrait cité : seul le numéro est connu)");
+  for (const c of siennes) console.log(`      ${c.trouvee ? "vérifiée   " : "INTROUVABLE"} « ${apercu(c.texteCite)} »`);
+}
+if (verifiees.length > 0) {
+  const trouvees = verifiees.filter((c) => c.trouvee).length;
+  console.log(`Citations retrouvées dans leur passage : ${trouvees} sur ${verifiees.length}`);
 }
 console.log(`\nTokens : ${usage.entree} en entrée, dont ${usage.enCache} relus dans le cache ; ${usage.sortie} en sortie`);
