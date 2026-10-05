@@ -1,7 +1,7 @@
 // Tests du prompt augmenté, sans base ni LLM. Lancement : npm test
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { assembler, baliser, choisir, CITER, INSTRUCTIONS } from "../src/generation/prompt.ts";
+import { assembler, baliser, choisir, CITER } from "../src/generation/prompt.ts";
 import type { Resultat } from "../src/recherche/vectorielle.ts";
 
 const passage = (id: string, texte: string, score = 0.8): Resultat => ({ id, document: id.split("#")[0], titres: ["FAQ RH de Kalyo", "Une question"], texte, score });
@@ -28,8 +28,8 @@ test("choisir garde l'ordre de la recherche, écarte un passage qui dépasse le 
 
 test("assembler dit comment citer, met les passages numérotés, puis la date du jour, et la question en dernier", () => {
   const resultats = [passage("FAQ-RH#2", "Trois jours."), passage("POL-TT-02#10", "Article 4.")];
-  const prompt = assembler("Combien de jours ?", resultats, { budget: 1000, mesure: enCaracteres, date: "2026-10-05" });
-  assert.equal(prompt.systeme, INSTRUCTIONS);
+  const prompt = assembler("Combien de jours ?", resultats, { systeme: "Tu es Rhéa.", budget: 1000, mesure: enCaracteres, date: "2026-10-05" });
+  assert.equal(prompt.systeme, "Tu es Rhéa.");
   assert.ok(prompt.utilisateur.startsWith(`${CITER}\n\n<passages>\n`));
   assert.match(prompt.utilisateur, /<passages>\n<passage numero="1" source="FAQ-RH#2"[\s\S]*numero="2" source="POL-TT-02#10"[\s\S]*<\/passages>/);
   assert.ok(prompt.utilisateur.endsWith("Date du jour : 2026-10-05\n\nQuestion : Combien de jours ?"));

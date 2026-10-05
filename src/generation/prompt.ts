@@ -1,21 +1,14 @@
-// Le prompt augmenté : des instructions, puis les passages trouvés par la recherche, délimités et numérotés,
+// Le prompt augmenté : le prompt système, puis les passages trouvés par la recherche, délimités et numérotés,
 // dans la limite d'un budget de tokens, et enfin la question
 import type { Mesure } from "../decoupage/mesure.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
-
-// Les consignes, les mêmes pour toutes les questions (la leçon 2 les étoffe et les range dans leur propre fichier)
-export const INSTRUCTIONS = [
-  "Tu es Rhéa, l'assistant RH de Kalyo.",
-  "Réponds uniquement à partir des passages de la documentation RH fournis avec la question, et cite-les.",
-  "Si les passages ne permettent pas de répondre, dis-le.",
-].join("\n");
 
 // Les réglages par défaut : les passages demandés à la recherche, et les tokens qui leur sont réservés dans le prompt
 export const PASSAGES_DEMANDES = 8;
 export const BUDGET_PASSAGES = 1500;
 
 export type PromptAugmente = {
-  systeme: string; // les instructions
+  systeme: string; // les instructions : le prompt système de prompts/rhea.md
   utilisateur: string; // le message : les passages, la date du jour, puis la question
   passages: Resultat[]; // les passages gardés : le passage [n] est passages[n - 1]
   ecartes: Resultat[]; // ceux qui ne tenaient plus dans le budget
@@ -67,10 +60,10 @@ export const finDuMessage = (question: string, date: string) => `Date du jour : 
 export function assembler(
   question: string,
   resultats: Resultat[],
-  options: { budget: number; mesure: Mesure; date: string; systeme?: string },
+  options: { systeme: string; budget: number; mesure: Mesure; date: string },
 ): PromptAugmente {
   const { passages, ecartes } = choisir(resultats, options.budget, options.mesure);
   const blocs = passages.map((passage, i) => baliser(passage, i + 1)).join("\n\n");
   const utilisateur = `${CITER}\n\n<passages>\n${blocs}\n</passages>\n\n${finDuMessage(question, options.date)}`;
-  return { systeme: options.systeme ?? INSTRUCTIONS, utilisateur, passages, ecartes, question, date: options.date };
+  return { systeme: options.systeme, utilisateur, passages, ecartes, question, date: options.date };
 }
