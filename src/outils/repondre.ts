@@ -31,13 +31,22 @@ const resultats = await trouverPassages(pool, question, k, values.date);
 await pool.end();
 const prompt = assembler(question, resultats, { systeme: systeme.texte, budget, mesure: estimerTokens, date: values.date });
 
+const apercu = (texte: string) => {
+  const ligne = texte.replace(/\s+/g, " ");
+  return ligne.length > 90 ? `${ligne.slice(0, 90)}…` : ligne;
+};
+
 const debut = performance.now();
-const { texte, usage } = await generer(prompt);
+const { texte, usage, citations = [] } = await generer(prompt);
 const duree = ((performance.now() - debut) / 1000).toFixed(1);
 console.log(`« ${question} »`);
 console.log(`Rhéa (${config.LLM_PROVIDER}, prompt v${systeme.version} ${systeme.empreinte}, ${prompt.passages.length} passages) en ${duree} s :\n`);
 console.log(texte.trim());
 const cites = numerosCites(texte, prompt.passages);
 console.log(`\nSources citées :${cites.length === 0 ? " aucune" : ""}`);
-for (const n of cites) console.log(`  ${ligneDeSource(n, prompt.passages[n - 1])}`);
+for (const n of cites) {
+  console.log(`  ${ligneDeSource(n, prompt.passages[n - 1])}`);
+  // Avec Claude, chaque citation donne aussi le texte qu'elle cite, tiré mot pour mot du passage
+  for (const c of citations.filter((c) => c.numero === n)) console.log(`      « ${apercu(c.texteCite)} »`);
+}
 console.log(`\nTokens : ${usage.entree} en entrée, dont ${usage.enCache} relus dans le cache ; ${usage.sortie} en sortie`);

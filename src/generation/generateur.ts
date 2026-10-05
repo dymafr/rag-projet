@@ -1,12 +1,15 @@
 // Le générateur choisi dans .env : il reçoit le prompt augmenté et rend la réponse de Rhéa, avec les tokens consommés
+import Anthropic from "@anthropic-ai/sdk";
 import OpenAI from "openai";
 import { config } from "../config.ts";
 import type { Usage } from "../llm.ts";
 import { conseilOllama, ollama } from "../ollama.ts";
+import { repondreAvecClaude } from "./claude.ts";
 import { repondreAvecResponses, type Reglages } from "./openai.ts";
 import type { PromptAugmente } from "./prompt.ts";
 
-export type Generation = { texte: string; usage: Usage };
+export type Citation = { numero: number; texteCite: string }; // le numéro du passage cité, et le texte qu'il en cite
+export type Generation = { texte: string; usage: Usage; citations?: Citation[] }; // citations : avec Claude
 export type Generateur = (prompt: PromptAugmente) => Promise<Generation>;
 
 const LOCAL: Reglages = { temperature: 0, reasoning: { effort: "none" }, max_output_tokens: 1024 }; // voir openai.ts
@@ -26,5 +29,6 @@ export function creerGenerateur(): Generateur {
   if (config.LLM_PROVIDER === "ollama") {
     return (prompt) => repondreAvecResponses(ollama, config.LLM_MODEL, prompt, LOCAL).catch(conseilSiErreurOllama);
   }
-  throw new Error("Claude arrive à la leçon suivante : d'ici là, réglez LLM_PROVIDER sur openai ou ollama");
+  const client = new Anthropic(); // lit ANTHROPIC_API_KEY dans l'environnement
+  return (prompt) => repondreAvecClaude(client, config.LLM_MODEL, prompt);
 }
