@@ -5,14 +5,18 @@ import OpenAI from "openai";
 import { config } from "../config.ts";
 import type { Usage } from "../llm.ts";
 import { conseilOllama, ollama } from "../ollama.ts";
-import { repondreAvecClaude } from "./claude.ts";
-import { repondreAvecResponses, type Reglages } from "./openai.ts";
+import { repondreAvecClaude, streamerAvecClaude } from "./claude.ts";
+import { repondreAvecResponses, streamerAvecResponses, type Reglages } from "./openai.ts";
 import type { PromptAugmente } from "./prompt.ts";
 import type { DemandeJson } from "./structure.ts";
 
 export type Citation = { numero: number; texteCite: string }; // le numéro du passage cité, et le texte qu'il en cite
 export type Generation = { texte: string; usage: Usage; citations?: Citation[] }; // citations : avec Claude
 export type Generateur = (prompt: PromptAugmente, json?: DemandeJson) => Promise<Generation>;
+
+// En flux (leçon 8) : la réponse arrive en morceaux, puis une fin avec les tokens consommés
+export type Morceau = { type: "texte"; texte: string } | { type: "citation"; citation: Citation } | { type: "fin"; usage: Usage };
+export type GenerateurEnFlux = (prompt: PromptAugmente, signal?: AbortSignal) => AsyncGenerator<Morceau>;
 
 const LOCAL: Reglages = { temperature: 0, reasoning: { effort: "none" }, max_output_tokens: 1024 }; // voir openai.ts
 
@@ -33,4 +37,25 @@ export function creerGenerateur(): Generateur {
   }
   const client = new Anthropic(); // lit ANTHROPIC_API_KEY dans l'environnement
   return (prompt, json) => repondreAvecClaude(client, config.LLM_MODEL, prompt, json);
+}
+
+// Avec Ollama, en flux comme en mode simple : le conseil s'ajoute au message d'une erreur de son API
+async function* avecConseilOllama(flux: AsyncGenerator<Morceau>): AsyncGenerator<Morceau> {
+  try {
+    yield* flux;
+  } catch (erreur) {
+    conseilSiErreurOllama(erreur as Error);
+  }
+}
+
+export function creerGenerateurEnFlux(): GenerateurEnFlux {
+  if (config.LLM_PROVIDER === "openai") {
+    const client = new OpenAI();
+    return (prompt, signal) => streamerAvecResponses(client, config.LLM_MODEL, prompt, {}, signal);
+  }
+  if (config.LLM_PROVIDER === "ollama") {
+    return (prompt, signal) => avecConseilOllama(streamerAvecResponses(ollama, config.LLM_MODEL, prompt, LOCAL, signal));
+  }
+  const client = new Anthropic();
+  return (prompt, signal) => streamerAvecClaude(client, config.LLM_MODEL, prompt, signal);
 }
