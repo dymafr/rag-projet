@@ -1,0 +1,3391 @@
+{
+  "date": "2026-10-09",
+  "llm": "ollama gemma4:e4b",
+  "embeddings": "transformers Xenova/bge-m3",
+  "prompt": "v1 59f13e1e",
+  "reponses": [
+    {
+      "id": "Q01",
+      "question": "Combien de jours de télétravail ai-je par semaine ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-TTG-01#3",
+          "score": 0.7817
+        },
+        {
+          "id": "FAQ-RH#2",
+          "score": 0.772
+        },
+        {
+          "id": "POL-TT-02#10",
+          "score": 0.7439
+        },
+        {
+          "id": "INT-ACTUALITES#7",
+          "score": 0.6941
+        },
+        {
+          "id": "INT-ERGONOMIE#1",
+          "score": 0.6921
+        },
+        {
+          "id": "POL-TTG-01#12",
+          "score": 0.6823
+        },
+        {
+          "id": "POL-TT-02#7",
+          "score": 0.6715
+        },
+        {
+          "id": "POL-TTG-01#9",
+          "score": 0.6692
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-TTG-01#3",
+          "texte": "## Combien de jours de télétravail ?\n\nDepuis le 1er mars 2026, vous pouvez télétravailler jusqu'à 3 jours par semaine, sur accord de votre manager (avenant n° 2, article 4). Avant cette date, la limite était de 2 jours par semaine.\n\nChaque équipe fixe avec son manager au moins un jour de présence commun sur site par semaine, par exemple le mardi. Ce jour ne peut pas être un jour de télétravail : il sert aux réunions d'équipe et à l'accueil des nouveaux arrivants. Les autres jours de présence sont libres, dans la limite de 3 jours de télétravail par semaine.\n\nLes jours de télétravail non utilisés une semaine ne se reportent pas sur la semaine suivante."
+        },
+        {
+          "numero": 2,
+          "id": "FAQ-RH#2",
+          "texte": "## Combien de jours de télétravail ai-je par semaine ?\n\nDepuis le 1er mars 2026, vous pouvez télétravailler jusqu'à trois jours par semaine, sur accord de votre manager (avenant n° 2 à l'accord télétravail, article 4). Avant cette date, la limite était de deux jours."
+        },
+        {
+          "numero": 3,
+          "id": "POL-TT-02#10",
+          "texte": "## Article 4. Nombre de jours de télétravail\n\nÀ compter du 1er mars 2026, le salarié éligible peut télétravailler 3 jours par semaine au plus, sur accord de son manager.\n\nChaque équipe fixe avec son manager au moins un jour de présence commun par semaine, pendant lequel tous ses membres travaillent sur site. Ce jour ne peut pas être choisi comme jour de télétravail. Les autres jours de présence sont libres, dans la limite de 3 jours de télétravail par semaine.\n\nLe salarié déclare chaque semaine ses jours de télétravail dans l'espace RH, avant le début de la semaine concernée. Ces déclarations servent au calcul de l'indemnité prévue à l'article 7.\n\nLes jours de télétravail non utilisés ne sont pas reportables d'une semaine sur l'autre. Pour une réunion, une formation ou une nécessité de service, le manager peut demander la présence du salarié un jour de télétravail, en le prévenant au moins 48 heures à l'avance. Ce jour peut être reporté dans la même semaine, en accord avec le manager."
+        },
+        {
+          "numero": 4,
+          "id": "INT-ACTUALITES#7",
+          "texte": "## Trois jours de télétravail à partir du 1er mars\n\n20 janvier 2026\n\nUn avenant n° 2 à l'accord télétravail (POL-TT-02) a été conclu. À partir du 1er mars 2026, le nombre de jours de télétravail passe de deux à trois par semaine (article 4). Chaque équipe fixe avec son manager au moins un jour de présence commun. Le télétravail n'est possible qu'en France métropolitaine, jamais depuis l'étranger. L'indemnité est de 2,50 € par jour de télétravail, dans la limite de 30 € par mois."
+        },
+        {
+          "numero": 5,
+          "id": "INT-ERGONOMIE#1",
+          "texte": "# Bien s'installer en télétravail\n\nMis à jour le 2 mars 2026\n\nDepuis le 1er mars 2026, vous pouvez télétravailler jusqu'à trois jours par semaine, sur accord de votre manager (avenant n° 2 à l'accord télétravail, POL-TT-02, article 4). Plus de jours à domicile, c'est aussi plus d'heures devant l'écran : voici comment installer un poste confortable et comment Kalyo vous aide à vous équiper."
+        },
+        {
+          "numero": 6,
+          "id": "POL-TTG-01#12",
+          "texte": "### Puis-je télétravailler une semaine depuis la maison de mes parents en Bretagne ?\n\nOui, pour vos jours de télétravail, si l'adresse est déclarée dans l'espace RH avant le premier jour. La limite reste de 3 jours par semaine : les deux autres jours sont des jours de présence sur site ou des jours de congé."
+        },
+        {
+          "numero": 7,
+          "id": "POL-TT-02#7",
+          "texte": "### 3.2 Période d'adaptation\n\nLe télétravail débute par une période d'adaptation de 2 mois. Pendant cette période, le salarié comme le manager peuvent y mettre fin par écrit, en respectant un délai de prévenance d'une semaine."
+        }
+      ],
+      "texte": "Depuis le 1er mars 2026, vous pouvez télétravailler jusqu'à trois jours par semaine, sur accord de votre manager [1][2][3][5]. Chaque équipe doit fixer avec son manager au moins un jour de présence commun sur site par semaine [1][3]. Vous devez déclarer vos jours de télétravail chaque semaine dans l'espace RH avant le début de la semaine concernée [3].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-TTG-01#3",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "FAQ-RH#2",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "POL-TT-02#10",
+          "extraits": []
+        },
+        {
+          "numero": 5,
+          "source": "INT-ERGONOMIE#1",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 3073
+    },
+    {
+      "id": "Q02",
+      "question": "Combien de jours de télétravail ai-je par semaine ?",
+      "date": "2026-01-15",
+      "trouves": [
+        {
+          "id": "POL-TT-01#8",
+          "score": 0.7314
+        },
+        {
+          "id": "POL-TT-01#6",
+          "score": 0.6827
+        },
+        {
+          "id": "POL-TT-01#12",
+          "score": 0.6334
+        },
+        {
+          "id": "POL-TT-01#11",
+          "score": 0.6076
+        },
+        {
+          "id": "POL-TT-01#7",
+          "score": 0.6023
+        },
+        {
+          "id": "POL-TT-01#14",
+          "score": 0.5896
+        },
+        {
+          "id": "POL-HO-01#4",
+          "score": 0.5846
+        },
+        {
+          "id": "POL-HO-01#5",
+          "score": 0.5825
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-TT-01#8",
+          "texte": "## Article 4. Nombre de jours de télétravail\n\nLe salarié éligible peut télétravailler 2 jours par semaine au plus. Les jours de télétravail sont fixés avec le manager et déclarés dans l'espace RH.\n\nChaque équipe fixe avec son manager un jour de présence commun par semaine, pendant lequel tous ses membres travaillent sur site. Ce jour ne peut pas être choisi comme jour de télétravail.\n\nLes jours de télétravail non utilisés ne sont pas reportables d'une semaine sur l'autre. Pour une réunion, une formation ou une nécessité de service, le manager peut demander la présence du salarié un jour de télétravail, en le prévenant au moins 48 heures à l'avance. Ce jour peut être reporté dans la même semaine, en accord avec le manager."
+        },
+        {
+          "numero": 2,
+          "id": "POL-TT-01#6",
+          "texte": "### 3.2 Période d'adaptation\n\nLe télétravail débute par une période d'adaptation de 2 mois. Pendant cette période, le salarié comme le manager peuvent y mettre fin par écrit, en respectant un délai de prévenance d'une semaine."
+        },
+        {
+          "numero": 3,
+          "id": "POL-TT-01#12",
+          "texte": "## Article 8. Joignabilité et droit à la déconnexion\n\nPendant ses jours de télétravail, le salarié organise librement son temps de travail, dans le respect de la durée du travail qui lui est applicable. Il doit toutefois être joignable par son équipe, son manager et, le cas échéant, les clients, pendant les plages suivantes : de 9 h 30 à 12 h et de 14 h à 17 h.\n\nChaque salarié bénéficie d'un droit à la déconnexion. De 20 h à 8 h, ainsi que le week-end, aucun salarié n'est tenu de lire ni de répondre aux messages et appels professionnels. Les managers veillent à ne pas envoyer de sollicitations pendant ces périodes, sauf urgence ou astreinte.\n\nLa charge de travail en télétravail est abordée lors de l'entretien annuel."
+        },
+        {
+          "numero": 4,
+          "id": "POL-TT-01#11",
+          "texte": "## Article 7. Indemnité de télétravail\n\nPour couvrir les frais liés au travail à domicile (électricité, chauffage, connexion internet), Kalyo verse une indemnité forfaitaire de 2 € par jour de télétravail, dans la limite de 20 € par mois.\n\nL'indemnité est calculée à partir des jours de télétravail déclarés dans l'espace RH et versée avec la paie du mois suivant. Aucun autre remboursement de ces frais ne peut être demandé.\n\nLes jours de télétravail ouvrent droit aux titres-restaurant dans les mêmes conditions que les jours travaillés sur site."
+        },
+        {
+          "numero": 5,
+          "id": "POL-TT-01#7",
+          "texte": "### 3.3 Réversibilité\n\nAprès la période d'adaptation, le salarié ou l'entreprise peut mettre fin au télétravail à tout moment, par écrit, avec un préavis d'un mois. Lorsque la décision vient de l'entreprise, elle est motivée. Le salarié retrouve alors son poste dans les locaux de Kalyo, dans les mêmes conditions qu'avant le télétravail."
+        },
+        {
+          "numero": 6,
+          "id": "POL-TT-01#14",
+          "texte": "## Article 10. Durée, suivi et révision\n\nLe présent accord est conclu pour une durée indéterminée. Il entre en vigueur le 1er janvier 2024.\n\nUne commission de suivi se réunit une fois par an. Elle est composée de deux représentants de la direction, de la responsable du service RH et du délégué syndical. Elle établit le bilan de l'application de l'accord (nombre de salariés en télétravail, demandes refusées, difficultés rencontrées) et peut proposer des évolutions.\n\nLe présent accord peut être révisé par avenant ou dénoncé dans les conditions prévues par la loi. Il est déposé selon les formalités légales et publié sur l'intranet.\n\nFait à Lyon, le 15 décembre 2023.\n\nPour la société Kalyo : Noémie Millet, directrice associée.\n\nPour l'organisation syndicale : Olivier Abadie, délégué syndical."
+        }
+      ],
+      "texte": "Vous pouvez télétravailler au maximum 2 jours par semaine [1]. Ces jours sont fixés avec votre manager et doivent être déclarés dans l'espace RH [1].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-TT-01#8",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1011
+    },
+    {
+      "id": "Q03",
+      "question": "How many days can I work from home?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-TTG-01#3",
+          "score": 0.6547
+        },
+        {
+          "id": "POL-TTG-01#12",
+          "score": 0.6526
+        },
+        {
+          "id": "FAQ-RH#2",
+          "score": 0.6286
+        },
+        {
+          "id": "POL-TT-02#10",
+          "score": 0.6108
+        },
+        {
+          "id": "INT-ERGONOMIE#1",
+          "score": 0.6057
+        },
+        {
+          "id": "POL-TTG-01#9",
+          "score": 0.5976
+        },
+        {
+          "id": "INT-ACTUALITES#7",
+          "score": 0.5795
+        },
+        {
+          "id": "INT-ACTUALITES#5",
+          "score": 0.5785
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-TTG-01#3",
+          "texte": "## Combien de jours de télétravail ?\n\nDepuis le 1er mars 2026, vous pouvez télétravailler jusqu'à 3 jours par semaine, sur accord de votre manager (avenant n° 2, article 4). Avant cette date, la limite était de 2 jours par semaine.\n\nChaque équipe fixe avec son manager au moins un jour de présence commun sur site par semaine, par exemple le mardi. Ce jour ne peut pas être un jour de télétravail : il sert aux réunions d'équipe et à l'accueil des nouveaux arrivants. Les autres jours de présence sont libres, dans la limite de 3 jours de télétravail par semaine.\n\nLes jours de télétravail non utilisés une semaine ne se reportent pas sur la semaine suivante."
+        },
+        {
+          "numero": 2,
+          "id": "POL-TTG-01#12",
+          "texte": "### Puis-je télétravailler une semaine depuis la maison de mes parents en Bretagne ?\n\nOui, pour vos jours de télétravail, si l'adresse est déclarée dans l'espace RH avant le premier jour. La limite reste de 3 jours par semaine : les deux autres jours sont des jours de présence sur site ou des jours de congé."
+        },
+        {
+          "numero": 3,
+          "id": "FAQ-RH#2",
+          "texte": "## Combien de jours de télétravail ai-je par semaine ?\n\nDepuis le 1er mars 2026, vous pouvez télétravailler jusqu'à trois jours par semaine, sur accord de votre manager (avenant n° 2 à l'accord télétravail, article 4). Avant cette date, la limite était de deux jours."
+        },
+        {
+          "numero": 4,
+          "id": "POL-TT-02#10",
+          "texte": "## Article 4. Nombre de jours de télétravail\n\nÀ compter du 1er mars 2026, le salarié éligible peut télétravailler 3 jours par semaine au plus, sur accord de son manager.\n\nChaque équipe fixe avec son manager au moins un jour de présence commun par semaine, pendant lequel tous ses membres travaillent sur site. Ce jour ne peut pas être choisi comme jour de télétravail. Les autres jours de présence sont libres, dans la limite de 3 jours de télétravail par semaine.\n\nLe salarié déclare chaque semaine ses jours de télétravail dans l'espace RH, avant le début de la semaine concernée. Ces déclarations servent au calcul de l'indemnité prévue à l'article 7.\n\nLes jours de télétravail non utilisés ne sont pas reportables d'une semaine sur l'autre. Pour une réunion, une formation ou une nécessité de service, le manager peut demander la présence du salarié un jour de télétravail, en le prévenant au moins 48 heures à l'avance. Ce jour peut être reporté dans la même semaine, en accord avec le manager."
+        },
+        {
+          "numero": 5,
+          "id": "INT-ERGONOMIE#1",
+          "texte": "# Bien s'installer en télétravail\n\nMis à jour le 2 mars 2026\n\nDepuis le 1er mars 2026, vous pouvez télétravailler jusqu'à trois jours par semaine, sur accord de votre manager (avenant n° 2 à l'accord télétravail, POL-TT-02, article 4). Plus de jours à domicile, c'est aussi plus d'heures devant l'écran : voici comment installer un poste confortable et comment Kalyo vous aide à vous équiper."
+        },
+        {
+          "numero": 6,
+          "id": "POL-TTG-01#9",
+          "texte": "## Période d'adaptation et réversibilité\n\nLe télétravail commence par une période d'adaptation de 2 mois. Pendant cette période, vous ou votre manager pouvez y mettre fin par écrit, avec un délai de prévenance d'une semaine.\n\nEnsuite, le télétravail reste réversible : vous ou votre manager pouvez y mettre fin par écrit, avec un préavis d'un mois, par exemple par un ticket de catégorie « Télétravail » dans l'espace RH. Quand la décision vient de l'entreprise, elle est motivée."
+        },
+        {
+          "numero": 7,
+          "id": "INT-ACTUALITES#5",
+          "texte": "## Télétravail : l'avenant n° 2 est entré en vigueur\n\n2 mars 2026\n\nDepuis le 1er mars 2026, vous pouvez télétravailler jusqu'à trois jours par semaine, sur accord de votre manager. Le guide pratique du télétravail (POL-TTG-01) est en ligne, ainsi que nos conseils pour bien s'installer en télétravail."
+        }
+      ],
+      "texte": "Depuis le 1er mars 2026, vous pouvez télétravailler jusqu'à 3 jours par semaine, sur accord de votre manager [1][3][4][5][7]. Chaque équipe doit fixer avec son manager au moins un jour de présence commun sur site par semaine, ce jour ne pouvant pas être un jour de télétravail [1][4]. Vous devez déclarer chaque semaine vos jours de télétravail dans l'espace RH avant le début de la semaine concernée [4].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-TTG-01#3",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "FAQ-RH#2",
+          "extraits": []
+        },
+        {
+          "numero": 4,
+          "source": "POL-TT-02#10",
+          "extraits": []
+        },
+        {
+          "numero": 5,
+          "source": "INT-ERGONOMIE#1",
+          "extraits": []
+        },
+        {
+          "numero": 7,
+          "source": "INT-ACTUALITES#5",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1542
+    },
+    {
+      "id": "Q04",
+      "question": "Quel est le plafond pour un repas avec un client à Paris ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "FAQ-RH#19",
+          "score": 0.758
+        },
+        {
+          "id": "POL-NF-01#8",
+          "score": 0.7059
+        },
+        {
+          "id": "POL-NF-01#6",
+          "score": 0.685
+        },
+        {
+          "id": "FAQ-RH#20",
+          "score": 0.6027
+        },
+        {
+          "id": "FAQ-RH#21",
+          "score": 0.5888
+        },
+        {
+          "id": "POL-NF-01#9",
+          "score": 0.5514
+        },
+        {
+          "id": "POL-NF-01#7",
+          "score": 0.4941
+        },
+        {
+          "id": "GRP-TRV-01#10",
+          "score": 0.4931
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "FAQ-RH#19",
+          "texte": "## Quel est le plafond pour un repas avec un client ?\n\n45 € par personne à Paris et 35 € par personne dans les autres villes, boissons comprises. Indiquez le nom et la société des invités sur la note de frais. Le barème complet figure dans la politique notes de frais."
+        },
+        {
+          "numero": 2,
+          "id": "POL-NF-01#8",
+          "texte": "### 6.2 Repas avec un client ou un invité\n\nLe repas avec un client est remboursé dans la limite de 45 € par personne à Paris et de 35 € par personne dans les autres villes, boissons comprises. Le plafond s'applique à chaque convive, salariés de Kalyo compris.\n\nSur la note, indiquez le nom et la société de chaque invité, ainsi que le nom des salariés de Kalyo présents. Le salarié le plus élevé dans la hiérarchie règle l'addition.\n\nUn repas qui réunit uniquement des salariés de Kalyo n'est pas remboursé, sauf événement d'équipe validé à l'avance par la direction."
+        },
+        {
+          "numero": 3,
+          "id": "POL-NF-01#6",
+          "texte": "## Article 5. Plafonds de repas et d'hébergement\n\nLes plafonds suivants s'appliquent par personne et par repas, ou par nuit.\n\n| Dépense | Paris | Autres villes |\n| --- | --- | --- |\n| Repas avec un client (par personne, boissons comprises) | 45 € | 35 € |\n| Repas seul en déplacement | 20 € | 20 € |\n| Nuit d'hôtel (petit déjeuner compris) | 130 € | 95 € |\n\nLa colonne « Paris » vaut pour Paris et les communes limitrophes. La colonne « Autres villes » vaut pour toutes les autres communes, y compris Lyon et Nantes lorsque vous vous y rendez depuis l'autre site.\n\nLa part d'une dépense qui dépasse le plafond reste à votre charge. Un dépassement exceptionnel (hôtel pendant un salon, par exemple) n'est remboursé qu'avec l'accord écrit préalable de votre manager, joint à la note."
+        },
+        {
+          "numero": 4,
+          "id": "FAQ-RH#20",
+          "texte": "## Quel est le plafond pour un repas seul en déplacement ?\n\n20 € par repas, sur justificatif. Un repas pris dans votre ville de rattachement n'est pas remboursé, sauf s'il s'agit d'un repas avec un client."
+        },
+        {
+          "numero": 5,
+          "id": "FAQ-RH#21",
+          "texte": "## Quel est le plafond pour une nuit d'hôtel ?\n\n130 € par nuit à Paris et 95 € dans les autres villes, petit déjeuner compris. Réservez en priorité par l'agence de voyages de Kalyo, qui règle directement l'hôtel."
+        },
+        {
+          "numero": 6,
+          "id": "POL-NF-01#9",
+          "texte": "## Article 7. Hébergement\n\nUne nuit d'hôtel est prise en charge lorsque le retour à votre domicile le soir n'est pas raisonnable, compte tenu de l'horaire de fin de mission ou de la durée du trajet. Le plafond est de 130 € par nuit à Paris et de 95 € dans les autres villes, petit déjeuner compris.\n\nRéservez en priorité par l'agence de voyages de Kalyo, accessible depuis le portail de réservation du groupe : elle règle directement l'hôtel et vous n'avancez pas les frais. Si vous réservez vous-même, demandez une facture à votre nom.\n\nLes dépenses personnelles (minibar, films, pressing, appels) restent à votre charge."
+        },
+        {
+          "numero": 7,
+          "id": "POL-NF-01#7",
+          "texte": "### 6.1 Repas seul en déplacement\n\nUn repas pris seul pendant un déplacement est remboursé dans la limite de 20 €, sur justificatif. Un repas pris dans votre ville de rattachement n'est pas remboursé, sauf s'il s'agit d'un repas avec un client.\n\nUn jour où un repas vous est remboursé en note de frais, vous ne recevez pas de titre-restaurant (voir POL-TP-01)."
+        },
+        {
+          "numero": 8,
+          "id": "GRP-TRV-01#10",
+          "texte": "## 7. Per diems abroad\n\nBusiness meals with clients abroad are reimbursed at actual cost, on receipts and with line manager approval. Expenses paid in foreign currency are converted into EUR at the rate applied by the expense tool on the date of the expense."
+        }
+      ],
+      "texte": "Le plafond pour un repas avec un client à Paris est de 45 € par personne, boissons comprises [1][2][3]. Vous devez indiquer le nom et la société des invités sur la note de frais [1][2].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "FAQ-RH#19",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "POL-NF-01#8",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "POL-NF-01#6",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 531
+    },
+    {
+      "id": "Q05",
+      "question": "Quel est le plafond pour un repas avec un client à Berlin ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "FAQ-RH#19",
+          "score": 0.689
+        },
+        {
+          "id": "POL-NF-01#8",
+          "score": 0.6294
+        },
+        {
+          "id": "POL-NF-01#6",
+          "score": 0.5906
+        },
+        {
+          "id": "FAQ-RH#20",
+          "score": 0.5672
+        },
+        {
+          "id": "FAQ-RH#21",
+          "score": 0.5206
+        },
+        {
+          "id": "GRP-TRV-01#9",
+          "score": 0.5032
+        },
+        {
+          "id": "GRP-TRV-01#10",
+          "score": 0.4974
+        },
+        {
+          "id": "POL-NF-01#9",
+          "score": 0.493
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "FAQ-RH#19",
+          "texte": "## Quel est le plafond pour un repas avec un client ?\n\n45 € par personne à Paris et 35 € par personne dans les autres villes, boissons comprises. Indiquez le nom et la société des invités sur la note de frais. Le barème complet figure dans la politique notes de frais."
+        },
+        {
+          "numero": 2,
+          "id": "POL-NF-01#8",
+          "texte": "### 6.2 Repas avec un client ou un invité\n\nLe repas avec un client est remboursé dans la limite de 45 € par personne à Paris et de 35 € par personne dans les autres villes, boissons comprises. Le plafond s'applique à chaque convive, salariés de Kalyo compris.\n\nSur la note, indiquez le nom et la société de chaque invité, ainsi que le nom des salariés de Kalyo présents. Le salarié le plus élevé dans la hiérarchie règle l'addition.\n\nUn repas qui réunit uniquement des salariés de Kalyo n'est pas remboursé, sauf événement d'équipe validé à l'avance par la direction."
+        },
+        {
+          "numero": 3,
+          "id": "POL-NF-01#6",
+          "texte": "## Article 5. Plafonds de repas et d'hébergement\n\nLes plafonds suivants s'appliquent par personne et par repas, ou par nuit.\n\n| Dépense | Paris | Autres villes |\n| --- | --- | --- |\n| Repas avec un client (par personne, boissons comprises) | 45 € | 35 € |\n| Repas seul en déplacement | 20 € | 20 € |\n| Nuit d'hôtel (petit déjeuner compris) | 130 € | 95 € |\n\nLa colonne « Paris » vaut pour Paris et les communes limitrophes. La colonne « Autres villes » vaut pour toutes les autres communes, y compris Lyon et Nantes lorsque vous vous y rendez depuis l'autre site.\n\nLa part d'une dépense qui dépasse le plafond reste à votre charge. Un dépassement exceptionnel (hôtel pendant un salon, par exemple) n'est remboursé qu'avec l'accord écrit préalable de votre manager, joint à la note."
+        },
+        {
+          "numero": 4,
+          "id": "FAQ-RH#20",
+          "texte": "## Quel est le plafond pour un repas seul en déplacement ?\n\n20 € par repas, sur justificatif. Un repas pris dans votre ville de rattachement n'est pas remboursé, sauf s'il s'agit d'un repas avec un client."
+        },
+        {
+          "numero": 5,
+          "id": "FAQ-RH#21",
+          "texte": "## Quel est le plafond pour une nuit d'hôtel ?\n\n130 € par nuit à Paris et 95 € dans les autres villes, petit déjeuner compris. Réservez en priorité par l'agence de voyages de Kalyo, qui règle directement l'hôtel."
+        },
+        {
+          "numero": 6,
+          "id": "GRP-TRV-01#9",
+          "texte": "## 7. Per diems abroad\n\nFor business travel outside the country of the employing subsidiary, employees receive a daily allowance (per diem) covering meals and small incidental expenses (local transport, tips, laundry). No receipts are required for these expenses. Hotels and transport booked through the portal are not included.\n\n| Zone | Countries (examples) | Per diem (EUR per day) |\n| --- | --- | --- |\n| Europe | European Union and EEA countries, Switzerland, United Kingdom | 60 |\n| North America | United States, Canada | 85 |\n| Asia | Japan, Singapore, South Korea, China, India | 70 |\n| Rest of the world | All other countries | 55 |\n\nThe per diem is paid for each calendar day spent abroad, including the days of departure and return. It is increased by 20 % in the high-cost cities listed in the portal. When lunch or dinner is provided free of charge (by a client, a conference organiser or an airline), the per diem is reduced by 30 % for each meal provided."
+        },
+        {
+          "numero": 7,
+          "id": "GRP-TRV-01#10",
+          "texte": "## 7. Per diems abroad\n\nBusiness meals with clients abroad are reimbursed at actual cost, on receipts and with line manager approval. Expenses paid in foreign currency are converted into EUR at the rate applied by the expense tool on the date of the expense."
+        }
+      ],
+      "texte": "Le plafond pour un repas avec un client à Berlin est de 35 € par personne, boissons comprises [2][3]. Vous devez indiquer le nom et la société des invités sur la note de frais [1][2].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "FAQ-RH#19",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "POL-NF-01#8",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "POL-NF-01#6",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 590
+    },
+    {
+      "id": "Q06",
+      "question": "Mon fils a de la fièvre, je dois rester avec lui. Je pose quoi ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "FAQ-RH#11",
+          "score": 0.5005
+        },
+        {
+          "id": "POL-CA-01#17",
+          "score": 0.4899
+        },
+        {
+          "id": "FAQ-RH#9",
+          "score": 0.4802
+        },
+        {
+          "id": "FAQ-RH#27",
+          "score": 0.475
+        },
+        {
+          "id": "POL-CA-01#14",
+          "score": 0.4744
+        },
+        {
+          "id": "POL-CA-01#16",
+          "score": 0.4676
+        },
+        {
+          "id": "POL-CA-01#7",
+          "score": 0.4564
+        },
+        {
+          "id": "FAQ-RH#15",
+          "score": 0.4553
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "FAQ-RH#11",
+          "texte": "## Quel code d'absence dois-je poser pour un enfant malade ?\n\nLe code `EMA` (enfant malade). Kalyo accorde trois jours par an et par enfant de moins de 16 ans, rémunérés à 100 %. Joignez un certificat médical à la demande dans l'espace RH dans les 48 heures."
+        },
+        {
+          "numero": 2,
+          "id": "POL-CA-01#17",
+          "texte": "## Article 7. Événements familiaux (EVF)\n\n| Événement | Durée | Justificatif |\n| --- | --- | --- |\n| Annonce du handicap ou d'une maladie grave d'un enfant | 5 jours ouvrés | Certificat médical |\n| Déménagement | 1 jour par an | Justificatif de changement d'adresse |\n\nCes jours se prennent au moment de l'événement. Pour un mariage ou un PACS, ils se prennent dans la semaine qui précède ou qui suit la cérémonie.\n\nPour une naissance, le congé de paternité et d'accueil de l'enfant suit les règles légales : une partie se prend immédiatement après le congé de naissance, le reste dans les mois qui suivent. Prévenez le service RH au moins un mois avant la date prévue de début du congé de paternité."
+        },
+        {
+          "numero": 3,
+          "id": "FAQ-RH#9",
+          "texte": "## Comment poser un congé ?\n\nFaites la demande dans l'espace RH, rubrique « Mes absences », en choisissant le code d'absence adapté (`CP` pour les congés payés, `RTT` pour une journée de réduction du temps de travail). Votre manager la valide ou la refuse sous cinq jours ouvrés."
+        },
+        {
+          "numero": 4,
+          "id": "FAQ-RH#27",
+          "texte": "## Comment ajouter mon conjoint ou mes enfants à la mutuelle ?\n\nDepuis l'espace adhérent de l'organisme de mutuelle, rubrique « Mes bénéficiaires ». Les enfants sont couverts gratuitement. Le conjoint ajouté paie une cotisation complémentaire, prélevée sur le salaire."
+        },
+        {
+          "numero": 5,
+          "id": "POL-CA-01#14",
+          "texte": "## Article 6. Absence pour enfant malade (EMA)\n\nKalyo accorde 3 jours par année civile et par enfant de moins de 16 ans, en cas de maladie ou d'accident de l'enfant. Ces jours sont payés à 100 %. Ils ne sont pas transférables d'un enfant à l'autre.\n\nPrévenez votre manager le jour même, puis posez le code EMA dans l'espace RH et joignez le certificat médical dans les 48 heures.\n\nAu-delà de ces 3 jours, vous pouvez poser des CP ou des RTT, ou demander au service RH les congés non rémunérés prévus par la loi."
+        },
+        {
+          "numero": 6,
+          "id": "POL-CA-01#16",
+          "texte": "## Article 7. Événements familiaux (EVF)\n\n| Événement | Durée | Justificatif |\n| --- | --- | --- |\n| Mariage ou PACS du salarié | 5 jours ouvrés | Acte de mariage ou attestation d'enregistrement du PACS |\n| Mariage ou PACS d'un enfant | 1 jour ouvré | Acte de mariage ou attestation de PACS |\n| Naissance ou adoption | 3 jours ouvrés (congé de naissance), puis congé de paternité et d'accueil de l'enfant de 25 jours calendaires | Acte de naissance ou jugement d'adoption |\n| Décès du conjoint, du partenaire de PACS ou du concubin | 3 jours ouvrés | Acte de décès |\n| Décès d'un enfant | Durée prévue par la loi selon l'âge de l'enfant (au moins 5 jours ouvrés), plus le congé de deuil le cas échéant | Acte de décès |\n| Décès du père, de la mère, d'un beau-parent, d'un frère ou d'une sœur | 3 jours ouvrés | Acte de décès |"
+        },
+        {
+          "numero": 7,
+          "id": "POL-CA-01#7",
+          "texte": "### 3.2 Délais\n\n| Demande | Délai minimum |\n| --- | --- |\n| Congé de 5 jours ouvrés consécutifs au plus | 2 semaines avant le premier jour |\n| Congé de plus de 5 jours ouvrés consécutifs | 1 mois avant le premier jour |\n| Congés d'été (juillet et août) | Avant le 31 mars |\n\nLes managers confirment le planning des congés d'été avant le 30 avril. Lorsque plusieurs demandes se chevauchent dans une équipe, le manager tient compte de la situation de famille (enfants scolarisés, congés du conjoint) et de l'ancienneté."
+        }
+      ],
+      "texte": "Vous devez utiliser le code d'absence EMA pour un enfant malade [1][5]. Vous devez prévenir votre manager le jour même, puis poser le code EMA dans l'espace RH et joindre le certificat médical dans les 48 heures [5]. Kalyo accorde trois jours par an et par enfant de moins de 16 ans, rémunérés à 100 % [1][5].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "FAQ-RH#11",
+          "extraits": []
+        },
+        {
+          "numero": 5,
+          "source": "POL-CA-01#14",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 963
+    },
+    {
+      "id": "Q07",
+      "question": "Combien de jours de congé pour mon mariage ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "FAQ-RH#13",
+          "score": 0.7588
+        },
+        {
+          "id": "POL-CA-01#16",
+          "score": 0.628
+        },
+        {
+          "id": "POL-CA-01#7",
+          "score": 0.6142
+        },
+        {
+          "id": "POL-CA-01#17",
+          "score": 0.612
+        },
+        {
+          "id": "FAQ-RH#14",
+          "score": 0.6107
+        },
+        {
+          "id": "FAQ-RH#15",
+          "score": 0.6002
+        },
+        {
+          "id": "FAQ-RH#7",
+          "score": 0.5919
+        },
+        {
+          "id": "FAQ-RH#10",
+          "score": 0.5879
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "FAQ-RH#13",
+          "texte": "## Combien de jours de congé pour mon mariage ?\n\nCinq jours ouvrés, à prendre dans la semaine qui précède ou qui suit la cérémonie. Posez le code `EVF` (événement familial) dans l'espace RH et joignez l'acte de mariage."
+        },
+        {
+          "numero": 2,
+          "id": "POL-CA-01#16",
+          "texte": "## Article 7. Événements familiaux (EVF)\n\n| Événement | Durée | Justificatif |\n| --- | --- | --- |\n| Mariage ou PACS du salarié | 5 jours ouvrés | Acte de mariage ou attestation d'enregistrement du PACS |\n| Mariage ou PACS d'un enfant | 1 jour ouvré | Acte de mariage ou attestation de PACS |\n| Naissance ou adoption | 3 jours ouvrés (congé de naissance), puis congé de paternité et d'accueil de l'enfant de 25 jours calendaires | Acte de naissance ou jugement d'adoption |\n| Décès du conjoint, du partenaire de PACS ou du concubin | 3 jours ouvrés | Acte de décès |\n| Décès d'un enfant | Durée prévue par la loi selon l'âge de l'enfant (au moins 5 jours ouvrés), plus le congé de deuil le cas échéant | Acte de décès |\n| Décès du père, de la mère, d'un beau-parent, d'un frère ou d'une sœur | 3 jours ouvrés | Acte de décès |"
+        },
+        {
+          "numero": 3,
+          "id": "POL-CA-01#7",
+          "texte": "### 3.2 Délais\n\n| Demande | Délai minimum |\n| --- | --- |\n| Congé de 5 jours ouvrés consécutifs au plus | 2 semaines avant le premier jour |\n| Congé de plus de 5 jours ouvrés consécutifs | 1 mois avant le premier jour |\n| Congés d'été (juillet et août) | Avant le 31 mars |\n\nLes managers confirment le planning des congés d'été avant le 30 avril. Lorsque plusieurs demandes se chevauchent dans une équipe, le manager tient compte de la situation de famille (enfants scolarisés, congés du conjoint) et de l'ancienneté."
+        },
+        {
+          "numero": 4,
+          "id": "POL-CA-01#17",
+          "texte": "## Article 7. Événements familiaux (EVF)\n\n| Événement | Durée | Justificatif |\n| --- | --- | --- |\n| Annonce du handicap ou d'une maladie grave d'un enfant | 5 jours ouvrés | Certificat médical |\n| Déménagement | 1 jour par an | Justificatif de changement d'adresse |\n\nCes jours se prennent au moment de l'événement. Pour un mariage ou un PACS, ils se prennent dans la semaine qui précède ou qui suit la cérémonie.\n\nPour une naissance, le congé de paternité et d'accueil de l'enfant suit les règles légales : une partie se prend immédiatement après le congé de naissance, le reste dans les mois qui suivent. Prévenez le service RH au moins un mois avant la date prévue de début du congé de paternité."
+        },
+        {
+          "numero": 5,
+          "id": "FAQ-RH#14",
+          "texte": "## Combien de jours de congé pour un PACS ?\n\nLe PACS ouvre les mêmes droits que le mariage : cinq jours ouvrés, avec le code `EVF` et le justificatif d'enregistrement du PACS."
+        },
+        {
+          "numero": 6,
+          "id": "FAQ-RH#15",
+          "texte": "## Combien de jours pour la naissance de mon enfant ?\n\nLe second parent bénéficie de trois jours de congé de naissance, rémunérés par Kalyo, puis du congé de paternité et d'accueil de l'enfant de 25 jours calendaires. Prévenez le service RH au moins un mois avant la date prévue de début du congé de paternité."
+        },
+        {
+          "numero": 7,
+          "id": "FAQ-RH#7",
+          "texte": "## Combien de jours de congés payés ai-je par an ?\n\nUn salarié à temps plein acquiert 25 jours ouvrés de congés payés par an, soit 2,08 jours par mois travaillé. La période d'acquisition court du 1er juin au 31 mai."
+        },
+        {
+          "numero": 8,
+          "id": "FAQ-RH#10",
+          "texte": "## Avec quel délai dois-je demander mes congés ?\n\nAu moins deux semaines à l'avance. Pour une absence de plus de cinq jours ouvrés consécutifs, le délai passe à un mois. Les congés d'été se demandent avant le 31 mars."
+        }
+      ],
+      "texte": "Pour votre mariage, vous avez droit à cinq jours ouvrés [1][2]. Vous devez poser le code EVF dans l'espace RH et joindre l'acte de mariage [1]. Ces jours se prennent dans la semaine qui précède ou qui suit la cérémonie [1][4].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "FAQ-RH#13",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "POL-CA-01#16",
+          "extraits": []
+        },
+        {
+          "numero": 4,
+          "source": "POL-CA-01#17",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1129
+    },
+    {
+      "id": "Q08",
+      "question": "Quand est versée la paie ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "FAQ-RH#29",
+          "score": 0.7536
+        },
+        {
+          "id": "POL-TTG-01#14",
+          "score": 0.7216
+        },
+        {
+          "id": "INT-CALENDRIER-PAIE#1",
+          "score": 0.6481
+        },
+        {
+          "id": "FAQ-RH#30",
+          "score": 0.6399
+        },
+        {
+          "id": "INT-BIEN-DEMARRER#7",
+          "score": 0.6366
+        },
+        {
+          "id": "INT-CALENDRIER-PAIE#3",
+          "score": 0.6343
+        },
+        {
+          "id": "INT-CALENDRIER-PAIE#2",
+          "score": 0.6336
+        },
+        {
+          "id": "INT-CALENDRIER-PAIE#6",
+          "score": 0.6255
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "FAQ-RH#29",
+          "texte": "## Quand la paie est-elle versée ?\n\nLe salaire est versé le dernier jour ouvré de chaque mois. Le bulletin de paie est déposé la veille dans votre coffre-fort numérique, accessible depuis l'espace RH."
+        },
+        {
+          "numero": 2,
+          "id": "POL-TTG-01#14",
+          "texte": "### Quand vais-je recevoir l'indemnité de mes jours de mars ?\n\nAvec la paie d'avril, versée le 30 avril 2026, à condition que vos jours aient été déclarés dans l'espace RH."
+        },
+        {
+          "numero": 3,
+          "id": "INT-CALENDRIER-PAIE#1",
+          "texte": "# Calendrier de paie 2026\n\nMis à jour le 2 mars 2026\n\nChez Kalyo, le salaire est versé le dernier jour ouvré de chaque mois. Le bulletin de paie est déposé la veille dans votre coffre-fort numérique, accessible depuis l'espace RH. Le tableau ci-dessous donne toutes les dates de l'année 2026."
+        },
+        {
+          "numero": 4,
+          "id": "FAQ-RH#30",
+          "texte": "## Qui contacter pour une question sur ma paie ?\n\nOuvrez un ticket dans l'espace RH, catégorie « Paie ». Le service paie répond sous trois jours ouvrés. Pour une erreur sur le montant versé, joignez le bulletin concerné."
+        },
+        {
+          "numero": 5,
+          "id": "INT-BIEN-DEMARRER#7",
+          "texte": "## Bon à savoir\n\n- Votre premier bulletin de paie est déposé dans le coffre-fort numérique la veille du versement du salaire, qui a lieu le dernier jour ouvré du mois (voir le calendrier de paie 2026).\n- Vous recevez un titre-restaurant de 10 € par jour travaillé, y compris en télétravail, sur une carte rechargée au début de chaque mois.\n- Pour poser vos premiers congés, parlez-en à votre manager, puis faites la demande dans l'espace RH, rubrique « Mes absences »."
+        },
+        {
+          "numero": 6,
+          "id": "INT-CALENDRIER-PAIE#3",
+          "texte": "## Dates de versement et de dépôt des bulletins\n\n| Mois | Versement du salaire | Bulletin dans le coffre-fort numérique | Notes de frais validées avant le |\n| --- | --- | --- | --- |\n| Décembre | jeudi 31 décembre | mercredi 30 décembre | 20 décembre |\n\nLe dépôt dans le coffre-fort numérique est automatique : en août et en novembre, le bulletin arrive donc un dimanche. Le jour où le virement apparaît sur votre compte dépend ensuite de votre banque."
+        },
+        {
+          "numero": 7,
+          "id": "INT-CALENDRIER-PAIE#2",
+          "texte": "## Dates de versement et de dépôt des bulletins\n\n| Mois | Versement du salaire | Bulletin dans le coffre-fort numérique | Notes de frais validées avant le |\n| --- | --- | --- | --- |\n| Janvier | vendredi 30 janvier | jeudi 29 janvier | 20 janvier |\n| Février | vendredi 27 février | jeudi 26 février | 20 février |\n| Mars | mardi 31 mars | lundi 30 mars | 20 mars |\n| Avril | jeudi 30 avril | mercredi 29 avril | 20 avril |\n| Mai | vendredi 29 mai | jeudi 28 mai | 20 mai |\n| Juin | mardi 30 juin | lundi 29 juin | 20 juin |\n| Juillet | vendredi 31 juillet | jeudi 30 juillet | 20 juillet |\n| Août | lundi 31 août | dimanche 30 août | 20 août |\n| Septembre | mercredi 30 septembre | mardi 29 septembre | 20 septembre |\n| Octobre | vendredi 30 octobre | jeudi 29 octobre | 20 octobre |\n| Novembre | lundi 30 novembre | dimanche 29 novembre | 20 novembre |"
+        },
+        {
+          "numero": 8,
+          "id": "INT-CALENDRIER-PAIE#6",
+          "texte": "## Une question ?\n\nOuvrez un ticket « Paie » dans l'espace RH en joignant le bulletin concerné. Le service paie répond sous 3 jours ouvrés. Voir aussi la page Qui contacter."
+        }
+      ],
+      "texte": "Le salaire est versé le dernier jour ouvré de chaque mois [1][3]. Le bulletin de paie est déposé la veille dans votre coffre-fort numérique, accessible depuis l'espace RH [1][3]. Vous pouvez consulter le calendrier de paie 2026 pour les dates précises [7].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "FAQ-RH#29",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "INT-CALENDRIER-PAIE#1",
+          "extraits": []
+        },
+        {
+          "numero": 7,
+          "source": "INT-CALENDRIER-PAIE#2",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1200
+    },
+    {
+      "id": "Q09",
+      "question": "Comment me faire rembourser mon abonnement de transport ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-TP-01#4",
+          "score": 0.6981
+        },
+        {
+          "id": "POL-TP-01#2",
+          "score": 0.6783
+        },
+        {
+          "id": "FAQ-RH#23",
+          "score": 0.6763
+        },
+        {
+          "id": "POL-NF-01#11",
+          "score": 0.6326
+        },
+        {
+          "id": "POL-TP-01#6",
+          "score": 0.6148
+        },
+        {
+          "id": "POL-NF-01#12",
+          "score": 0.6102
+        },
+        {
+          "id": "INT-VELO#2",
+          "score": 0.6098
+        },
+        {
+          "id": "POL-TP-01#3",
+          "score": 0.5945
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-TP-01#4",
+          "texte": "### 1.3 Versement\n\nLe remboursement apparaît chaque mois sur votre bulletin de paie, y compris pour un abonnement annuel, réparti sur douze mois. Il est maintenu les semaines où vous télétravaillez. Il est suspendu pendant un congé sans solde.\n\nUn salarié à temps partiel au moins à mi-temps est remboursé comme un salarié à temps plein. En dessous d'un mi-temps, le remboursement est calculé au prorata des heures travaillées."
+        },
+        {
+          "numero": 2,
+          "id": "POL-TP-01#2",
+          "texte": "### 1.1 Montant\n\nKalyo rembourse 60 % du prix de votre abonnement de transport en commun (métro, tramway, bus, train régional) ou de service public de location de vélos, pour vos trajets entre votre domicile et votre site. La loi impose une prise en charge de 50 % : Kalyo va au-delà.\n\nLe remboursement porte sur le trajet le plus direct, sur la base d'un abonnement en 2de classe.\n\nExemple : pour un abonnement mensuel à 72 €, vous recevez 43,20 € par mois. Pour un abonnement annuel à 780 €, vous recevez 39 € par mois, soit 468 € sur l'année."
+        },
+        {
+          "numero": 3,
+          "id": "FAQ-RH#23",
+          "texte": "## Mes frais de transport en commun sont-ils remboursés ?\n\nOui. Kalyo rembourse 60 % de votre abonnement de transport en commun, sur justificatif déposé une fois par an dans l'espace RH. Le remboursement apparaît chaque mois sur votre bulletin de paie."
+        },
+        {
+          "numero": 4,
+          "id": "POL-NF-01#11",
+          "texte": "### 8.2 Transports en commun\n\nLes tickets de métro, de tramway ou de bus utilisés pendant un déplacement sont remboursés sur justificatif."
+        },
+        {
+          "numero": 5,
+          "id": "POL-TP-01#6",
+          "texte": "## Article 2. Forfait mobilités durables\n\nExemple : vous achetez un vélo à assistance électrique en mars, puis le faites réviser en octobre. Vous pouvez demander le remboursement de ces deux dépenses, dans la limite de 300 € pour l'année."
+        },
+        {
+          "numero": 6,
+          "id": "POL-NF-01#12",
+          "texte": "### 8.3 Taxi\n\nLe taxi ou la voiture de transport avec chauffeur n'est remboursé que si aucun transport en commun ne permet le trajet, par exemple tard le soir ou vers un lieu non desservi. Indiquez le motif sur la note de frais."
+        },
+        {
+          "numero": 7,
+          "id": "INT-VELO#2",
+          "texte": "## Le forfait mobilités durables\n\nLe forfait mobilités durables rembourse jusqu'à 300 € par an de frais liés à vos trajets entre votre domicile et le travail à vélo, à trottinette ou en covoiturage. Il couvre par exemple l'achat ou l'entretien d'un vélo, y compris à assistance électrique.\n\nPour en bénéficier, faites la demande dans l'espace RH en ouvrant un ticket « Transport », avec une déclaration sur l'honneur et vos justificatifs d'achat ou d'entretien. Si vous combinez vélo et transports en commun, les règles de cumul avec le remboursement de l'abonnement figurent dans la politique Transport, mobilités durables et titres-restaurant (POL-TP-01)."
+        },
+        {
+          "numero": 8,
+          "id": "POL-TP-01#3",
+          "texte": "### 1.2 Justificatif\n\nDéposez votre justificatif dans l'espace RH, rubrique « Mes documents » : l'attestation annuelle de votre transporteur pour un abonnement annuel, ou le justificatif de votre abonnement pour un abonnement mensuel. Le dépôt se fait une fois par an, en janvier, ou dès la souscription pour un nouvel abonnement. Kalyo peut vous demander à tout moment les justificatifs des mois suivants.\n\nSi vous changez d'abonnement ou le résiliez, signalez-le par un ticket de catégorie « Transport » et déposez le nouveau justificatif."
+        }
+      ],
+      "texte": "Kalyo rembourse 60 % du prix de votre abonnement de transport en commun pour vos trajets domicile-site [2]. Vous devez déposer votre justificatif dans l'espace RH, rubrique « Mes documents », une fois par an en janvier ou dès la souscription [8]. Le remboursement apparaîtra chaque mois sur votre bulletin de paie [3].",
+      "sources": [
+        {
+          "numero": 2,
+          "source": "POL-TP-01#2",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "FAQ-RH#23",
+          "extraits": []
+        },
+        {
+          "numero": 8,
+          "source": "POL-TP-01#3",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1257
+    },
+    {
+      "id": "Q10",
+      "question": "Je peux télétravailler depuis le Portugal cet été ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-TTG-01#13",
+          "score": 0.6674
+        },
+        {
+          "id": "POL-TTG-01#5",
+          "score": 0.6329
+        },
+        {
+          "id": "POL-TTG-01#12",
+          "score": 0.6159
+        },
+        {
+          "id": "FAQ-RH#4",
+          "score": 0.6105
+        },
+        {
+          "id": "POL-TT-02#11",
+          "score": 0.6017
+        },
+        {
+          "id": "INT-ERGONOMIE#1",
+          "score": 0.578
+        },
+        {
+          "id": "POL-TTG-01#2",
+          "score": 0.5643
+        },
+        {
+          "id": "POL-TTG-01#6",
+          "score": 0.5628
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-TTG-01#13",
+          "texte": "### Et depuis l'Espagne, pour prolonger mes vacances ?\n\nNon. Le télétravail depuis l'étranger n'est pas autorisé, quelle que soit la durée. Posez plutôt des jours de congé."
+        },
+        {
+          "numero": 2,
+          "id": "POL-TTG-01#5",
+          "texte": "## Où télétravailler ?\n\nVous pouvez télétravailler depuis votre domicile ou depuis tout autre lieu situé en France métropolitaine (résidence secondaire, logement d'un proche, espace de travail partagé), à deux conditions :\n- le lieu offre une connexion fiable et un espace de travail calme ;\n- vous avez déclaré l'adresse dans l'espace RH avant le premier jour de télétravail depuis ce lieu.\n\nLe télétravail depuis l'étranger n'est jamais autorisé, même pour quelques jours, même accolé à des congés. Les règles de sécurité sociale, de fiscalité et de sécurité des données ne le permettent pas."
+        },
+        {
+          "numero": 3,
+          "id": "POL-TTG-01#12",
+          "texte": "### Puis-je télétravailler une semaine depuis la maison de mes parents en Bretagne ?\n\nOui, pour vos jours de télétravail, si l'adresse est déclarée dans l'espace RH avant le premier jour. La limite reste de 3 jours par semaine : les deux autres jours sont des jours de présence sur site ou des jours de congé."
+        },
+        {
+          "numero": 4,
+          "id": "FAQ-RH#4",
+          "texte": "## Puis-je télétravailler depuis un autre lieu que mon domicile ?\n\nOui, depuis tout lieu situé en France métropolitaine qui offre une connexion fiable et un espace de travail calme. Déclarez l'adresse dans l'espace RH avant le premier jour de télétravail depuis ce lieu. Le télétravail depuis l'étranger n'est pas autorisé."
+        },
+        {
+          "numero": 5,
+          "id": "POL-TT-02#11",
+          "texte": "## Article 5. Lieu du télétravail\n\nLe télétravail s'exerce au domicile du salarié ou dans un autre lieu déclaré dans l'espace RH avant le premier jour de télétravail depuis ce lieu, situé en France métropolitaine. Le lieu choisi doit offrir une connexion internet fiable et un espace de travail calme, permettant de respecter les règles de confidentialité.\n\nLe télétravail depuis l'étranger n'est jamais autorisé, y compris pour quelques jours, pour des raisons de sécurité sociale, de fiscalité et de sécurité informatique.\n\nLe salarié informe son assureur habitation qu'il télétravaille à son domicile. L'usage d'un réseau sans fil public n'est autorisé qu'avec la connexion sécurisée (VPN) fournie par Kalyo."
+        },
+        {
+          "numero": 6,
+          "id": "INT-ERGONOMIE#1",
+          "texte": "# Bien s'installer en télétravail\n\nMis à jour le 2 mars 2026\n\nDepuis le 1er mars 2026, vous pouvez télétravailler jusqu'à trois jours par semaine, sur accord de votre manager (avenant n° 2 à l'accord télétravail, POL-TT-02, article 4). Plus de jours à domicile, c'est aussi plus d'heures devant l'écran : voici comment installer un poste confortable et comment Kalyo vous aide à vous équiper."
+        },
+        {
+          "numero": 7,
+          "id": "POL-TTG-01#2",
+          "texte": "## Qui peut télétravailler ?\n\nLe télétravail régulier est ouvert aux salariés qui ont au moins 6 mois d'ancienneté et occupent un poste compatible. Parlez-en d'abord à votre manager, puis faites la demande dans l'espace RH : votre manager y répond sous 15 jours."
+        },
+        {
+          "numero": 8,
+          "id": "POL-TTG-01#6",
+          "texte": "## Être joignable\n\nPendant vos jours de télétravail, vous restez joignable de 9 h 30 à 12 h et de 14 h à 17 h, par téléphone, messagerie instantanée et visioconférence, comme sur site. En dehors de ces plages, vous organisez votre journée librement, dans le respect de votre temps de travail (voir la politique temps de travail, horaires et droit à la déconnexion, POL-HO-01). Pour les salariés en heures, ces plages s'appliquent les jours de télétravail dans le cadre de leurs horaires variables."
+        }
+      ],
+      "texte": "Le télétravail depuis l'étranger n'est jamais autorisé, même pour quelques jours, car cela n'est pas permis pour des raisons de sécurité sociale, de fiscalité et de sécurité informatique [2][5]. Pour prolonger vos vacances, vous devez poser des jours de congé [1].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-TTG-01#13",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "POL-TTG-01#5",
+          "extraits": []
+        },
+        {
+          "numero": 5,
+          "source": "POL-TT-02#11",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1197
+    },
+    {
+      "id": "Q11",
+      "question": "Combien me paie une semaine d'astreinte ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-AS-01#5",
+          "score": 0.7997
+        },
+        {
+          "id": "FAQ-RH#33",
+          "score": 0.7394
+        },
+        {
+          "id": "POL-AS-01#6",
+          "score": 0.6433
+        },
+        {
+          "id": "POL-AS-01#4",
+          "score": 0.6365
+        },
+        {
+          "id": "POL-AS-01#9",
+          "score": 0.599
+        },
+        {
+          "id": "POL-AS-01#8",
+          "score": 0.5732
+        },
+        {
+          "id": "POL-HO-01#4",
+          "score": 0.5686
+        },
+        {
+          "id": "INT-CALENDRIER-PAIE#5",
+          "score": 0.5671
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-AS-01#5",
+          "texte": "## Article 4. Indemnité d'astreinte\n\nChaque semaine complète d'astreinte donne droit à une indemnité forfaitaire de 150 € brut, souvent appelée prime d'astreinte. Elle est due même si vous n'avez eu aucune intervention.\n\nPour une semaine partielle (échange de jours, planning modifié), l'indemnité est calculée au prorata du nombre de jours d'astreinte : 150 € divisés par 7, soit 21,43 € par jour. Trois jours d'astreinte donnent ainsi 64,29 €."
+        },
+        {
+          "numero": 2,
+          "id": "FAQ-RH#33",
+          "texte": "## Comment sont rémunérées les astreintes ?\n\nChaque semaine d'astreinte donne droit à une prime forfaitaire de 150 €. Les interventions réalisées pendant l'astreinte sont payées en heures majorées de 50 %, ou de 100 % la nuit, le dimanche et les jours fériés."
+        },
+        {
+          "numero": 3,
+          "id": "POL-AS-01#6",
+          "texte": "## Article 5. Paiement des interventions\n\nLes interventions sont payées en heures, en plus de l'indemnité d'astreinte, avec une majoration qui dépend du moment :\n| Moment de l'intervention | Majoration |\n| --- | --- |\n| Du lundi au samedi, entre 6 h et 22 h | 50 % |\n| La nuit, de 22 h à 6 h | 100 % |\n| Le dimanche | 100 % |\n| Les jours fériés | 100 % |\n\nLe taux horaire de référence correspond à votre salaire de base mensuel brut divisé par 151,67 heures. Chaque intervention est comptée pour 30 minutes au moins, puis par tranche de 15 minutes entamée. Les majorations ne se cumulent pas : une intervention un dimanche à 23 h est majorée de 100 %, pas de 200 %.\n\nExemple : une intervention de 2 heures un samedi à 15 h est payée 2 heures au taux horaire de référence majoré de 50 %, soit l'équivalent de 3 heures au taux normal."
+        },
+        {
+          "numero": 4,
+          "id": "POL-AS-01#4",
+          "texte": "## Article 3. Organisation et planning\n\nUne semaine d'astreinte commence le lundi à 9 h et se termine le lundi suivant à 9 h. Elle couvre les soirées, les nuits, le week-end et les jours fériés de la semaine. Pendant vos horaires habituels, vous travaillez normalement.\n\nLe manager publie le planning des astreintes au moins 15 jours à l'avance ; il est consultable dans l'espace RH. Deux salariés peuvent échanger leurs semaines avec l'accord du manager, qui met le planning à jour. En cas de circonstances exceptionnelles (absence imprévue d'un collègue, par exemple), le planning peut être modifié plus tard, à condition de vous prévenir au moins un jour franc à l'avance.\n\nUn salarié n'assure pas plus d'une semaine d'astreinte sur trois, sauf accord entre lui et son manager. Aucune astreinte n'est planifiée pendant vos congés payés, vos jours de RTT ou un arrêt de travail."
+        },
+        {
+          "numero": 5,
+          "id": "POL-AS-01#9",
+          "texte": "## Article 8. Matériel et conditions d'intervention\n\nPendant la semaine d'astreinte, vous disposez :\n- d'un ordinateur portable configuré avec les accès nécessaires ;\n- du téléphone d'astreinte de l'équipe, que vous transmettez le lundi à 9 h au collègue suivant.\n\nVous devez pouvoir commencer une intervention à distance dans les 30 minutes qui suivent l'appel. Vous pouvez assurer l'astreinte depuis votre domicile ou depuis tout lieu situé en France métropolitaine offrant une connexion fiable, comme pour le télétravail. Le téléphone d'astreinte sert uniquement aux astreintes : gardez-le chargé et à portée de main.\n\nSi une intervention sur place est nécessaire, vos frais de déplacement (taxi la nuit, indemnités kilométriques) sont remboursés selon la politique notes de frais et déplacements (POL-NF-01), avec le formulaire NDF-03."
+        },
+        {
+          "numero": 6,
+          "id": "INT-CALENDRIER-PAIE#5",
+          "texte": "## Ce qui apparaît sur votre bulletin\n\n- L'indemnité de télétravail (2,50 € par jour déclaré pour les jours télétravaillés depuis le 1er mars 2026, 30 € par mois au plus), versée avec la paie du mois suivant.\n- Le remboursement de 60 % de votre abonnement de transport en commun, chaque mois.\n- La part des titres-restaurant qui reste à votre charge, Kalyo en finançant 60 %.\n- Le cas échéant, la prime d'astreinte de 150 € par semaine et les interventions majorées."
+        }
+      ],
+      "texte": "Chaque semaine complète d'astreinte vous donne droit à une indemnité forfaitaire de 150 € brut [1]. Cette prime forfaitaire de 150 € est versée avec la paie du mois suivant [6].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-AS-01#5",
+          "extraits": []
+        },
+        {
+          "numero": 6,
+          "source": "INT-CALENDRIER-PAIE#5",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1087
+    },
+    {
+      "id": "Q12",
+      "question": "Quel formulaire pour une note de frais ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-NF-01#4",
+          "score": 0.7485
+        },
+        {
+          "id": "FAQ-RH#18",
+          "score": 0.7081
+        },
+        {
+          "id": "INT-OUTILS#3",
+          "score": 0.7036
+        },
+        {
+          "id": "INT-CALENDRIER-PAIE#4",
+          "score": 0.6842
+        },
+        {
+          "id": "POL-NF-01#18",
+          "score": 0.626
+        },
+        {
+          "id": "POL-NF-01#1",
+          "score": 0.5953
+        },
+        {
+          "id": "POL-NF-01#20",
+          "score": 0.5922
+        },
+        {
+          "id": "POL-NF-01#21",
+          "score": 0.5883
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-NF-01#4",
+          "texte": "## Article 3. Déclaration des frais : le formulaire NDF-03\n\nLes frais se déclarent avec le formulaire NDF-03, dans l'outil de notes de frais, dans les 30 jours qui suivent la dépense. Au-delà, la note peut être refusée.\n\nPour chaque dépense, indiquez la date, la nature, le montant toutes taxes comprises, le lieu et l'objet de la mission (client, projet), puis joignez la photo ou le scan du justificatif. Vous pouvez regrouper sur une même note les dépenses d'un déplacement ou d'un mois.\n\nDepuis le 1er mars 2026, le formulaire NDF-03 sert aussi à demander le remboursement du siège ergonomique des salariés en télétravail (jusqu'à 250 €, une fois tous les cinq ans, sur facture) : voir le guide pratique du télétravail (POL-TTG-01)."
+        },
+        {
+          "numero": 2,
+          "id": "FAQ-RH#18",
+          "texte": "## Comment me faire rembourser une note de frais ?\n\nRemplissez le formulaire `NDF-03` dans l'outil de notes de frais, joignez les justificatifs, puis soumettez-le à votre manager dans les 30 jours qui suivent la dépense. Les notes validées avant le 20 du mois sont remboursées avec la paie du mois."
+        },
+        {
+          "numero": 3,
+          "id": "INT-OUTILS#3",
+          "texte": "## L'outil de notes de frais\n\nToutes les dépenses professionnelles passent par le formulaire NDF-03 de l'outil de notes de frais. Photographiez vos justificatifs, joignez-les au formulaire et soumettez-le à votre manager dans les 30 jours qui suivent la dépense. Les notes validées avant le 20 du mois sont remboursées avec la paie du mois. Les plafonds par type de dépense sont détaillés dans la politique notes de frais et déplacements (POL-NF-01)."
+        },
+        {
+          "numero": 4,
+          "id": "INT-CALENDRIER-PAIE#4",
+          "texte": "## Notes de frais : la règle du 20\n\nUne note de frais saisie avec le formulaire NDF-03 et validée par votre manager avant le 20 du mois est remboursée avec la paie du même mois. Validée le 20 ou après, elle est remboursée avec la paie du mois suivant. Soumettez vos notes dans les 30 jours qui suivent la dépense et n'attendez pas le dernier moment : votre manager a lui aussi besoin de temps pour les valider."
+        },
+        {
+          "numero": 5,
+          "id": "POL-NF-01#18",
+          "texte": "## Article 11. Avances sur frais\n\nPour un déplacement de plus de trois jours, vous pouvez demander une avance sur frais par un ticket de catégorie « Notes de frais » dans l'espace RH, au moins 10 jours ouvrés avant le départ. L'avance couvre au plus 80 % des frais estimés. Elle est versée par virement après accord de votre manager.\n\nL'avance est régularisée sur la note NDF-03 du déplacement. Si les frais justifiés sont inférieurs à l'avance, la différence est déduite de votre prochain remboursement ou, à défaut, de votre paie, après information."
+        },
+        {
+          "numero": 6,
+          "id": "POL-NF-01#1",
+          "texte": "# Politique notes de frais et déplacements\n\nRéférence POL-NF-01 · En vigueur au 1er janvier 2026"
+        },
+        {
+          "numero": 7,
+          "id": "POL-NF-01#20",
+          "texte": "### 12.2 Contrôles\n\nLe service finance et paie contrôle toutes les notes de frais (plafonds, justificatifs, cohérence avec la mission) et procède à des contrôles approfondis par sondage. Il peut vous demander les originaux. Une fausse déclaration ou un justificatif falsifié peut donner lieu à une sanction disciplinaire."
+        },
+        {
+          "numero": 8,
+          "id": "POL-NF-01#21",
+          "texte": "### 12.3 Perte d'un justificatif\n\nEn cas de perte d'un justificatif, vous pouvez le remplacer par une attestation sur l'honneur, dont le modèle est disponible dans l'outil de notes de frais. L'attestation précise la date, le lieu, la nature et le montant de la dépense.\n\nCette possibilité est limitée à une fois par trimestre et à 50 € au plus par attestation. Au-delà, la dépense n'est pas remboursée. Pour une nuit d'hôtel, demandez plutôt un duplicata de la facture à l'hôtel."
+        }
+      ],
+      "texte": "Les frais se déclarent avec le formulaire NDF-03 dans l'outil de notes de frais [1][2][3]. Vous devez joindre la photo ou le scan du justificatif pour chaque dépense [1]. Vous pouvez soumettre ce formulaire à votre manager dans les 30 jours suivant la dépense [1][2][3].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-NF-01#4",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "FAQ-RH#18",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "INT-OUTILS#3",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1278
+    },
+    {
+      "id": "Q13",
+      "question": "Combien de RTT ai-je par an ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "FAQ-RH#8",
+          "score": 0.6855
+        },
+        {
+          "id": "POL-CA-01#9",
+          "score": 0.6056
+        },
+        {
+          "id": "INT-ACTUALITES#3",
+          "score": 0.5914
+        },
+        {
+          "id": "POL-CA-01#10",
+          "score": 0.5661
+        },
+        {
+          "id": "POL-HO-01#3",
+          "score": 0.5235
+        },
+        {
+          "id": "INT-ESPACE-RH#2",
+          "score": 0.5069
+        },
+        {
+          "id": "POL-HO-01#5",
+          "score": 0.4949
+        },
+        {
+          "id": "FAQ-RH#7",
+          "score": 0.4862
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "FAQ-RH#8",
+          "texte": "## Combien de jours de RTT ai-je par an ?\n\nUn salarié à temps plein en forfait jours dispose de 10 jours de RTT par an. Les RTT doivent être posés avant le 31 décembre et ne sont pas reportables. Votre solde personnel est affiché dans l'espace RH."
+        },
+        {
+          "numero": 2,
+          "id": "POL-CA-01#9",
+          "texte": "## Article 4. Jours de réduction du temps de travail (RTT)\n\nLes salariés en forfait annuel en jours (voir la politique temps de travail, horaires et droit à la déconnexion, POL-HO-01) disposent de 10 jours de RTT par année civile à temps plein.\n- Temps partiel : les RTT sont calculés au prorata. Un salarié à 80 % dispose de 8 jours.\n- Arrivée en cours d'année : les RTT sont calculés au prorata des mois de présence, le mois d'arrivée comptant en entier. Un salarié à temps plein arrivé en avril dispose de 7,5 jours pour l'année.\n- Salariés en heures (35 heures hebdomadaires, support informatique et finance et paie) : ils n'ont pas de jours de RTT.\n\nLes RTT se posent par journée ou demi-journée, avec la même procédure et les mêmes délais que les congés payés. Ils doivent être posés avant le 31 décembre et ne sont pas reportables : un jour de réduction du temps de travail non pris au 31 décembre est perdu et n'est pas payé."
+        },
+        {
+          "numero": 3,
+          "id": "INT-ACTUALITES#3",
+          "texte": "## RTT : pensez à poser vos jours avant le 31 décembre\n\n1er septembre 2026\n\nLes salariés à temps plein en forfait jours disposent de 10 jours de RTT par an. Ils doivent être posés avant le 31 décembre 2026 et ne sont pas reportables. Consultez votre solde dans l'espace RH, rubrique « Mes absences », et anticipez : une demande se fait au moins deux semaines à l'avance, un mois à l'avance au-delà de cinq jours ouvrés."
+        },
+        {
+          "numero": 4,
+          "id": "POL-CA-01#10",
+          "texte": "## Article 4. Jours de réduction du temps de travail (RTT)\n\nEn cas de départ en cours d'année, les RTT sont calculés au prorata des mois de présence, comme pour une arrivée. Posez les jours restants avant votre dernier jour de travail : les RTT non pris à la date du départ ne sont pas payés."
+        },
+        {
+          "numero": 5,
+          "id": "POL-HO-01#3",
+          "texte": "## Article 2. Forfait annuel en jours\n\nLes cadres autonomes, qui organisent librement leur emploi du temps, travaillent selon un forfait annuel de 218 jours travaillés, journée de solidarité comprise. Leur temps de travail se décompte en jours ou en demi-journées, et non en heures.\n\nCe forfait donne droit à 10 jours de RTT par an pour un salarié à temps plein. Les règles de pose, de prorata et de report des RTT figurent dans la politique congés et absences (POL-CA-01).\n\nLe salarié en forfait jours déclare chaque mois ses jours travaillés et ses jours de repos dans l'espace RH. Il bénéficie d'au moins 11 heures consécutives de repos entre deux journées de travail et d'au moins 35 heures consécutives de repos chaque semaine.\n\nSa charge de travail, l'organisation de son travail et l'équilibre entre vie professionnelle et vie personnelle sont abordés chaque année lors de l'entretien annuel. En cas de surcharge, il peut à tout moment demander un rendez-vous à son manager ou au service RH."
+        },
+        {
+          "numero": 6,
+          "id": "FAQ-RH#7",
+          "texte": "## Combien de jours de congés payés ai-je par an ?\n\nUn salarié à temps plein acquiert 25 jours ouvrés de congés payés par an, soit 2,08 jours par mois travaillé. La période d'acquisition court du 1er juin au 31 mai."
+        }
+      ],
+      "texte": "Pour un salarié à temps plein en forfait jours, vous disposez de 10 jours de RTT par an [1][2][3]. Si vous êtes à temps partiel, les RTT sont calculés au prorata [2]. Vous pouvez consulter votre solde personnel dans l'espace RH [1].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "FAQ-RH#8",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "POL-CA-01#9",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "INT-ACTUALITES#3",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1141
+    },
+    {
+      "id": "Q14",
+      "question": "À quelle heure dois-je arriver le premier jour ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "INT-BIEN-DEMARRER#3",
+          "score": 0.6465
+        },
+        {
+          "id": "FAQ-RH#35",
+          "score": 0.6358
+        },
+        {
+          "id": "INT-BIEN-DEMARRER#2",
+          "score": 0.559
+        },
+        {
+          "id": "INT-BIEN-DEMARRER#4",
+          "score": 0.5451
+        },
+        {
+          "id": "INT-BIEN-DEMARRER#7",
+          "score": 0.5448
+        },
+        {
+          "id": "FAQ-RH#3",
+          "score": 0.5315
+        },
+        {
+          "id": "FAQ-RH#10",
+          "score": 0.5178
+        },
+        {
+          "id": "POL-AS-01#4",
+          "score": 0.516
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "INT-BIEN-DEMARRER#3",
+          "texte": "## Le premier jour\n\n- Votre manager vous accueille à 9 h 30 à l'accueil du site (voir le site de Lyon ou le site de Nantes).\n- Vous recevez votre badge d'accès et votre ordinateur. Le support informatique vous aide à activer vos comptes et la double authentification.\n- Vous rencontrez votre référent : un collègue choisi par votre manager, qui vous accompagne pendant vos trois premiers mois. C'est à lui que vous posez toutes les petites questions du quotidien, celles que l'on n'ose pas toujours poser.\n- Le midi, votre équipe vous emmène déjeuner."
+        },
+        {
+          "numero": 2,
+          "id": "FAQ-RH#35",
+          "texte": "## Que se passe-t-il le premier jour d'un nouvel arrivant ?\n\nLe nouvel arrivant est accueilli à 9 h 30 par son manager. Il reçoit son badge et son ordinateur, puis rencontre son référent, un collègue qui l'accompagne pendant ses trois premiers mois. Le parcours d'intégration est détaillé sur la page « Bien démarrer » de l'intranet."
+        },
+        {
+          "numero": 3,
+          "id": "INT-BIEN-DEMARRER#2",
+          "texte": "## Avant votre arrivée\n\nLe service RH vous envoie votre contrat de travail et la liste des pièces à fournir. Votre manager prépare votre arrivée avec le support informatique : votre ordinateur, vos comptes et vos accès sont prêts pour le premier jour."
+        },
+        {
+          "numero": 4,
+          "id": "INT-BIEN-DEMARRER#4",
+          "texte": "## La première semaine\n\n- Formation sécurité, obligatoire pour tous les nouveaux arrivants : consignes d'évacuation, rôle des sauveteurs secouristes du travail et règles de sécurité informatique.\n- Prise en main des outils du quotidien : espace RH, outil de notes de frais, coffre-fort numérique, messagerie et agenda.\n- Démarches administratives dans l'espace RH : coordonnées bancaires, affiliation à la mutuelle ou demande de dispense, justificatif d'abonnement de transport si vous en avez un.\n- Points réguliers avec votre manager pour fixer vos premiers objectifs et découvrir les projets de l'équipe."
+        },
+        {
+          "numero": 5,
+          "id": "INT-BIEN-DEMARRER#7",
+          "texte": "## Bon à savoir\n\n- Votre premier bulletin de paie est déposé dans le coffre-fort numérique la veille du versement du salaire, qui a lieu le dernier jour ouvré du mois (voir le calendrier de paie 2026).\n- Vous recevez un titre-restaurant de 10 € par jour travaillé, y compris en télétravail, sur une carte rechargée au début de chaque mois.\n- Pour poser vos premiers congés, parlez-en à votre manager, puis faites la demande dans l'espace RH, rubrique « Mes absences »."
+        },
+        {
+          "numero": 6,
+          "id": "FAQ-RH#3",
+          "texte": "## Dois-je venir sur site certains jours fixes ?\n\nOui. Chaque équipe fixe avec son manager au moins un jour de présence commun par semaine. Les autres jours de présence sont libres, dans la limite de trois jours de télétravail par semaine."
+        },
+        {
+          "numero": 7,
+          "id": "FAQ-RH#10",
+          "texte": "## Avec quel délai dois-je demander mes congés ?\n\nAu moins deux semaines à l'avance. Pour une absence de plus de cinq jours ouvrés consécutifs, le délai passe à un mois. Les congés d'été se demandent avant le 31 mars."
+        }
+      ],
+      "texte": "Vous devez vous présenter à 9 h 30 à l'accueil du site [1][2]. Votre manager vous accueillera à cette heure [2].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "INT-BIEN-DEMARRER#3",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "FAQ-RH#35",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 892
+    },
+    {
+      "id": "Q15",
+      "question": "Puis-je prendre un congé sans solde ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "FAQ-RH#17",
+          "score": 0.7806
+        },
+        {
+          "id": "POL-CA-01#19",
+          "score": 0.7432
+        },
+        {
+          "id": "POL-CA-01#12",
+          "score": 0.5869
+        },
+        {
+          "id": "FAQ-RH#9",
+          "score": 0.5816
+        },
+        {
+          "id": "INT-ESPACE-RH#2",
+          "score": 0.5787
+        },
+        {
+          "id": "POL-CA-01#7",
+          "score": 0.5681
+        },
+        {
+          "id": "FAQ-RH#7",
+          "score": 0.5561
+        },
+        {
+          "id": "POL-CA-01#14",
+          "score": 0.5552
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "FAQ-RH#17",
+          "texte": "## Puis-je prendre un congé sans solde ?\n\nOui, pour une durée d'un mois à six mois, avec le code `CSS`. La demande se fait au moins deux mois à l'avance et doit être acceptée par votre manager et par le service RH."
+        },
+        {
+          "numero": 2,
+          "id": "POL-CA-01#19",
+          "texte": "## Article 9. Congé sans solde (CSS)\n\nVous pouvez demander un congé sans solde d'une durée d'un mois à six mois, pour le motif de votre choix. La demande se fait dans l'espace RH avec le code CSS, au moins deux mois avant la date de départ souhaitée.\n\nLa demande doit être acceptée par votre manager et par le service RH, qui la soumet à l'accord de la direction. La réponse vous est donnée sous un mois.\n\nPendant le congé, votre contrat de travail est suspendu : vous ne percevez pas de salaire et n'acquérez pas de congés payés. Ouvrez un ticket « Mutuelle et prévoyance » pour connaître les conditions de maintien de vos garanties. À votre retour, vous retrouvez votre poste ou un poste équivalent, avec la même rémunération. Une prolongation est possible dans la limite de six mois au total."
+        },
+        {
+          "numero": 3,
+          "id": "POL-CA-01#12",
+          "texte": "## Article 5. Codes d'absence\n\n| Code | Signification | Règle principale | Justificatif |\n| --- | --- | --- | --- |\n| CP | Congés payés | 25 jours ouvrés par an, acquis du 1er juin au 31 mai | Aucun |\n| RTT | Réduction du temps de travail | 10 jours par an (forfait jours, temps plein), à poser avant le 31 décembre | Aucun |\n| EMA | Enfant malade | 3 jours par an et par enfant de moins de 16 ans, payés à 100 % | Certificat médical sous 48 h |\n| EVF | Événement familial | Durée selon l'événement (article 7) | Acte ou justificatif de l'événement |\n| CSS | Congé sans solde | 1 à 6 mois, demande 2 mois avant | Aucun |\n| MAL | Maladie | Salaire maintenu à 100 % dès le premier jour après un an d'ancienneté | Arrêt de travail sous 48 h |\n| FOR | Formation | Selon la politique de formation (POL-FO-01) | Convocation ou attestation de présence |"
+        },
+        {
+          "numero": 4,
+          "id": "FAQ-RH#9",
+          "texte": "## Comment poser un congé ?\n\nFaites la demande dans l'espace RH, rubrique « Mes absences », en choisissant le code d'absence adapté (`CP` pour les congés payés, `RTT` pour une journée de réduction du temps de travail). Votre manager la valide ou la refuse sous cinq jours ouvrés."
+        },
+        {
+          "numero": 5,
+          "id": "INT-ESPACE-RH#2",
+          "texte": "## Mes absences\n\nPour poser une absence, choisissez les dates et le code d'absence :\n- `CP` : congés payés (25 jours ouvrés par an pour un temps plein) ;\n- `RTT` : jour de réduction du temps de travail (10 jours par an en forfait jours à temps plein, à poser avant le 31 décembre) ;\n- `EMA` : enfant malade, avec un certificat médical joint sous 48 heures ;\n- `EVF` : événement familial (mariage, PACS, naissance, déménagement) ;\n- `CSS` : congé sans solde, à demander au moins deux mois avant.\n\nVotre manager valide ou refuse la demande sous cinq jours ouvrés. Vos soldes s'affichent en haut de la rubrique. C'est aussi dans « Mes absences » que vous déposez un arrêt de travail, sous 48 heures. Les délais de demande et le détail des droits figurent dans la politique congés et absences (POL-CA-01).\n\nLes jours de télétravail et l'adresse depuis laquelle vous télétravaillez se déclarent également dans l'espace RH : voir le guide pratique du télétravail (POL-TTG-01)."
+        },
+        {
+          "numero": 6,
+          "id": "POL-CA-01#7",
+          "texte": "### 3.2 Délais\n\n| Demande | Délai minimum |\n| --- | --- |\n| Congé de 5 jours ouvrés consécutifs au plus | 2 semaines avant le premier jour |\n| Congé de plus de 5 jours ouvrés consécutifs | 1 mois avant le premier jour |\n| Congés d'été (juillet et août) | Avant le 31 mars |\n\nLes managers confirment le planning des congés d'été avant le 30 avril. Lorsque plusieurs demandes se chevauchent dans une équipe, le manager tient compte de la situation de famille (enfants scolarisés, congés du conjoint) et de l'ancienneté."
+        }
+      ],
+      "texte": "Vous pouvez demander un congé sans solde pour une durée allant d'un mois à six mois en utilisant le code CSS [3]. La demande doit être effectuée dans l'espace RH au moins deux mois avant la date de départ souhaitée [2][5]. Votre manager et le service RH doivent accepter cette demande, qui est ensuite soumise à l'accord de la direction [2].",
+      "sources": [
+        {
+          "numero": 2,
+          "source": "POL-CA-01#19",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "POL-CA-01#12",
+          "extraits": []
+        },
+        {
+          "numero": 5,
+          "source": "INT-ESPACE-RH#2",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1394
+    },
+    {
+      "id": "Q16",
+      "question": "Quel est le montant de l'indemnité de télétravail ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-TTG-01#8",
+          "score": 0.7547
+        },
+        {
+          "id": "POL-TT-02#13",
+          "score": 0.7264
+        },
+        {
+          "id": "FAQ-RH#5",
+          "score": 0.7239
+        },
+        {
+          "id": "INT-CALENDRIER-PAIE#5",
+          "score": 0.6873
+        },
+        {
+          "id": "INT-ACTUALITES#7",
+          "score": 0.6668
+        },
+        {
+          "id": "INT-ERGONOMIE#5",
+          "score": 0.6283
+        },
+        {
+          "id": "POL-TP-01#7",
+          "score": 0.6062
+        },
+        {
+          "id": "POL-TT-02#10",
+          "score": 0.5999
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-TTG-01#8",
+          "texte": "## Indemnité de télétravail\n\nKalyo verse une indemnité forfaitaire de 2,50 € par jour de télétravail, dans la limite de 30 € par mois. Elle couvre les frais courants du domicile (électricité, chauffage, connexion). Elle est calculée automatiquement à partir des jours déclarés dans l'espace RH et versée avec la paie du mois suivant.\n\nExemple : vous avez télétravaillé 9 jours en avril 2026. Vous recevez 22,50 € avec la paie de mai, versée le 29 mai 2026. Avec 13 jours déclarés, l'indemnité aurait été plafonnée à 30 €.\n\nUn jour non déclaré dans l'espace RH ne donne pas droit à l'indemnité."
+        },
+        {
+          "numero": 2,
+          "id": "POL-TT-02#13",
+          "texte": "## Article 7. Indemnité de télétravail\n\nPour couvrir les frais liés au travail à domicile (électricité, chauffage, connexion internet), Kalyo verse une indemnité forfaitaire de 2,50 € par jour de télétravail, dans la limite de 30 € par mois.\n\nL'indemnité est calculée automatiquement à partir des jours de télétravail déclarés dans l'espace RH et versée avec la paie du mois suivant. Aucun autre remboursement de ces frais ne peut être demandé.\n\nLes jours de télétravail ouvrent droit aux titres-restaurant dans les mêmes conditions que les jours travaillés sur site (voir la politique transport, mobilités durables et titres-restaurant, POL-TP-01)."
+        },
+        {
+          "numero": 3,
+          "id": "FAQ-RH#5",
+          "texte": "## Existe-t-il une indemnité de télétravail ?\n\nOui. Kalyo verse une indemnité forfaitaire de 2,50 € par jour de télétravail, dans la limite de 30 € par mois. Elle est calculée automatiquement à partir des jours déclarés dans l'espace RH et versée avec la paie du mois suivant."
+        },
+        {
+          "numero": 4,
+          "id": "INT-CALENDRIER-PAIE#5",
+          "texte": "## Ce qui apparaît sur votre bulletin\n\n- L'indemnité de télétravail (2,50 € par jour déclaré pour les jours télétravaillés depuis le 1er mars 2026, 30 € par mois au plus), versée avec la paie du mois suivant.\n- Le remboursement de 60 % de votre abonnement de transport en commun, chaque mois.\n- La part des titres-restaurant qui reste à votre charge, Kalyo en finançant 60 %.\n- Le cas échéant, la prime d'astreinte de 150 € par semaine et les interventions majorées."
+        },
+        {
+          "numero": 5,
+          "id": "INT-ACTUALITES#7",
+          "texte": "## Trois jours de télétravail à partir du 1er mars\n\n20 janvier 2026\n\nUn avenant n° 2 à l'accord télétravail (POL-TT-02) a été conclu. À partir du 1er mars 2026, le nombre de jours de télétravail passe de deux à trois par semaine (article 4). Chaque équipe fixe avec son manager au moins un jour de présence commun. Le télétravail n'est possible qu'en France métropolitaine, jamais depuis l'étranger. L'indemnité est de 2,50 € par jour de télétravail, dans la limite de 30 € par mois."
+        },
+        {
+          "numero": 6,
+          "id": "INT-ERGONOMIE#5",
+          "texte": "## S'équiper avec l'aide de Kalyo\n\n- **Écran, clavier et souris** : si vous êtes en télétravail régulier, demandez-les au support informatique, qui les fournit à partir du catalogue du service informatique (ticket ou poste 4012).\n- **Siège ergonomique** : il est remboursé jusqu'à 250 €, une fois tous les cinq ans, sur présentation de la facture. Saisissez la dépense avec le formulaire NDF-03 dans l'outil de notes de frais.\n- **Indemnité de télétravail** : 2,50 € par jour de télétravail, dans la limite de 30 € par mois. Elle est calculée à partir des jours déclarés dans l'espace RH et versée avec la paie du mois suivant."
+        },
+        {
+          "numero": 7,
+          "id": "POL-TP-01#7",
+          "texte": "### 3.1 Valeur et financement\n\nVous recevez un titre-restaurant de 10 € par jour travaillé, y compris les jours de télétravail. Kalyo en finance 60 %, soit 6 €. Les 40 % restants, soit 4 €, sont retenus sur votre salaire.\n\nExemple : pour 20 jours travaillés dans le mois, votre carte est créditée de 200 € et 80 € sont retenus sur votre bulletin de paie."
+        }
+      ],
+      "texte": "Kalyo verse une indemnité forfaitaire de 2,50 € par jour de télétravail [1][2][3][6]. Cette indemnité est plafonnée à 30 € par mois [1][2][3][4][5]. Elle est calculée automatiquement à partir des jours déclarés dans l'espace RH et versée avec la paie du mois suivant [1][2][3][6].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-TTG-01#8",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "POL-TT-02#13",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "FAQ-RH#5",
+          "extraits": []
+        },
+        {
+          "numero": 4,
+          "source": "INT-CALENDRIER-PAIE#5",
+          "extraits": []
+        },
+        {
+          "numero": 5,
+          "source": "INT-ACTUALITES#7",
+          "extraits": []
+        },
+        {
+          "numero": 6,
+          "source": "INT-ERGONOMIE#5",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1376
+    },
+    {
+      "id": "Q17",
+      "question": "Combien me rembourse-t-on par kilomètre avec ma voiture ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-NF-01#15",
+          "score": 0.7164
+        },
+        {
+          "id": "FAQ-RH#22",
+          "score": 0.6872
+        },
+        {
+          "id": "POL-NF-01#14",
+          "score": 0.6675
+        },
+        {
+          "id": "POL-NF-01#16",
+          "score": 0.6323
+        },
+        {
+          "id": "INT-VELO#2",
+          "score": 0.6186
+        },
+        {
+          "id": "FAQ-RH#24",
+          "score": 0.6009
+        },
+        {
+          "id": "POL-TP-01#5",
+          "score": 0.5951
+        },
+        {
+          "id": "POL-TP-01#2",
+          "score": 0.5871
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-NF-01#15",
+          "texte": "## Article 9. Voiture personnelle et indemnités kilométriques\n\n| Puissance fiscale | Jusqu'à 5 000 km | De 5 001 à 20 000 km | Au-delà de 20 000 km |\n| --- | --- | --- | --- |\n| 3 CV et moins | d × 0,529 | (d × 0,316) + 1 065 € | d × 0,370 |\n| 4 CV | d × 0,606 | (d × 0,340) + 1 330 € | d × 0,407 |\n| 5 CV | d × 0,636 | (d × 0,357) + 1 395 € | d × 0,427 |\n| 6 CV | d × 0,665 | (d × 0,374) + 1 457 € | d × 0,447 |\n| 7 CV et plus | d × 0,697 | (d × 0,394) + 1 515 € | d × 0,470 |\n\nL'outil de notes de frais cumule vos kilomètres professionnels de l'année et applique automatiquement la tranche correspondante. Exemple : 200 km parcourus avec une voiture de 5 CV, en début d'année, sont remboursés 127,20 € (200 × 0,636)."
+        },
+        {
+          "numero": 2,
+          "id": "FAQ-RH#22",
+          "texte": "## Comment sont remboursés mes trajets en voiture personnelle ?\n\nSelon le barème kilométrique publié chaque année par l'administration fiscale, en fonction de la puissance fiscale du véhicule. Joignez à la note de frais le trajet, le nombre de kilomètres et la carte grise du véhicule."
+        },
+        {
+          "numero": 3,
+          "id": "POL-NF-01#14",
+          "texte": "## Article 9. Voiture personnelle et indemnités kilométriques\n\nL'utilisation de votre voiture personnelle pour un déplacement professionnel nécessite l'accord préalable de votre manager. Votre assurance doit couvrir l'usage professionnel du véhicule.\n\nLes trajets sont remboursés selon le barème kilométrique fiscal, en fonction de la puissance fiscale du véhicule et de la distance parcourue dans l'année à titre professionnel. Le barème ci-dessous est reproduit à titre indicatif ; le barème publié chaque année par l'administration fiscale fait foi. Dans le tableau, « d » désigne la distance professionnelle parcourue dans l'année civile, en kilomètres."
+        },
+        {
+          "numero": 4,
+          "id": "POL-NF-01#16",
+          "texte": "## Article 9. Voiture personnelle et indemnités kilométriques\n\nJoignez à la note le trajet (points de départ et d'arrivée), le nombre de kilomètres et la carte grise du véhicule. La distance retenue est la plus courte entre celle calculée depuis votre domicile et celle calculée depuis votre site de rattachement.\n\nLes péages et le parking sont remboursés en plus, sur justificatif. Le carburant ne l'est pas : il est compris dans le barème."
+        },
+        {
+          "numero": 5,
+          "id": "INT-VELO#2",
+          "texte": "## Le forfait mobilités durables\n\nLe forfait mobilités durables rembourse jusqu'à 300 € par an de frais liés à vos trajets entre votre domicile et le travail à vélo, à trottinette ou en covoiturage. Il couvre par exemple l'achat ou l'entretien d'un vélo, y compris à assistance électrique.\n\nPour en bénéficier, faites la demande dans l'espace RH en ouvrant un ticket « Transport », avec une déclaration sur l'honneur et vos justificatifs d'achat ou d'entretien. Si vous combinez vélo et transports en commun, les règles de cumul avec le remboursement de l'abonnement figurent dans la politique Transport, mobilités durables et titres-restaurant (POL-TP-01)."
+        },
+        {
+          "numero": 6,
+          "id": "FAQ-RH#24",
+          "texte": "## Existe-t-il une aide pour venir au travail à vélo ?\n\nOui. Le forfait mobilités durables rembourse jusqu'à 300 € par an de frais liés au vélo, à la trottinette ou au covoiturage. La demande se fait dans l'espace RH, avec une déclaration sur l'honneur et les justificatifs d'achat ou d'entretien."
+        }
+      ],
+      "texte": "Le remboursement kilométrique dépend de la puissance fiscale de votre véhicule et de la distance professionnelle parcourue dans l'année [3]. Vous pouvez consulter le barème détaillé dans l'outil de notes de frais qui applique automatiquement la tranche correspondante [1]. Pour effectuer votre demande, vous devez joindre à la note de frais le trajet, le nombre de kilomètres et la carte grise du véhicule [2][4].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-NF-01#15",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "FAQ-RH#22",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "POL-NF-01#14",
+          "extraits": []
+        },
+        {
+          "numero": 4,
+          "source": "POL-NF-01#16",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1382
+    },
+    {
+      "id": "Q18",
+      "question": "Existe-t-il une aide pour venir au travail à vélo ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "FAQ-RH#24",
+          "score": 0.7394
+        },
+        {
+          "id": "INT-VELO#1",
+          "score": 0.6643
+        },
+        {
+          "id": "INT-SITE-LYON#3",
+          "score": 0.6284
+        },
+        {
+          "id": "INT-VELO#3",
+          "score": 0.5991
+        },
+        {
+          "id": "INT-VELO#6",
+          "score": 0.5851
+        },
+        {
+          "id": "INT-VELO#2",
+          "score": 0.5566
+        },
+        {
+          "id": "INT-VELO#5",
+          "score": 0.5513
+        },
+        {
+          "id": "INT-SITE-NANTES#4",
+          "score": 0.5394
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "FAQ-RH#24",
+          "texte": "## Existe-t-il une aide pour venir au travail à vélo ?\n\nOui. Le forfait mobilités durables rembourse jusqu'à 300 € par an de frais liés au vélo, à la trottinette ou au covoiturage. La demande se fait dans l'espace RH, avec une déclaration sur l'honneur et les justificatifs d'achat ou d'entretien."
+        },
+        {
+          "numero": 2,
+          "id": "INT-VELO#1",
+          "texte": "# Venir à vélo\n\nMis à jour le 13 avril 2026\n\nLyon et Nantes se prêtent bien au vélo, et de plus en plus de salariés de Kalyo viennent travailler en pédalant. Voici ce que Kalyo met à votre disposition pour vous faciliter la vie."
+        },
+        {
+          "numero": 3,
+          "id": "INT-SITE-LYON#3",
+          "texte": "## Venir à vélo\n\nUn local à vélos sécurisé se trouve au sous-sol, accessible avec votre badge. Il est équipé d'arceaux, de prises pour recharger les vélos électriques et d'une pompe. Des douches et des casiers sont à votre disposition au rez-de-chaussée. Les berges du Rhône offrent un itinéraire cyclable agréable depuis le centre-ville. Tout sur le forfait mobilités durables : Venir à vélo."
+        },
+        {
+          "numero": 4,
+          "id": "INT-VELO#3",
+          "texte": "## Le local à vélos\n\n- À Lyon, un local sécurisé au sous-sol, accessible avec votre badge, avec des arceaux, des prises pour recharger les vélos électriques et une pompe (voir le site de Lyon).\n- À Nantes, un abri fermé dans la cour intérieure, lui aussi accessible avec votre badge et équipé de prises de recharge (voir le site de Nantes).\n\nAttachez toujours votre vélo par le cadre, même dans le local. Les vélos qui semblent abandonnés depuis plusieurs mois sont signalés par l'accueil, puis retirés après un message sur l'intranet."
+        },
+        {
+          "numero": 5,
+          "id": "INT-VELO#6",
+          "texte": "## Rouler en sécurité\n\n- Portez un casque et des vêtements visibles, surtout en hiver.\n- Vérifiez votre éclairage avant chaque trajet de nuit.\n- Un accident survenu sur le trajet entre votre domicile et le travail est un accident de trajet : prévenez votre manager et le service RH sous 24 heures."
+        },
+        {
+          "numero": 6,
+          "id": "INT-VELO#2",
+          "texte": "## Le forfait mobilités durables\n\nLe forfait mobilités durables rembourse jusqu'à 300 € par an de frais liés à vos trajets entre votre domicile et le travail à vélo, à trottinette ou en covoiturage. Il couvre par exemple l'achat ou l'entretien d'un vélo, y compris à assistance électrique.\n\nPour en bénéficier, faites la demande dans l'espace RH en ouvrant un ticket « Transport », avec une déclaration sur l'honneur et vos justificatifs d'achat ou d'entretien. Si vous combinez vélo et transports en commun, les règles de cumul avec le remboursement de l'abonnement figurent dans la politique Transport, mobilités durables et titres-restaurant (POL-TP-01)."
+        },
+        {
+          "numero": 7,
+          "id": "INT-VELO#5",
+          "texte": "## L'atelier de réparation\n\nDeux fois par an, au printemps et à l'automne, un atelier de réparation s'installe pour une journée sur chaque site. Un mécanicien vérifie vos freins, votre éclairage, vos pneus et votre transmission, sans frais pour vous, et vous montre comment faire les réglages simples. Les dates sont annoncées dans les actualités RH et l'inscription se fait auprès de l'accueil."
+        },
+        {
+          "numero": 8,
+          "id": "INT-SITE-NANTES#4",
+          "texte": "## Stationnement\n\nUn abri à vélos fermé se trouve dans la cour intérieure. Il est accessible avec votre badge et équipé de prises pour recharger les vélos électriques. Des douches et des casiers sont installés au rez-de-chaussée (voir Venir à vélo). Le site ne dispose que de quelques places de parking pour les voitures, réservées aux personnes à mobilité réduite et aux visiteurs."
+        }
+      ],
+      "texte": "Oui, Kalyo propose une aide via le forfait mobilités durables qui rembourse jusqu'à 300 € par an pour les frais liés au vélo, à la trottinette ou au covoiturage [1][6]. Pour en bénéficier, vous devez faire la demande dans l'espace RH en ouvrant un ticket « Transport », en joignant une déclaration sur l'honneur et vos justificatifs [1][6].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "FAQ-RH#24",
+          "extraits": []
+        },
+        {
+          "numero": 6,
+          "source": "INT-VELO#2",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1440
+    },
+    {
+      "id": "Q19",
+      "question": "Ai-je le droit de ne pas répondre aux e-mails le soir ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-HO-01#8",
+          "score": 0.6197
+        },
+        {
+          "id": "POL-TTG-01#10",
+          "score": 0.5918
+        },
+        {
+          "id": "POL-TT-02#14",
+          "score": 0.5567
+        },
+        {
+          "id": "POL-TTG-01#6",
+          "score": 0.5143
+        },
+        {
+          "id": "INT-ESPACE-RH#2",
+          "score": 0.4866
+        },
+        {
+          "id": "POL-TT-02#6",
+          "score": 0.4847
+        },
+        {
+          "id": "INT-OUTILS#6",
+          "score": 0.4701
+        },
+        {
+          "id": "FAQ-RH#30",
+          "score": 0.4689
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-HO-01#8",
+          "texte": "## Article 7. Droit à la déconnexion\n\nChaque salarié a le droit de ne pas être connecté à ses outils professionnels en dehors de son temps de travail.\n\nEntre 20 h et 8 h, ainsi que le week-end, aucune réponse n'est attendue aux messages et aux appels professionnels. Il en va de même pendant les congés, les jours de RTT et les arrêts de travail. Seuls les salariés d'astreinte doivent rester joignables pendant leur semaine d'astreinte, selon les règles de la politique astreintes et interventions (POL-AS-01).\n\nPour faire vivre ce droit :\n- les managers évitent d'envoyer des messages pendant ces périodes et utilisent l'envoi différé ;\n- un message reçu le soir ou le week-end peut attendre le jour ouvré suivant.\n\nSi vous êtes régulièrement sollicité en dehors de ces plages, parlez-en à votre manager ou ouvrez un ticket de catégorie « Autre » dans l'espace RH."
+        },
+        {
+          "numero": 2,
+          "id": "POL-TTG-01#10",
+          "texte": "## Droit à la déconnexion\n\nEntre 20 h et 8 h, ainsi que le week-end, personne n'attend de réponse de votre part, sauf si vous êtes d'astreinte. Les règles complètes figurent dans la politique temps de travail, horaires et droit à la déconnexion (POL-HO-01)."
+        },
+        {
+          "numero": 3,
+          "id": "POL-TT-02#14",
+          "texte": "## Article 8. Joignabilité et droit à la déconnexion\n\nPendant ses jours de télétravail, le salarié organise librement son temps de travail, dans le respect de la durée du travail qui lui est applicable. Il doit toutefois être joignable par son équipe, son manager et, le cas échéant, les clients, pendant les plages suivantes : de 9 h 30 à 12 h et de 14 h à 17 h.\n\nChaque salarié bénéficie d'un droit à la déconnexion. De 20 h à 8 h, ainsi que le week-end, aucun salarié n'est tenu de lire ni de répondre aux messages et appels professionnels. Les managers veillent à ne pas envoyer de sollicitations pendant ces périodes, sauf urgence ou astreinte (voir aussi POL-HO-01).\n\nLa charge de travail en télétravail est abordée lors de l'entretien annuel."
+        },
+        {
+          "numero": 4,
+          "id": "POL-TTG-01#6",
+          "texte": "## Être joignable\n\nPendant vos jours de télétravail, vous restez joignable de 9 h 30 à 12 h et de 14 h à 17 h, par téléphone, messagerie instantanée et visioconférence, comme sur site. En dehors de ces plages, vous organisez votre journée librement, dans le respect de votre temps de travail (voir la politique temps de travail, horaires et droit à la déconnexion, POL-HO-01). Pour les salariés en heures, ces plages s'appliquent les jours de télétravail dans le cadre de leurs horaires variables."
+        },
+        {
+          "numero": 5,
+          "id": "INT-ESPACE-RH#2",
+          "texte": "## Mes absences\n\nPour poser une absence, choisissez les dates et le code d'absence :\n- `CP` : congés payés (25 jours ouvrés par an pour un temps plein) ;\n- `RTT` : jour de réduction du temps de travail (10 jours par an en forfait jours à temps plein, à poser avant le 31 décembre) ;\n- `EMA` : enfant malade, avec un certificat médical joint sous 48 heures ;\n- `EVF` : événement familial (mariage, PACS, naissance, déménagement) ;\n- `CSS` : congé sans solde, à demander au moins deux mois avant.\n\nVotre manager valide ou refuse la demande sous cinq jours ouvrés. Vos soldes s'affichent en haut de la rubrique. C'est aussi dans « Mes absences » que vous déposez un arrêt de travail, sous 48 heures. Les délais de demande et le détail des droits figurent dans la politique congés et absences (POL-CA-01).\n\nLes jours de télétravail et l'adresse depuis laquelle vous télétravaillez se déclarent également dans l'espace RH : voir le guide pratique du télétravail (POL-TTG-01)."
+        },
+        {
+          "numero": 6,
+          "id": "POL-TT-02#6",
+          "texte": "### 3.1 Demande\n\nLe salarié fait sa demande dans l'espace RH, après en avoir parlé avec son manager. Le manager y répond dans l'espace RH sous 15 jours. Tout refus est motivé par écrit. L'accord du manager n'entraîne pas d'avenant au contrat de travail ; le service RH est informé automatiquement."
+        }
+      ],
+      "texte": "Chaque salarié bénéficie d'un droit à la déconnexion, ce qui signifie qu'aucune réponse n'est attendue aux messages et appels professionnels entre 20 h et 8 h, ainsi que le week-end [1][2]. Pendant votre télétravail, aucun salarié n'est tenu de lire ni de répondre aux messages et appels professionnels de 20 h à 8 h et le week-end [3]. Si vous êtes régulièrement sollicité en dehors de ces plages, vous devez en parler à votre manager ou ouvrir un ticket de catégorie « Autre » dans l'espace RH [1].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-HO-01#8",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "POL-TTG-01#10",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "POL-TT-02#14",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1603
+    },
+    {
+      "id": "Q20",
+      "question": "Quels sont les jours fériés en novembre 2026 ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "INT-JOURS-FERIES#1",
+          "score": 0.6281
+        },
+        {
+          "id": "INT-JOURS-FERIES#2",
+          "score": 0.6148
+        },
+        {
+          "id": "INT-ACTUALITES#9",
+          "score": 0.5985
+        },
+        {
+          "id": "INT-JOURS-FERIES#4",
+          "score": 0.5503
+        },
+        {
+          "id": "INT-JOURS-FERIES#5",
+          "score": 0.5269
+        },
+        {
+          "id": "INT-JOURS-FERIES#3",
+          "score": 0.5076
+        },
+        {
+          "id": "INT-CALENDRIER-PAIE#2",
+          "score": 0.4673
+        },
+        {
+          "id": "INT-JOURS-FERIES#6",
+          "score": 0.4645
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "INT-JOURS-FERIES#1",
+          "texte": "# Jours fériés 2026\n\nMis à jour le 15 décembre 2025\n\nVoici les jours fériés de l'année 2026 et la façon dont ils s'appliquent chez Kalyo, à Lyon comme à Nantes. Un jour férié chômé qui tombe pendant vos congés n'est pas décompté de vos jours de congés payés."
+        },
+        {
+          "numero": 2,
+          "id": "INT-JOURS-FERIES#2",
+          "texte": "# Jours fériés 2026\n\n| Date | Jour | Fête | Chez Kalyo |\n| --- | --- | --- | --- |\n| 1er janvier | jeudi | Jour de l'an | Chômé |\n| 6 avril | lundi | Lundi de Pâques | Chômé |\n| 1er mai | vendredi | Fête du travail | Chômé |\n| 8 mai | vendredi | Victoire de 1945 | Chômé |\n| 14 mai | jeudi | Ascension | Chômé |\n| 25 mai | lundi | Lundi de Pentecôte | Travaillé (journée de solidarité) |\n| 14 juillet | mardi | Fête nationale | Chômé |\n| 15 août | samedi | Assomption | Tombe un samedi |\n| 1er novembre | dimanche | Toussaint | Tombe un dimanche |\n| 11 novembre | mercredi | Armistice de 1918 | Chômé |\n| 25 décembre | vendredi | Noël | Chômé |"
+        },
+        {
+          "numero": 3,
+          "id": "INT-ACTUALITES#9",
+          "texte": "## Calendrier de paie et jours fériés 2026\n\n15 décembre 2025\n\nLe calendrier de paie 2026 et la liste des jours fériés 2026 sont en ligne. Rappel : chez Kalyo, le lundi de Pentecôte, le 25 mai 2026, est la journée de solidarité. Il est travaillé."
+        },
+        {
+          "numero": 4,
+          "id": "INT-JOURS-FERIES#4",
+          "texte": "## L'Assomption et la Toussaint\n\nEn 2026, l'Assomption tombe un samedi et la Toussaint un dimanche. Ces deux jours ne donnent pas droit à un jour de repos supplémentaire."
+        },
+        {
+          "numero": 5,
+          "id": "INT-JOURS-FERIES#5",
+          "texte": "## Les ponts\n\nKalyo n'impose aucun pont en 2026. Si vous souhaitez faire le pont, posez un jour de congé payé (`CP`) ou un jour de `RTT` dans l'espace RH, rubrique « Mes absences », au moins deux semaines à l'avance. Les ponts possibles cette année :\n- vendredi 2 janvier, après le jour de l'an ;\n- vendredi 15 mai, après l'Ascension ;\n- lundi 13 juillet, avant la fête nationale.\n\nOrganisez-vous avec votre équipe pour que chacun puisse en profiter et que les clients restent servis. Votre manager valide ou refuse les demandes sous cinq jours ouvrés."
+        },
+        {
+          "numero": 6,
+          "id": "INT-JOURS-FERIES#3",
+          "texte": "## La journée de solidarité\n\nChez Kalyo, la journée de solidarité est fixée au lundi de Pentecôte, le 25 mai 2026. Ce jour-là est travaillé comme un jour ordinaire et ne donne pas lieu à une rémunération supplémentaire. Les bâtiments de Lyon et de Nantes sont ouverts aux horaires habituels."
+        },
+        {
+          "numero": 7,
+          "id": "INT-CALENDRIER-PAIE#2",
+          "texte": "## Dates de versement et de dépôt des bulletins\n\n| Mois | Versement du salaire | Bulletin dans le coffre-fort numérique | Notes de frais validées avant le |\n| --- | --- | --- | --- |\n| Janvier | vendredi 30 janvier | jeudi 29 janvier | 20 janvier |\n| Février | vendredi 27 février | jeudi 26 février | 20 février |\n| Mars | mardi 31 mars | lundi 30 mars | 20 mars |\n| Avril | jeudi 30 avril | mercredi 29 avril | 20 avril |\n| Mai | vendredi 29 mai | jeudi 28 mai | 20 mai |\n| Juin | mardi 30 juin | lundi 29 juin | 20 juin |\n| Juillet | vendredi 31 juillet | jeudi 30 juillet | 20 juillet |\n| Août | lundi 31 août | dimanche 30 août | 20 août |\n| Septembre | mercredi 30 septembre | mardi 29 septembre | 20 septembre |\n| Octobre | vendredi 30 octobre | jeudi 29 octobre | 20 octobre |\n| Novembre | lundi 30 novembre | dimanche 29 novembre | 20 novembre |"
+        },
+        {
+          "numero": 8,
+          "id": "INT-JOURS-FERIES#6",
+          "texte": "## Astreintes et jours fériés\n\nSi vous êtes d'astreinte un jour férié, les interventions réalisées ce jour-là sont majorées de 100 %. Voir la politique Astreintes et interventions (POL-AS-01)."
+        }
+      ],
+      "texte": "Les jours fériés en novembre 2026 sont le 1er novembre, qui tombe un dimanche, et le 11 novembre, qui est un jour férié chômé [2][4]. Ces deux jours ne donnent pas droit à un jour de repos supplémentaire [4].",
+      "sources": [
+        {
+          "numero": 2,
+          "source": "INT-JOURS-FERIES#2",
+          "extraits": []
+        },
+        {
+          "numero": 4,
+          "source": "INT-JOURS-FERIES#4",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1193
+    },
+    {
+      "id": "Q21",
+      "question": "Quel est mon préavis si je démissionne ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "INT-DEPART#3",
+          "score": 0.7046
+        },
+        {
+          "id": "INT-DEPART#2",
+          "score": 0.5856
+        },
+        {
+          "id": "POL-TTG-01#9",
+          "score": 0.5642
+        },
+        {
+          "id": "POL-TT-02#8",
+          "score": 0.5612
+        },
+        {
+          "id": "POL-CA-01#6",
+          "score": 0.5607
+        },
+        {
+          "id": "INT-ESPACE-RH#2",
+          "score": 0.5598
+        },
+        {
+          "id": "POL-CA-01#7",
+          "score": 0.5525
+        },
+        {
+          "id": "POL-MO-01#9",
+          "score": 0.5442
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "INT-DEPART#3",
+          "texte": "## Le préavis\n\nLa démission ouvre un préavis, qui commence à la date à laquelle Kalyo reçoit votre lettre. Sa durée dépend de votre statut et de votre classification : elle est fixée par la convention collective des bureaux d'études techniques (Syntec) et rappelée dans votre contrat de travail. En cas de doute, ouvrez un ticket « Autre » dans l'espace RH. Vous pouvez demander à être dispensé de tout ou partie du préavis : la dispense doit être acceptée par votre manager et par le service RH."
+        },
+        {
+          "numero": 2,
+          "id": "INT-DEPART#2",
+          "texte": "## Démissionner\n\nLa démission est une décision écrite, claire et sans ambiguïté. Adressez une lettre à votre manager et au service RH, remise en main propre contre signature ou envoyée en recommandé avec accusé de réception. Nous vous conseillons d'en parler d'abord de vive voix à votre manager."
+        },
+        {
+          "numero": 3,
+          "id": "POL-TTG-01#9",
+          "texte": "## Période d'adaptation et réversibilité\n\nLe télétravail commence par une période d'adaptation de 2 mois. Pendant cette période, vous ou votre manager pouvez y mettre fin par écrit, avec un délai de prévenance d'une semaine.\n\nEnsuite, le télétravail reste réversible : vous ou votre manager pouvez y mettre fin par écrit, avec un préavis d'un mois, par exemple par un ticket de catégorie « Télétravail » dans l'espace RH. Quand la décision vient de l'entreprise, elle est motivée."
+        },
+        {
+          "numero": 4,
+          "id": "POL-TT-02#8",
+          "texte": "### 3.3 Réversibilité\n\nAprès la période d'adaptation, le salarié ou l'entreprise peut mettre fin au télétravail à tout moment, par écrit, avec un préavis d'un mois. Lorsque la décision vient de l'entreprise, elle est motivée. Le salarié retrouve alors son poste dans les locaux de Kalyo, dans les mêmes conditions qu'avant le télétravail."
+        },
+        {
+          "numero": 5,
+          "id": "POL-CA-01#6",
+          "texte": "### 3.1 Procédure\n\nToute absence prévisible se demande dans l'espace RH, rubrique « Mes absences », avec le code d'absence adapté (article 5). Votre manager valide ou refuse la demande sous 5 jours ouvrés. Un refus est motivé, par exemple par les nécessités du service. Sans réponse passé ce délai, relancez votre manager ou ouvrez un ticket « Congés et absences »."
+        },
+        {
+          "numero": 6,
+          "id": "INT-ESPACE-RH#2",
+          "texte": "## Mes absences\n\nPour poser une absence, choisissez les dates et le code d'absence :\n- `CP` : congés payés (25 jours ouvrés par an pour un temps plein) ;\n- `RTT` : jour de réduction du temps de travail (10 jours par an en forfait jours à temps plein, à poser avant le 31 décembre) ;\n- `EMA` : enfant malade, avec un certificat médical joint sous 48 heures ;\n- `EVF` : événement familial (mariage, PACS, naissance, déménagement) ;\n- `CSS` : congé sans solde, à demander au moins deux mois avant.\n\nVotre manager valide ou refuse la demande sous cinq jours ouvrés. Vos soldes s'affichent en haut de la rubrique. C'est aussi dans « Mes absences » que vous déposez un arrêt de travail, sous 48 heures. Les délais de demande et le détail des droits figurent dans la politique congés et absences (POL-CA-01).\n\nLes jours de télétravail et l'adresse depuis laquelle vous télétravaillez se déclarent également dans l'espace RH : voir le guide pratique du télétravail (POL-TTG-01)."
+        },
+        {
+          "numero": 7,
+          "id": "POL-CA-01#7",
+          "texte": "### 3.2 Délais\n\n| Demande | Délai minimum |\n| --- | --- |\n| Congé de 5 jours ouvrés consécutifs au plus | 2 semaines avant le premier jour |\n| Congé de plus de 5 jours ouvrés consécutifs | 1 mois avant le premier jour |\n| Congés d'été (juillet et août) | Avant le 31 mars |\n\nLes managers confirment le planning des congés d'été avant le 30 avril. Lorsque plusieurs demandes se chevauchent dans une équipe, le manager tient compte de la situation de famille (enfants scolarisés, congés du conjoint) et de l'ancienneté."
+        }
+      ],
+      "texte": "La durée de votre préavis dépend de votre statut et de votre classification [1]. Elle est fixée par la convention collective des bureaux d'études techniques (Syntec) et rappelée dans votre contrat de travail [1]. En cas de doute, vous pouvez ouvrir un ticket « Autre » dans l'espace RH [1].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "INT-DEPART#3",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1111
+    },
+    {
+      "id": "Q22",
+      "question": "Que faire si je reçois un e-mail suspect ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "INT-SECURITE#4",
+          "score": 0.6261
+        },
+        {
+          "id": "INT-SECURITE#5",
+          "score": 0.5298
+        },
+        {
+          "id": "INT-OUTILS#8",
+          "score": 0.4959
+        },
+        {
+          "id": "POL-HO-01#8",
+          "score": 0.4883
+        },
+        {
+          "id": "INT-OUTILS#6",
+          "score": 0.4876
+        },
+        {
+          "id": "INT-SECURITE#1",
+          "score": 0.4873
+        },
+        {
+          "id": "INT-QUI-CONTACTER#1",
+          "score": 0.4864
+        },
+        {
+          "id": "POL-CA-01#6",
+          "score": 0.4845
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "INT-SECURITE#4",
+          "texte": "## Hameçonnage\n\nLe hameçonnage consiste à vous envoyer un faux message (courriel, SMS, appel) pour obtenir vos identifiants ou vous faire ouvrir un fichier piégé. Méfiez-vous :\n- d'un message urgent ou alarmant (« votre compte sera bloqué ce soir ») ;\n- d'un expéditeur inconnu, ou dont l'adresse ressemble à celle d'un collègue sans être tout à fait la même ;\n- d'une demande de paiement, de changement de coordonnées bancaires ou d'identifiants ;\n- d'un lien dont l'adresse réelle ne correspond pas au texte affiché.\n\nAu moindre doute, ne cliquez pas, n'ouvrez pas la pièce jointe et signalez le message au support informatique (ticket ou poste 4012). Si vous avez cliqué, prévenez le support immédiatement : plus l'alerte est rapide, plus les dégâts sont limités, et personne ne vous le reprochera. Le service RH ne vous demandera jamais vos coordonnées bancaires par message : elles se modifient uniquement dans l'espace RH."
+        },
+        {
+          "numero": 2,
+          "id": "INT-SECURITE#5",
+          "texte": "## Verrouillage du poste\n\nVerrouillez votre session chaque fois que vous quittez votre poste, même pour quelques minutes, au bureau comme à la maison. Ne laissez jamais votre ordinateur sans surveillance dans un train, un café ou une voiture. En cas de perte ou de vol, prévenez le support sans attendre."
+        },
+        {
+          "numero": 3,
+          "id": "INT-OUTILS#8",
+          "texte": "## Le support informatique\n\nPour une panne, un accès à ouvrir, un doute sur un message suspect ou un équipement à commander dans le catalogue du service informatique (écran, clavier, souris), ouvrez un ticket dans l'outil de tickets du support informatique, accessible depuis l'intranet. En cas d'urgence, appelez le poste 4012, du lundi au vendredi de 8 h 30 à 18 h. Une équipe du support est présente sur chaque site."
+        },
+        {
+          "numero": 4,
+          "id": "POL-HO-01#8",
+          "texte": "## Article 7. Droit à la déconnexion\n\nChaque salarié a le droit de ne pas être connecté à ses outils professionnels en dehors de son temps de travail.\n\nEntre 20 h et 8 h, ainsi que le week-end, aucune réponse n'est attendue aux messages et aux appels professionnels. Il en va de même pendant les congés, les jours de RTT et les arrêts de travail. Seuls les salariés d'astreinte doivent rester joignables pendant leur semaine d'astreinte, selon les règles de la politique astreintes et interventions (POL-AS-01).\n\nPour faire vivre ce droit :\n- les managers évitent d'envoyer des messages pendant ces périodes et utilisent l'envoi différé ;\n- un message reçu le soir ou le week-end peut attendre le jour ouvré suivant.\n\nSi vous êtes régulièrement sollicité en dehors de ces plages, parlez-en à votre manager ou ouvrez un ticket de catégorie « Autre » dans l'espace RH."
+        },
+        {
+          "numero": 5,
+          "id": "INT-OUTILS#6",
+          "texte": "## La messagerie et l'agenda\n\nLa messagerie et l'agenda partagé servent à vos échanges internes et avec les clients. Réservez les salles de réunion directement depuis l'agenda. Rendez votre agenda visible par votre équipe, en particulier vos jours de télétravail et vos absences. Avant de partir en congé, activez un message d'absence qui indique la personne à contacter."
+        },
+        {
+          "numero": 6,
+          "id": "INT-SECURITE#1",
+          "texte": "# Sécurité informatique : les bons réflexes\n\nMis à jour le 6 octobre 2025\n\nKalyo travaille chaque jour avec les données de ses clients : une seule erreur peut exposer un projet entier. Ces réflexes simples s'appliquent à tous, sur site comme en télétravail. Ils sont présentés lors de la formation sécurité de votre première semaine (voir Bien démarrer)."
+        },
+        {
+          "numero": 7,
+          "id": "INT-QUI-CONTACTER#1",
+          "texte": "# Qui contacter ?\n\nMis à jour le 1er septembre 2026\n\nAvant de solliciter quelqu'un, vérifiez que la réponse ne figure pas déjà sur l'intranet ou dans la FAQ RH. Sinon, ce tableau vous indique le bon interlocuteur. Les questions RH passent par un ticket dans l'espace RH : il est suivi et traité même en l'absence d'un collègue."
+        }
+      ],
+      "texte": "Au moindre doute concernant un message, ne cliquez pas et n'ouvrez pas la pièce jointe [1]. Vous devez signaler ce message au support informatique via un ticket ou en appelant le poste 4012 [1][3].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "INT-SECURITE#4",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "INT-OUTILS#8",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1118
+    },
+    {
+      "id": "Q23",
+      "question": "What is the daily allowance for a business trip to Germany?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "GRP-TRV-01#9",
+          "score": 0.6317
+        },
+        {
+          "id": "GRP-TRV-01#10",
+          "score": 0.5486
+        },
+        {
+          "id": "GRP-TRV-01#16",
+          "score": 0.5264
+        },
+        {
+          "id": "GRP-TRV-01#11",
+          "score": 0.5063
+        },
+        {
+          "id": "POL-TP-01#7",
+          "score": 0.5046
+        },
+        {
+          "id": "POL-AS-01#5",
+          "score": 0.4968
+        },
+        {
+          "id": "POL-NF-01#9",
+          "score": 0.4941
+        },
+        {
+          "id": "FAQ-RH#24",
+          "score": 0.4878
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "GRP-TRV-01#9",
+          "texte": "## 7. Per diems abroad\n\nFor business travel outside the country of the employing subsidiary, employees receive a daily allowance (per diem) covering meals and small incidental expenses (local transport, tips, laundry). No receipts are required for these expenses. Hotels and transport booked through the portal are not included.\n\n| Zone | Countries (examples) | Per diem (EUR per day) |\n| --- | --- | --- |\n| Europe | European Union and EEA countries, Switzerland, United Kingdom | 60 |\n| North America | United States, Canada | 85 |\n| Asia | Japan, Singapore, South Korea, China, India | 70 |\n| Rest of the world | All other countries | 55 |\n\nThe per diem is paid for each calendar day spent abroad, including the days of departure and return. It is increased by 20 % in the high-cost cities listed in the portal. When lunch or dinner is provided free of charge (by a client, a conference organiser or an airline), the per diem is reduced by 30 % for each meal provided."
+        },
+        {
+          "numero": 2,
+          "id": "GRP-TRV-01#10",
+          "texte": "## 7. Per diems abroad\n\nBusiness meals with clients abroad are reimbursed at actual cost, on receipts and with line manager approval. Expenses paid in foreign currency are converted into EUR at the rate applied by the expense tool on the date of the expense."
+        },
+        {
+          "numero": 3,
+          "id": "GRP-TRV-01#16",
+          "texte": "## 13. Combining business and personal travel\n\nPersonal days may be added to a business trip with line manager approval. All additional costs are paid by the employee, and the group insurance does not cover these days. Working remotely from abroad before or after a business trip is subject to local telework rules; at Kalyo, telework from abroad is not permitted (see the Kalyo telework agreement)."
+        },
+        {
+          "numero": 4,
+          "id": "GRP-TRV-01#11",
+          "texte": "## 8. Travel insurance and 24/7 assistance\n\nAll employees travelling abroad on business are covered by the group international travel insurance. It covers emergency medical expenses, hospitalisation, medical repatriation, loss or delay of luggage and personal liability. Download your insurance certificate from the portal before departure.\n\nA 24/7 assistance service is available around the clock for medical emergencies, lost documents, security incidents and urgent rebooking. Its number is printed on the travel card available in the portal. For trips within the European Union, also carry your European Health Insurance Card."
+        },
+        {
+          "numero": 5,
+          "id": "POL-TP-01#7",
+          "texte": "### 3.1 Valeur et financement\n\nVous recevez un titre-restaurant de 10 € par jour travaillé, y compris les jours de télétravail. Kalyo en finance 60 %, soit 6 €. Les 40 % restants, soit 4 €, sont retenus sur votre salaire.\n\nExemple : pour 20 jours travaillés dans le mois, votre carte est créditée de 200 € et 80 € sont retenus sur votre bulletin de paie."
+        },
+        {
+          "numero": 6,
+          "id": "POL-AS-01#5",
+          "texte": "## Article 4. Indemnité d'astreinte\n\nChaque semaine complète d'astreinte donne droit à une indemnité forfaitaire de 150 € brut, souvent appelée prime d'astreinte. Elle est due même si vous n'avez eu aucune intervention.\n\nPour une semaine partielle (échange de jours, planning modifié), l'indemnité est calculée au prorata du nombre de jours d'astreinte : 150 € divisés par 7, soit 21,43 € par jour. Trois jours d'astreinte donnent ainsi 64,29 €."
+        },
+        {
+          "numero": 7,
+          "id": "FAQ-RH#24",
+          "texte": "## Existe-t-il une aide pour venir au travail à vélo ?\n\nOui. Le forfait mobilités durables rembourse jusqu'à 300 € par an de frais liés au vélo, à la trottinette ou au covoiturage. La demande se fait dans l'espace RH, avec une déclaration sur l'honneur et les justificatifs d'achat ou d'entretien."
+        }
+      ],
+      "texte": "Pour un voyage d'affaires en Allemagne, vous recevez une allocation journalière de 60 EUR par jour [1]. Cette allocation couvre les repas et les petites dépenses accessoires [1]. Vous devez soumettre votre demande via l'espace RH.",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "GRP-TRV-01#9",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1191
+    },
+    {
+      "id": "Q24",
+      "question": "Quels sont les horaires de travail chez Kalyo ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-HO-01#2",
+          "score": 0.7309
+        },
+        {
+          "id": "INT-CALENDRIER-PAIE#1",
+          "score": 0.6493
+        },
+        {
+          "id": "POL-AS-01#1",
+          "score": 0.6407
+        },
+        {
+          "id": "POL-TT-02#2",
+          "score": 0.6188
+        },
+        {
+          "id": "POL-CA-01#18",
+          "score": 0.6167
+        },
+        {
+          "id": "POL-TT-02#4",
+          "score": 0.6091
+        },
+        {
+          "id": "INT-BIEN-DEMARRER#3",
+          "score": 0.6084
+        },
+        {
+          "id": "POL-TT-02#1",
+          "score": 0.6053
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-HO-01#2",
+          "texte": "## Article 1. Objet et champ d'application\n\nLa présente politique décrit l'organisation du temps de travail chez Kalyo, sur les sites de Lyon et de Nantes : les deux régimes de durée du travail, le temps partiel, les heures supplémentaires, la journée de solidarité et le droit à la déconnexion. Elle complète la convention collective des bureaux d'études techniques (Syntec).\n\nDeux régimes coexistent chez Kalyo :\n| Régime | Salariés concernés | Jours de RTT |\n| --- | --- | --- |\n| Forfait annuel de 218 jours | Cadres autonomes (tous les services, sauf ceux de la ligne suivante) | 10 jours par an à temps plein |\n| 35 heures hebdomadaires, horaires variables | Support informatique, finance et paie | Aucun |"
+        },
+        {
+          "numero": 2,
+          "id": "INT-CALENDRIER-PAIE#1",
+          "texte": "# Calendrier de paie 2026\n\nMis à jour le 2 mars 2026\n\nChez Kalyo, le salaire est versé le dernier jour ouvré de chaque mois. Le bulletin de paie est déposé la veille dans votre coffre-fort numérique, accessible depuis l'espace RH. Le tableau ci-dessous donne toutes les dates de l'année 2026."
+        },
+        {
+          "numero": 3,
+          "id": "POL-AS-01#1",
+          "texte": "# Astreintes et interventions\n\nRéférence POL-AS-01 · En vigueur au 1er septembre 2025\n\nCertaines activités de Kalyo exigent qu'un salarié puisse intervenir en dehors des horaires habituels : panne d'une infrastructure, incident chez un client, service informatique interne à rétablir. Cette politique fixe l'organisation et la rémunération des astreintes à compter du 1er septembre 2025. Elle complète la politique temps de travail, horaires et droit à la déconnexion (POL-HO-01)."
+        },
+        {
+          "numero": 4,
+          "id": "POL-TT-02#2",
+          "texte": "## Préambule\n\nLe télétravail régulier est organisé chez Kalyo par l'accord d'entreprise relatif au télétravail signé le 15 décembre 2023 (POL-TT-01), entré en vigueur le 1er janvier 2024. Cet accord a été modifié une première fois par l'avenant n° 1 du 3 juin 2024, qui a seulement simplifié la procédure de demande : la demande est depuis validée directement par le manager dans l'espace RH, sans avenant au contrat de travail.\n\nLes bilans de la commission de suivi en 2024 et en 2025 ont montré que le télétravail fonctionne bien sur les deux sites, sans effet négatif sur le service rendu aux clients. Lors de l'enquête interne d'octobre 2025, une large majorité des salariés a demandé un jour de télétravail de plus par semaine, et signalé que l'indemnité et la participation à l'achat d'un siège ne couvraient plus leurs frais réels. Les parties ont donc décidé de faire évoluer le nombre de jours, l'équipement et l'indemnité, tout en maintenant un jour de présence commun par équipe."
+        },
+        {
+          "numero": 5,
+          "id": "POL-CA-01#18",
+          "texte": "## Article 8. Maladie\n\nSi vous êtes malade :\n1. prévenez votre manager le jour même ;\n\n2. envoyez votre arrêt de travail au service RH sous 48 heures, depuis l'espace RH, rubrique « Mes absences », avec le code MAL ;\n\n3. faites de même pour toute prolongation.\n\nAprès un an d'ancienneté, Kalyo maintient votre salaire à 100 % dès le premier jour d'arrêt, pendant 90 jours d'arrêt au plus sur douze mois consécutifs. Kalyo perçoit directement les indemnités journalières de l'assurance maladie. Au-delà de ces 90 jours, le contrat de prévoyance prend le relais (voir la politique mutuelle et prévoyance, POL-MU-01).\n\nAvant un an d'ancienneté, l'indemnisation suit les règles de la convention collective et de la loi.\n\nUn accident du travail ou de trajet se déclare sous 24 heures à votre manager et au service RH. Après un arrêt long, une visite de reprise avec la médecine du travail est organisée lorsque la loi le prévoit."
+        },
+        {
+          "numero": 6,
+          "id": "POL-TT-02#1",
+          "texte": "# Avenant n° 2 à l'accord télétravail\n\nRéférence POL-TT-02 · En vigueur au 1er mars 2026 · Remplace POL-TT-01\n\nEntre la société Kalyo, dont le siège est situé à Lyon (quartier de Gerland), représentée par Noémie Millet, directrice associée, d'une part,\n\nEt l'organisation syndicale représentative dans l'entreprise, représentée par Olivier Abadie, délégué syndical, d'autre part,\n\nil a été convenu ce qui suit."
+        }
+      ],
+      "texte": "Chez Kalyo, deux régimes de durée du travail coexistent sur les sites de Lyon et de Nantes [1]. Le premier est le forfait annuel de 218 jours pour les cadres autonomes, et le second est le régime de 35 heures hebdomadaires avec horaires variables pour le support informatique, la finance et la paie [1].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-HO-01#2",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1383
+    },
+    {
+      "id": "Q25",
+      "question": "Avant quand dois-je remplir mon auto-évaluation pour l'entretien annuel ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-EN-01#3",
+          "score": 0.7664
+        },
+        {
+          "id": "FAQ-RH#34",
+          "score": 0.6665
+        },
+        {
+          "id": "POL-EN-01#2",
+          "score": 0.6612
+        },
+        {
+          "id": "POL-FO-01#12",
+          "score": 0.5838
+        },
+        {
+          "id": "INT-ACTUALITES#8",
+          "score": 0.5828
+        },
+        {
+          "id": "POL-EN-01#4",
+          "score": 0.572
+        },
+        {
+          "id": "POL-EN-01#5",
+          "score": 0.5648
+        },
+        {
+          "id": "POL-EN-01#6",
+          "score": 0.5634
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-EN-01#3",
+          "texte": "### 1.2 Préparation\n\nVous préparez l'entretien dans l'espace RH en remplissant votre auto-évaluation : principales réalisations, difficultés rencontrées, atteinte de vos objectifs, besoins (outils, formation, organisation). Complétez-la au plus tard deux jours ouvrés avant l'entretien, pour que votre manager puisse la lire."
+        },
+        {
+          "numero": 2,
+          "id": "FAQ-RH#34",
+          "texte": "## Quand a lieu l'entretien annuel ?\n\nEntre le 15 janvier et le 28 février. Votre manager vous envoie l'invitation et la grille d'entretien deux semaines avant. L'entretien professionnel, consacré à votre évolution, a lieu tous les deux ans pendant la même période."
+        },
+        {
+          "numero": 3,
+          "id": "POL-EN-01#2",
+          "texte": "### 1.1 Calendrier\n\nL'entretien annuel a lieu chaque année entre le 15 janvier et le 28 février. Au moins deux semaines avant la date retenue, votre manager vous envoie l'invitation et la grille d'entretien, c'est-à-dire le support que vous remplirez ensemble. Comptez une heure à une heure et demie.\n\nUn salarié arrivé moins de trois mois avant le 15 janvier ne passe pas d'entretien annuel cette année-là : le point de fin d'intégration avec son manager en tient lieu."
+        },
+        {
+          "numero": 4,
+          "id": "POL-FO-01#12",
+          "texte": "## Article 7. Lien avec l'entretien professionnel\n\nL'entretien professionnel, organisé tous les deux ans, fait le point sur les formations suivies, les certifications obtenues et vos souhaits d'évolution. C'est le bon moment pour exprimer un besoin de formation : il est ensuite pris en compte dans le plan de l'année suivante. Voir la politique entretiens annuels et professionnels (POL-EN-01)."
+        },
+        {
+          "numero": 5,
+          "id": "INT-ACTUALITES#8",
+          "texte": "## Campagne d'entretiens annuels 2026\n\n8 janvier 2026\n\nLa campagne d'entretiens annuels se déroule du 15 janvier au 28 février 2026. Votre manager vous envoie l'invitation et la grille d'entretien deux semaines avant la date retenue. Si votre entretien professionnel, consacré à votre évolution et organisé tous les deux ans, tombe cette année, il a lieu pendant la même période. Voir la politique Entretiens annuels et professionnels (POL-EN-01)."
+        },
+        {
+          "numero": 6,
+          "id": "POL-EN-01#4",
+          "texte": "### 1.3 Déroulement\n\nL'entretien porte sur :\n- le bilan de l'année écoulée et l'atteinte des objectifs ;\n- les compétences mises en œuvre dans votre poste ;\n- les objectifs de l'année qui commence, en général trois à cinq objectifs précis et mesurables, fixés ensemble ;\n- votre charge de travail, l'organisation de votre travail et l'équilibre avec votre vie personnelle.\n\nPour conduire l'entretien et apprécier les résultats, le manager s'appuie aussi sur une grille réservée aux managers (Grille d'entretien annuel : guide du manager, MGR-EA-01). Ce document n'est pas diffusé aux salariés."
+        },
+        {
+          "numero": 7,
+          "id": "POL-EN-01#5",
+          "texte": "### 1.4 Compte rendu\n\nAprès l'entretien, votre manager rédige le compte rendu dans l'espace RH, et vous pouvez y ajouter vos commentaires. Le compte rendu est signé par les deux parties dans l'espace RH, dans les 15 jours qui suivent l'entretien. Signer ne veut pas dire être d'accord : votre signature atteste que l'entretien a eu lieu, et vos commentaires vous permettent d'exprimer un désaccord. Le compte rendu signé est ensuite consultable dans la rubrique « Mes documents ».\n\nEn cas de désaccord persistant, vous pouvez demander un échange avec le service RH, par un ticket de catégorie « Autre »."
+        }
+      ],
+      "texte": "Vous devez compléter votre auto-évaluation au plus tard deux jours ouvrés avant l'entretien [1]. Vous pouvez préparer cet entretien en remplissant votre auto-évaluation dans l'espace RH [1].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-EN-01#3",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1054
+    },
+    {
+      "id": "Q26",
+      "question": "Si je suis malade longtemps, est-ce que Kalyo continue de me payer mon salaire, et combien de temps ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-CA-01#18",
+          "score": 0.721
+        },
+        {
+          "id": "FAQ-RH#12",
+          "score": 0.713
+        },
+        {
+          "id": "INT-DEPART#7",
+          "score": 0.6261
+        },
+        {
+          "id": "POL-MU-01#8",
+          "score": 0.6114
+        },
+        {
+          "id": "POL-CA-01#14",
+          "score": 0.6108
+        },
+        {
+          "id": "FAQ-RH#11",
+          "score": 0.6095
+        },
+        {
+          "id": "FAQ-RH#5",
+          "score": 0.6082
+        },
+        {
+          "id": "INT-CALENDRIER-PAIE#1",
+          "score": 0.6023
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-CA-01#18",
+          "texte": "## Article 8. Maladie\n\nSi vous êtes malade :\n1. prévenez votre manager le jour même ;\n\n2. envoyez votre arrêt de travail au service RH sous 48 heures, depuis l'espace RH, rubrique « Mes absences », avec le code MAL ;\n\n3. faites de même pour toute prolongation.\n\nAprès un an d'ancienneté, Kalyo maintient votre salaire à 100 % dès le premier jour d'arrêt, pendant 90 jours d'arrêt au plus sur douze mois consécutifs. Kalyo perçoit directement les indemnités journalières de l'assurance maladie. Au-delà de ces 90 jours, le contrat de prévoyance prend le relais (voir la politique mutuelle et prévoyance, POL-MU-01).\n\nAvant un an d'ancienneté, l'indemnisation suit les règles de la convention collective et de la loi.\n\nUn accident du travail ou de trajet se déclare sous 24 heures à votre manager et au service RH. Après un arrêt long, une visite de reprise avec la médecine du travail est organisée lorsque la loi le prévoit."
+        },
+        {
+          "numero": 2,
+          "id": "FAQ-RH#12",
+          "texte": "## Que faire si je suis malade ?\n\nPrévenez votre manager le jour même, puis envoyez votre arrêt de travail au service RH sous 48 heures, depuis l'espace RH rubrique « Mes absences ». Après un an d'ancienneté, Kalyo maintient votre salaire à 100 % dès le premier jour d'arrêt."
+        },
+        {
+          "numero": 3,
+          "id": "INT-DEPART#7",
+          "texte": "## La portabilité de la mutuelle\n\nSi vous êtes indemnisé par l'assurance chômage, vous continuez à bénéficier gratuitement de la complémentaire santé et de la prévoyance de Kalyo après votre départ, pendant une durée égale à celle de votre dernier contrat, dans la limite prévue par la loi. C'est la portabilité. Solvéa Santé vous demandera un justificatif de votre indemnisation. Détails : politique mutuelle et prévoyance (POL-MU-01)."
+        },
+        {
+          "numero": 4,
+          "id": "POL-MU-01#8",
+          "texte": "## Article 6. Portabilité après votre départ\n\nSi votre contrat de travail prend fin et que vous êtes indemnisé par l'assurance chômage, vous conservez gratuitement vos garanties santé et prévoyance : c'est la portabilité. Elle dure autant que votre dernier contrat chez Kalyo, dans la limite de 12 mois, et s'arrête dès que vous retrouvez un emploi. Elle ne s'applique pas en cas de licenciement pour faute lourde. Elle est mentionnée sur votre certificat de travail."
+        },
+        {
+          "numero": 5,
+          "id": "POL-CA-01#14",
+          "texte": "## Article 6. Absence pour enfant malade (EMA)\n\nKalyo accorde 3 jours par année civile et par enfant de moins de 16 ans, en cas de maladie ou d'accident de l'enfant. Ces jours sont payés à 100 %. Ils ne sont pas transférables d'un enfant à l'autre.\n\nPrévenez votre manager le jour même, puis posez le code EMA dans l'espace RH et joignez le certificat médical dans les 48 heures.\n\nAu-delà de ces 3 jours, vous pouvez poser des CP ou des RTT, ou demander au service RH les congés non rémunérés prévus par la loi."
+        },
+        {
+          "numero": 6,
+          "id": "FAQ-RH#11",
+          "texte": "## Quel code d'absence dois-je poser pour un enfant malade ?\n\nLe code `EMA` (enfant malade). Kalyo accorde trois jours par an et par enfant de moins de 16 ans, rémunérés à 100 %. Joignez un certificat médical à la demande dans l'espace RH dans les 48 heures."
+        },
+        {
+          "numero": 7,
+          "id": "FAQ-RH#5",
+          "texte": "## Existe-t-il une indemnité de télétravail ?\n\nOui. Kalyo verse une indemnité forfaitaire de 2,50 € par jour de télétravail, dans la limite de 30 € par mois. Elle est calculée automatiquement à partir des jours déclarés dans l'espace RH et versée avec la paie du mois suivant."
+        },
+        {
+          "numero": 8,
+          "id": "INT-CALENDRIER-PAIE#1",
+          "texte": "# Calendrier de paie 2026\n\nMis à jour le 2 mars 2026\n\nChez Kalyo, le salaire est versé le dernier jour ouvré de chaque mois. Le bulletin de paie est déposé la veille dans votre coffre-fort numérique, accessible depuis l'espace RH. Le tableau ci-dessous donne toutes les dates de l'année 2026."
+        }
+      ],
+      "texte": "Après un an d'ancienneté, Kalyo maintient votre salaire à 100 % dès le premier jour d'arrêt, pendant 90 jours d'arrêt au plus sur douze mois consécutifs [1]. Au-delà de ces 90 jours, le contrat de prévoyance prend le relais [1]. Pour signaler votre maladie, vous devez prévenir votre manager le jour même et envoyer votre arrêt de travail au service RH sous 48 heures via l'espace RH, rubrique « Mes absences » [1][2].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-CA-01#18",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "FAQ-RH#12",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1581
+    },
+    {
+      "id": "Q27",
+      "question": "Si je suis une formation du plan de formation, est-ce que je suis payé pendant ce temps ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "INT-ESPACE-RH#3",
+          "score": 0.6593
+        },
+        {
+          "id": "POL-FO-01#9",
+          "score": 0.6537
+        },
+        {
+          "id": "FAQ-RH#32",
+          "score": 0.6454
+        },
+        {
+          "id": "POL-FO-01#8",
+          "score": 0.6076
+        },
+        {
+          "id": "POL-FO-01#13",
+          "score": 0.599
+        },
+        {
+          "id": "POL-FO-01#3",
+          "score": 0.5916
+        },
+        {
+          "id": "FAQ-RH#33",
+          "score": 0.5878
+        },
+        {
+          "id": "POL-FO-01#7",
+          "score": 0.5733
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "INT-ESPACE-RH#3",
+          "texte": "## Formation\n\nFaites votre demande au moins un mois avant la session, après en avoir parlé à votre manager. Pour une formation financée par votre compte personnel de formation (CPF) et suivie sur le temps de travail, le délai est de deux mois, avec l'accord de votre manager. Voir la politique de formation (POL-FO-01)."
+        },
+        {
+          "numero": 2,
+          "id": "POL-FO-01#9",
+          "texte": "### 5.2 Formation sur le temps de travail\n\nSi la formation a lieu en tout ou partie sur votre temps de travail, il vous faut l'accord de votre manager. Faites la demande au moins deux mois avant le début de la formation, dans l'espace RH, rubrique « Formation ». Le service RH vous répond sous 30 jours calendaires ; sans réponse dans ce délai, la demande est considérée comme acceptée. Pendant les heures de formation sur le temps de travail, votre salaire est maintenu."
+        },
+        {
+          "numero": 3,
+          "id": "FAQ-RH#32",
+          "texte": "## Puis-je utiliser mon compte personnel de formation (CPF) pendant mon temps de travail ?\n\nOui, si la formation a lieu en tout ou partie sur le temps de travail et que votre manager donne son accord. Faites la demande au moins deux mois à l'avance dans l'espace RH, rubrique « Formation »."
+        },
+        {
+          "numero": 4,
+          "id": "POL-FO-01#8",
+          "texte": "### 5.1 Formation hors temps de travail\n\nSi la formation se déroule entièrement en dehors de votre temps de travail (le soir, le week-end, pendant vos congés), vous n'avez besoin d'aucune autorisation et vous n'avez pas à en informer Kalyo."
+        },
+        {
+          "numero": 5,
+          "id": "POL-FO-01#13",
+          "texte": "## Article 8. La clause de dédit-formation\n\nPour une formation dont le coût pour Kalyo dépasse 5 000 €, une clause de dédit-formation est signée avant le début de la formation. Le principe est simple : en échange de ce financement important, vous vous engagez à rester chez Kalyo pendant une durée fixée à l'avance, deux ans au plus après la fin de la formation. Si vous démissionnez avant la fin de cette durée, vous remboursez une partie du coût de la formation.\n\nLa clause précise la formation, son coût, la durée de l'engagement et le montant à rembourser. Ce montant diminue chaque mois, au prorata de la durée restant à courir : plus vous partez tard, moins vous remboursez. Seuls les frais pédagogiques sont pris en compte, jamais le salaire versé pendant la formation.\n\nLa clause ne s'applique pas si c'est Kalyo qui met fin au contrat de travail. Elle ne concerne jamais les formations obligatoires, ni les formations financées par votre CPF, ni les formations de 5 000 € ou moins."
+        },
+        {
+          "numero": 6,
+          "id": "POL-FO-01#3",
+          "texte": "### 2.1 La démarche\n\nParlez d'abord de votre projet à votre manager. Faites ensuite la demande dans l'espace RH, rubrique « Formation », au moins un mois avant le début de la session. Indiquez :\n- l'intitulé de la formation et l'organisme ;\n- les dates, la durée et le lieu (sur site, à distance ou chez l'organisme) ;\n- le coût, avec le devis et le programme ;\n- ce que la formation vous apportera dans votre poste ou pour votre évolution."
+        },
+        {
+          "numero": 7,
+          "id": "FAQ-RH#33",
+          "texte": "## Comment sont rémunérées les astreintes ?\n\nChaque semaine d'astreinte donne droit à une prime forfaitaire de 150 €. Les interventions réalisées pendant l'astreinte sont payées en heures majorées de 50 %, ou de 100 % la nuit, le dimanche et les jours fériés."
+        },
+        {
+          "numero": 8,
+          "id": "POL-FO-01#7",
+          "texte": "## Article 5. Le compte personnel de formation (CPF)\n\nLe compte personnel de formation (CPF) est un compte individuel, crédité chaque année en euros, qui vous permet de suivre une formation certifiante de votre choix. Il vous appartient et vous le gérez vous-même sur la plateforme publique dédiée."
+        }
+      ],
+      "texte": "Je ne peux pas répondre à votre question car les passages fournis ne contiennent pas d'information sur la rémunération lors d'une formation issue du plan de formation. Je vous propose d'ouvrir un ticket dans l'espace RH pour obtenir cette précision.",
+      "sources": [],
+      "abstention": "sans-source",
+      "duree": 1154
+    },
+    {
+      "id": "Q28",
+      "question": "Puis-je laisser mon ordinateur sans surveillance dans un café ou dans ma voiture ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "INT-SECURITE#5",
+          "score": 0.6244
+        },
+        {
+          "id": "INT-SECURITE#6",
+          "score": 0.5074
+        },
+        {
+          "id": "INT-VELO#3",
+          "score": 0.502
+        },
+        {
+          "id": "INT-ERGONOMIE#2",
+          "score": 0.4961
+        },
+        {
+          "id": "POL-HO-01#8",
+          "score": 0.4905
+        },
+        {
+          "id": "GRP-TRV-01#15",
+          "score": 0.4844
+        },
+        {
+          "id": "INT-ERGONOMIE#3",
+          "score": 0.4811
+        },
+        {
+          "id": "POL-TTG-01#7",
+          "score": 0.4748
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "INT-SECURITE#5",
+          "texte": "## Verrouillage du poste\n\nVerrouillez votre session chaque fois que vous quittez votre poste, même pour quelques minutes, au bureau comme à la maison. Ne laissez jamais votre ordinateur sans surveillance dans un train, un café ou une voiture. En cas de perte ou de vol, prévenez le support sans attendre."
+        },
+        {
+          "numero": 2,
+          "id": "INT-SECURITE#6",
+          "texte": "## Réseaux sans fil publics et VPN en télétravail\n\n- Hors des locaux, connectez-vous toujours au VPN avant d'accéder aux applications internes.\n- Sur un réseau sans fil public (gare, hôtel, café), le VPN est obligatoire. Mieux encore : utilisez le partage de connexion de votre téléphone.\n- Dans un lieu public, évitez de travailler sur des documents confidentiels à la vue de tous, ou demandez au support un filtre de confidentialité pour votre écran.\n- Ne branchez jamais une clé USB inconnue sur votre ordinateur professionnel."
+        },
+        {
+          "numero": 3,
+          "id": "INT-VELO#3",
+          "texte": "## Le local à vélos\n\n- À Lyon, un local sécurisé au sous-sol, accessible avec votre badge, avec des arceaux, des prises pour recharger les vélos électriques et une pompe (voir le site de Lyon).\n- À Nantes, un abri fermé dans la cour intérieure, lui aussi accessible avec votre badge et équipé de prises de recharge (voir le site de Nantes).\n\nAttachez toujours votre vélo par le cadre, même dans le local. Les vélos qui semblent abandonnés depuis plusieurs mois sont signalés par l'accueil, puis retirés après un message sur l'intranet."
+        },
+        {
+          "numero": 4,
+          "id": "INT-ERGONOMIE#2",
+          "texte": "## Choisir l'emplacement\n\n- Un espace calme, si possible une pièce ou un coin dédié, que vous quittez à la fin de la journée.\n- Une lumière naturelle qui arrive de côté : ni fenêtre dans le dos (reflets sur l'écran), ni fenêtre en face (éblouissement).\n- Une connexion fiable. Le télétravail est possible depuis tout lieu situé en France métropolitaine, jamais depuis l'étranger. Déclarez l'adresse dans l'espace RH avant le premier jour de télétravail depuis ce lieu."
+        },
+        {
+          "numero": 5,
+          "id": "POL-HO-01#8",
+          "texte": "## Article 7. Droit à la déconnexion\n\nChaque salarié a le droit de ne pas être connecté à ses outils professionnels en dehors de son temps de travail.\n\nEntre 20 h et 8 h, ainsi que le week-end, aucune réponse n'est attendue aux messages et aux appels professionnels. Il en va de même pendant les congés, les jours de RTT et les arrêts de travail. Seuls les salariés d'astreinte doivent rester joignables pendant leur semaine d'astreinte, selon les règles de la politique astreintes et interventions (POL-AS-01).\n\nPour faire vivre ce droit :\n- les managers évitent d'envoyer des messages pendant ces périodes et utilisent l'envoi différé ;\n- un message reçu le soir ou le week-end peut attendre le jour ouvré suivant.\n\nSi vous êtes régulièrement sollicité en dehors de ces plages, parlez-en à votre manager ou ouvrez un ticket de catégorie « Autre » dans l'espace RH."
+        },
+        {
+          "numero": 6,
+          "id": "GRP-TRV-01#15",
+          "texte": "## 12. Loyalty programmes\n\nEmployees may keep the loyalty points earned on business trips for personal use. Points must never influence the choice of carrier or hotel: the lowest compliant option is always chosen. Upgrades paid with personal points are allowed."
+        },
+        {
+          "numero": 7,
+          "id": "INT-ERGONOMIE#3",
+          "texte": "## Régler son poste\n\n- Écran : le haut de l'écran à hauteur des yeux, à une longueur de bras environ. Un ordinateur portable utilisé seul oblige à baisser la tête : ajoutez un écran externe, ou surélevez le portable et utilisez un clavier séparé.\n- Siège : les pieds à plat au sol, les cuisses à l'horizontale, le dos soutenu par le dossier.\n- Clavier et souris : près du bord du bureau, les coudes le long du corps, les avant-bras posés."
+        }
+      ],
+      "texte": "Vous ne devez jamais laisser votre ordinateur sans surveillance dans un train, un café ou une voiture [1]. Veuillez verrouiller votre session chaque fois que vous quittez votre poste, même pour quelques minutes, au bureau comme à la maison [1].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "INT-SECURITE#5",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1120
+    },
+    {
+      "id": "Q29",
+      "question": "Je travaille à 40 %, comment est calculé le remboursement de mon abonnement de transport ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-TP-01#4",
+          "score": 0.7173
+        },
+        {
+          "id": "POL-TP-01#2",
+          "score": 0.6579
+        },
+        {
+          "id": "FAQ-RH#23",
+          "score": 0.6447
+        },
+        {
+          "id": "POL-TP-01#6",
+          "score": 0.5978
+        },
+        {
+          "id": "INT-VELO#2",
+          "score": 0.5968
+        },
+        {
+          "id": "POL-MU-01#9",
+          "score": 0.5887
+        },
+        {
+          "id": "FAQ-RH#24",
+          "score": 0.5693
+        },
+        {
+          "id": "FAQ-RH#22",
+          "score": 0.5664
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-TP-01#4",
+          "texte": "### 1.3 Versement\n\nLe remboursement apparaît chaque mois sur votre bulletin de paie, y compris pour un abonnement annuel, réparti sur douze mois. Il est maintenu les semaines où vous télétravaillez. Il est suspendu pendant un congé sans solde.\n\nUn salarié à temps partiel au moins à mi-temps est remboursé comme un salarié à temps plein. En dessous d'un mi-temps, le remboursement est calculé au prorata des heures travaillées."
+        },
+        {
+          "numero": 2,
+          "id": "POL-TP-01#2",
+          "texte": "### 1.1 Montant\n\nKalyo rembourse 60 % du prix de votre abonnement de transport en commun (métro, tramway, bus, train régional) ou de service public de location de vélos, pour vos trajets entre votre domicile et votre site. La loi impose une prise en charge de 50 % : Kalyo va au-delà.\n\nLe remboursement porte sur le trajet le plus direct, sur la base d'un abonnement en 2de classe.\n\nExemple : pour un abonnement mensuel à 72 €, vous recevez 43,20 € par mois. Pour un abonnement annuel à 780 €, vous recevez 39 € par mois, soit 468 € sur l'année."
+        },
+        {
+          "numero": 3,
+          "id": "FAQ-RH#23",
+          "texte": "## Mes frais de transport en commun sont-ils remboursés ?\n\nOui. Kalyo rembourse 60 % de votre abonnement de transport en commun, sur justificatif déposé une fois par an dans l'espace RH. Le remboursement apparaît chaque mois sur votre bulletin de paie."
+        },
+        {
+          "numero": 4,
+          "id": "POL-TP-01#6",
+          "texte": "## Article 2. Forfait mobilités durables\n\nExemple : vous achetez un vélo à assistance électrique en mars, puis le faites réviser en octobre. Vous pouvez demander le remboursement de ces deux dépenses, dans la limite de 300 € pour l'année."
+        },
+        {
+          "numero": 5,
+          "id": "INT-VELO#2",
+          "texte": "## Le forfait mobilités durables\n\nLe forfait mobilités durables rembourse jusqu'à 300 € par an de frais liés à vos trajets entre votre domicile et le travail à vélo, à trottinette ou en covoiturage. Il couvre par exemple l'achat ou l'entretien d'un vélo, y compris à assistance électrique.\n\nPour en bénéficier, faites la demande dans l'espace RH en ouvrant un ticket « Transport », avec une déclaration sur l'honneur et vos justificatifs d'achat ou d'entretien. Si vous combinez vélo et transports en commun, les règles de cumul avec le remboursement de l'abonnement figurent dans la politique Transport, mobilités durables et titres-restaurant (POL-TP-01)."
+        },
+        {
+          "numero": 6,
+          "id": "POL-MU-01#9",
+          "texte": "## Article 7. Tableau des garanties santé\n\nLes remboursements sont exprimés en pourcentage de la base de remboursement (BR), c'est-à-dire le tarif sur lequel l'assurance maladie calcule sa part, ou en forfait. Les pourcentages incluent la part de l'assurance maladie, dans la limite des frais réels.\n\n| Poste | Remboursement total |\n| --- | --- |\n| Consultations de généraliste ou de spécialiste | 200 % BR |\n| Pharmacie (médicaments remboursables) | 100 % BR |\n| Hospitalisation : honoraires et frais de séjour | 250 % BR |\n| Hospitalisation : chambre particulière | 70 € par nuit |\n| Optique : équipement à verres simples | forfait de 280 € |\n| Optique : équipement à verres complexes | forfait de 450 € |\n| Dentaire : soins | 100 % BR |\n| Dentaire : prothèses | 350 % BR |\n| Dentaire : implants | forfait de 400 € par an |"
+        },
+        {
+          "numero": 7,
+          "id": "FAQ-RH#24",
+          "texte": "## Existe-t-il une aide pour venir au travail à vélo ?\n\nOui. Le forfait mobilités durables rembourse jusqu'à 300 € par an de frais liés au vélo, à la trottinette ou au covoiturage. La demande se fait dans l'espace RH, avec une déclaration sur l'honneur et les justificatifs d'achat ou d'entretien."
+        }
+      ],
+      "texte": "Pour un salarié à temps partiel en dessous d'un mi-temps, le remboursement de l'abonnement de transport est calculé au prorata des heures travaillées [1]. Le remboursement de 60 % du prix de votre abonnement de transport en commun est versé chaque mois sur votre bulletin de paie [2][3]. Vous devez déposer votre justificatif une fois par an dans l'espace RH [3].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-TP-01#4",
+          "extraits": []
+        },
+        {
+          "numero": 2,
+          "source": "POL-TP-01#2",
+          "extraits": []
+        },
+        {
+          "numero": 3,
+          "source": "FAQ-RH#23",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1376
+    },
+    {
+      "id": "Q30",
+      "question": "Si je reviens à mon ancien site pendant la période probatoire de ma mobilité, qui paie le déménagement ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-MO-01#9",
+          "score": 0.6169
+        },
+        {
+          "id": "POL-MO-01#6",
+          "score": 0.5841
+        },
+        {
+          "id": "POL-MO-01#10",
+          "score": 0.5546
+        },
+        {
+          "id": "POL-MO-01#3",
+          "score": 0.5527
+        },
+        {
+          "id": "INT-DEPART#7",
+          "score": 0.5373
+        },
+        {
+          "id": "POL-MO-01#7",
+          "score": 0.5344
+        },
+        {
+          "id": "POL-MU-01#8",
+          "score": 0.5305
+        },
+        {
+          "id": "POL-TP-01#4",
+          "score": 0.5284
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "POL-MO-01#9",
+          "texte": "## Article 5. La période probatoire\n\nUne période probatoire de 3 mois commence à votre prise de poste. Elle permet à chacun de vérifier que le nouveau poste vous convient. Ce n'est pas une période d'essai : votre contrat de travail n'est pas remis en cause.\n\nPendant ces trois mois, vous ou votre nouveau manager pouvez mettre fin à la mobilité. Vous retrouvez alors votre ancien poste, ou un poste équivalent sur votre site d'origine. Si la décision vient de Kalyo, le déménagement de retour est pris en charge dans les mêmes conditions ; si elle vient de vous, il reste à votre charge. Dans les deux cas, les aides déjà versées ne vous sont pas réclamées."
+        },
+        {
+          "numero": 2,
+          "id": "POL-MO-01#6",
+          "texte": "### 4.1 Prise en charge du déménagement\n\nKalyo prend en charge le déménagement de votre logement, sur devis, jusqu'à 2 500 €. Transmettez deux devis de déménageurs au service RH par un ticket « Mobilité » ; Kalyo règle directement le déménageur retenu. Si vous déménagez par vos propres moyens (location d'un véhicule utilitaire, par exemple), les frais sont remboursés sur facture dans la même limite, avec le formulaire NDF-03."
+        },
+        {
+          "numero": 3,
+          "id": "POL-MO-01#10",
+          "texte": "## Article 6. Rémunération et conditions de travail\n\nLa mobilité géographique seule ne modifie pas votre salaire. Si elle s'accompagne d'un changement de poste ou de responsabilités, une évolution de rémunération est discutée à part, avec le service RH.\n\nLes autres règles sont les mêmes sur les deux sites : télétravail, titres-restaurant, congés, mutuelle. Après votre déménagement :\n- mettez à jour votre adresse dans l'espace RH ;\n- déposez le justificatif de votre nouvel abonnement de transport, remboursé à 60 % (voir la politique transport, mobilités durables et titres-restaurant, POL-TP-01) ;\n- récupérez votre badge d'accès au nouveau site, remis le premier jour par votre nouveau manager."
+        },
+        {
+          "numero": 4,
+          "id": "POL-MO-01#3",
+          "texte": "## Article 2. Les conditions\n\nPour demander une mobilité, vous devez avoir au moins 12 mois d'ancienneté dans votre poste actuel. Cette condition ne s'applique pas en cas de situation personnelle particulière : mutation du conjoint, raison de santé ou rapprochement familial, par exemple. Le service RH examine ces situations au cas par cas, de façon confidentielle. Dans tous les cas, votre période d'essai doit être terminée."
+        },
+        {
+          "numero": 5,
+          "id": "INT-DEPART#7",
+          "texte": "## La portabilité de la mutuelle\n\nSi vous êtes indemnisé par l'assurance chômage, vous continuez à bénéficier gratuitement de la complémentaire santé et de la prévoyance de Kalyo après votre départ, pendant une durée égale à celle de votre dernier contrat, dans la limite prévue par la loi. C'est la portabilité. Solvéa Santé vous demandera un justificatif de votre indemnisation. Détails : politique mutuelle et prévoyance (POL-MU-01)."
+        },
+        {
+          "numero": 6,
+          "id": "POL-MO-01#7",
+          "texte": "### 4.2 Congé pour le déménagement\n\nVous bénéficiez de deux jours de congé exceptionnel rémunérés pour ce déménagement. Ils s'ajoutent au jour de congé annuel pour déménagement prévu par la politique congés et absences (POL-CA-01), qui se pose avec le code EVF : si vous n'avez pas encore utilisé ce jour annuel, vous disposez donc de trois jours au total.\n\nLes deux jours de mobilité sont enregistrés par le service RH à partir de la date de déménagement que vous lui communiquez. Ils se prennent au plus tard deux mois après votre prise de poste."
+        }
+      ],
+      "texte": "Si la décision de retour à votre ancien poste vient de Kalyo, le déménagement de retour est pris en charge dans les mêmes conditions que le déménagement initial [1]. Si la décision vient de vous, les frais de déménagement restent à votre charge [1].",
+      "sources": [
+        {
+          "numero": 1,
+          "source": "POL-MO-01#9",
+          "extraits": []
+        }
+      ],
+      "abstention": null,
+      "duree": 1010
+    },
+    {
+      "id": "Q31",
+      "question": "Quelle est la météo à Lyon demain ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "INT-SITE-LYON#5",
+          "score": 0.4658
+        },
+        {
+          "id": "INT-SITE-NANTES#7",
+          "score": 0.461
+        },
+        {
+          "id": "POL-MO-01#8",
+          "score": 0.4391
+        },
+        {
+          "id": "INT-SITE-LYON#1",
+          "score": 0.438
+        },
+        {
+          "id": "POL-MO-01#10",
+          "score": 0.4342
+        },
+        {
+          "id": "INT-SITE-LYON#3",
+          "score": 0.4332
+        },
+        {
+          "id": "INT-JOURS-FERIES#1",
+          "score": 0.4299
+        },
+        {
+          "id": "INT-SITE-LYON#2",
+          "score": 0.4285
+        }
+      ],
+      "passages": [],
+      "texte": "",
+      "sources": [],
+      "abstention": "avant-llm",
+      "duree": 28
+    },
+    {
+      "id": "Q32",
+      "question": "Donne-moi une recette de crêpes.",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "GRP-TRV-01#10",
+          "score": 0.4468
+        },
+        {
+          "id": "POL-NF-01#6",
+          "score": 0.4212
+        },
+        {
+          "id": "INT-ESPACE-RH#2",
+          "score": 0.4199
+        },
+        {
+          "id": "POL-NF-01#8",
+          "score": 0.4131
+        },
+        {
+          "id": "POL-AS-01#5",
+          "score": 0.4086
+        },
+        {
+          "id": "INT-CALENDRIER-PAIE#6",
+          "score": 0.4043
+        },
+        {
+          "id": "POL-NF-01#7",
+          "score": 0.4034
+        },
+        {
+          "id": "INT-ESPACE-RH#6",
+          "score": 0.4019
+        }
+      ],
+      "passages": [],
+      "texte": "",
+      "sources": [],
+      "abstention": "avant-llm",
+      "duree": 30
+    },
+    {
+      "id": "Q33",
+      "question": "Qui a gagné la Coupe du monde 2022 ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-TT-02#2",
+          "score": 0.308
+        },
+        {
+          "id": "GRP-TRV-01#5",
+          "score": 0.3067
+        },
+        {
+          "id": "INT-JOURS-FERIES#2",
+          "score": 0.3028
+        },
+        {
+          "id": "POL-MU-01#2",
+          "score": 0.3009
+        },
+        {
+          "id": "INT-QUI-CONTACTER#4",
+          "score": 0.3006
+        },
+        {
+          "id": "POL-TTG-01#13",
+          "score": 0.2979
+        },
+        {
+          "id": "POL-TT-02#3",
+          "score": 0.2956
+        },
+        {
+          "id": "POL-MU-01#4",
+          "score": 0.295
+        }
+      ],
+      "passages": [],
+      "texte": "",
+      "sources": [],
+      "abstention": "avant-llm",
+      "duree": 33
+    },
+    {
+      "id": "Q34",
+      "question": "Ai-je droit à un congé sabbatique ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "FAQ-RH#17",
+          "score": 0.5816
+        },
+        {
+          "id": "POL-CA-01#7",
+          "score": 0.5591
+        },
+        {
+          "id": "POL-CA-01#9",
+          "score": 0.5554
+        },
+        {
+          "id": "POL-CA-01#19",
+          "score": 0.5502
+        },
+        {
+          "id": "INT-ESPACE-RH#2",
+          "score": 0.5417
+        },
+        {
+          "id": "POL-CA-01#5",
+          "score": 0.5398
+        },
+        {
+          "id": "FAQ-RH#7",
+          "score": 0.539
+        },
+        {
+          "id": "FAQ-RH#16",
+          "score": 0.5375
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "FAQ-RH#17",
+          "texte": "## Puis-je prendre un congé sans solde ?\n\nOui, pour une durée d'un mois à six mois, avec le code `CSS`. La demande se fait au moins deux mois à l'avance et doit être acceptée par votre manager et par le service RH."
+        },
+        {
+          "numero": 2,
+          "id": "POL-CA-01#7",
+          "texte": "### 3.2 Délais\n\n| Demande | Délai minimum |\n| --- | --- |\n| Congé de 5 jours ouvrés consécutifs au plus | 2 semaines avant le premier jour |\n| Congé de plus de 5 jours ouvrés consécutifs | 1 mois avant le premier jour |\n| Congés d'été (juillet et août) | Avant le 31 mars |\n\nLes managers confirment le planning des congés d'été avant le 30 avril. Lorsque plusieurs demandes se chevauchent dans une équipe, le manager tient compte de la situation de famille (enfants scolarisés, congés du conjoint) et de l'ancienneté."
+        },
+        {
+          "numero": 3,
+          "id": "POL-CA-01#9",
+          "texte": "## Article 4. Jours de réduction du temps de travail (RTT)\n\nLes salariés en forfait annuel en jours (voir la politique temps de travail, horaires et droit à la déconnexion, POL-HO-01) disposent de 10 jours de RTT par année civile à temps plein.\n- Temps partiel : les RTT sont calculés au prorata. Un salarié à 80 % dispose de 8 jours.\n- Arrivée en cours d'année : les RTT sont calculés au prorata des mois de présence, le mois d'arrivée comptant en entier. Un salarié à temps plein arrivé en avril dispose de 7,5 jours pour l'année.\n- Salariés en heures (35 heures hebdomadaires, support informatique et finance et paie) : ils n'ont pas de jours de RTT.\n\nLes RTT se posent par journée ou demi-journée, avec la même procédure et les mêmes délais que les congés payés. Ils doivent être posés avant le 31 décembre et ne sont pas reportables : un jour de réduction du temps de travail non pris au 31 décembre est perdu et n'est pas payé."
+        },
+        {
+          "numero": 4,
+          "id": "POL-CA-01#19",
+          "texte": "## Article 9. Congé sans solde (CSS)\n\nVous pouvez demander un congé sans solde d'une durée d'un mois à six mois, pour le motif de votre choix. La demande se fait dans l'espace RH avec le code CSS, au moins deux mois avant la date de départ souhaitée.\n\nLa demande doit être acceptée par votre manager et par le service RH, qui la soumet à l'accord de la direction. La réponse vous est donnée sous un mois.\n\nPendant le congé, votre contrat de travail est suspendu : vous ne percevez pas de salaire et n'acquérez pas de congés payés. Ouvrez un ticket « Mutuelle et prévoyance » pour connaître les conditions de maintien de vos garanties. À votre retour, vous retrouvez votre poste ou un poste équivalent, avec la même rémunération. Une prolongation est possible dans la limite de six mois au total."
+        },
+        {
+          "numero": 5,
+          "id": "INT-ESPACE-RH#2",
+          "texte": "## Mes absences\n\nPour poser une absence, choisissez les dates et le code d'absence :\n- `CP` : congés payés (25 jours ouvrés par an pour un temps plein) ;\n- `RTT` : jour de réduction du temps de travail (10 jours par an en forfait jours à temps plein, à poser avant le 31 décembre) ;\n- `EMA` : enfant malade, avec un certificat médical joint sous 48 heures ;\n- `EVF` : événement familial (mariage, PACS, naissance, déménagement) ;\n- `CSS` : congé sans solde, à demander au moins deux mois avant.\n\nVotre manager valide ou refuse la demande sous cinq jours ouvrés. Vos soldes s'affichent en haut de la rubrique. C'est aussi dans « Mes absences » que vous déposez un arrêt de travail, sous 48 heures. Les délais de demande et le détail des droits figurent dans la politique congés et absences (POL-CA-01).\n\nLes jours de télétravail et l'adresse depuis laquelle vous télétravaillez se déclarent également dans l'espace RH : voir le guide pratique du télétravail (POL-TTG-01)."
+        },
+        {
+          "numero": 6,
+          "id": "FAQ-RH#7",
+          "texte": "## Combien de jours de congés payés ai-je par an ?\n\nUn salarié à temps plein acquiert 25 jours ouvrés de congés payés par an, soit 2,08 jours par mois travaillé. La période d'acquisition court du 1er juin au 31 mai."
+        }
+      ],
+      "texte": "Je ne trouve aucune information concernant un congé sabbatique dans les documents RH de Kalyo. Je vous propose d'ouvrir un ticket dans l'espace RH pour obtenir une réponse.",
+      "sources": [],
+      "abstention": "sans-source",
+      "duree": 617
+    },
+    {
+      "id": "Q35",
+      "question": "Comment configurer mon VPN sous Linux ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "INT-OUTILS#7",
+          "score": 0.6128
+        },
+        {
+          "id": "INT-SECURITE#6",
+          "score": 0.5677
+        },
+        {
+          "id": "INT-OUTILS#1",
+          "score": 0.4513
+        },
+        {
+          "id": "INT-ESPACE-RH#1",
+          "score": 0.4503
+        },
+        {
+          "id": "INT-ERGONOMIE#3",
+          "score": 0.4326
+        },
+        {
+          "id": "POL-TT-02#11",
+          "score": 0.4277
+        },
+        {
+          "id": "INT-ERGONOMIE#2",
+          "score": 0.4263
+        },
+        {
+          "id": "INT-SECURITE#3",
+          "score": 0.4076
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "INT-OUTILS#7",
+          "texte": "## Le VPN\n\nLe VPN (réseau privé virtuel) chiffre la connexion entre votre ordinateur et le réseau de Kalyo. Il est obligatoire pour accéder aux applications internes hors des locaux, en télétravail comme en déplacement, et indispensable sur un réseau sans fil public. Les bons réflexes sont rappelés sur la page Sécurité informatique : les bons réflexes."
+        },
+        {
+          "numero": 2,
+          "id": "INT-SECURITE#6",
+          "texte": "## Réseaux sans fil publics et VPN en télétravail\n\n- Hors des locaux, connectez-vous toujours au VPN avant d'accéder aux applications internes.\n- Sur un réseau sans fil public (gare, hôtel, café), le VPN est obligatoire. Mieux encore : utilisez le partage de connexion de votre téléphone.\n- Dans un lieu public, évitez de travailler sur des documents confidentiels à la vue de tous, ou demandez au support un filtre de confidentialité pour votre écran.\n- Ne branchez jamais une clé USB inconnue sur votre ordinateur professionnel."
+        },
+        {
+          "numero": 3,
+          "id": "INT-OUTILS#1",
+          "texte": "# Les outils du quotidien\n\nMis à jour le 18 mai 2026\n\nVoici les outils que vous utiliserez chaque semaine chez Kalyo. Ils sont tous accessibles depuis l'intranet, avec votre compte Kalyo et la double authentification. Hors des locaux, connectez-vous d'abord au VPN."
+        },
+        {
+          "numero": 4,
+          "id": "INT-ESPACE-RH#1",
+          "texte": "# L'espace RH : mode d'emploi\n\nMis à jour le 16 mars 2026\n\nL'espace RH est le portail en ligne de toutes vos démarches RH. Vous y accédez depuis la page d'accueil de l'intranet, avec votre compte Kalyo et la double authentification. Hors des locaux, connectez-vous d'abord au VPN."
+        },
+        {
+          "numero": 5,
+          "id": "INT-ERGONOMIE#3",
+          "texte": "## Régler son poste\n\n- Écran : le haut de l'écran à hauteur des yeux, à une longueur de bras environ. Un ordinateur portable utilisé seul oblige à baisser la tête : ajoutez un écran externe, ou surélevez le portable et utilisez un clavier séparé.\n- Siège : les pieds à plat au sol, les cuisses à l'horizontale, le dos soutenu par le dossier.\n- Clavier et souris : près du bord du bureau, les coudes le long du corps, les avant-bras posés."
+        },
+        {
+          "numero": 6,
+          "id": "POL-TT-02#11",
+          "texte": "## Article 5. Lieu du télétravail\n\nLe télétravail s'exerce au domicile du salarié ou dans un autre lieu déclaré dans l'espace RH avant le premier jour de télétravail depuis ce lieu, situé en France métropolitaine. Le lieu choisi doit offrir une connexion internet fiable et un espace de travail calme, permettant de respecter les règles de confidentialité.\n\nLe télétravail depuis l'étranger n'est jamais autorisé, y compris pour quelques jours, pour des raisons de sécurité sociale, de fiscalité et de sécurité informatique.\n\nLe salarié informe son assureur habitation qu'il télétravaille à son domicile. L'usage d'un réseau sans fil public n'est autorisé qu'avec la connexion sécurisée (VPN) fournie par Kalyo."
+        },
+        {
+          "numero": 7,
+          "id": "INT-ERGONOMIE#2",
+          "texte": "## Choisir l'emplacement\n\n- Un espace calme, si possible une pièce ou un coin dédié, que vous quittez à la fin de la journée.\n- Une lumière naturelle qui arrive de côté : ni fenêtre dans le dos (reflets sur l'écran), ni fenêtre en face (éblouissement).\n- Une connexion fiable. Le télétravail est possible depuis tout lieu situé en France métropolitaine, jamais depuis l'étranger. Déclarez l'adresse dans l'espace RH avant le premier jour de télétravail depuis ce lieu."
+        },
+        {
+          "numero": 8,
+          "id": "INT-SECURITE#3",
+          "texte": "## Double authentification\n\nLa double authentification est obligatoire pour votre compte Kalyo, l'espace RH et les outils accessibles depuis l'intranet. En plus du mot de passe, vous validez chaque connexion avec l'application d'authentification installée sur votre téléphone. Une demande de validation que vous n'avez pas lancée ? Refusez-la et signalez-la au support. Si vous changez de téléphone ou si vous le perdez, prévenez le support, qui transfère votre double authentification."
+        }
+      ],
+      "texte": "Je ne peux pas répondre à votre question car les passages fournis ne contiennent pas d'informations sur la configuration du VPN sous Linux. Je vous propose d'ouvrir un ticket dans l'espace RH pour obtenir cette aide.",
+      "sources": [],
+      "abstention": "sans-source",
+      "duree": 1139
+    },
+    {
+      "id": "Q36",
+      "question": "Kalyo va-t-elle être rachetée ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "INT-DEPART#1",
+          "score": 0.5428
+        },
+        {
+          "id": "FAQ-RH#26",
+          "score": 0.5206
+        },
+        {
+          "id": "POL-TP-01#2",
+          "score": 0.5044
+        },
+        {
+          "id": "INT-VELO#1",
+          "score": 0.4946
+        },
+        {
+          "id": "POL-TP-01#1",
+          "score": 0.4891
+        },
+        {
+          "id": "INT-CSE#1",
+          "score": 0.4886
+        },
+        {
+          "id": "POL-HO-01#2",
+          "score": 0.4872
+        },
+        {
+          "id": "INT-DEPART#4",
+          "score": 0.4872
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "INT-DEPART#1",
+          "texte": "# Quitter Kalyo\n\nMis à jour le 6 juillet 2026\n\nVous quittez Kalyo ? Cette page rassemble les étapes à suivre, de l'annonce de votre départ à votre dernier jour. Pour une rupture conventionnelle ou un départ à la retraite, prenez d'abord rendez-vous avec le service RH : les étapes sont différentes."
+        },
+        {
+          "numero": 2,
+          "id": "FAQ-RH#26",
+          "texte": "## Quelle mutuelle propose Kalyo ?\n\nKalyo a souscrit un contrat collectif de complémentaire santé obligatoire. L'entreprise prend en charge 60 % de la cotisation. La notice et votre carte de tiers payant sont disponibles dans l'espace adhérent de l'organisme, accessible depuis l'intranet."
+        },
+        {
+          "numero": 3,
+          "id": "POL-TP-01#2",
+          "texte": "### 1.1 Montant\n\nKalyo rembourse 60 % du prix de votre abonnement de transport en commun (métro, tramway, bus, train régional) ou de service public de location de vélos, pour vos trajets entre votre domicile et votre site. La loi impose une prise en charge de 50 % : Kalyo va au-delà.\n\nLe remboursement porte sur le trajet le plus direct, sur la base d'un abonnement en 2de classe.\n\nExemple : pour un abonnement mensuel à 72 €, vous recevez 43,20 € par mois. Pour un abonnement annuel à 780 €, vous recevez 39 € par mois, soit 468 € sur l'année."
+        },
+        {
+          "numero": 4,
+          "id": "INT-VELO#1",
+          "texte": "# Venir à vélo\n\nMis à jour le 13 avril 2026\n\nLyon et Nantes se prêtent bien au vélo, et de plus en plus de salariés de Kalyo viennent travailler en pédalant. Voici ce que Kalyo met à votre disposition pour vous faciliter la vie."
+        },
+        {
+          "numero": 5,
+          "id": "POL-TP-01#1",
+          "texte": "# Transport, mobilités durables et titres-restaurant\n\nRéférence POL-TP-01 · En vigueur au 1er janvier 2026\n\nCette politique décrit trois avantages accordés à tous les salariés de Kalyo, à Lyon comme à Nantes, à compter du 1er janvier 2026 : le remboursement de l'abonnement de transport en commun, le forfait mobilités durables et les titres-restaurant.\n\nLes frais engagés pendant un déplacement professionnel ne relèvent pas de cette politique : voir la politique notes de frais et déplacements (POL-NF-01)."
+        },
+        {
+          "numero": 6,
+          "id": "INT-CSE#1",
+          "texte": "# Le comité social et économique (CSE)\n\nMis à jour le 4 mai 2026\n\nLe comité social et économique (CSE) représente les salariés de Kalyo auprès de la direction. Ses membres sont des salariés élus par leurs collègues. Le CSE de Kalyo est commun aux sites de Lyon et de Nantes. Il est présidé par Samia Lemaire, directrice associée, qui représente l'employeur lors des réunions."
+        },
+        {
+          "numero": 7,
+          "id": "POL-HO-01#2",
+          "texte": "## Article 1. Objet et champ d'application\n\nLa présente politique décrit l'organisation du temps de travail chez Kalyo, sur les sites de Lyon et de Nantes : les deux régimes de durée du travail, le temps partiel, les heures supplémentaires, la journée de solidarité et le droit à la déconnexion. Elle complète la convention collective des bureaux d'études techniques (Syntec).\n\nDeux régimes coexistent chez Kalyo :\n| Régime | Salariés concernés | Jours de RTT |\n| --- | --- | --- |\n| Forfait annuel de 218 jours | Cadres autonomes (tous les services, sauf ceux de la ligne suivante) | 10 jours par an à temps plein |\n| 35 heures hebdomadaires, horaires variables | Support informatique, finance et paie | Aucun |"
+        },
+        {
+          "numero": 8,
+          "id": "INT-DEPART#4",
+          "texte": "## Avant votre dernier jour\n\n- Organisez la passation de vos dossiers avec votre manager.\n- Soumettez vos dernières notes de frais avec le formulaire NDF-03, sans attendre la fin du délai de 30 jours.\n- Faites le point sur vos congés : les congés payés acquis et non pris vous sont versés sous forme d'indemnité compensatrice. Pour les RTT, voir l'article 4 de la politique congés et absences (POL-CA-01) : posez les jours restants avant votre dernier jour.\n- Récupérez vos fichiers personnels. Ne copiez aucune donnée de Kalyo ou de ses clients."
+        }
+      ],
+      "texte": "Je ne traite que les questions relatives aux règles RH de Kalyo.",
+      "sources": [],
+      "abstention": "sans-source",
+      "duree": 772
+    },
+    {
+      "id": "Q37",
+      "question": "Quel est le salaire de mon collègue Julien ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "INT-CALENDRIER-PAIE#5",
+          "score": 0.4702
+        },
+        {
+          "id": "FAQ-RH#6",
+          "score": 0.4619
+        },
+        {
+          "id": "FAQ-RH#25",
+          "score": 0.4603
+        },
+        {
+          "id": "POL-TP-01#7",
+          "score": 0.458
+        },
+        {
+          "id": "POL-TTG-01#8",
+          "score": 0.4556
+        },
+        {
+          "id": "POL-MU-01#11",
+          "score": 0.4493
+        },
+        {
+          "id": "POL-AS-01#5",
+          "score": 0.4458
+        },
+        {
+          "id": "FAQ-RH#5",
+          "score": 0.4429
+        }
+      ],
+      "passages": [],
+      "texte": "",
+      "sources": [],
+      "abstention": "avant-llm",
+      "duree": 26
+    },
+    {
+      "id": "Q38",
+      "question": "Quel est le barème des primes sur objectifs des managers ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "FAQ-RH#19",
+          "score": 0.4803
+        },
+        {
+          "id": "FAQ-RH#33",
+          "score": 0.4685
+        },
+        {
+          "id": "POL-EN-01#4",
+          "score": 0.4579
+        },
+        {
+          "id": "POL-AS-01#6",
+          "score": 0.4561
+        },
+        {
+          "id": "POL-AS-01#5",
+          "score": 0.4472
+        },
+        {
+          "id": "POL-TP-01#7",
+          "score": 0.44
+        },
+        {
+          "id": "GRP-TRV-01#15",
+          "score": 0.4223
+        },
+        {
+          "id": "POL-NF-01#6",
+          "score": 0.4209
+        }
+      ],
+      "passages": [],
+      "texte": "",
+      "sources": [],
+      "abstention": "avant-llm",
+      "duree": 30
+    },
+    {
+      "id": "Q39",
+      "question": "Pourquoi ma collègue Camille était-elle absente la semaine dernière ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "INT-ESPACE-RH#2",
+          "score": 0.5345
+        },
+        {
+          "id": "POL-CA-01#6",
+          "score": 0.5229
+        },
+        {
+          "id": "POL-CA-01#14",
+          "score": 0.4987
+        },
+        {
+          "id": "FAQ-RH#3",
+          "score": 0.4964
+        },
+        {
+          "id": "POL-CA-01#12",
+          "score": 0.494
+        },
+        {
+          "id": "POL-AS-01#9",
+          "score": 0.4771
+        },
+        {
+          "id": "POL-TT-02#10",
+          "score": 0.4761
+        },
+        {
+          "id": "POL-HO-01#8",
+          "score": 0.4734
+        }
+      ],
+      "passages": [
+        {
+          "numero": 1,
+          "id": "INT-ESPACE-RH#2",
+          "texte": "## Mes absences\n\nPour poser une absence, choisissez les dates et le code d'absence :\n- `CP` : congés payés (25 jours ouvrés par an pour un temps plein) ;\n- `RTT` : jour de réduction du temps de travail (10 jours par an en forfait jours à temps plein, à poser avant le 31 décembre) ;\n- `EMA` : enfant malade, avec un certificat médical joint sous 48 heures ;\n- `EVF` : événement familial (mariage, PACS, naissance, déménagement) ;\n- `CSS` : congé sans solde, à demander au moins deux mois avant.\n\nVotre manager valide ou refuse la demande sous cinq jours ouvrés. Vos soldes s'affichent en haut de la rubrique. C'est aussi dans « Mes absences » que vous déposez un arrêt de travail, sous 48 heures. Les délais de demande et le détail des droits figurent dans la politique congés et absences (POL-CA-01).\n\nLes jours de télétravail et l'adresse depuis laquelle vous télétravaillez se déclarent également dans l'espace RH : voir le guide pratique du télétravail (POL-TTG-01)."
+        },
+        {
+          "numero": 2,
+          "id": "POL-CA-01#6",
+          "texte": "### 3.1 Procédure\n\nToute absence prévisible se demande dans l'espace RH, rubrique « Mes absences », avec le code d'absence adapté (article 5). Votre manager valide ou refuse la demande sous 5 jours ouvrés. Un refus est motivé, par exemple par les nécessités du service. Sans réponse passé ce délai, relancez votre manager ou ouvrez un ticket « Congés et absences »."
+        },
+        {
+          "numero": 3,
+          "id": "POL-CA-01#14",
+          "texte": "## Article 6. Absence pour enfant malade (EMA)\n\nKalyo accorde 3 jours par année civile et par enfant de moins de 16 ans, en cas de maladie ou d'accident de l'enfant. Ces jours sont payés à 100 %. Ils ne sont pas transférables d'un enfant à l'autre.\n\nPrévenez votre manager le jour même, puis posez le code EMA dans l'espace RH et joignez le certificat médical dans les 48 heures.\n\nAu-delà de ces 3 jours, vous pouvez poser des CP ou des RTT, ou demander au service RH les congés non rémunérés prévus par la loi."
+        },
+        {
+          "numero": 4,
+          "id": "FAQ-RH#3",
+          "texte": "## Dois-je venir sur site certains jours fixes ?\n\nOui. Chaque équipe fixe avec son manager au moins un jour de présence commun par semaine. Les autres jours de présence sont libres, dans la limite de trois jours de télétravail par semaine."
+        },
+        {
+          "numero": 5,
+          "id": "POL-CA-01#12",
+          "texte": "## Article 5. Codes d'absence\n\n| Code | Signification | Règle principale | Justificatif |\n| --- | --- | --- | --- |\n| CP | Congés payés | 25 jours ouvrés par an, acquis du 1er juin au 31 mai | Aucun |\n| RTT | Réduction du temps de travail | 10 jours par an (forfait jours, temps plein), à poser avant le 31 décembre | Aucun |\n| EMA | Enfant malade | 3 jours par an et par enfant de moins de 16 ans, payés à 100 % | Certificat médical sous 48 h |\n| EVF | Événement familial | Durée selon l'événement (article 7) | Acte ou justificatif de l'événement |\n| CSS | Congé sans solde | 1 à 6 mois, demande 2 mois avant | Aucun |\n| MAL | Maladie | Salaire maintenu à 100 % dès le premier jour après un an d'ancienneté | Arrêt de travail sous 48 h |\n| FOR | Formation | Selon la politique de formation (POL-FO-01) | Convocation ou attestation de présence |"
+        }
+      ],
+      "texte": "Je ne traite que les questions relatives aux règles RH de Kalyo.",
+      "sources": [],
+      "abstention": "sans-source",
+      "duree": 740
+    },
+    {
+      "id": "Q40",
+      "question": "Quelle note a eue Thomas Leroy à son entretien annuel ?",
+      "date": "2026-10-09",
+      "trouves": [
+        {
+          "id": "POL-EN-01#8",
+          "score": 0.4078
+        },
+        {
+          "id": "POL-EN-01#4",
+          "score": 0.4027
+        },
+        {
+          "id": "POL-EN-01#1",
+          "score": 0.3836
+        },
+        {
+          "id": "FAQ-RH#34",
+          "score": 0.3831
+        },
+        {
+          "id": "POL-EN-01#3",
+          "score": 0.3703
+        },
+        {
+          "id": "POL-EN-01#5",
+          "score": 0.3632
+        },
+        {
+          "id": "POL-EN-01#2",
+          "score": 0.3615
+        },
+        {
+          "id": "POL-FO-01#12",
+          "score": 0.3537
+        }
+      ],
+      "passages": [],
+      "texte": "",
+      "sources": [],
+      "abstention": "avant-llm",
+      "duree": 29
+    }
+  ]
+}

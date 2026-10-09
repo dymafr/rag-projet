@@ -7,6 +7,7 @@ const Schema = z
   .object({
     LLM_PROVIDER: z.enum(["anthropic", "openai", "ollama"]).default("anthropic"),
     LLM_MODEL: z.string().min(1, "indiquez le modèle qui rédige les réponses"),
+    JUGE_MODEL: z.string().optional(), // le modèle du juge d'évaluation, chez le même fournisseur ; vide ou absent : LLM_MODEL
     EMBEDDING_PROVIDER: z.enum(["transformers", "openai", "voyage", "ollama"]).default("transformers"),
     EMBEDDING_MODEL: z.string().min(1, "indiquez le modèle d'embedding"),
     EMBEDDING_DIMENSIONS: z.coerce.number().int().positive().optional(), // taille réduite des vecteurs, si le modèle le permet

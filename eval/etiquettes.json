@@ -1,0 +1,211 @@
+[
+  {
+    "id": "Q01",
+    "empreinte": "f25a060e20ba",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q02",
+    "empreinte": "709bf788ea8a",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q03",
+    "empreinte": "e01f8a8c5e1a",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q04",
+    "empreinte": "0f187db013f3",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q05",
+    "empreinte": "19bd319fc09e",
+    "fidelite": false,
+    "pertinence": true,
+    "exactitude": false,
+    "note": "35 € est le plafond des villes françaises (« Autres villes » : les autres communes). Le passage [7], reçu par le LLM (en anglais), dit qu'à l'étranger ce repas est remboursé aux frais réels : la réponse applique la règle au mauvais cas et contredit un passage reçu."
+  },
+  {
+    "id": "Q06",
+    "empreinte": "202a4f5bb532",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q07",
+    "empreinte": "cf3e70134c10",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q08",
+    "empreinte": "cbfeb7dfc9c2",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q09",
+    "empreinte": "633eec2a7714",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q10",
+    "empreinte": "9374c487c402",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q11",
+    "empreinte": "b9f500e7a44e",
+    "fidelite": false,
+    "pertinence": true,
+    "exactitude": true,
+    "note": "« Cette prime forfaitaire de 150 € est versée avec la paie du mois suivant » : le passage [6] le dit de l'indemnité de télétravail, pas de la prime d'astreinte (aucun passage ne dit quand elle est versée)."
+  },
+  {
+    "id": "Q12",
+    "empreinte": "f2f5b6c5d50b",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q13",
+    "empreinte": "dcc7c918f0d4",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q14",
+    "empreinte": "161c90d1e774",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q15",
+    "empreinte": "e31d4f731b60",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q16",
+    "empreinte": "c5250e1a74d0",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q17",
+    "empreinte": "e16f791e4351",
+    "fidelite": false,
+    "pertinence": false,
+    "exactitude": false,
+    "note": "Explique comment le montant est calculé sans donner de montant par kilomètre, alors que le barème figurait dans le passage [1]. Aucun passage ne dit que l'on consulte le barème dans l'outil de notes de frais (l'outil applique la tranche ; le barème est dans le passage [1])."
+  },
+  {
+    "id": "Q18",
+    "empreinte": "3827bd6e3c78",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q19",
+    "empreinte": "c2ee21841421",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q20",
+    "empreinte": "0244e1e42f88",
+    "fidelite": false,
+    "pertinence": true,
+    "exactitude": true,
+    "note": "« Ces deux jours ne donnent pas droit à un jour de repos supplémentaire » : le passage [4] le dit de la Toussaint et de l'Assomption, pas du 11 novembre, qui est chômé."
+  },
+  {
+    "id": "Q21",
+    "empreinte": "4302c2c7ef0e",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q22",
+    "empreinte": "73128b621a6d",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q23",
+    "empreinte": "d415bbc336f3",
+    "fidelite": false,
+    "pertinence": true,
+    "exactitude": true,
+    "note": "« Vous devez soumettre votre demande via l'espace RH » : aucun passage ne le dit (le passage [1] ne donne aucune démarche pour l'indemnité journalière)."
+  },
+  {
+    "id": "Q24",
+    "empreinte": "ab1a4d227872",
+    "fidelite": true,
+    "pertinence": false,
+    "exactitude": false,
+    "note": "Décrit les deux régimes sans donner d'horaires : les plages de présence obligatoire (10 h à 12 h et 14 h à 16 h) sont dans POL-HO-01#4, qui n'a pas été retrouvé."
+  },
+  {
+    "id": "Q25",
+    "empreinte": "3f05227167ad",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q26",
+    "empreinte": "56452beb54cf",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q28",
+    "empreinte": "e8a6da52aceb",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q29",
+    "empreinte": "7d1289bd75ae",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  },
+  {
+    "id": "Q30",
+    "empreinte": "9ca9c162cb69",
+    "fidelite": true,
+    "pertinence": true,
+    "exactitude": true
+  }
+]

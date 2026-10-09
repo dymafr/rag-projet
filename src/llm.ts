@@ -12,11 +12,11 @@ export type Llm = (debut: string, fin: string) => Promise<{ texte: string; usage
 const MAX_TOKENS = 1024; // de quoi répondre, même si le modèle réfléchit avant
 
 // Claude : le bloc marqué cache_control est gardé quelques minutes ; relu par l'appel suivant, il coûte bien moins cher
-function appelAnthropic(): Llm {
+function appelAnthropic(modele: string): Llm {
   const client = new Anthropic();
   return async (debut, fin) => {
     const reponse = await client.messages.create({
-      model: config.LLM_MODEL,
+      model: modele,
       max_tokens: MAX_TOKENS,
       messages: [
         {
@@ -37,12 +37,12 @@ function appelAnthropic(): Llm {
 
 // OpenAI : mise en cache par défaut, mais les modèles récents n'écrivent d'eux-mêmes que le prompt entier,
 // qui change à chaque appel : on marque donc la fin du document, comme cache_control chez Claude
-function appelOpenAI(): Llm {
+function appelOpenAI(modele: string): Llm {
   const client = new OpenAI();
   return async (debut, fin) => {
     const document = { type: "input_text" as const, text: debut, prompt_cache_breakpoint: { mode: "explicit" as const } };
     const input = [{ role: "user" as const, content: [document] }, { role: "user" as const, content: fin }];
-    const reponse = await client.responses.create({ model: config.LLM_MODEL, input, max_output_tokens: MAX_TOKENS });
+    const reponse = await client.responses.create({ model: modele, input, max_output_tokens: MAX_TOKENS });
     const usage = reponse.usage;
     return {
       texte: reponse.output_text,
@@ -51,11 +51,19 @@ function appelOpenAI(): Llm {
   };
 }
 
-// Ollama : le modèle tourne en local, sans coût par token
-function appelOllama(): Llm {
+// Ollama : le modèle tourne en local, sans coût par token. Comme pour les réponses de Rhéa (generateur.ts), température 0
+// et pas de réflexion préalable : c'est plus rapide, et la même question reçoit presque toujours la même réponse, ce
+// qu'on attend d'un juge (« presque » : le chapitre 8 mesure ces écarts)
+function appelOllama(modele: string): Llm {
   return async (debut, fin) => {
     const reponse = await ollama.chat.completions
-      .create({ model: config.LLM_MODEL, messages: [{ role: "user", content: `${debut}\n\n${fin}` }], max_tokens: MAX_TOKENS })
+      .create({
+        model: modele,
+        messages: [{ role: "user", content: `${debut}\n\n${fin}` }],
+        max_tokens: MAX_TOKENS,
+        temperature: 0,
+        reasoning_effort: "none",
+      })
       .catch(conseilOllama);
     return {
       texte: reponse.choices[0]?.message.content ?? "",
@@ -66,4 +74,5 @@ function appelOllama(): Llm {
 
 const APPELS = { anthropic: appelAnthropic, openai: appelOpenAI, ollama: appelOllama };
 
-export const creerLlm = (): Llm => APPELS[config.LLM_PROVIDER]();
+// modele : celui de .env par défaut ; le juge d'évaluation peut en prendre un autre, chez le même fournisseur
+export const creerLlm = (modele = config.LLM_MODEL): Llm => APPELS[config.LLM_PROVIDER](modele);

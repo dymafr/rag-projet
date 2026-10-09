@@ -37,7 +37,11 @@
     "serveur": "node --env-file=.env src/outils/lancer-serveur.ts",
     "eval:generer": "node --env-file=.env src/outils/generer-questions.ts",
     "eval:verifier": "node --env-file=.env src/outils/verifier-jeu.ts",
-    "eval:recherche": "node --env-file=.env src/outils/evaluer-recherche.ts"
+    "eval:recherche": "node --env-file=.env src/outils/evaluer-recherche.ts",
+    "eval:repondre": "node --env-file=.env src/outils/enregistrer-reponses.ts",
+    "eval:juger": "node --env-file=.env src/outils/juger-reponses.ts",
+    "eval:etiqueter": "node src/outils/etiqueter.ts",
+    "eval:calibrer": "node src/outils/calibrer-juge.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

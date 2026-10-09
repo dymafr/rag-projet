@@ -5,6 +5,7 @@ import { writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import { z } from "zod";
 import { pool } from "../db.ts";
+import { lireJson } from "../eval/juge.ts";
 import { creerLlm } from "../llm.ts";
 
 const { values } = parseArgs({ options: { nombre: { type: "string", default: "8" }, graine: { type: "string", default: "1" } } });
@@ -29,15 +30,6 @@ pourrait poser, et dont la réponse se trouve dans ce passage. Formule-la comme 
 ne reprends ni le titre ni les expressions exactes du passage. Puis donne la réponse en une ou deux phrases, tirée du passage.
 Réponds uniquement avec un objet JSON : {"question": "...", "reponse": "..."}`;
 const Candidat = z.strictObject({ question: z.string().min(1), reponse: z.string().min(1) });
-
-// Un modèle local entoure parfois le JSON de texte ou de balises : on garde ce qui va de la première { à la dernière }
-function lireJson(texte: string): unknown {
-  try {
-    return JSON.parse(texte.match(/\{[\s\S]*\}/)?.[0] ?? "");
-  } catch {
-    return null;
-  }
-}
 
 const llm = creerLlm();
 const candidates = [];
