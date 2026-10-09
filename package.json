@@ -33,12 +33,12 @@
     "enregistrer": "node --env-file=.env src/outils/enregistrer-exemples.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.128.0",
-    "@huggingface/transformers": "^4.3.0",
+    "@anthropic-ai/sdk": "^0.132.1",
+    "@huggingface/transformers": "^4.3.1",
     "@joplin/turndown-plugin-gfm": "^1.0.68",
     "cheerio": "^1.2.0",
-    "openai": "^7.23.0",
-    "pg": "^8.23.0",
+    "openai": "^7.31.0",
+    "pg": "^8.23.1",
     "pgvector": "^0.3.0",
     "turndown": "^7.2.4",
     "unpdf": "^1.8.1",
@@ -48,7 +48,7 @@
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",
     "@electric-sql/pglite-pgvector": "^0.0.9",
-    "@types/node": "^26.6.3",
+    "@types/node": "^26.6.4",
     "@types/pg": "^8.23.1",
     "@types/turndown": "^5.0.6",
     "typescript": "^7.0.2"
