@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rhéa, l'assistant RH de Kalyo</title>
+<!-- Page de chat fournie avec le projet : elle appelle POST /ask et affiche la réponse en flux, puis ses sources -->
+<style>
+  :root { --fond: #f6f5f2; --carte: #ffffff; --texte: #1f2328; --doux: #5b6470; --accent: #b8561a; --bord: #e2ded6; --ok: #2f7d4f; --ko: #b42318; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--fond); color: var(--texte); }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 140px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sous-titre { color: var(--doux); margin: 0 0 24px; }
+  .question { margin: 24px 0 8px; font-weight: 600; }
+  .reponse { background: var(--carte); border: 1px solid var(--bord); border-radius: 12px; padding: 14px 16px; white-space: pre-wrap; }
+  .reponse.abstention { color: var(--doux); font-style: italic; }
+  .reponse.erreur { color: var(--ko); }
+  .sources { margin: 8px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--doux); }
+  .sources li { margin: 6px 0; }
+  .sources .extrait { display: block; margin-left: 28px; }
+  .ok { color: var(--ok); } .ko { color: var(--ko); }
+  .pied { color: var(--doux); font-size: 13px; margin-top: 6px; }
+  form { position: fixed; left: 0; right: 0; bottom: 0; background: var(--fond); border-top: 1px solid var(--bord); padding: 12px 16px; }
+  .barre { max-width: 760px; margin: 0 auto; display: flex; gap: 8px; }
+  input { flex: 1; font: inherit; padding: 10px 12px; border: 1px solid var(--bord); border-radius: 10px; background: var(--carte); }
+  button { font: inherit; padding: 10px 16px; border: 0; border-radius: 10px; background: var(--accent); color: #fff; cursor: pointer; }
+  button[hidden] { display: none; }
+  button.secondaire { background: var(--doux); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Rhéa</h1>
+  <p class="sous-titre">L'assistant RH de Kalyo répond à partir de la documentation RH, et cite ses sources.</p>
+  <div id="conversation" aria-live="polite"></div>
+</main>
+<form id="formulaire">
+  <div class="barre">
+    <input id="question" autocomplete="off" placeholder="Votre question, par exemple : combien de jours de télétravail ai-je par semaine ?" required maxlength="1000">
+    <button id="envoyer">Envoyer</button>
+    <button id="arreter" type="button" class="secondaire" hidden>Arrêter</button>
+  </div>
+</form>
+<script>
+const conversation = document.getElementById("conversation");
+const champ = document.getElementById("question");
+const envoyer = document.getElementById("envoyer");
+const arreter = document.getElementById("arreter");
+let annulation = null;
+
+// Lire un flux SSE reçu en réponse à un POST : EventSource ne sait faire que des GET, on lit donc le corps avec fetch
+async function demander(question, surEvenement, signal) {
+  const reponse = await fetch("/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }), signal });
+  if (!reponse.ok) throw new Error((await reponse.json().catch(() => ({}))).erreur ?? `HTTP ${reponse.status}`);
+  const lecteur = reponse.body.pipeThrough(new TextDecoderStream()).getReader();
+  let tampon = "";
+  while (true) {
+    const { value, done } = await lecteur.read();
+    if (done) break;
+    tampon += value;
+    let fin;
+    while ((fin = tampon.indexOf("\n\n")) !== -1) { // un événement se termine par une ligne vide
+      const bloc = tampon.slice(0, fin);
+      tampon = tampon.slice(fin + 2);
+      let nom = "message", donnees = "";
+      // Notre serveur termine ses lignes par \n et n'écrit que event: et data: ; la norme SSE admet aussi \r\n,
+      // et des lignes de commentaire qui commencent par « : », ignorées ici
+      for (const ligne of bloc.split("\n")) {
+        if (ligne.startsWith("event:")) nom = ligne.slice(6).trim();
+        else if (ligne.startsWith("data:")) donnees += ligne.slice(5).trim();
+      }
+      if (donnees) surEvenement(nom, JSON.parse(donnees));
+    }
+  }
+}
+
+function element(balise, classe, texte) {
+  const e = document.createElement(balise);
+  if (classe) e.className = classe;
+  if (texte) e.textContent = texte;
+  return e;
+}
+
+function afficherSources(liste, sources) {
+  for (const s of sources) {
+    const li = element("li", "", `[${s.numero}] ${s.titre} (${s.source})`);
+    for (const x of s.extraits) {
+      const extrait = element("span", "extrait");
+      extrait.append(element("span", x.trouvee ? "ok" : "ko", x.trouvee ? "vérifié " : "introuvable "),`« ${x.texte.slice(0, 160)}${x.texte.length > 160 ? "…" : ""} »`);
+      li.append(extrait);
+    }
+    liste.append(li);
+  }
+}
+
+document.getElementById("formulaire").addEventListener("submit", async (evenement) => {
+  evenement.preventDefault();
+  if (annulation) return; // une réponse est en cours : Entrée ne lance pas un second flux
+  const question = champ.value.trim();
+  if (!question) return;
+  champ.value = "";
+  conversation.append(element("p", "question", question));
+  const bulle = element("div", "reponse", "…");
+  const liste = element("ul", "sources");
+  const pied = element("p", "pied");
+  conversation.append(bulle, liste, pied);
+  let commence = false;
+  let termine = false; // vrai à l'événement fin, ou erreur : sinon, le flux s'est arrêté en route
+  annulation = new AbortController();
+  envoyer.hidden = envoyer.disabled = true;
+  arreter.hidden = false;
+  try {
+    await demander(question, (nom, donnees) => {
+      if (nom === "texte") {
+        if (!commence) { bulle.textContent = ""; commence = true; }
+        bulle.textContent += donnees.texte;
+      } else if (nom === "sources") afficherSources(liste, donnees);
+      else if (nom === "abstention") { bulle.textContent = donnees.message; bulle.classList.add("abstention"); liste.replaceChildren(); }
+      else if (nom === "erreur") { termine = true; bulle.textContent = `Erreur : ${donnees.message}`; bulle.classList.add("erreur"); }
+      else if (nom === "fin") {
+        termine = true;
+        pied.textContent = donnees.usage
+          ? `${donnees.usage.entree} tokens en entrée, ${donnees.usage.sortie} en sortie ; prompt ${donnees.prompt}`
+          : `sans appel au LLM ; prompt ${donnees.prompt}`;
+      }
+      window.scrollTo(0, document.body.scrollHeight);
+    }, annulation.signal);
+    if (!termine) bulle.textContent += " (réponse interrompue)";
+  } catch (erreur) {
+    bulle.textContent = erreur.name === "AbortError" ? `${bulle.textContent} (arrêté)` : `Erreur : ${erreur.message}`;
+  } finally {
+    annulation = null;
+    envoyer.hidden = envoyer.disabled = false;
+    arreter.hidden = true;
+    champ.focus();
+  }
+});
+
+arreter.addEventListener("click", () => annulation?.abort());
+</script>
+</body>
+</html>

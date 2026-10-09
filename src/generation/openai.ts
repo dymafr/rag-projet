@@ -2,7 +2,7 @@
 // seul le client change (new OpenAI() ou le client ollama de src/ollama.ts)
 import type OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
-import type { Generation } from "./generateur.ts";
+import type { Generation, Morceau } from "./generateur.ts";
 import type { PromptAugmente } from "./prompt.ts";
 import { ReponseRhea, type DemandeJson } from "./structure.ts";
 
@@ -54,4 +54,43 @@ export async function repondreAvecResponses(
     texte: reponse.output_text, // le texte de la réponse, rassemblé par le SDK ; en JSON, l'objet encore sous forme de texte
     usage: usageDe(reponse.usage),
   };
+}
+
+// En flux (leçon 8) : la même requête, avec stream: true. Les événements arrivent au fil de l'écriture :
+// des morceaux de texte, puis la réponse complète avec ses tokens. signal : l'appel s'arrête si le client part
+export async function* streamerAvecResponses(
+  client: OpenAI,
+  modele: string,
+  prompt: PromptAugmente,
+  reglages: Reglages = {},
+  signal?: AbortSignal,
+): AsyncGenerator<Morceau> {
+  const flux = await client.responses.create(
+    {
+      model: modele,
+      instructions: prompt.systeme,
+      input: prompt.utilisateur,
+      max_output_tokens: MAX_TOKENS,
+      store: false,
+      ...reglages,
+      stream: true,
+    },
+    { signal },
+  );
+  let termine = false;
+  for await (const evenement of flux) {
+    if (evenement.type === "response.output_text.delta") yield { type: "texte", texte: evenement.delta };
+    else if (evenement.type === "response.refusal.done") throw new Error(`Refus du modèle : ${evenement.refusal}`);
+    else if (evenement.type === "response.completed") {
+      // Les mêmes contrôles qu'en mode simple : Ollama répond « completed » même quand la limite a coupé la réponse
+      if ((evenement.response.usage?.output_tokens ?? 0) >= (reglages.max_output_tokens ?? MAX_TOKENS)) throw new Error("Réponse coupée par la limite de tokens");
+      termine = true;
+      yield { type: "fin", usage: usageDe(evenement.response.usage) };
+    } else if (evenement.type === "response.incomplete") {
+      throw new Error(`Réponse incomplete : ${evenement.response.incomplete_details?.reason ?? "raison inconnue"}`);
+    } else if (evenement.type === "response.failed") throw new Error(`Réponse failed : ${evenement.response.error?.message ?? "raison inconnue"}`);
+    else if (evenement.type === "error") throw new Error(`Erreur du flux : ${evenement.message}`);
+  }
+  // Une connexion fermée proprement avant l'événement de fin laisse une réponse partielle, sans erreur : on la signale
+  if (!termine) throw new Error("Flux interrompu avant la fin de la réponse");
 }

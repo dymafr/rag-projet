@@ -3,7 +3,7 @@
 import type Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import type { Resultat } from "../recherche/vectorielle.ts";
-import type { Citation, Generation } from "./generateur.ts";
+import type { Citation, Generation, Morceau } from "./generateur.ts";
 import { finDuMessage, type PromptAugmente } from "./prompt.ts";
 import { ReponseRhea, type DemandeJson } from "./structure.ts";
 
@@ -68,4 +68,35 @@ export async function repondreAvecClaude(client: Anthropic, modele: string, prom
   }
   const { texte, citations } = lireReponse(reponse.content);
   return { texte, citations, usage: usageDe(reponse.usage) };
+}
+
+// 4. En flux (leçon 8) : la même requête, en flux. Les morceaux de texte arrivent au fil de l'écriture, et chaque
+// citation dès qu'elle est prête. Comme lireReponse, on ajoute [n] à la fin de chaque bloc de texte qui cite le passage n
+export async function* streamerAvecClaude(client: Anthropic, modele: string, prompt: PromptAugmente, signal?: AbortSignal): AsyncGenerator<Morceau> {
+  const contenu: Anthropic.ContentBlockParam[] = [...prompt.passages.map(blocDeRecherche), { type: "text", text: finDuMessage(prompt.question, prompt.date) }];
+  const flux = client.messages.stream(
+    { model: modele, max_tokens: MAX_TOKENS, system: prompt.systeme, messages: [{ role: "user", content: contenu }] },
+    { signal },
+  );
+  const numerosDuBloc = new Set<number>();
+  for await (const evenement of flux) {
+    if (evenement.type === "content_block_delta" && evenement.delta.type === "text_delta") {
+      yield { type: "texte", texte: evenement.delta.text };
+    } else if (evenement.type === "content_block_delta" && evenement.delta.type === "citations_delta") {
+      const citation = evenement.delta.citation;
+      if (citation.type !== "search_result_location") continue;
+      numerosDuBloc.add(citation.search_result_index + 1);
+      yield { type: "citation", citation: { numero: citation.search_result_index + 1, texteCite: citation.cited_text } };
+    } else if (evenement.type === "content_block_stop" && numerosDuBloc.size > 0) {
+      yield { type: "texte", texte: [...numerosDuBloc].map((n) => `[${n}]`).join("") };
+      numerosDuBloc.clear();
+    }
+  }
+  // Le message complet, rassemblé par le SDK : les mêmes contrôles qu'en mode simple
+  const message = await flux.finalMessage();
+  if (message.stop_reason !== "end_turn") {
+    const detail = message.stop_reason === "refusal" ? ` (${message.stop_details?.explanation ?? "sans explication"})` : "";
+    throw new Error(`Réponse interrompue : ${message.stop_reason}${detail}`);
+  }
+  yield { type: "fin", usage: usageDe(message.usage) };
 }
