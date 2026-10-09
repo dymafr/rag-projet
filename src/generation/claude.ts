@@ -1,9 +1,11 @@
 // Répondre avec Claude : les passages partent en blocs search_result, et Claude cite lui-même ses sources.
 // Chaque morceau de la réponse qui s'appuie sur un passage arrive avec sa citation : le passage et le texte cité
 import type Anthropic from "@anthropic-ai/sdk";
+import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import type { Resultat } from "../recherche/vectorielle.ts";
 import type { Citation, Generation } from "./generateur.ts";
 import { finDuMessage, type PromptAugmente } from "./prompt.ts";
+import { ReponseRhea, type DemandeJson } from "./structure.ts";
 
 // La réflexion, active d'office sur certains modèles, compte dans cette limite, comme le texte de la réponse
 const MAX_TOKENS = 4096;
@@ -45,18 +47,19 @@ function usageDe({ input_tokens, cache_creation_input_tokens, cache_read_input_t
   return { entree: input_tokens + (cache_creation_input_tokens ?? 0) + enCache, enCache, sortie: output_tokens };
 }
 
-// 3. L'appel : le prompt système, puis un seul message avec les blocs des passages, la date du jour et la question
-export async function repondreAvecClaude(client: Anthropic, modele: string, prompt: PromptAugmente): Promise<Generation> {
+// 3. L'appel : le prompt système, puis un seul message avec les blocs des passages, la date du jour et la question.
+// En JSON (leçon 5), Claude refuse les citations natives (erreur 400) : les passages partent alors en texte,
+// numérotés comme pour OpenAI, et output_config donne le schéma à suivre
+export async function repondreAvecClaude(client: Anthropic, modele: string, prompt: PromptAugmente, json?: DemandeJson): Promise<Generation> {
+  const contenu: Anthropic.ContentBlockParam[] = json
+    ? [{ type: "text", text: json.consigne ? `${prompt.utilisateur}\n\n${json.consigne}` : prompt.utilisateur }]
+    : [...prompt.passages.map(blocDeRecherche), { type: "text", text: finDuMessage(prompt.question, prompt.date) }];
   const reponse = await client.messages.create({
     model: modele,
     max_tokens: MAX_TOKENS,
     system: prompt.systeme,
-    messages: [
-      {
-        role: "user",
-        content: [...prompt.passages.map(blocDeRecherche), { type: "text", text: finDuMessage(prompt.question, prompt.date) }],
-      },
-    ],
+    messages: [{ role: "user", content: contenu }],
+    ...(json && { output_config: { format: zodOutputFormat(ReponseRhea) } }),
   });
   // Un refus de sécurité ou une réponse coupée ne doit pas passer pour une réponse complète
   if (reponse.stop_reason !== "end_turn") {
