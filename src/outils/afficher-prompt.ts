@@ -3,6 +3,7 @@
 import { parseArgs } from "node:util";
 import { pool } from "../db.ts";
 import { assembler, baliser, BUDGET_PASSAGES, estimerTokens, PASSAGES_DEMANDES } from "../generation/prompt.ts";
+import { lirePromptSysteme } from "../generation/systeme.ts";
 import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
 
 const { values, positionals } = parseArgs({
@@ -21,14 +22,15 @@ if (!question || !Number.isInteger(k) || k < 1 || !Number.isInteger(budget) || b
   process.exit(1);
 }
 
+const systeme = await lirePromptSysteme();
 const resultats = await trouverPassages(pool, question, k, values.date);
 await pool.end();
-const prompt = assembler(question, resultats, { budget, mesure: estimerTokens, date: values.date });
+const prompt = assembler(question, resultats, { systeme: systeme.texte, budget, mesure: estimerTokens, date: values.date });
 
 console.log(`« ${question} » : ${resultats.length} passages trouvés, ${prompt.passages.length} gardés dans un budget de ${budget} tokens`);
 prompt.passages.forEach((p, i) => console.log(`  [${i + 1}]  ${p.score.toFixed(3)}  ${p.id.padEnd(18)} ${estimerTokens(baliser(p, i + 1))} tokens`));
 for (const p of prompt.ecartes) console.log(`  écarté ${p.score.toFixed(3)}  ${p.id.padEnd(18)} ${estimerTokens(baliser(p, 0))} tokens, plus de place`);
 const tokens = estimerTokens(prompt.systeme) + estimerTokens(prompt.utilisateur);
 console.log(`Prompt complet : environ ${tokens} tokens (estimation prudente, 3 caractères par token)\n`);
-console.log(`=== Instructions (rôle système) ===\n${prompt.systeme}\n`);
+console.log(`=== Prompt système : prompts/rhea.md, version ${systeme.version}, empreinte ${systeme.empreinte} ===\n${prompt.systeme}\n`);
 console.log(`=== Message (rôle utilisateur) ===\n${prompt.utilisateur}`);
