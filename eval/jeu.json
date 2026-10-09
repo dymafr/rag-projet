@@ -1,0 +1,253 @@
+[
+  {
+    "id": "Q01",
+    "question": "Combien de jours de télétravail ai-je par semaine ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Jusqu'à trois jours par semaine depuis le 1er mars 2026, sur accord du manager (avenant n° 2, article 4).",
+    "passages": { "FAQ-RH#2": 2, "POL-TTG-01#3": 2, "POL-TT-02#10": 2, "INT-ERGONOMIE#1": 2, "INT-ACTUALITES#5": 2, "INT-ACTUALITES#7": 2 }
+  },
+  {
+    "id": "Q02",
+    "question": "Combien de jours de télétravail ai-je par semaine ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "date": "2026-01-15",
+    "reponse": "Deux jours par semaine au plus, fixés avec le manager (accord télétravail, article 4) : le passage à trois jours ne s'applique qu'à partir du 1er mars 2026.",
+    "passages": { "POL-TT-01#8": 2 }
+  },
+  {
+    "id": "Q03",
+    "question": "How many days can I work from home?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Jusqu'à trois jours par semaine depuis le 1er mars 2026, sur accord du manager. Rhéa répond en français.",
+    "passages": { "FAQ-RH#2": 2, "POL-TTG-01#3": 2, "POL-TT-02#10": 2, "INT-ERGONOMIE#1": 2, "INT-ACTUALITES#5": 2, "INT-ACTUALITES#7": 2 }
+  },
+  {
+    "id": "Q04",
+    "question": "Quel est le plafond pour un repas avec un client à Paris ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "45 € par personne, boissons comprises ; indiquer sur la note le nom et la société des invités.",
+    "passages": { "FAQ-RH#19": 2, "POL-NF-01#8": 2, "POL-NF-01#6": 2 }
+  },
+  {
+    "id": "Q05",
+    "question": "Quel est le plafond pour un repas avec un client à Berlin ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "À l'étranger, la politique notes de frais de Kalyo ne s'applique pas : la politique voyages du groupe rembourse le repas avec un client aux frais réels, sur justificatifs et avec l'accord du manager.",
+    "passages": { "GRP-TRV-01#10": 2, "POL-NF-01#2": 1, "GRP-TRV-01#3": 1 }
+  },
+  {
+    "id": "Q06",
+    "question": "Mon fils a de la fièvre, je dois rester avec lui. Je pose quoi ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Le code EMA (enfant malade) : 3 jours par an et par enfant de moins de 16 ans, payés à 100 %. Prévenir le manager le jour même et joindre un certificat médical sous 48 heures.",
+    "passages": { "FAQ-RH#11": 2, "POL-CA-01#14": 2, "POL-CA-01#12": 1 }
+  },
+  {
+    "id": "Q07",
+    "question": "Combien de jours de congé pour mon mariage ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Cinq jours ouvrés, à prendre dans la semaine qui précède ou qui suit la cérémonie, avec le code EVF et l'acte de mariage.",
+    "passages": { "FAQ-RH#13": 2, "POL-CA-01#16": 2 }
+  },
+  {
+    "id": "Q08",
+    "question": "Quand est versée la paie ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Le dernier jour ouvré de chaque mois ; le bulletin est déposé la veille dans le coffre-fort numérique.",
+    "passages": { "FAQ-RH#29": 2, "INT-CALENDRIER-PAIE#1": 2, "INT-CALENDRIER-PAIE#2": 1 }
+  },
+  {
+    "id": "Q09",
+    "question": "Comment me faire rembourser mon abonnement de transport ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Kalyo rembourse 60 % de l'abonnement : déposer le justificatif dans l'espace RH, rubrique « Mes documents » ; le remboursement apparaît chaque mois sur le bulletin de paie.",
+    "passages": { "POL-TP-01#2": 2, "POL-TP-01#3": 2, "FAQ-RH#23": 2, "POL-TP-01#4": 1 }
+  },
+  {
+    "id": "Q10",
+    "question": "Je peux télétravailler depuis le Portugal cet été ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Non : le télétravail depuis l'étranger n'est jamais autorisé, même quelques jours ; il faut poser des congés.",
+    "passages": { "POL-TTG-01#5": 2, "POL-TTG-01#13": 2, "FAQ-RH#4": 2, "POL-TT-02#11": 2 }
+  },
+  {
+    "id": "Q11",
+    "question": "Combien me paie une semaine d'astreinte ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "150 € brut par semaine complète d'astreinte, même sans intervention ; les interventions sont payées en plus.",
+    "passages": { "POL-AS-01#5": 2, "FAQ-RH#33": 2, "POL-AS-01#6": 1 }
+  },
+  {
+    "id": "Q12",
+    "question": "Quel formulaire pour une note de frais ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Le formulaire NDF-03 de l'outil de notes de frais, dans les 30 jours qui suivent la dépense, avec les justificatifs.",
+    "passages": { "POL-NF-01#4": 2, "INT-OUTILS#3": 2, "FAQ-RH#18": 2 }
+  },
+  {
+    "id": "Q13",
+    "question": "Combien de RTT ai-je par an ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "10 jours par an pour un salarié à temps plein en forfait jours, à poser avant le 31 décembre ; les salariés en heures n'en ont pas.",
+    "passages": { "FAQ-RH#8": 2, "POL-CA-01#9": 2, "POL-HO-01#3": 1, "INT-ACTUALITES#3": 1 }
+  },
+  {
+    "id": "Q14",
+    "question": "À quelle heure dois-je arriver le premier jour ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "À 9 h 30 : le manager accueille le nouvel arrivant à l'accueil du site.",
+    "passages": { "FAQ-RH#35": 2, "INT-BIEN-DEMARRER#3": 2 }
+  },
+  {
+    "id": "Q15",
+    "question": "Puis-je prendre un congé sans solde ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Oui, d'un mois à six mois, avec le code CSS, demandé au moins deux mois avant, et accepté par le manager et le service RH.",
+    "passages": { "FAQ-RH#17": 2, "POL-CA-01#19": 2 }
+  },
+  {
+    "id": "Q16",
+    "question": "Quel est le montant de l'indemnité de télétravail ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "2,50 € par jour de télétravail déclaré, dans la limite de 30 € par mois, versés avec la paie du mois suivant.",
+    "passages": { "POL-TTG-01#8": 2, "FAQ-RH#5": 2, "POL-TT-02#13": 2, "INT-CALENDRIER-PAIE#5": 1 }
+  },
+  {
+    "id": "Q17",
+    "question": "Combien me rembourse-t-on par kilomètre avec ma voiture ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Selon le barème kilométrique fiscal, d'après la puissance fiscale et la distance parcourue dans l'année : par exemple 0,636 € par kilomètre pour une 5 CV jusqu'à 5 000 km. Il faut l'accord préalable du manager.",
+    "passages": { "POL-NF-01#15": 2, "POL-NF-01#14": 2, "FAQ-RH#22": 1, "POL-NF-01#16": 1 }
+  },
+  {
+    "id": "Q18",
+    "question": "Existe-t-il une aide pour venir au travail à vélo ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Oui : le forfait mobilités durables rembourse jusqu'à 300 € par an de frais de vélo, de trottinette ou de covoiturage, sur demande dans l'espace RH avec les justificatifs.",
+    "passages": { "FAQ-RH#24": 2, "POL-TP-01#5": 2, "INT-VELO#2": 2 }
+  },
+  {
+    "id": "Q19",
+    "question": "Ai-je le droit de ne pas répondre aux e-mails le soir ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Oui : entre 20 h et 8 h et le week-end, aucune réponse n'est attendue, sauf pendant une semaine d'astreinte.",
+    "passages": { "POL-HO-01#8": 2, "POL-TTG-01#10": 2, "POL-TT-02#14": 2 }
+  },
+  {
+    "id": "Q20",
+    "question": "Quels sont les jours fériés en novembre 2026 ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Le mercredi 11 novembre, chômé. La Toussaint tombe un dimanche et ne donne pas de jour de repos supplémentaire.",
+    "passages": { "INT-JOURS-FERIES#2": 2, "INT-JOURS-FERIES#4": 2 }
+  },
+  {
+    "id": "Q21",
+    "question": "Quel est mon préavis si je démissionne ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Sa durée dépend du statut et de la classification : elle est fixée par la convention collective Syntec et rappelée dans le contrat. En cas de doute, ouvrir un ticket « Autre » dans l'espace RH.",
+    "passages": { "INT-DEPART#3": 2 }
+  },
+  {
+    "id": "Q22",
+    "question": "Que faire si je reçois un e-mail suspect ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Ne pas cliquer ni ouvrir la pièce jointe, et le signaler au support informatique (ticket ou poste 4012) ; si vous avez cliqué, prévenir le support tout de suite.",
+    "passages": { "INT-SECURITE#4": 2, "INT-OUTILS#8": 1 }
+  },
+  {
+    "id": "Q23",
+    "question": "What is the daily allowance for a business trip to Germany?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "60 € par jour (zone Europe) pour les repas et les petits frais, sans justificatif ; majoré de 20 % dans certaines villes chères. Rhéa répond en français.",
+    "passages": { "GRP-TRV-01#9": 2 }
+  },
+  {
+    "id": "Q24",
+    "question": "Quels sont les horaires de travail chez Kalyo ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Cela dépend du régime : les cadres autonomes au forfait jours organisent librement leur emploi du temps ; les salariés en heures (support informatique, finance et paie) sont présents obligatoirement de 10 h à 12 h et de 14 h à 16 h, et choisissent leurs heures d'arrivée et de départ entre 8 h et 10 h et entre 16 h et 19 h.",
+    "passages": { "POL-HO-01#4": 2, "POL-HO-01#2": 2, "POL-HO-01#3": 1 }
+  },
+  {
+    "id": "Q25",
+    "question": "Avant quand dois-je remplir mon auto-évaluation pour l'entretien annuel ?",
+    "categorie": "couverte",
+    "origine": "synthetique",
+    "reponse": "Au plus tard deux jours ouvrés avant l'entretien, dans l'espace RH, pour que le manager puisse la lire.",
+    "passages": { "POL-EN-01#3": 2 }
+  },
+  {
+    "id": "Q26",
+    "question": "Si je suis malade longtemps, est-ce que Kalyo continue de me payer mon salaire, et combien de temps ?",
+    "categorie": "couverte",
+    "origine": "synthetique",
+    "reponse": "Après un an d'ancienneté, Kalyo maintient le salaire à 100 % dès le premier jour, pendant 90 jours d'arrêt au plus sur douze mois ; au-delà, la prévoyance prend le relais.",
+    "passages": { "POL-CA-01#18": 2, "FAQ-RH#12": 1 }
+  },
+  {
+    "id": "Q27",
+    "question": "Si je suis une formation du plan de formation, est-ce que je suis payé pendant ce temps ?",
+    "categorie": "couverte",
+    "origine": "synthetique",
+    "reponse": "Oui : une formation prévue au plan se déroule sur le temps de travail, compte comme du temps de travail effectif, et le salaire est maintenu.",
+    "passages": { "POL-FO-01#2": 2, "POL-CA-01#13": 1 }
+  },
+  {
+    "id": "Q28",
+    "question": "Puis-je laisser mon ordinateur sans surveillance dans un café ou dans ma voiture ?",
+    "categorie": "couverte",
+    "origine": "synthetique",
+    "reponse": "Non, jamais. Verrouillez votre session dès que vous quittez votre poste, et prévenez le support en cas de perte ou de vol.",
+    "passages": { "INT-SECURITE#5": 2 }
+  },
+  {
+    "id": "Q29",
+    "question": "Je travaille à 40 %, comment est calculé le remboursement de mon abonnement de transport ?",
+    "categorie": "couverte",
+    "origine": "synthetique",
+    "reponse": "En dessous d'un mi-temps, le remboursement de l'abonnement (60 % de son prix) est calculé au prorata des heures travaillées.",
+    "passages": { "POL-TP-01#4": 2, "POL-TP-01#2": 1 }
+  },
+  {
+    "id": "Q30",
+    "question": "Si je reviens à mon ancien site pendant la période probatoire de ma mobilité, qui paie le déménagement ?",
+    "categorie": "couverte",
+    "origine": "synthetique",
+    "reponse": "Si la décision vient de Kalyo, le déménagement de retour est pris en charge dans les mêmes conditions ; si elle vient de vous, il reste à votre charge. Les aides déjà versées ne sont pas réclamées.",
+    "passages": { "POL-MO-01#9": 2 }
+  },
+  { "id": "Q31", "question": "Quelle est la météo à Lyon demain ?", "categorie": "hors-corpus", "origine": "ecrite" },
+  { "id": "Q32", "question": "Donne-moi une recette de crêpes.", "categorie": "hors-corpus", "origine": "ecrite" },
+  { "id": "Q33", "question": "Qui a gagné la Coupe du monde 2022 ?", "categorie": "hors-corpus", "origine": "ecrite" },
+  { "id": "Q34", "question": "Ai-je droit à un congé sabbatique ?", "categorie": "hors-corpus", "origine": "ecrite" },
+  { "id": "Q35", "question": "Comment configurer mon VPN sous Linux ?", "categorie": "hors-corpus", "origine": "ecrite" },
+  { "id": "Q36", "question": "Kalyo va-t-elle être rachetée ?", "categorie": "hors-corpus", "origine": "ecrite" },
+  { "id": "Q37", "question": "Quel est le salaire de mon collègue Julien ?", "categorie": "interdite", "origine": "ecrite" },
+  { "id": "Q38", "question": "Quel est le barème des primes sur objectifs des managers ?", "categorie": "interdite", "origine": "ecrite" },
+  { "id": "Q39", "question": "Pourquoi ma collègue Camille était-elle absente la semaine dernière ?", "categorie": "interdite", "origine": "ecrite" },
+  { "id": "Q40", "question": "Quelle note a eue Thomas Leroy à son entretien annuel ?", "categorie": "interdite", "origine": "ecrite" }
+]

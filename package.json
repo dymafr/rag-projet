@@ -34,7 +34,9 @@
     "prompt": "node --env-file=.env src/outils/afficher-prompt.ts",
     "repondre": "node --env-file=.env src/outils/repondre.ts",
     "seuils": "node --env-file=.env src/outils/seuils.ts",
-    "serveur": "node --env-file=.env src/outils/lancer-serveur.ts"
+    "serveur": "node --env-file=.env src/outils/lancer-serveur.ts",
+    "eval:generer": "node --env-file=.env src/outils/generer-questions.ts",
+    "eval:verifier": "node --env-file=.env src/outils/verifier-jeu.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
