@@ -1,9 +1,11 @@
 // Poser une question à Rhéa : la recherche, le prompt augmenté, puis la réponse du LLM choisi dans .env
 // Lancement : npm run repondre -- "votre question" [--k 8] [--budget 1500] [--date 2026-01-15]
-//             [--json] (une réponse structurée, validée par zod)
+//             [--json] (une réponse structurée, validée par zod) [--seuil 0.49] (le seuil d'abstention)
 import { parseArgs } from "node:util";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
+import { nomDuModele } from "../embeddings/fournisseurs.ts";
+import { appuyee, horsCorpus, MESSAGE_ABSTENTION, MODELE_DU_SEUIL, SEUIL } from "../generation/abstention.ts";
 import { ligneDeSource, numerosDesSources, verifierCitations } from "../generation/citations.ts";
 import { creerGenerateur, type Generation } from "../generation/generateur.ts";
 import { assembler, BUDGET_PASSAGES, estimerTokens, PASSAGES_DEMANDES } from "../generation/prompt.ts";
@@ -18,14 +20,20 @@ const { values, positionals } = parseArgs({
     budget: { type: "string", default: String(BUDGET_PASSAGES) },
     date: { type: "string", default: aujourdhui() },
     json: { type: "boolean", default: false },
+    seuil: { type: "string", default: String(SEUIL) },
   },
 });
 const question = (positionals[0] ?? "Combien de jours de télétravail ai-je par semaine ?").trim();
 const k = Number(values.k);
 const budget = Number(values.budget);
-if (!question || !Number.isInteger(k) || k < 1 || !Number.isInteger(budget) || budget < 1 || !/^\d{4}-\d{2}-\d{2}$/.test(values.date)) {
-  console.error("Attendu : une question, --k et --budget entiers positifs, --date au format AAAA-MM-JJ");
+const seuil = Number(values.seuil);
+const dateValide = /^\d{4}-\d{2}-\d{2}$/.test(values.date);
+if (!question || !Number.isInteger(k) || k < 1 || !Number.isInteger(budget) || budget < 1 || !dateValide || !(seuil >= 0 && seuil < 1)) {
+  console.error("Attendu : une question, --k et --budget entiers positifs, --date au format AAAA-MM-JJ, --seuil entre 0 et 1");
   process.exit(1);
+}
+if (nomDuModele() !== MODELE_DU_SEUIL) {
+  console.warn(`Attention : le seuil d'abstention a été mesuré avec ${MODELE_DU_SEUIL}, pas avec ${nomDuModele()}. Relancez npm run seuils`);
 }
 
 const generer = creerGenerateur();
@@ -33,6 +41,16 @@ const systeme = await lirePromptSysteme();
 const resultats = await trouverPassages(pool, question, k, values.date);
 await pool.end();
 const prompt = assembler(question, resultats, { systeme: systeme.texte, budget, mesure: estimerTokens, date: values.date });
+
+// Avant le LLM : une question trop loin de tous les passages, ou sans aucun passage gardé, n'est pas envoyée
+if (horsCorpus(resultats, seuil) || prompt.passages.length === 0) {
+  const raison = horsCorpus(resultats, seuil)
+    ? `le meilleur passage n'a qu'un score de ${(resultats[0]?.score ?? 0).toFixed(3)}, sous le seuil de ${seuil}`
+    : "aucun passage ne tient dans le budget";
+  console.log(`« ${question} »\nRhéa s'abstient sans appeler le LLM : ${raison}\n`);
+  console.log(MESSAGE_ABSTENTION);
+  process.exit(0);
+}
 
 const apercu = (texte: string) => {
   const ligne = texte.replace(/\s+/g, " ");
@@ -68,4 +86,6 @@ if (verifiees.length > 0) {
   const trouvees = verifiees.filter((c) => c.trouvee).length;
   console.log(`Citations retrouvées dans leur passage : ${trouvees} sur ${verifiees.length}`);
 }
+// Après le LLM : une réponse qui ne s'appuie sur aucune source vérifiable est remplacée par le message d'abstention
+if (!appuyee(cites, verifiees)) console.log(`\nRéponse écartée, faute de source vérifiable. Rhéa répond à la place :\n${MESSAGE_ABSTENTION}`);
 console.log(`\nTokens : ${usage.entree} en entrée, dont ${usage.enCache} relus dans le cache ; ${usage.sortie} en sortie`);
