@@ -41,7 +41,9 @@
     "eval:repondre": "node --env-file=.env src/outils/enregistrer-reponses.ts",
     "eval:juger": "node --env-file=.env src/outils/juger-reponses.ts",
     "eval:etiqueter": "node src/outils/etiqueter.ts",
-    "eval:calibrer": "node src/outils/calibrer-juge.ts"
+    "eval:calibrer": "node src/outils/calibrer-juge.ts",
+    "eval:citations": "node --env-file=.env src/outils/evaluer-citations.ts",
+    "eval:abstention": "node src/outils/evaluer-abstention.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

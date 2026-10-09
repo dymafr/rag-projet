@@ -5,8 +5,9 @@ import { readFile } from "node:fs/promises";
 import { z } from "zod";
 import type { Llm, Usage } from "../llm.ts";
 
+// Les critères jugés sur une réponse entière ; le soutien se juge phrase par phrase, avec les seuls passages cités
 export const CRITERES_JUGES = ["fidelite", "pertinence", "exactitude"] as const;
-export type Critere = (typeof CRITERES_JUGES)[number];
+export type Critere = (typeof CRITERES_JUGES)[number] | "soutien";
 
 // Ce que le juge lit : la question, la réponse, les passages envoyés au LLM et, pour l'exactitude, la réponse de référence
 export type AJuger = { question: string; reponse: string; passages: { numero: number; texte: string }[]; reference?: string };
@@ -46,6 +47,15 @@ plus courte ou plus longue ; l'absence d'un détail secondaire de la référence
 Réponds "non" si elle contredit la référence, s'il lui manque une information essentielle, ou si elle ajoute une information fausse.
 ${FORMAT}`,
     donnees: (a) => `<question>\n${a.question}\n</question>\n\n<reference>\n${a.reference ?? ""}\n</reference>\n\n<reponse>\n${a.reponse}\n</reponse>`,
+  },
+  // Ici, reponse est une seule phrase de la réponse, et passages ceux qu'elle cite
+  soutien: {
+    consigne: `Tu vérifies qu'une phrase écrite par un assistant RH est établie par les passages qu'il cite pour elle.
+Réponds "oui" si tout ce que dit la phrase découle de ces passages, et d'eux seuls.
+Réponds "non" si une partie de la phrase n'en découle pas, ou si les passages la contredisent.
+N'utilise aucune connaissance extérieure aux passages.
+${FORMAT}`,
+    donnees: (a) => `<passages>\n${passages(a)}\n</passages>\n\n<phrase>\n${a.reponse}\n</phrase>`,
   },
 };
 
