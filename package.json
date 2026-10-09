@@ -30,7 +30,8 @@
     "indexer": "node --env-file=.env src/outils/indexer.ts",
     "mesurer:index": "node --env-file=.env src/outils/mesurer-index.ts",
     "rechercher": "node --env-file=.env src/outils/rechercher.ts",
-    "enregistrer": "node --env-file=.env src/outils/enregistrer-exemples.ts"
+    "enregistrer": "node --env-file=.env src/outils/enregistrer-exemples.ts",
+    "prompt": "node --env-file=.env src/outils/afficher-prompt.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

@@ -21,3 +21,9 @@ test("requete garde la version en vigueur à la date demandée, avec une seule v
   assert.match(sql, /WHERE date_effet <= \$2 AND \(date_fin IS NULL OR date_fin > \$2\)/);
   assert.deepEqual(valeurs, ["[0.6,0.8]", "2026-01-15"]);
 });
+
+test("requete ne garde que les documents dont l'accès est permis", () => {
+  const { sql, valeurs } = requete([0.6, 0.8], 5, { enVigueurLe: "2026-10-05", acces: ["tous"] });
+  assert.match(sql, /WHERE date_effet <= \$2 AND \(date_fin IS NULL OR date_fin > \$2\) AND acces = ANY\(\$3\)/);
+  assert.deepEqual(valeurs, ["[0.6,0.8]", "2026-10-05", ["tous"]]);
+});

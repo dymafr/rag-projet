@@ -18,13 +18,13 @@ const TAILLE_LOT = 32; // textes envoyés par appel
 const prefixe = (modele: string, usage: Usage) =>
   /e5/i.test(modele) ? (usage === "requete" ? "query: " : "passage: ") : "";
 
-// Modèle local, dans le processus Node. Il est chargé au premier appel, puis gardé en mémoire
+// Modèle local, chargé au premier appel. Vecteur d'un texte : son premier token (cls) avec BGE, la moyenne sinon
 function appelTransformers(r: Reglages): Embedder {
   let extraire: Promise<FeatureExtractionPipeline> | undefined;
   return async (textes, usage) => {
     extraire ??= pipeline("feature-extraction", r.EMBEDDING_MODEL, { dtype: "q8" });
     const entrees = textes.map((t) => prefixe(r.EMBEDDING_MODEL, usage) + t);
-    const tenseur = await (await extraire)(entrees, { pooling: "mean", normalize: true });
+    const tenseur = await (await extraire)(entrees, { pooling: /bge/i.test(r.EMBEDDING_MODEL) ? "cls" : "mean", normalize: true });
     return tenseur.tolist();
   };
 }
