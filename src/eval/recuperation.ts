@@ -1,6 +1,8 @@
 // Les métriques de récupération : les passages trouvés par la recherche, dans leur ordre, comparés aux passages
 // attendus du jeu d'évaluation. Un passage est pertinent s'il a une note (1 ou 2) ; le nDCG tient compte de la note,
 // et le succès@k ne compte que les passages qui répondent (note 2)
+import { z } from "zod";
+
 export type Notes = Record<string, number>;
 
 const pertinent = (notes: Notes, id: string) => Object.hasOwn(notes, id);
@@ -55,4 +57,17 @@ export type MesuresRecuperation = ReturnType<typeof mesurerRecuperation>;
 export function moyennes(mesures: MesuresRecuperation[]): MesuresRecuperation {
   const moyenne = (cle: keyof MesuresRecuperation) => mesures.reduce((total, m) => total + m[cle], 0) / mesures.length;
   return { succes: moyenne("succes"), rappel: moyenne("rappel"), precision: moyenne("precision"), rangReciproque: moyenne("rangReciproque"), ndcg: moyenne("ndcg") };
+}
+
+// Les minimums de l'intégration continue (eval/minimums.json) : une moyenne qui passe en dessous fait échouer
+// l'évaluation. strictObject refuse une clé inconnue : une faute de frappe (« mrr ») ne désactive pas un contrôle en silence
+const Taux = z.number().min(0).max(1).optional();
+export const Minimums = z.strictObject({ succes: Taux, rappel: Taux, precision: Taux, rangReciproque: Taux, ndcg: Taux });
+export type Minimums = z.infer<typeof Minimums>;
+
+export function sousLeMinimum(moy: MesuresRecuperation, minimums: Minimums) {
+  return (Object.keys(minimums) as (keyof Minimums)[])
+    // !(moyenne >= minimum) plutôt que moyenne < minimum : une moyenne sur zéro question (NaN) échoue aussi
+    .filter((cle) => minimums[cle] !== undefined && !(moy[cle] >= minimums[cle]))
+    .map((cle) => ({ cle, valeur: moy[cle], minimum: minimums[cle]! }));
 }

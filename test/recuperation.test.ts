@@ -1,7 +1,7 @@
 // Tests des métriques de récupération, sur un exemple calculé à la main. Lancement : npm test
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mesurerRecuperation, moyennes, ndcg, precision, rangReciproque, rappel, succes } from "../src/eval/recuperation.ts";
+import { Minimums, mesurerRecuperation, moyennes, ndcg, precision, rangReciproque, rappel, sousLeMinimum, succes } from "../src/eval/recuperation.ts";
 
 // Trois passages attendus : A et C répondent (note 2), B aide (note 1). La recherche classe X, A, B, Y, C
 const notes = { A: 2, B: 1, C: 2 };
@@ -55,4 +55,13 @@ test("les moyennes sur plusieurs questions donnent notamment le MRR", () => {
   ]);
   assert.equal(m.rangReciproque, 0.5);
   proche(m.rappel, (1 / 3 + 1 / 3 + 0) / 3);
+});
+
+test("les minimums : une moyenne en dessous est signalée, une clé inconnue est refusée", () => {
+  const moy = { succes: 0.93, rappel: 0.8, precision: 0.3, rangReciproque: 0.84, ndcg: 0.81 };
+  assert.deepEqual(sousLeMinimum(moy, { succes: 0.9, rappel: 0.85 }), [{ cle: "rappel", valeur: 0.8, minimum: 0.85 }]);
+  assert.deepEqual(sousLeMinimum(moy, {}), []);
+  assert.deepEqual(sousLeMinimum({ ...moy, rappel: NaN }, { rappel: 0.85 }).map((e) => e.cle), ["rappel"]); // aucune question
+  assert.equal(Minimums.safeParse({ mrr: 0.8 }).success, false); // faute de frappe : rangReciproque
+  assert.equal(Minimums.safeParse({ rappel: 85 }).success, false); // un taux va de 0 à 1
 });

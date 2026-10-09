@@ -1,0 +1,47 @@
+# Évaluer Rhéa à chaque push et à chaque pull request : les tests, puis la récupération sur le jeu d'évaluation.
+# Aucun LLM ni aucune clé : les embeddings sont calculés en local et la base tourne dans un conteneur, comme sur votre
+# machine. Les étapes avec un LLM (réponses, juge) coûtent et demandent un secret : elles se lancent à la main
+name: Évaluation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch: # pour la lancer à la main depuis l'onglet Actions
+
+permissions:
+  contents: read # le jeton du workflow ne peut que lire le dépôt
+
+concurrency: # un nouveau push annule l'exécution précédente de la même branche, devenue inutile
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  recuperation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env: # ces variables l'emportent sur le fichier .env ; aucun LLM n'est appelé, donc aucune clé n'est demandée
+      LLM_PROVIDER: ollama
+      LLM_MODEL: gemma4:e4b
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # Le modèle d'embedding est gardé d'une exécution à l'autre : enregistré après un job réussi, relu sur la même
+      # branche ou celle par défaut. Si .env.example ou package-lock.json change, la clé change : il est retéléchargé
+      - uses: actions/cache@v6
+        with:
+          path: node_modules/@huggingface/transformers/.cache
+          key: embeddings-${{ hashFiles('.env.example', 'package-lock.json') }}
+      - run: cp .env.example .env
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run db:up
+      - run: npm run ingest
+      - run: npm run decouper
+      - run: npm run indexer
+      - run: npm run eval:verifier
+      # Échoue si une moyenne passe sous son minimum (eval/minimums.json)
+      - run: npm run eval:recherche -- --minimums eval/minimums.json
