@@ -1,6 +1,7 @@
 // Poser à Rhéa les questions du jeu d'évaluation et enregistrer tout ce qu'il faut pour juger ses réponses ensuite :
 // les passages trouvés, ceux envoyés au LLM, la réponse, les sources et l'abstention éventuelle
-// Lancement : npm run eval:repondre -- [--sortie eval/reponses.json]
+// Lancement : npm run eval:repondre -- [--sortie eval/reponses.json] [--k 8] [--budget 1500]
+// --k et --budget changent les réglages de Rhéa le temps d'une évaluation, pour en comparer d'autres sans toucher au code
 import { writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import { repondreEnFlux } from "../api/rhea.ts";
@@ -15,7 +16,18 @@ import { lirePromptSysteme } from "../generation/systeme.ts";
 import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 
-const { values } = parseArgs({ options: { sortie: { type: "string", default: "eval/reponses.json" } } });
+const { values } = parseArgs({
+  options: {
+    sortie: { type: "string", default: "eval/reponses.json" },
+    k: { type: "string", default: String(PASSAGES_DEMANDES) },
+    budget: { type: "string", default: String(BUDGET_PASSAGES) },
+  },
+});
+const k = Number(values.k);
+const budget = Number(values.budget);
+if (!Number.isInteger(k) || k < 1 || !Number.isInteger(budget) || budget < 1) {
+  throw new Error("--k et --budget attendent des nombres entiers positifs, par exemple --k 8 --budget 1500");
+}
 const systeme = await lirePromptSysteme();
 const generer = creerGenerateurEnFlux();
 const jour = aujourdhui();
@@ -27,7 +39,7 @@ for (const q of await lireJeu()) {
   const debut = performance.now();
   const evenements = repondreEnFlux(q.question, {
     chercher: async (question, date) => {
-      espion.trouves = await trouverPassages(pool, question, PASSAGES_DEMANDES, date);
+      espion.trouves = await trouverPassages(pool, question, k, date);
       return espion.trouves;
     },
     generer: (prompt, signal) => {
@@ -35,7 +47,7 @@ for (const q of await lireJeu()) {
       return generer(prompt, signal);
     },
     systeme,
-    budget: BUDGET_PASSAGES,
+    budget,
     date: () => q.date ?? jour,
   });
   let texte = "";
@@ -69,6 +81,8 @@ const enregistrement: Enregistrement = {
   llm: `${config.LLM_PROVIDER} ${config.LLM_MODEL}`,
   embeddings: nomDuModele(),
   prompt: `v${systeme.version} ${systeme.empreinte}`,
+  k,
+  budget,
   reponses,
 };
 await writeFile(values.sortie, `${JSON.stringify(enregistrement, null, 2)}\n`);

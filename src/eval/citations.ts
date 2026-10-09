@@ -2,6 +2,9 @@
 // sert-elle à quelque chose ? (le rappel et la précision des citations, définis par le banc d'essai ALCE).
 // À ne pas confondre avec generation/citations.ts, qui vérifie qu'un extrait cité figure bien dans son passage :
 // un extrait peut exister mot pour mot sans prouver la phrase qui le cite
+import { readFile } from "node:fs/promises";
+import { z } from "zod";
+
 export type Phrase = { texte: string; numeros: number[] };
 
 // Les numéros cités : [2], ou [1, 3], comme les accepte Rhéa (numerosCites, au chapitre 7)
@@ -71,4 +74,30 @@ export async function evaluerCitations(reponse: string, soutien: Soutien): Promi
     precision: citations.length === 0 ? null : citations.filter(Boolean).length / citations.length,
     sansCitation: phrases.length - citantes.length,
   };
+}
+
+// Le fichier écrit par npm run eval:citations, relu par le bilan
+export const FichierDeCitations = z.object({
+  date: z.iso.date(),
+  juge: z.string(),
+  consignes: z.string(), // l'empreinte de la consigne du juge de soutien
+  reponses: z.string(), // le fichier des réponses évaluées
+  resultats: z.array(
+    z.object({
+      id: z.string(),
+      empreinte: z.string(), // celle du texte évalué : un résultat ne vaut que pour cette réponse
+      phrases: z.array(z.object({ texte: z.string(), numeros: z.array(z.number()), appuyee: z.boolean().nullable(), utiles: z.array(z.boolean()) })),
+      rappel: z.number().nullable(),
+      precision: z.number().nullable(),
+      sansCitation: z.number(),
+      sourceAttendue: z.boolean().nullable(),
+    }),
+  ),
+});
+export type FichierDeCitations = z.infer<typeof FichierDeCitations>;
+
+export async function lireCitations(fichier = "eval/citations.json"): Promise<FichierDeCitations> {
+  const resultat = FichierDeCitations.safeParse(JSON.parse(await readFile(fichier, "utf8")));
+  if (!resultat.success) throw new Error(`${fichier} invalide :\n${z.prettifyError(resultat.error)}`);
+  return resultat.data;
 }

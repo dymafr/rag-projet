@@ -4,6 +4,7 @@
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { z } from "zod";
+import { BUDGET_PASSAGES, PASSAGES_DEMANDES } from "../generation/prompt.ts";
 
 export const ReponseEnregistree = z.object({
   id: z.string(),
@@ -25,6 +26,9 @@ export const Enregistrement = z.object({
   llm: z.string(),
   embeddings: z.string(),
   prompt: z.string(), // la version du prompt système et son empreinte
+  // Les réglages de Rhéa pendant l'enregistrement ; un enregistrement plus ancien, sans eux, a utilisé ceux par défaut
+  k: z.number().default(PASSAGES_DEMANDES), // les passages demandés à la recherche
+  budget: z.number().default(BUDGET_PASSAGES), // les tokens réservés aux passages dans le prompt
   reponses: z.array(ReponseEnregistree),
 });
 export type Enregistrement = z.infer<typeof Enregistrement>;

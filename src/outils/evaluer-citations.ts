@@ -4,7 +4,7 @@
 import { writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import { config } from "../config.ts";
-import { evaluerCitations } from "../eval/citations.ts";
+import { evaluerCitations, type FichierDeCitations } from "../eval/citations.ts";
 import { lireJeu } from "../eval/jeu.ts";
 import { CRITERES, juger } from "../eval/juge.ts";
 import { empreinte, lireReponses } from "../eval/reponses.ts";
@@ -57,6 +57,6 @@ console.log(`phrases sans citation : ${resultats.reduce((total, r) => total + r.
 console.log(`source attendue citée : ${attendues.filter((r) => r.sourceAttendue).length}/${attendues.length}`);
 
 const consignes = empreinte(CRITERES.soutien.consigne);
-const fichier = { date: aujourdhui(), juge: `${config.LLM_PROVIDER} ${modele}`, consignes, reponses: values.reponses, resultats };
+const fichier: FichierDeCitations = { date: aujourdhui(), juge: `${config.LLM_PROVIDER} ${modele}`, consignes, reponses: values.reponses, resultats };
 await writeFile(values.sortie, `${JSON.stringify(fichier, null, 2)}\n`);
 console.log(`\nRésultats enregistrés dans ${values.sortie}`);

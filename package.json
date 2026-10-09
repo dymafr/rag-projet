@@ -43,7 +43,9 @@
     "eval:etiqueter": "node src/outils/etiqueter.ts",
     "eval:calibrer": "node src/outils/calibrer-juge.ts",
     "eval:citations": "node --env-file=.env src/outils/evaluer-citations.ts",
-    "eval:abstention": "node src/outils/evaluer-abstention.ts"
+    "eval:abstention": "node src/outils/evaluer-abstention.ts",
+    "eval": "node --env-file=.env src/outils/evaluer.ts",
+    "eval:bilan": "node src/outils/faire-le-bilan.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
