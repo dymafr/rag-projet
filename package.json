@@ -36,7 +36,8 @@
     "seuils": "node --env-file=.env src/outils/seuils.ts",
     "serveur": "node --env-file=.env src/outils/lancer-serveur.ts",
     "eval:generer": "node --env-file=.env src/outils/generer-questions.ts",
-    "eval:verifier": "node --env-file=.env src/outils/verifier-jeu.ts"
+    "eval:verifier": "node --env-file=.env src/outils/verifier-jeu.ts",
+    "eval:recherche": "node --env-file=.env src/outils/evaluer-recherche.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
