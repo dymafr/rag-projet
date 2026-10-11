@@ -1,7 +1,7 @@
 // Mesurer la récupération de Rhéa sur le jeu d'évaluation : pour chaque question couverte, les passages trouvés
 // comparés aux passages attendus, puis la moyenne de chaque métrique. Aucun appel au LLM : la mesure est rapide et gratuite
 // Lancement : npm run eval:recherche -- [--k 8] [--minimums eval/minimums.json] [--traces eval/traces/vectorielle.json]
-//             et les options de recherche (src/recherche/options.ts) : [--mode vectorielle] [--poids 1,0.5] [--candidats 50]
+//             et les options de recherche (src/recherche/options.ts) : [--mode vectorielle] [--vocabulaire]…
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { parseArgs } from "node:util";
@@ -16,6 +16,7 @@ import { decrire, lireReglages, OPTIONS_RECHERCHE } from "../recherche/options.t
 import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
 
 const { values } = parseArgs({
+  allowNegative: true, // --no-vocabulaire : désactiver une option booléenne
   options: {
     ...OPTIONS_RECHERCHE,
     k: { type: "string", default: String(PASSAGES_DEMANDES) },

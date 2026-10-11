@@ -13,6 +13,7 @@ import { aujourdhui } from "../recherche/passages.ts";
 
 const LIGNE_DE_BASE = "eval/ligne-de-base.json";
 const { values } = parseArgs({
+  allowNegative: true, // --no-vocabulaire
   options: {
     ...OPTIONS_RECHERCHE,
     nom: { type: "string", default: aujourdhui() }, // le nom du dossier : la date, ou le nom d'une expérience
@@ -37,11 +38,11 @@ function etape(outil: string, options: string[]) {
     process.exit(1);
   }
 }
-// Les options de recherche données, telles quelles : --mode plein-texte, --poids 1,0.5…
+// Les options de recherche données, telles quelles : --mode plein-texte, --no-vocabulaire…
 const recherche = Object.keys(OPTIONS_RECHERCHE).flatMap((cle) => {
   const valeur = values[cle as keyof typeof OPTIONS_RECHERCHE];
   if (valeur === undefined) return [];
-  return [`--${cle}`, valeur];
+  return typeof valeur === "boolean" ? [valeur ? `--${cle}` : `--no-${cle}`] : [`--${cle}`, valeur];
 });
 etape("enregistrer-reponses.ts", ["--sortie", `${dossier}/reponses.json`, "--k", values.k, "--budget", values.budget, ...recherche]);
 etape("juger-reponses.ts", ["--reponses", `${dossier}/reponses.json`, "--sortie", `${dossier}/jugements.json`]);

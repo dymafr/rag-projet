@@ -8,15 +8,18 @@ import { chercherHybride } from "./hybride.ts";
 import { chercherPleinTexte } from "./plein-texte.ts";
 import { RECHERCHE, type Reglages } from "./reglages.ts";
 import { chercher, similarites, type Filtres, type Resultat } from "./vectorielle.ts";
+import { enrichir } from "./vocabulaire.ts";
 
 // La date du jour, à l'heure locale (sv-SE écrit AAAA-MM-JJ)
 export const aujourdhui = () => new Date().toLocaleDateString("sv-SE");
 
-// Une recherche, pour une requête : celle du mode choisi
+// Une recherche, pour une requête : celle du mode choisi. Le plein texte cherche des mots-clés : la requête, enrichie du
+// vocabulaire de Kalyo si le réglage vocabulaire est actif (leçon 4)
 async function chercherUneFois(base: Base, requete: string, k: number, filtres: Filtres, reglages: Reglages): Promise<Resultat[]> {
-  if (reglages.mode === "plein-texte") return chercherPleinTexte(base, requete, k, filtres);
+  const motsCles = reglages.vocabulaire ? enrichir(requete) : requete;
+  if (reglages.mode === "plein-texte") return chercherPleinTexte(base, motsCles, k, filtres);
   const [vecteur] = await vectoriser([requete], "requete");
-  if (reglages.mode === "hybride") return chercherHybride(base, requete, vecteur, k, filtres, reglages);
+  if (reglages.mode === "hybride") return chercherHybride(base, motsCles, vecteur, k, filtres, reglages);
   return chercher(base, vecteur, k, filtres);
 }
 

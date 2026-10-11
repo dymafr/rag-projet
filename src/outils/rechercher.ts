@@ -3,6 +3,7 @@
 //             [--date 2026-01-15] (les règles en vigueur ce jour-là ; par défaut aujourd'hui) [--toutes-versions]
 //             options de démonstration : --index (passer par l'index HNSW, comme sur une grande table), --sans-iteratif
 //             --mode plein-texte : chercher les mots de la question plutôt que son sens ; --mode hybride : les deux (chapitre 9)
+//             --vocabulaire : ajouter aux mots cherchés en plein texte les sigles et synonymes du lexique (chapitre 9)
 import { parseArgs } from "node:util";
 import { pool } from "../db.ts";
 import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
@@ -10,6 +11,7 @@ import { chercherHybride } from "../recherche/hybride.ts";
 import { chercherPleinTexte, requetePleinTexte } from "../recherche/plein-texte.ts";
 import { MODES, RECHERCHE, type Reglages } from "../recherche/reglages.ts";
 import { chercher, requete, type Filtres } from "../recherche/vectorielle.ts";
+import { enrichir } from "../recherche/vocabulaire.ts";
 import { lireIndexation } from "../stockage/schema.ts";
 
 const { values, positionals } = parseArgs({
@@ -25,6 +27,7 @@ const { values, positionals } = parseArgs({
     index: { type: "boolean", default: false },
     "sans-iteratif": { type: "boolean", default: false },
     mode: { type: "string", default: "vectorielle" }, // vectorielle, plein-texte ou hybride
+    vocabulaire: { type: "boolean", default: false },
   },
 });
 const question = positionals[0] ?? "Combien de jours de télétravail par semaine ?";
@@ -49,6 +52,9 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(values.date)) {
   process.exit(1);
 }
 if (!values["toutes-versions"]) filtres.enVigueurLe = values.date;
+// Les mots que cherche le plein texte : la question, et les autres façons de dire ses sigles et abréviations
+const motsCles = values.vocabulaire && mode !== "vectorielle" ? enrichir(question) : question;
+if (motsCles !== question) console.log(`Mots-clés du plein texte : ${motsCles}`);
 const apercu = (texte: string) => texte.replace(/\n+/g, " ↵ ").slice(0, 70);
 
 const client = await pool.connect(); // une seule connexion : les réglages SET valent pour les requêtes qui suivent
@@ -72,9 +78,9 @@ const vecteur = pleinTexte ? [] : (await vectoriser([question], "requete"))[0];
 const debut = performance.now();
 // score : la similarité cosinus en recherche vectorielle et hybride ; en plein texte, le score BM25, qui n'a pas de maximum
 const resultats = pleinTexte
-  ? await chercherPleinTexte(client, question, k, filtres)
+  ? await chercherPleinTexte(client, motsCles, k, filtres)
   : mode === "hybride"
-    ? await chercherHybride(client, question, vecteur, k, filtres, RECHERCHE) // les poids de Rhéa
+    ? await chercherHybride(client, motsCles, vecteur, k, filtres, RECHERCHE) // les poids de Rhéa
     : await chercher(client, vecteur, k, filtres);
 console.log(`« ${question} »  ${mode}  ${JSON.stringify(filtres)}`);
 console.log(`${resultats.length} chunks sur ${k} demandés, en ${(performance.now() - debut).toFixed(1)} ms\n`);
@@ -82,7 +88,7 @@ for (const { id, score, texte } of resultats) console.log(`  ${score.toFixed(3)}
 
 // EXPLAIN ANALYZE exécute la requête et décrit ce que PostgreSQL a fait : parcours de la table ou de l'index, lignes écartées
 if (values.plan) {
-  const { sql, valeurs } = pleinTexte ? requetePleinTexte(question, k, filtres) : requete(vecteur, k, filtres);
+  const { sql, valeurs } = pleinTexte ? requetePleinTexte(motsCles, k, filtres) : requete(vecteur, k, filtres);
   const { rows } = await client.query(`EXPLAIN (ANALYZE, COSTS OFF, TIMING OFF) ${sql}`, valeurs);
   const lignes = rows.map((ligne) => String(ligne["QUERY PLAN"]).replace(/'\[[^\]]*\]'::(vector|halfvec)/g, () => "$1")); // le vecteur, illisible, devient $1
   console.log(`\nPlan d'exécution :\n${lignes.map((ligne) => `  ${ligne}`).join("\n")}`);

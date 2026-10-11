@@ -19,6 +19,7 @@ import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 
 const { values } = parseArgs({
+  allowNegative: true, // --no-vocabulaire
   options: {
     ...OPTIONS_RECHERCHE,
     sortie: { type: "string", default: "eval/reponses.json" },

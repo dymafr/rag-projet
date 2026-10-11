@@ -1,11 +1,13 @@
 // Les options de recherche des outils d'évaluation (eval:recherche, eval:repondre, npm run eval) : elles changent les
-// réglages de Rhéa le temps d'une exécution, pour en comparer d'autres sans toucher au code
+// réglages de Rhéa le temps d'une exécution, pour en comparer d'autres sans toucher au code. Une option booléenne
+// s'active par son nom et se désactive par --no- : --vocabulaire, --no-vocabulaire
 import { MODES, RECHERCHE, type Reglages } from "./reglages.ts";
 
 export const OPTIONS_RECHERCHE = {
   mode: { type: "string" }, // vectorielle, plein-texte ou hybride
   poids: { type: "string" }, // en hybride : « 1,0.5 », le poids de la recherche vectorielle puis celui du plein texte
   candidats: { type: "string" },
+  vocabulaire: { type: "boolean" },
 } as const;
 
 // Les valeurs lues par parseArgs : absentes si l'option n'est pas donnée
@@ -13,6 +15,7 @@ type Valeurs = {
   mode?: string;
   poids?: string;
   candidats?: string;
+  vocabulaire?: boolean;
 };
 
 const parmi = <T extends string>(valeur: string, liste: readonly T[], option: string): T => {
@@ -38,10 +41,16 @@ export function lireReglages(v: Valeurs): Reglages {
     r.candidats = nombre(v.candidats);
     if (!Number.isInteger(r.candidats) || r.candidats < 1) throw new Error("--candidats attend un nombre entier positif, par exemple --candidats 20");
   }
+  if (v.vocabulaire !== undefined) r.vocabulaire = v.vocabulaire;
   return r;
 }
 
-// Les réglages en clair, pour les traces et les enregistrements : « hybride 1/0.5 »
+// Les réglages en clair, pour les traces et les enregistrements : « hybride 1/0.5, vocabulaire… »
 export function decrire(r: Reglages): string {
-  return r.mode === "hybride" ? `hybride ${r.poids.join("/")}` : r.mode;
+  return [
+    r.mode === "hybride" ? `hybride ${r.poids.join("/")}` : r.mode,
+    r.vocabulaire && r.mode !== "vectorielle" && "vocabulaire",
+  ]
+    .filter(Boolean)
+    .join(", ");
 }

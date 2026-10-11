@@ -10,8 +10,9 @@ export type Reglages = {
   mode: (typeof MODES)[number];
   candidats: number; // les passages que chaque recherche propose à la fusion
   poids: [number, number]; // en hybride : le poids de la recherche vectorielle, puis celui du plein texte (leçon 3)
+  vocabulaire: boolean; // enrichir la requête du plein texte avec les sigles et synonymes du lexique (leçon 4)
 };
 
 // Les réglages de Rhéa : ceux de l'API et des évaluations, sauf option contraire. Chacun a été choisi sur le jeu
-// d'évaluation (voir les leçons)
-export const RECHERCHE: Reglages = { mode: "hybride", candidats: 50, poids: [1, 0.5] };
+// d'évaluation (voir les leçons) : ce qui n'a pas gagné, ou coûte trop de temps, reste désactivé
+export const RECHERCHE: Reglages = { mode: "hybride", candidats: 50, poids: [1, 0.5], vocabulaire: false };
