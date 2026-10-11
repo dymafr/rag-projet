@@ -12,13 +12,13 @@ export type Filtres = {
 
 export type Resultat = { id: string; document: string; titres: string[]; texte: string; score: number };
 
-// La requête SQL et ses valeurs. Le vecteur de la question est $1, chaque filtre ajoute une condition au WHERE
-export function requete(vecteur: number[], k: number, filtres: Filtres = {}) {
-  const valeurs: unknown[] = [pgvector.toSql(vecteur)];
-  const conditions: string[] = [];
+// Les conditions SQL des filtres, à mettre dans le WHERE. Chaque valeur s'ajoute à valeurs et prend le numéro de
+// paramètre suivant : la recherche plein texte (chapitre 9) partage ces filtres avec la recherche vectorielle
+export function conditions(filtres: Filtres, valeurs: unknown[]): string[] {
+  const liste: string[] = [];
   const filtrer = (condition: (parametre: string) => string, valeur: unknown) => {
     valeurs.push(valeur);
-    conditions.push(condition(`$${valeurs.length}`));
+    liste.push(condition(`$${valeurs.length}`));
   };
   if (filtres.sites?.length) filtrer((p) => `sites && ${p}`, filtres.sites); // && : au moins un site en commun
   if (filtres.types?.length) filtrer((p) => `type = ANY(${p})`, filtres.types);
@@ -26,7 +26,14 @@ export function requete(vecteur: number[], k: number, filtres: Filtres = {}) {
   // En vigueur à cette date : le document s'applique déjà, et aucun texte plus récent ne l'a encore remplacé
   if (filtres.enVigueurLe) filtrer((p) => `date_effet <= ${p} AND (date_fin IS NULL OR date_fin > ${p})`, filtres.enVigueurLe);
   if (filtres.acces?.length) filtrer((p) => `acces = ANY(${p})`, filtres.acces);
-  const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+  return liste;
+}
+
+// La requête SQL et ses valeurs. Le vecteur de la question est $1, chaque filtre ajoute une condition au WHERE
+export function requete(vecteur: number[], k: number, filtres: Filtres = {}) {
+  const valeurs: unknown[] = [pgvector.toSql(vecteur)];
+  const liste = conditions(filtres, valeurs);
+  const where = liste.length > 0 ? `WHERE ${liste.join(" AND ")}` : "";
   // <=> est la distance cosinus : trier sur elle, en ordre croissant, permet à PostgreSQL d'utiliser l'index HNSW
   const sql = `SELECT id, document, titres, texte, 1 - (embedding <=> $1) AS score
     FROM chunks ${where}
@@ -38,5 +45,15 @@ export function requete(vecteur: number[], k: number, filtres: Filtres = {}) {
 export async function chercher(base: Base, vecteur: number[], k = 5, filtres: Filtres = {}): Promise<Resultat[]> {
   const { sql, valeurs } = requete(vecteur, k, filtres);
   const { rows } = await base.query<Resultat>(sql, valeurs);
+  return rows;
+}
+
+// La similarité cosinus de passages donnés par leur identifiant : pour ceux qu'une autre recherche a trouvés (chapitre 9)
+export async function similarites(base: Base, vecteur: number[], ids: string[]): Promise<Resultat[]> {
+  if (ids.length === 0) return [];
+  const { rows } = await base.query<Resultat>(
+    "SELECT id, document, titres, texte, 1 - (embedding <=> $1) AS score FROM chunks WHERE id = ANY($2)",
+    [pgvector.toSql(vecteur), ids],
+  );
   return rows;
 }

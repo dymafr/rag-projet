@@ -32,6 +32,29 @@ export async function creerIndex(base: Base, stockage: Stockage = "vector", tabl
     USING hnsw (embedding ${stockage}_cosine_ops) WITH (m = 16, ef_construction = 64)`);
 }
 
+// La recherche plein texte (chapitre 9). La configuration rhea : celle du français, où chaque mot accentué passe par
+// trois dictionnaires. rhea_vides écarte les mots vides (le, de, à, été…) ; unaccent retire les accents (« fievre »
+// trouve « fièvre ») ; french_stem ramène le mot à sa racine (« congé », « congés » et « conges » donnent « cong »).
+// Les mots vides sont écartés avant de retirer les accents : sans son accent, « à » deviendrait « a », que la liste ne
+// connaît pas. La colonne tsv : les mots du texte ramenés à leur racine, calculés par PostgreSQL à chaque écriture du
+// texte (GENERATED … STORED). Et l'index GIN, qui sait quels passages contiennent chaque mot. Sans danger si tout
+// existe déjà : on peut l'appeler sur une base indexée avant ce chapitre
+export async function ajouterPleinTexte(base: Base, table = "chunks") {
+  await base.query("CREATE EXTENSION IF NOT EXISTS unaccent");
+  const { rows } = await base.query("SELECT 1 FROM pg_ts_config WHERE cfgname = 'rhea'"); // pas de IF NOT EXISTS ici
+  if (rows.length === 0) {
+    // Les mots vides du français (le fichier french.stop de PostgreSQL) ; ACCEPT = false : les autres mots passent au
+    // dictionnaire suivant
+    await base.query("DROP TEXT SEARCH DICTIONARY IF EXISTS rhea_vides");
+    await base.query("CREATE TEXT SEARCH DICTIONARY rhea_vides (TEMPLATE = simple, STOPWORDS = french, ACCEPT = false)");
+    await base.query("CREATE TEXT SEARCH CONFIGURATION rhea (COPY = french)");
+    // word, hword, hword_part : les mots qui contiennent une lettre accentuée ; les mots sans accent gardent french_stem
+    await base.query("ALTER TEXT SEARCH CONFIGURATION rhea ALTER MAPPING FOR hword, hword_part, word WITH rhea_vides, unaccent, french_stem");
+  }
+  await base.query(`ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS tsv tsvector GENERATED ALWAYS AS (to_tsvector('rhea', texte)) STORED`);
+  await base.query(`CREATE INDEX IF NOT EXISTS ${table}_tsv_idx ON ${table} USING gin (tsv)`);
+}
+
 // Le modèle qui a calculé les vecteurs de la base, noté dans la table indexation (une seule ligne).
 // null si la base n'a pas encore été indexée de cette façon
 export type Indexation = { modele: string; dimension: number; stockage: Stockage };
@@ -56,4 +79,5 @@ export async function basculer(base: Base) {
   await base.query("ALTER TABLE chunks_nouveau RENAME TO chunks");
   await base.query("ALTER INDEX chunks_nouveau_pkey RENAME TO chunks_pkey");
   await base.query("ALTER INDEX chunks_nouveau_embedding_idx RENAME TO chunks_embedding_idx");
+  await base.query("ALTER INDEX IF EXISTS chunks_nouveau_tsv_idx RENAME TO chunks_tsv_idx"); // chapitre 9
 }

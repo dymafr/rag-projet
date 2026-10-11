@@ -10,7 +10,7 @@ import { pool } from "../db.ts";
 import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
 import { dateDeFin, empreintes, insererParLots, ligne, metadonnees } from "../stockage/chunks.ts";
 import { mettreAJour, planifier, supprimer, type Empreintes } from "../stockage/incremental.ts";
-import { basculer, creerIndex, creerTable, ecrireIndexation, lireIndexation } from "../stockage/schema.ts";
+import { ajouterPleinTexte, basculer, creerIndex, creerTable, ecrireIndexation, lireIndexation } from "../stockage/schema.ts";
 
 const { values } = parseArgs({
   options: {
@@ -84,6 +84,7 @@ debut = performance.now();
 try {
   await client.query("BEGIN");
   if (reconstruire) await creerTable(client, dimension, stockage, table);
+  await ajouterPleinTexte(client, table); // la recherche plein texte du chapitre 9 : colonne tsv et son index
   await insererParLots(client, plan.aVectoriser.map((voulu, i) => ligne(voulu.chunk, voulu.document, vecteurs[i], voulu.dateFin)), lot, table);
   for (const voulu of plan.aMettreAJour) {
     await mettreAJour(client, voulu.id, metadonnees(voulu.document, voulu.dateFin), voulu.empreinte_meta, table);
