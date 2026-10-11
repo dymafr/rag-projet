@@ -1,6 +1,6 @@
 {
   "configuration": {
-    "date": "2026-10-10",
+    "date": "2026-10-11",
     "jeu": "eb6c565fecd9",
     "llm": "ollama gemma4:e4b",
     "embeddings": "transformers Xenova/bge-m3",
@@ -12,60 +12,60 @@
   },
   "recuperation": {
     "n": 52,
-    "succes": 0.8846153846153846,
-    "rappel": 0.7868589743589743,
-    "precision": 0.24759615384615385,
-    "rangReciproque": 0.7955586080586081,
-    "ndcg": 0.7455693826683499
+    "succes": 0.9807692307692307,
+    "rappel": 0.9038461538461539,
+    "precision": 0.27403846153846156,
+    "rangReciproque": 0.875801282051282,
+    "ndcg": 0.837241595715147
   },
   "generation": {
     "fidelite": {
-      "oui": 40,
-      "n": 43
+      "oui": 47,
+      "n": 47
     },
     "pertinence": {
-      "oui": 38,
-      "n": 43
+      "oui": 41,
+      "n": 47
     },
     "exactitude": {
-      "oui": 38,
-      "n": 43
+      "oui": 42,
+      "n": 47
     }
   },
   "citations": {
-    "rappel": 0.9186046511627909,
-    "precision": 0.8945012351989097,
+    "rappel": 0.9751773049645389,
+    "precision": 0.9452887537993921,
     "sourceAttendue": {
-      "oui": 41,
-      "n": 43
+      "oui": 45,
+      "n": 47
     }
   },
   "abstention": {
-    "justes": 38,
+    "justes": 42,
     "fausses": 5,
-    "abstentionsATort": 9,
+    "abstentionsATort": 5,
     "reponsesATort": 0,
     "abstentionsJustes": 10,
     "tauxReponsesATort": 0,
-    "tauxAbstentionsATort": 0.17307692307692307,
-    "couverture": 0.8269230769230769,
-    "exactitudeQuandElleRepond": 0.8837209302325582,
+    "tauxAbstentionsATort": 0.09615384615384616,
+    "couverture": 0.9038461538461539,
+    "exactitudeQuandElleRepond": 0.8936170212765957,
     "fuites": [],
     "aRelire": [
       "Q39"
     ]
   },
   "reussite": {
-    "oui": 48,
+    "oui": 52,
     "n": 62
   },
   "reussiteParOrigine": {
     "ecrite": {
-      "oui": 43,
+      "oui": 46,
       "n": 56
     },
     "synthetique": {
-      "oui": 5,
+      "oui": 6,
       "n": 6
     }
   },
@@ -77,10 +77,10 @@
       "abstention": null,
       "recuperation": {
         "succes": 1,
-        "rappel": 0.8333333333333334,
-        "precision": 0.625,
+        "rappel": 1,
+        "precision": 0.75,
         "rangReciproque": 1,
-        "ndcg": 0.892210845475489
+        "ndcg": 0.9838048780283076
       },
       "fidelite": true,
       "pertinence": true,
@@ -171,8 +171,8 @@
         "succes": 1,
         "rappel": 0.3333333333333333,
         "precision": 0.125,
-        "rangReciproque": 0.14285714285714285,
-        "ndcg": 0.2129292954931993
+        "rangReciproque": 0.125,
+        "ndcg": 0.20151514190050246
       },
       "fidelite": true,
       "pertinence": true,
@@ -195,7 +195,7 @@
         "rappel": 0.6666666666666666,
         "precision": 0.25,
         "rangReciproque": 1,
-        "ndcg": 0.7373230204909161
+        "ndcg": 0.8670870086853021
       },
       "fidelite": true,
       "pertinence": true,
@@ -238,19 +238,19 @@
       "abstention": null,
       "recuperation": {
         "succes": 1,
-        "rappel": 1,
-        "precision": 0.375,
+        "rappel": 0.6666666666666666,
+        "precision": 0.25,
         "rangReciproque": 1,
-        "ndcg": 0.8860866087646527
+        "ndcg": 0.7606220037494031
       },
       "fidelite": true,
       "pertinence": true,
       "exactitude": true,
       "citations": {
-        "rappel": 0.6666666666666666,
-        "precision": 0.8,
+        "rappel": 1,
+        "precision": 1,
         "sourceAttendue": true,
-        "nonEtablies": 1
+        "nonEtablies": 0
       },
       "reussie": true
     },
@@ -264,7 +264,7 @@
         "rappel": 1,
         "precision": 0.5,
         "rangReciproque": 1,
-        "ndcg": 0.8295704511617705
+        "ndcg": 0.9437383351480844
       },
       "fidelite": true,
       "pertinence": true,
@@ -287,7 +287,7 @@
         "rappel": 1,
         "precision": 0.5,
         "rangReciproque": 1,
-        "ndcg": 0.9558295932317544
+        "ndcg": 0.9047172294870751
       },
       "fidelite": true,
       "pertinence": true,
@@ -310,14 +310,14 @@
         "rappel": 1,
         "precision": 0.375,
         "rangReciproque": 1,
-        "ndcg": 1
+        "ndcg": 0.9556956695617674
       },
-      "fidelite": false,
+      "fidelite": true,
       "pertinence": true,
       "exactitude": true,
       "citations": {
         "rappel": 0.6666666666666666,
-        "precision": 0.75,
+        "precision": 0.6666666666666666,
         "sourceAttendue": true,
         "nonEtablies": 1
       },
@@ -337,14 +337,14 @@
       },
       "fidelite": true,
       "pertinence": true,
-      "exactitude": true,
+      "exactitude": false,
       "citations": {
         "rappel": 1,
-        "precision": 0.8571428571428571,
+        "precision": 1,
         "sourceAttendue": true,
         "nonEtablies": 0
       },
-      "reussie": true
+      "reussie": false
     },
     {
       "id": "Q13",
@@ -356,7 +356,7 @@
         "rappel": 1,
         "precision": 0.5,
         "rangReciproque": 1,
-        "ndcg": 0.9895471976490702
+        "ndcg": 0.9510083821959369
       },
       "fidelite": true,
       "pertinence": true,
@@ -379,14 +379,14 @@
         "rappel": 1,
         "precision": 0.25,
         "rangReciproque": 1,
-        "ndcg": 1
+        "ndcg": 0.8503449055347546
       },
       "fidelite": true,
       "pertinence": true,
       "exactitude": true,
       "citations": {
         "rappel": 1,
-        "precision": 0.6666666666666666,
+        "precision": 1,
         "sourceAttendue": true,
         "nonEtablies": 0
       },
@@ -409,7 +409,7 @@
       "exactitude": true,
       "citations": {
         "rappel": 1,
-        "precision": 1,
+        "precision": 0.8333333333333334,
         "sourceAttendue": true,
         "nonEtablies": 0
       },
@@ -425,14 +425,14 @@
         "rappel": 1,
         "precision": 0.5,
         "rangReciproque": 1,
-        "ndcg": 1
+        "ndcg": 0.9906609666436669
       },
       "fidelite": true,
       "pertinence": true,
       "exactitude": true,
       "citations": {
         "rappel": 1,
-        "precision": 0.9230769230769231,
+        "precision": 0.9285714285714286,
         "sourceAttendue": true,
         "nonEtablies": 0
       },
@@ -448,7 +448,7 @@
         "rappel": 1,
         "precision": 0.5,
         "rangReciproque": 1,
-        "ndcg": 0.9687707507974168
+        "ndcg": 0.8807404415317287
       },
       "fidelite": true,
       "pertinence": false,
@@ -468,19 +468,19 @@
       "abstention": null,
       "recuperation": {
         "succes": 1,
-        "rappel": 0.6666666666666666,
-        "precision": 0.25,
+        "rappel": 1,
+        "precision": 0.375,
         "rangReciproque": 1,
-        "ndcg": 0.6364391809889587
+        "ndcg": 0.8194270280062366
       },
       "fidelite": true,
       "pertinence": true,
       "exactitude": true,
       "citations": {
-        "rappel": 1,
-        "precision": 0.5,
+        "rappel": 0.5,
+        "precision": 0.25,
         "sourceAttendue": true,
-        "nonEtablies": 0
+        "nonEtablies": 1
       },
       "reussie": true
     },
@@ -498,14 +498,14 @@
       },
       "fidelite": true,
       "pertinence": true,
-      "exactitude": false,
+      "exactitude": true,
       "citations": {
         "rappel": 1,
-        "precision": 1,
+        "precision": 0.6666666666666666,
         "sourceAttendue": true,
         "nonEtablies": 0
       },
-      "reussie": false
+      "reussie": true
     },
     {
       "id": "Q20",
@@ -514,19 +514,19 @@
       "abstention": null,
       "recuperation": {
         "succes": 1,
-        "rappel": 1,
-        "precision": 0.25,
+        "rappel": 0.5,
+        "precision": 0.125,
         "rangReciproque": 0.5,
-        "ndcg": 0.6509209298071326
+        "ndcg": 0.38685280723454163
       },
       "fidelite": true,
       "pertinence": true,
       "exactitude": true,
       "citations": {
-        "rappel": 0.6666666666666666,
-        "precision": 0.5,
+        "rappel": 1,
+        "precision": 1,
         "sourceAttendue": true,
-        "nonEtablies": 1
+        "nonEtablies": 0
       },
       "reussie": true
     },
@@ -563,7 +563,7 @@
         "rappel": 1,
         "precision": 0.25,
         "rangReciproque": 1,
-        "ndcg": 0.9502344167898356
+        "ndcg": 0.8597186998521972
       },
       "fidelite": true,
       "pertinence": true,
@@ -588,11 +588,11 @@
         "rangReciproque": 1,
         "ndcg": 1
       },
-      "fidelite": false,
+      "fidelite": true,
       "pertinence": true,
       "exactitude": true,
       "citations": {
-        "rappel": 0.6666666666666666,
+        "rappel": 1,
         "precision": 1,
         "sourceAttendue": true,
         "nonEtablies": 0
@@ -612,7 +612,7 @@
         "ndcg": 0.5316519652587917
       },
       "fidelite": true,
-      "pertinence": false,
+      "pertinence": true,
       "exactitude": false,
       "citations": {
         "rappel": 1,
@@ -661,10 +661,10 @@
       "pertinence": true,
       "exactitude": true,
       "citations": {
-        "rappel": 0.6666666666666666,
-        "precision": 0.5,
+        "rappel": 1,
+        "precision": 0.75,
         "sourceAttendue": true,
-        "nonEtablies": 1
+        "nonEtablies": 0
       },
       "reussie": true
     },
@@ -672,7 +672,7 @@
       "id": "Q27",
       "categorie": "couverte",
       "origine": "synthetique",
-      "abstention": "sans-source",
+      "abstention": null,
       "recuperation": {
         "succes": 0,
         "rappel": 0,
@@ -680,11 +680,16 @@
         "rangReciproque": 0,
         "ndcg": 0
       },
-      "fidelite": null,
-      "pertinence": null,
-      "exactitude": null,
-      "citations": null,
-      "reussie": false
+      "fidelite": true,
+      "pertinence": true,
+      "exactitude": true,
+      "citations": {
+        "rappel": 1,
+        "precision": 1,
+        "sourceAttendue": false,
+        "nonEtablies": 0
+      },
+      "reussie": true
     },
     {
       "id": "Q28",
@@ -719,14 +724,14 @@
         "rappel": 1,
         "precision": 0.25,
         "rangReciproque": 1,
-        "ndcg": 1
+        "ndcg": 0.9502344167898356
       },
       "fidelite": true,
       "pertinence": true,
       "exactitude": true,
       "citations": {
         "rappel": 1,
-        "precision": 0.75,
+        "precision": 1,
         "sourceAttendue": true,
         "nonEtablies": 0
       },
@@ -884,8 +889,8 @@
         "succes": 1,
         "rappel": 1,
         "precision": 0.25,
-        "rangReciproque": 1,
-        "ndcg": 0.8955796649110442
+        "rangReciproque": 0.5,
+        "ndcg": 0.6150170646154386
       },
       "fidelite": true,
       "pertinence": true,
@@ -908,7 +913,7 @@
         "rappel": 1,
         "precision": 0.625,
         "rangReciproque": 1,
-        "ndcg": 0.9213063073939847
+        "ndcg": 0.9494151733388624
       },
       "fidelite": true,
       "pertinence": true,
@@ -946,10 +951,10 @@
       "abstention": "avant-llm",
       "recuperation": {
         "succes": 1,
-        "rappel": 0.5,
-        "precision": 0.25,
+        "rappel": 1,
+        "precision": 0.5,
         "rangReciproque": 1,
-        "ndcg": 0.6366824387328317
+        "ndcg": 0.9709286432396583
       },
       "fidelite": null,
       "pertinence": null,
@@ -964,17 +969,17 @@
       "abstention": null,
       "recuperation": {
         "succes": 1,
-        "rappel": 0.75,
-        "precision": 0.375,
+        "rappel": 1,
+        "precision": 0.5,
         "rangReciproque": 1,
-        "ndcg": 0.7442207840670614
+        "ndcg": 0.9289652058714719
       },
       "fidelite": true,
-      "pertinence": true,
+      "pertinence": false,
       "exactitude": true,
       "citations": {
         "rappel": 1,
-        "precision": 0.8,
+        "precision": 0.6666666666666666,
         "sourceAttendue": true,
         "nonEtablies": 0
       },
@@ -989,17 +994,17 @@
         "succes": 1,
         "rappel": 0.5,
         "precision": 0.25,
-        "rangReciproque": 0.3333333333333333,
-        "ndcg": 0.31834121936641585
+        "rangReciproque": 1,
+        "ndcg": 0.5585075862632192
       },
       "fidelite": true,
       "pertinence": true,
       "exactitude": true,
       "citations": {
-        "rappel": 0.5,
-        "precision": 0.5,
+        "rappel": 1,
+        "precision": 1,
         "sourceAttendue": true,
-        "nonEtablies": 1
+        "nonEtablies": 0
       },
       "reussie": true
     },
@@ -1016,7 +1021,7 @@
         "ndcg": 1
       },
       "fidelite": true,
-      "pertinence": true,
+      "pertinence": false,
       "exactitude": true,
       "citations": {
         "rappel": 1,
@@ -1058,19 +1063,19 @@
         "succes": 1,
         "rappel": 1,
         "precision": 0.125,
-        "rangReciproque": 0.25,
-        "ndcg": 0.43067655807339306
+        "rangReciproque": 0.5,
+        "ndcg": 0.6309297535714575
       },
       "fidelite": true,
-      "pertinence": false,
-      "exactitude": true,
+      "pertinence": true,
+      "exactitude": false,
       "citations": {
         "rappel": 1,
         "precision": 1,
         "sourceAttendue": true,
         "nonEtablies": 0
       },
-      "reussie": true
+      "reussie": false
     },
     {
       "id": "Q50",
@@ -1104,14 +1109,14 @@
         "succes": 1,
         "rappel": 1,
         "precision": 0.125,
-        "rangReciproque": 1,
-        "ndcg": 1
+        "rangReciproque": 0.5,
+        "ndcg": 0.6309297535714575
       },
-      "fidelite": false,
+      "fidelite": true,
       "pertinence": true,
       "exactitude": true,
       "citations": {
-        "rappel": 0.6666666666666666,
+        "rappel": 1,
         "precision": 1,
         "sourceAttendue": true,
         "nonEtablies": 0
@@ -1135,7 +1140,7 @@
       "exactitude": true,
       "citations": {
         "rappel": 1,
-        "precision": 0.75,
+        "precision": 1,
         "sourceAttendue": true,
         "nonEtablies": 0
       },
@@ -1173,8 +1178,8 @@
         "succes": 1,
         "rappel": 0.5,
         "precision": 0.125,
-        "rangReciproque": 0.14285714285714285,
-        "ndcg": 0.25339584447728947
+        "rangReciproque": 0.25,
+        "ndcg": 0.3273949503887395
       },
       "fidelite": null,
       "pertinence": null,
@@ -1192,7 +1197,7 @@
         "rappel": 1,
         "precision": 0.375,
         "rangReciproque": 0.5,
-        "ndcg": 0.5741414090136013
+        "ndcg": 0.5887529497219782
       },
       "fidelite": true,
       "pertinence": false,
@@ -1209,19 +1214,24 @@
       "id": "Q56",
       "categorie": "couverte",
       "origine": "ecrite",
-      "abstention": "sans-source",
+      "abstention": null,
       "recuperation": {
-        "succes": 0,
-        "rappel": 0,
-        "precision": 0,
-        "rangReciproque": 0,
-        "ndcg": 0
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 0.16666666666666666,
+        "ndcg": 0.3562071871080222
       },
-      "fidelite": null,
-      "pertinence": null,
-      "exactitude": null,
-      "citations": null,
-      "reussie": false
+      "fidelite": true,
+      "pertinence": false,
+      "exactitude": true,
+      "citations": {
+        "rappel": 1,
+        "precision": 1,
+        "sourceAttendue": true,
+        "nonEtablies": 0
+      },
+      "reussie": true
     },
     {
       "id": "Q57",
@@ -1229,11 +1239,11 @@
       "origine": "ecrite",
       "abstention": "sans-source",
       "recuperation": {
-        "succes": 0,
-        "rappel": 0,
-        "precision": 0,
-        "rangReciproque": 0,
-        "ndcg": 0
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
       },
       "fidelite": null,
       "pertinence": null,
@@ -1247,11 +1257,11 @@
       "origine": "ecrite",
       "abstention": "sans-source",
       "recuperation": {
-        "succes": 0,
-        "rappel": 0,
-        "precision": 0,
-        "rangReciproque": 0,
-        "ndcg": 0
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
       },
       "fidelite": null,
       "pertinence": null,
@@ -1263,19 +1273,24 @@
       "id": "Q59",
       "categorie": "couverte",
       "origine": "ecrite",
-      "abstention": "sans-source",
+      "abstention": null,
       "recuperation": {
         "succes": 1,
-        "rappel": 0.3333333333333333,
-        "precision": 0.125,
+        "rappel": 1,
+        "precision": 0.375,
         "rangReciproque": 1,
-        "ndcg": 0.46927872602275644
+        "ndcg": 1
       },
-      "fidelite": null,
-      "pertinence": null,
-      "exactitude": null,
-      "citations": null,
-      "reussie": false
+      "fidelite": true,
+      "pertinence": true,
+      "exactitude": true,
+      "citations": {
+        "rappel": 1,
+        "precision": 1,
+        "sourceAttendue": true,
+        "nonEtablies": 0
+      },
+      "reussie": true
     },
     {
       "id": "Q60",
@@ -1283,40 +1298,45 @@
       "origine": "ecrite",
       "abstention": null,
       "recuperation": {
-        "succes": 0,
-        "rappel": 0,
-        "precision": 0,
-        "rangReciproque": 0,
-        "ndcg": 0
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
       },
       "fidelite": true,
       "pertinence": true,
-      "exactitude": false,
+      "exactitude": true,
       "citations": {
         "rappel": 1,
         "precision": 1,
-        "sourceAttendue": false,
+        "sourceAttendue": true,
         "nonEtablies": 0
       },
-      "reussie": false
+      "reussie": true
     },
     {
       "id": "Q61",
       "categorie": "couverte",
       "origine": "ecrite",
-      "abstention": "avant-llm",
+      "abstention": null,
       "recuperation": {
-        "succes": 0,
-        "rappel": 0,
-        "precision": 0,
-        "rangReciproque": 0,
-        "ndcg": 0
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 0.5,
+        "ndcg": 0.6309297535714575
       },
-      "fidelite": null,
-      "pertinence": null,
-      "exactitude": null,
-      "citations": null,
-      "reussie": false
+      "fidelite": true,
+      "pertinence": true,
+      "exactitude": true,
+      "citations": {
+        "rappel": 1,
+        "precision": 1,
+        "sourceAttendue": true,
+        "nonEtablies": 0
+      },
+      "reussie": true
     },
     {
       "id": "Q62",
@@ -1327,17 +1347,17 @@
         "succes": 1,
         "rappel": 0.5,
         "precision": 0.125,
-        "rangReciproque": 0.5,
-        "ndcg": 0.38685280723454163
+        "rangReciproque": 1,
+        "ndcg": 0.6131471927654584
       },
       "fidelite": true,
       "pertinence": true,
       "exactitude": true,
       "citations": {
-        "rappel": 0.3333333333333333,
-        "precision": 0.5,
+        "rappel": 1,
+        "precision": 1,
         "sourceAttendue": true,
-        "nonEtablies": 1
+        "nonEtablies": 0
       },
       "reussie": true
     }

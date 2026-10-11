@@ -18,4 +18,6 @@ test("options : une valeur invalide est refusée avec un message", () => {
   assert.throws(() => lireReglages({ poids: "0,0" }), /--poids/); // tous les scores de la fusion vaudraient 0
   assert.throws(() => lireReglages({ candidats: "vingt" }), /--candidats/);
   assert.throws(() => lireReglages({ reclassement: true, reclasseur: "llm" }), /--candidats 20/); // 50 candidats : trop pour le LLM
+  assert.throws(() => lireReglages({ diversite: "" }), /--diversite/);
+  assert.throws(() => lireReglages({ reclassement: true, diversite: "0.7" }), /ne se combinent pas/);
 });

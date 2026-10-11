@@ -57,3 +57,10 @@ export async function similarites(base: Base, vecteur: number[], ids: string[]):
   );
   return rows;
 }
+
+// Les vecteurs de passages donnés par leur identifiant : pour comparer les passages entre eux (chapitre 9). Le client pg
+// les rend en tableaux (pgvector.registerTypes) ; PGlite, en texte « [0.01,-0.02,…] », qui se lit comme du JSON
+export async function vecteurs(base: Base, ids: string[]): Promise<Map<string, number[]>> {
+  const { rows } = await base.query<{ id: string; embedding: number[] | string }>("SELECT id, embedding FROM chunks WHERE id = ANY($1)", [ids]);
+  return new Map(rows.map((r) => [r.id, typeof r.embedding === "string" ? (JSON.parse(r.embedding) as number[]) : r.embedding]));
+}

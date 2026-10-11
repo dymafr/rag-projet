@@ -1,6 +1,6 @@
-// Les options de recherche des outils d'évaluation (eval:recherche, eval:repondre, npm run eval) : elles changent les
-// réglages de Rhéa le temps d'une exécution, pour en comparer d'autres sans toucher au code. Une option booléenne
-// s'active par son nom et se désactive par --no- : --vocabulaire, --no-filtres-extraits
+// Les options de recherche des outils d'évaluation (eval:recherche, eval:repondre, npm run eval, eval:contexte) : elles
+// changent les réglages de Rhéa le temps d'une exécution, pour en comparer d'autres sans toucher au code. Une option
+// booléenne s'active par son nom et se désactive par --no- : --vocabulaire, --no-filtres-extraits
 import { CANDIDATS_LLM, MODES, RECHERCHE, RECLASSEURS, type Reglages } from "./reglages.ts";
 import { TRANSFORMATIONS } from "./transformations.ts";
 
@@ -14,6 +14,7 @@ export const OPTIONS_RECHERCHE = {
   transformation: { type: "string" }, // reecrire, multiplier, hyde ou decomposer
   "filtres-extraits": { type: "boolean" },
   condensation: { type: "boolean" },
+  diversite: { type: "string" }, // le lambda de MMR, entre 0 et 1
 } as const;
 
 // Les valeurs lues par parseArgs : absentes si l'option n'est pas donnée
@@ -27,6 +28,7 @@ type Valeurs = {
   transformation?: string;
   "filtres-extraits"?: boolean;
   condensation?: boolean;
+  diversite?: string;
 };
 
 const parmi = <T extends string>(valeur: string, liste: readonly T[], option: string): T => {
@@ -58,6 +60,11 @@ export function lireReglages(v: Valeurs): Reglages {
   if (v.transformation !== undefined) r.transformation = parmi(v.transformation, TRANSFORMATIONS, "transformation");
   if (v["filtres-extraits"] !== undefined) r.filtresExtraits = v["filtres-extraits"];
   if (v.condensation !== undefined) r.condensation = v.condensation;
+  if (v.diversite !== undefined) {
+    r.diversite = nombre(v.diversite);
+    if (!(r.diversite >= 0 && r.diversite <= 1)) throw new Error("--diversite attend un nombre entre 0 et 1, par exemple --diversite 0.7");
+  }
+  if (r.reclassement && r.diversite !== null) throw new Error("--reclassement et --diversite ne se combinent pas : choisissez l'un ou l'autre");
   if (r.reclassement && r.reclasseur === "llm" && r.candidats > CANDIDATS_LLM) {
     throw new Error(`Le LLM reclasse ${CANDIDATS_LLM} candidats au plus : ajoutez --candidats ${CANDIDATS_LLM}`);
   }
@@ -73,6 +80,7 @@ export function decrire(r: Reglages): string {
     r.transformation,
     r.filtresExtraits && "filtres extraits",
     r.condensation && "condensation",
+    r.diversite !== null && `MMR ${r.diversite}`,
   ]
     .filter(Boolean)
     .join(", ");

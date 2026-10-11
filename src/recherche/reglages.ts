@@ -13,7 +13,7 @@ export const CANDIDATS_LLM = 20;
 
 export type Reglages = {
   mode: (typeof MODES)[number];
-  candidats: number; // les passages que chaque recherche propose à la fusion, puis au reclassement
+  candidats: number; // les passages que chaque recherche propose à la fusion, puis au reclassement ou à MMR
   poids: [number, number]; // en hybride : le poids de la recherche vectorielle, puis celui du plein texte (leçon 3)
   vocabulaire: boolean; // enrichir la requête du plein texte avec les sigles et synonymes du lexique (leçon 4)
   reclassement: boolean; // reclasser les candidats (leçon 5)
@@ -21,6 +21,7 @@ export type Reglages = {
   transformation: Transformation | null; // transformer la question avec le LLM avant de chercher (leçon 6)
   filtresExtraits: boolean; // appliquer la date ou le type de document que la question précise (leçon 7)
   condensation: boolean; // condenser une question de suite avec l'historique, avant de chercher (leçon 8)
+  diversite: number | null; // le lambda de MMR : des passages pertinents et différents (leçon 9) ; null : sans MMR
 };
 
 // Les réglages de Rhéa : ceux de l'API et des évaluations, sauf option contraire. Chacun a été choisi sur le jeu
@@ -35,4 +36,5 @@ export const RECHERCHE: Reglages = {
   transformation: null,
   filtresExtraits: true,
   condensation: true,
+  diversite: null,
 };

@@ -1,0 +1,995 @@
+{
+  "date": "2026-10-11",
+  "juge": "ollama gemma4:e4b",
+  "consignes": "b3612f0f76f3",
+  "reponses": "eval/resultats/c09-fin/reponses.json",
+  "jugements": [
+    {
+      "id": "Q01",
+      "empreinte": "cc31b43a43f9",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que la déclaration des jours de télétravail doit se faire dans l'espace RH avant le début de la semaine concernée, ce qui est confirmé par le passage 3."
+    },
+    {
+      "id": "Q01",
+      "empreinte": "cc31b43a43f9",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement le nombre de jours de télétravail par semaine, répondant directement à la question posée."
+    },
+    {
+      "id": "Q01",
+      "empreinte": "cc31b43a43f9",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que le télétravail est possible jusqu'à trois jours par semaine et mentionne la date d'entrée en vigueur, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q02",
+      "empreinte": "709bf788ea8a",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que le télétravail est limité à 2 jours par semaine, qu'il est fixé avec le manager et qu'il doit être déclaré dans l'espace RH, ce qui est directement confirmé par le passage 1."
+    },
+    {
+      "id": "Q02",
+      "empreinte": "709bf788ea8a",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement le nombre maximum de jours de télétravail par semaine, répondant directement à la question posée."
+    },
+    {
+      "id": "Q02",
+      "empreinte": "709bf788ea8a",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique un maximum de 2 jours par semaine, ce qui correspond à l'information essentielle de la référence, sans contredire les autres détails."
+    },
+    {
+      "id": "Q03",
+      "empreinte": "e01f8a8c5e1a",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que chaque équipe doit fixer un jour de présence commun sur site, ce qui est confirmé par les passages 1 et 4. Elle mentionne également la déclaration hebdomadaire dans l'espace RH avant le début de la semaine, ce qui est précisé au passage 4."
+    },
+    {
+      "id": "Q03",
+      "empreinte": "e01f8a8c5e1a",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement le nombre de jours de télétravail possibles par semaine, répondant directement à la question posée."
+    },
+    {
+      "id": "Q03",
+      "empreinte": "e01f8a8c5e1a",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que le télétravail est possible jusqu'à 3 jours par semaine à partir du 1er mars 2026, sous réserve de l'accord du manager, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q04",
+      "empreinte": "0f187db013f3",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique le plafond de 45 € pour un repas client à Paris, boissons comprises, et mentionne l'obligation d'indiquer le nom et la société des invités, ce qui est confirmé par les passages 1, 2 et 3."
+    },
+    {
+      "id": "Q04",
+      "empreinte": "0f187db013f3",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement le plafond pour un repas avec un client à Paris, répondant ainsi directement à la question posée."
+    },
+    {
+      "id": "Q04",
+      "empreinte": "0f187db013f3",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique le plafond de 45 € par personne, boissons comprises, ce qui correspond à l'information essentielle de la référence."
+    },
+    {
+      "id": "Q05",
+      "empreinte": "b419de6352c0",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que le plafond pour un repas avec un client dans une ville autre que Paris est de 35 € par personne, boissons comprises, ce qui est confirmé par les passages 1 et 2. Elle précise également que ce plafond s'applique à chaque convive, y compris les salariés de Kalyo, et que les noms et sociétés des invités doivent être indiqués sur la note de frais, informations toutes présentes dans les passages 1 et 2."
+    },
+    {
+      "id": "Q05",
+      "empreinte": "b419de6352c0",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique le plafond pour un repas avec un client dans une ville autre que Paris, ce qui inclut Berlin."
+    },
+    {
+      "id": "Q05",
+      "empreinte": "b419de6352c0",
+      "critere": "exactitude",
+      "verdict": false,
+      "raison": "La référence indique que la politique de Kalyo ne s'applique pas à l'étranger et que les frais sont remboursés aux frais réels avec accord du manager, alors que la réponse donne un plafond spécifique de 35 €."
+    },
+    {
+      "id": "Q06",
+      "empreinte": "b5385e0cab50",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique l'utilisation du code EMA, la procédure (prévenir le manager, poser dans l'espace RH, joindre le certificat sous 48h), et le nombre de jours (trois par an et par enfant de moins de 16 ans, rémunérés à 100%), toutes ces informations sont présentes dans les passages 1 et 2."
+    },
+    {
+      "id": "Q06",
+      "empreinte": "b5385e0cab50",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique le code d'absence à utiliser et la procédure à suivre pour s'absenter pour un enfant malade, ce qui répond directement à la question de savoir quoi poser."
+    },
+    {
+      "id": "Q06",
+      "empreinte": "b5385e0cab50",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique l'utilisation du code EMA, la nécessité de prévenir le manager le jour même, de joindre un certificat médical sous 48 heures, et confirme les 3 jours par an et par enfant de moins de 16 ans payés à 100%, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q07",
+      "empreinte": "46ffd42502b0",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique 5 jours ouvrés pour le mariage, la nécessité de poser le code EVF dans l'espace RH et de joindre l'acte de mariage, ainsi que la possibilité de prendre ces jours dans la semaine précédant ou suivant la cérémonie, ce qui est confirmé par les passages 1 et 4."
+    },
+    {
+      "id": "Q07",
+      "empreinte": "46ffd42502b0",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement le nombre de jours de congé accordés pour le mariage, répondant directement à la question posée."
+    },
+    {
+      "id": "Q07",
+      "empreinte": "46ffd42502b0",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique bien les cinq jours ouvrés, la possibilité de prendre les jours dans la semaine précédant ou suivant la cérémonie, et les conditions (code EVF et acte de mariage)."
+    },
+    {
+      "id": "Q08",
+      "empreinte": "613a787c3657",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que le salaire est versé le dernier jour ouvré de chaque mois et que le bulletin est déposé la veille dans l'espace RH, ce qui est confirmé par les passages 1 et 4. Elle précise également la démarche pour une question de paie (ticket dans l'espace RH, catégorie « Paie »), ce qui est confirmé par les passages 3 et 5."
+    },
+    {
+      "id": "Q08",
+      "empreinte": "613a787c3657",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement que le salaire est versé le dernier jour ouvré de chaque mois, ce qui répond directement à la question sur la date de versement de la paie."
+    },
+    {
+      "id": "Q08",
+      "empreinte": "613a787c3657",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que le salaire est versé le dernier jour ouvré de chaque mois, ce qui correspond à l'information essentielle de la référence."
+    },
+    {
+      "id": "Q09",
+      "empreinte": "4cbd7416dbcc",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que le dépôt du justificatif se fait une fois par an en janvier ou dès la souscription, ce qui est confirmé par le passage 7. Le taux de remboursement de 60% et le versement mensuel sont également confirmés par les passages 1 et 3."
+    },
+    {
+      "id": "Q09",
+      "empreinte": "4cbd7416dbcc",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse explique la procédure de remboursement de l'abonnement de transport, incluant le pourcentage remboursé, le dépôt des justificatifs et la périodicité du remboursement."
+    },
+    {
+      "id": "Q09",
+      "empreinte": "4cbd7416dbcc",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que le remboursement est de 60% et que le justificatif doit être déposé dans l'espace RH, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q10",
+      "empreinte": "8a040b36715c",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse confirme que le télétravail depuis l'étranger n'est jamais autorisé, mentionne la nécessité de poser des jours de congé pour travailler depuis l'étranger, et cite les passages pertinents."
+    },
+    {
+      "id": "Q10",
+      "empreinte": "8a040b36715c",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique que le télétravail depuis l'étranger n'est jamais autorisé, ce qui répond directement à la question posée sur la possibilité de télétravailler depuis le Portugal cet été."
+    },
+    {
+      "id": "Q10",
+      "empreinte": "8a040b36715c",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique clairement que le télétravail depuis l'étranger n'est jamais autorisé et que des congés doivent être posés, ce qui correspond à l'information essentielle de la référence."
+    },
+    {
+      "id": "Q11",
+      "empreinte": "373bcd4023b3",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse mentionne l'indemnité de 150 € brut pour une semaine complète et le paiement des heures majorées (50% ou 100% la nuit/dimanche/férié), ce qui est directement tiré des passages 1 et 2. Elle renvoie ensuite à l'espace RH pour plus de détails, ce qui est cohérent avec les passages 5 et 6."
+    },
+    {
+      "id": "Q11",
+      "empreinte": "373bcd4023b3",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique le montant de l'indemnité forfaitaire pour une semaine d'astreinte, ce qui répond directement à la question posée."
+    },
+    {
+      "id": "Q11",
+      "empreinte": "373bcd4023b3",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique bien que chaque semaine complète d'astreinte donne droit à 150 € brut, ce qui correspond à l'information essentielle de la référence."
+    },
+    {
+      "id": "Q12",
+      "empreinte": "37d279bbffce",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse mentionne l'utilisation du formulaire NDF-03 dans l'outil de notes de frais pour déclarer les frais, ce qui est confirmé par les passages 1, 2 et 3. Elle indique également que ce formulaire sert à demander le remboursement du siège ergonomique depuis le 1er mars 2026, ce qui est confirmé par le passage 1."
+    },
+    {
+      "id": "Q12",
+      "empreinte": "37d279bbffce",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement le formulaire à utiliser pour une note de frais, répondant directement à la question posée."
+    },
+    {
+      "id": "Q12",
+      "empreinte": "37d279bbffce",
+      "critere": "exactitude",
+      "verdict": false,
+      "raison": "La réponse indique correctement le formulaire NDF-03 à utiliser, mais elle ajoute une information non présente dans la référence concernant la demande de remboursement du siège ergonomique."
+    },
+    {
+      "id": "Q13",
+      "empreinte": "261cf7703043",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que les salariés à temps partiel ont des RTT calculés au prorata, ce qui est confirmé par le passage 3. Les autres informations (10 jours pour temps plein, consultation dans l'espace RH) sont également présentes dans les passages 1, 2 et 3."
+    },
+    {
+      "id": "Q13",
+      "empreinte": "261cf7703043",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique le nombre de RTT pour un salarié à temps plein (10 jours) et mentionne le calcul au prorata pour les temps partiels, ce qui répond à la question sur le nombre de RTT."
+    },
+    {
+      "id": "Q13",
+      "empreinte": "261cf7703043",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique 10 jours pour un salarié à temps plein en forfait jours, ce qui correspond à l'information essentielle de la référence. Elle mentionne également le prorata pour temps partiel, ce qui n'est pas une contradiction."
+    },
+    {
+      "id": "Q14",
+      "empreinte": "9715d207bf9c",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse mentionne l'accueil à 9h30, la réception du badge et de l'ordinateur, ainsi que l'accompagnement par le référent pendant trois mois, toutes ces informations sont présentes dans les passages 1 et 5."
+    },
+    {
+      "id": "Q14",
+      "empreinte": "9715d207bf9c",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement l'heure d'arrivée pour le premier jour, répondant directement à la question posée."
+    },
+    {
+      "id": "Q14",
+      "empreinte": "9715d207bf9c",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que le manager accueillera le nouvel arrivant à 9 h 30 le premier jour, ce qui correspond à l'information essentielle de la référence."
+    },
+    {
+      "id": "Q15",
+      "empreinte": "74ef73a6086f",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que la demande doit être faite dans l'espace RH avec le code CSS, au moins deux mois avant, et que l'acceptation par le manager et le service RH est nécessaire, ce qui est confirmé par les passages 1, 2 et 3."
+    },
+    {
+      "id": "Q15",
+      "empreinte": "74ef73a6086f",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse confirme la possibilité de prendre un congé sans solde et détaille les modalités de la demande."
+    },
+    {
+      "id": "Q15",
+      "empreinte": "74ef73a6086f",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse confirme la possibilité de prendre un congé sans solde, la durée (un mois à six mois), la nécessité du code CSS, le délai de deux mois et l'approbation du manager et des RH, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q16",
+      "empreinte": "fbeadfab7b6d",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que l'indemnité est plafonnée à 30 € par mois, ce qui est confirmé par les passages 1, 2, 3, 4, 5 et 6. Les autres informations (montant, calcul, versement) sont également fidèles aux passages fournis."
+    },
+    {
+      "id": "Q16",
+      "empreinte": "fbeadfab7b6d",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement le montant de l'indemnité de télétravail, précisant le montant journalier et le plafond mensuel."
+    },
+    {
+      "id": "Q16",
+      "empreinte": "fbeadfab7b6d",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique le montant de 2,50 € par jour, le plafond de 30 € par mois, et le versement avec la paie du mois suivant, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q17",
+      "empreinte": "c68bea0fb77a",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que l'outil de notes de frais applique automatiquement la tranche correspondante en fonction des kilomètres professionnels annuels, ce qui est confirmé par le passage [2]. Elle mentionne également les pièces à joindre (trajet, kilomètres, carte grise) tirées des passages [1] et [4]."
+    },
+    {
+      "id": "Q17",
+      "empreinte": "c68bea0fb77a",
+      "critere": "pertinence",
+      "verdict": false,
+      "raison": "La réponse indique que le remboursement dépend du barème kilométrique fiscal et des informations à fournir pour le calcul, sans donner le montant exact demandé."
+    },
+    {
+      "id": "Q17",
+      "empreinte": "c68bea0fb77a",
+      "critere": "exactitude",
+      "verdict": false,
+      "raison": "La réponse indique qu'il faut se référer au barème kilométrique fiscal en fonction de la puissance fiscale et de la distance, ce qui correspond à l'information essentielle de la référence, mais elle ne donne pas le chiffre ou la règle principale."
+    },
+    {
+      "id": "Q18",
+      "empreinte": "bc51bebd2d40",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que le remboursement est de 300 € par an pour les frais liés au vélo, à la trottinette ou au covoiturage, et que la demande se fait dans l'espace RH en ouvrant un ticket « Transport » avec une déclaration sur l'honneur et des justificatifs, ce qui est confirmé par les passages 1 et 4."
+    },
+    {
+      "id": "Q18",
+      "empreinte": "bc51bebd2d40",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse confirme l'existence d'une aide pour venir au travail à vélo et détaille les modalités pour en bénéficier."
+    },
+    {
+      "id": "Q18",
+      "empreinte": "bc51bebd2d40",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse confirme l'existence de l'aide et indique le montant de remboursement (300 € par an) et les modalités de demande (dans l'espace RH avec justificatifs), ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q19",
+      "empreinte": "73db10c103b4",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que le droit à la déconnexion signifie qu'aucune réponse n'est attendue entre 20h et 8h et le week-end, ce qui est confirmé par les passages 1 et 3. Elle mentionne également la démarche à suivre en cas de sollicitation régulière, qui est de parler au manager ou d'ouvrir un ticket dans l'espace RH, ce qui est également présent dans le passage 1."
+    },
+    {
+      "id": "Q19",
+      "empreinte": "73db10c103b4",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse aborde directement le droit de ne pas répondre aux e-mails le soir en mentionnant le droit à la déconnexion et les plages horaires concernées."
+    },
+    {
+      "id": "Q19",
+      "empreinte": "73db10c103b4",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse confirme qu'aucune réponse n'est attendue entre 20h et 8h et le week-end, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q20",
+      "empreinte": "49de0504bb9a",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse mentionne le 1er novembre (Toussaint) et le 11 novembre (Armistice de 1918) comme jours fériés en novembre 2026, ce qui est confirmé par le passage 2. Elle indique que le 1er novembre tombe un dimanche et que le 11 novembre est chômé chez Kalyo, ce qui est également confirmé par le passage 2."
+    },
+    {
+      "id": "Q20",
+      "empreinte": "49de0504bb9a",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse liste les jours fériés de novembre 2026, répondant directement à la question posée."
+    },
+    {
+      "id": "Q20",
+      "empreinte": "49de0504bb9a",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La référence indique que le 11 novembre est chômé et que la Toussaint tombe un dimanche sans jour de repos supplémentaire. La réponse mentionne le 1er novembre comme jour férié et le 11 novembre comme jour chômé, ce qui est cohérent avec l'information essentielle."
+    },
+    {
+      "id": "Q21",
+      "empreinte": "4302c2c7ef0e",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que la durée du préavis dépend du statut et de la classification, qu'elle est fixée par la convention Syntec et rappelée dans le contrat, et que l'on peut ouvrir un ticket « Autre » en cas de doute, ce qui est entièrement couvert par le passage 1."
+    },
+    {
+      "id": "Q21",
+      "empreinte": "4302c2c7ef0e",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique que la durée du préavis dépend du statut et de la classification, et renvoie vers la convention collective et le contrat de travail pour obtenir cette information."
+    },
+    {
+      "id": "Q21",
+      "empreinte": "4302c2c7ef0e",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que la durée dépend du statut et de la classification, qu'elle est fixée par la convention Syntec et rappelée dans le contrat, et mentionne la procédure en cas de doute, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q22",
+      "empreinte": "d3beaad98958",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique de ne pas cliquer ni ouvrir la pièce jointe au moindre doute, et de signaler le message au support informatique via un ticket ou le poste 4012, ce qui est conforme au passage 2."
+    },
+    {
+      "id": "Q22",
+      "empreinte": "d3beaad98958",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement les actions à entreprendre (ne pas cliquer, signaler au support informatique) en cas de réception d'un e-mail suspect."
+    },
+    {
+      "id": "Q22",
+      "empreinte": "d3beaad98958",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique de ne pas cliquer ni ouvrir la pièce jointe et de signaler au support informatique via ticket ou poste 4012, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q23",
+      "empreinte": "16fb3d0ca473",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que l'Allemagne est en Europe et que le per diem est de 60 EUR, ce qui est cohérent avec le passage 1. Elle mentionne également la soumission des notes de frais via l'outil local et le formulaire NDF-03, ce qui est confirmé par le passage 6."
+    },
+    {
+      "id": "Q23",
+      "empreinte": "16fb3d0ca473",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement l'indemnité journalière pour un voyage d'affaires en Allemagne, répondant directement à la question posée."
+    },
+    {
+      "id": "Q23",
+      "empreinte": "16fb3d0ca473",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique l'indemnité journalière de 60 EUR pour un voyage d'affaires en Allemagne, ce qui correspond au montant essentiel de la référence."
+    },
+    {
+      "id": "Q24",
+      "empreinte": "8aedd7f5951e",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse mentionne les deux régimes de durée du travail, les jours de forfait et les services concernés, ce qui est directement tiré du passage 1."
+    },
+    {
+      "id": "Q24",
+      "empreinte": "8aedd7f5951e",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique les différents régimes de durée du travail (forfait annuel et 35 heures hebdomadaires) chez Kalyo, ce qui répond à la question sur les horaires de travail."
+    },
+    {
+      "id": "Q24",
+      "empreinte": "8aedd7f5951e",
+      "critere": "exactitude",
+      "verdict": false,
+      "raison": "La réponse mentionne les deux régimes mais ne donne pas les horaires obligatoires spécifiques (10h-12h et 14h-16h) ni les plages horaires de flexibilité pour les salariés en heures, ce qui est une information essentielle de la référence."
+    },
+    {
+      "id": "Q25",
+      "empreinte": "65bcdda6e76a",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que l'auto-évaluation doit être complétée au plus tard deux jours ouvrés avant l'entretien et que cette préparation se fait dans l'espace RH en détaillant réalisations, difficultés, objectifs et besoins, ce qui est directement tiré du passage 1."
+    },
+    {
+      "id": "Q25",
+      "empreinte": "65bcdda6e76a",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement la date limite pour remplir l'auto-évaluation, répondant directement à la question posée."
+    },
+    {
+      "id": "Q25",
+      "empreinte": "65bcdda6e76a",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que l'auto-évaluation doit être complétée au plus tard deux jours ouvrés avant l'entretien, ce qui correspond à l'information essentielle de la référence."
+    },
+    {
+      "id": "Q26",
+      "empreinte": "792a81dad1db",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse mentionne le maintien du salaire à 100% pendant 90 jours au-delà d'un an d'ancienneté, le relais de la prévoyance après ces 90 jours, la nécessité de prévenir le manager le jour même, d'envoyer l'arrêt sous 48h via l'espace RH avec le code MAL, ce qui est entièrement couvert par les passages 1 et 2."
+    },
+    {
+      "id": "Q26",
+      "empreinte": "792a81dad1db",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique que Kalyo maintient le salaire à 100% pendant 90 jours d'arrêt sur douze mois consécutifs, et que la prévoyance prend le relais au-delà, ce qui répond aux deux parties de la question."
+    },
+    {
+      "id": "Q26",
+      "empreinte": "792a81dad1db",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que Kalyo maintient le salaire à 100 % pendant 90 jours au plus sur douze mois, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q27",
+      "empreinte": "8b2938ce1320",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse mentionne que Kalyo prend en charge jusqu'à deux jours de préparation sur le temps de travail, ce qui est confirmé par le passage 7. Elle indique également que le salaire est maintenu si la formation a lieu sur le temps de travail, ce qui est confirmé par le passage 2. Enfin, elle précise que le certificat doit être transmis par un ticket « Formation » au service RH, ce qui est confirmé par le passage 7."
+    },
+    {
+      "id": "Q27",
+      "empreinte": "8b2938ce1320",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique que le salaire est maintenu si la formation a lieu en tout ou partie sur le temps de travail, ce qui répond directement à la question sur la rémunération pendant la formation."
+    },
+    {
+      "id": "Q27",
+      "empreinte": "8b2938ce1320",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que si la formation a lieu en tout ou partie sur le temps de travail, le salaire est maintenu, ce qui correspond à l'information essentielle de la référence."
+    },
+    {
+      "id": "Q28",
+      "empreinte": "3a63764f2c6e",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse reprend fidèlement les informations du passage 1 concernant le verrouillage de la session et la procédure en cas de perte ou de vol."
+    },
+    {
+      "id": "Q28",
+      "empreinte": "3a63764f2c6e",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement qu'il ne faut jamais laisser l'ordinateur sans surveillance dans un café ou dans une voiture, ce qui répond directement à la question posée."
+    },
+    {
+      "id": "Q28",
+      "empreinte": "3a63764f2c6e",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique qu'il ne faut jamais laisser l'ordinateur sans surveillance dans un café ou une voiture, ce qui correspond à la règle essentielle de la référence."
+    },
+    {
+      "id": "Q29",
+      "empreinte": "beba3d4f3504",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse mentionne que pour un salarié à temps partiel en dessous d'un mi-temps, le remboursement est calculé au prorata des heures travaillées, ce qui est confirmé par le passage 1. Elle indique également que Kalyo rembourse 60% de l'abonnement et que ce remboursement apparaît chaque mois sur le bulletin de paie, ce qui est confirmé par les passages 2 et 3."
+    },
+    {
+      "id": "Q29",
+      "empreinte": "beba3d4f3504",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse explique comment le remboursement est calculé pour un salarié à temps partiel, en mentionnant le calcul au prorata des heures travaillées et le pourcentage de remboursement."
+    },
+    {
+      "id": "Q29",
+      "empreinte": "beba3d4f3504",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que le remboursement est calculé au prorata des heures travaillées pour un salarié en dessous d'un mi-temps, ce qui correspond à la règle essentielle de la référence."
+    },
+    {
+      "id": "Q30",
+      "empreinte": "e2da0615fe7c",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que le déménagement de retour est pris en charge par Kalyo si la décision vient de l'entreprise pendant la période probatoire, et que les aides déjà versées ne sont pas réclamées. Ces informations sont présentes dans le passage 1."
+    },
+    {
+      "id": "Q30",
+      "empreinte": "e2da0615fe7c",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse aborde directement la question du remboursement du déménagement si le salarié revient à son ancien site pendant la période probatoire de mobilité."
+    },
+    {
+      "id": "Q30",
+      "empreinte": "e2da0615fe7c",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que Kalyo prend en charge le déménagement de retour si la décision vient de l'entreprise, ce qui correspond à la condition principale de la référence. Elle mentionne également que les aides déjà versées ne sont pas réclamées."
+    },
+    {
+      "id": "Q41",
+      "empreinte": "570a013f44e6",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse mentionne la possibilité de remplacer un justificatif perdu par une attestation sur l'honneur, limitée à une fois par trimestre et à 50 € par attestation, ce qui est confirmé par le passage 2. Elle indique également qu'il faut ouvrir un ticket pour toute question, ce qui est mentionné dans le passage 5."
+    },
+    {
+      "id": "Q41",
+      "empreinte": "570a013f44e6",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique que le salarié peut remplacer le ticket perdu par une attestation sur l'honneur et donne des précisions sur cette procédure."
+    },
+    {
+      "id": "Q41",
+      "empreinte": "570a013f44e6",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse confirme que l'attestation sur l'honneur remplace le justificatif perdu, et mentionne les limites de fréquence (une fois par trimestre) et de montant (50 € au plus par attestation), ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q42",
+      "empreinte": "8f3caab10044",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que la note validée le 20 ou après est remboursée le mois suivant, ce qui est confirmé par les passages [2]. Elle mentionne également la soumission dans les 30 jours, ce qui est présent dans les passages [1] et [3]."
+    },
+    {
+      "id": "Q42",
+      "empreinte": "8f3caab10044",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "L'assistant répond directement à la question en précisant que la note validée le 20 ne sera pas payée avec la paie de ce mois-ci, mais avec celle du mois suivant."
+    },
+    {
+      "id": "Q42",
+      "empreinte": "8f3caab10044",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que la note validée le 20 sera remboursée avec la paie du mois suivant, ce qui correspond à la règle essentielle de la référence."
+    },
+    {
+      "id": "Q45",
+      "empreinte": "b467c7036b36",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que les RTT ne sont pas reportables, doivent être posés avant le 31 décembre 2026 pour les salariés à temps plein en forfait jours, et que le solde est consultable dans l'espace RH rubrique « Mes absences », ce qui est confirmé par les passages 1, 2 et 4."
+    },
+    {
+      "id": "Q45",
+      "empreinte": "b467c7036b36",
+      "critere": "pertinence",
+      "verdict": false,
+      "raison": "La réponse indique que les RTT ne sont pas reportables et donne une date limite pour les salariés en forfait jours, mais elle ne répond pas directement à la possibilité de reporter les RTT non posés sur 2027."
+    },
+    {
+      "id": "Q45",
+      "empreinte": "b467c7036b36",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que les RTT ne sont pas reportables et mentionne une date limite de pose avant le 31 décembre 2026 pour les salariés en forfait jours, ce qui est cohérent avec le principe de non-reportabilité avant le 31 décembre mentionné dans la référence."
+    },
+    {
+      "id": "Q46",
+      "empreinte": "c414a00d5ab5",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que le siège ergonomique est remboursé jusqu'à 250 € une fois tous les cinq ans sur présentation de la facture, et que la demande se fait avec le formulaire NDF-03 dans l'outil de notes de frais, ce qui est conforme aux passages 1 et 4."
+    },
+    {
+      "id": "Q46",
+      "empreinte": "c414a00d5ab5",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique le montant de remboursement pour un fauteuil ergonomique, ce qui répond directement à la question posée."
+    },
+    {
+      "id": "Q46",
+      "empreinte": "c414a00d5ab5",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique le montant de remboursement (250 €), la fréquence (une fois tous les cinq ans) et la procédure (formulaire NDF-03 dans l'outil de notes de frais), ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q47",
+      "empreinte": "fc7ca9096d26",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que l'accident sur le lieu de télétravail est présumé être un accident du travail et doit être déclaré sous 24h au manager et au service RH, ce qui est confirmé par les passages 1 et 2. Elle précise également la déclaration hebdomadaire des jours de télétravail dans l'espace RH avant le début de la semaine, ce qui est confirmé par le passage 6."
+    },
+    {
+      "id": "Q47",
+      "empreinte": "fc7ca9096d26",
+      "critere": "pertinence",
+      "verdict": false,
+      "raison": "La réponse aborde la question de savoir si l'accident est un accident du travail en mentionnant la présomption pour un accident survenu pendant le télétravail, mais elle inclut également une information non sollicitée sur la déclaration des jours de télétravail."
+    },
+    {
+      "id": "Q47",
+      "empreinte": "fc7ca9096d26",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse confirme que l'accident survenu pendant le télétravail est présumé être un accident du travail et indique la nécessité de le déclarer sous 24 heures au manager et aux RH. Elle ajoute une information non pertinente sur la déclaration des jours de télétravail."
+    },
+    {
+      "id": "Q48",
+      "empreinte": "99eedea20922",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse reprend fidèlement les informations concernant les trajets en train, y compris la classe, la condition de remboursement de la 1re classe, et la recommandation de réservation."
+    },
+    {
+      "id": "Q48",
+      "empreinte": "99eedea20922",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse aborde la possibilité de prendre la 1ère classe en fonction de son prix par rapport à la 2ème classe, ce qui répond directement à la question du salarié."
+    },
+    {
+      "id": "Q48",
+      "empreinte": "99eedea20922",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse confirme que la 1re classe est remboursée si son prix est inférieur ou égal à celui de la 2de classe au moment de la réservation, ce qui correspond à l'information essentielle de la référence."
+    },
+    {
+      "id": "Q49",
+      "empreinte": "fd64d82cf88c",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que la politique de groupe est la référence pour tous les vols, y compris les vols domestiques, ce qui est confirmé par le passage 1. Elle mentionne également que les réservations hors portail ne sont remboursées qu'en cas d'exception avec explication écrite, ce qui est confirmé par le passage 2. Enfin, elle indique que les frais sont soumis via le formulaire NDF-03 dans l'outil de notes de frais, ce qui est confirmé par le passage 6."
+    },
+    {
+      "id": "Q49",
+      "empreinte": "fd64d82cf88c",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique que les vols doivent être réservés via le portail de réservation de groupe, mais elle confirme que les frais peuvent être soumis via le formulaire NDF-03."
+    },
+    {
+      "id": "Q49",
+      "empreinte": "fd64d82cf88c",
+      "critere": "exactitude",
+      "verdict": false,
+      "raison": "La réponse indique que les vols doivent être réservés via le portail de réservation de groupe et que les réservations hors portail ne sont remboursées qu'en exception, ce qui correspond à l'information essentielle de la référence. Cependant, elle ajoute que l'utilisateur soumet ses frais via NDF-03, ce qui n'est pas mentionné dans la référence."
+    },
+    {
+      "id": "Q50",
+      "empreinte": "6404ece2a277",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que les jours d'arrêt ne sont pas décomptés des CP en cas de maladie pendant les congés payés, ce qui est mentionné dans le passage 1. Elle précise également la transmission de l'arrêt sous 48 heures, ce qui est confirmé par les passages 1 et 2."
+    },
+    {
+      "id": "Q50",
+      "empreinte": "6404ece2a277",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement que les jours d'arrêt maladie pendant les congés payés ne sont pas décomptés des CP, répondant ainsi à la question posée."
+    },
+    {
+      "id": "Q50",
+      "empreinte": "6404ece2a277",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse confirme que les jours d'arrêt maladie pendant les CP ne sont pas décomptés des CP et mentionne la transmission de l'arrêt sous 48 heures, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q51",
+      "empreinte": "1fa6b825a04b",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que pour un déplacement de plus de trois jours, une avance peut être demandée via un ticket de catégorie « Notes de frais » dans l'espace RH, au moins 10 jours ouvrés avant le départ, et que cette avance couvre au plus 80 % des frais estimés, ce qui est conforme au passage 2."
+    },
+    {
+      "id": "Q51",
+      "empreinte": "1fa6b825a04b",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique la procédure pour demander une avance sur frais pour un déplacement de plus de trois jours, ce qui couvre la question posée sur une mission de deux semaines."
+    },
+    {
+      "id": "Q51",
+      "empreinte": "1fa6b825a04b",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse confirme la possibilité d'une avance pour un déplacement de plus de trois jours, indique la procédure (ticket « Notes de frais ») et la condition de délai (10 jours ouvrés avant le départ), ainsi que le plafond de l'avance (80%)."
+    },
+    {
+      "id": "Q52",
+      "empreinte": "d8b790192174",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que pour les remboursements et bénéficiaires, il faut utiliser l'espace adhérent de Solvéa Santé, ce qui est confirmé par les passages 2 et 3. Elle indique également que pour les cotisations, la dispense ou la prévoyance, il faut ouvrir un ticket « Mutuelle et prévoyance » dans l'espace RH, ce qui est confirmé par le passage 2."
+    },
+    {
+      "id": "Q52",
+      "empreinte": "d8b790192174",
+      "critere": "pertinence",
+      "verdict": false,
+      "raison": "La réponse indique comment contacter Solvéa pour différents sujets (remboursements, cotisations, etc.) mais ne donne pas de moyen direct de joindre l'entité Solvéa en général."
+    },
+    {
+      "id": "Q52",
+      "empreinte": "d8b790192174",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que l'espace adhérent de Solvéa Santé est utilisé pour les remboursements et les bénéficiaires, et qu'un ticket « Mutuelle et prévoyance » dans l'espace RH est utilisé pour les cotisations, la dispense ou la prévoyance, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q53",
+      "empreinte": "73191f7c7cbd",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse reprend fidèlement les informations du passage 1 concernant la nature de la RQTH, les aides associées et le caractère volontaire de l'information à Kalyo."
+    },
+    {
+      "id": "Q53",
+      "empreinte": "73191f7c7cbd",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse définit ce qu'est la RQTH et explique ce qu'elle permet, répondant directement à la question posée."
+    },
+    {
+      "id": "Q53",
+      "empreinte": "73191f7c7cbd",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse identifie correctement la RQTH comme une décision administrative donnant accès à des aides comme l'aménagement du poste et confirme qu'il n'est pas obligatoire d'en informer Kalyo."
+    },
+    {
+      "id": "Q55",
+      "empreinte": "f14ed5def2fb",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que la carte de tiers payant est téléchargeable dans l'espace adhérent de Solvéa Santé et que le suivi des remboursements y est possible, ce qui est confirmé par les passages 3 et 6. Elle mentionne également le renouvellement chaque 1er janvier, ce qui est confirmé par le passage 6."
+    },
+    {
+      "id": "Q55",
+      "empreinte": "f14ed5def2fb",
+      "critere": "pertinence",
+      "verdict": false,
+      "raison": "La réponse indique comment obtenir la carte et comment suivre les remboursements, mais elle n'explique pas le fonctionnement général de la carte Solvéa Santé."
+    },
+    {
+      "id": "Q55",
+      "empreinte": "f14ed5def2fb",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que la carte est un tiers payant et qu'elle est renouvelée chaque 1er janvier, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q56",
+      "empreinte": "9daed24611bf",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse reprend fidèlement les conditions de remboursement du taxi ou de la voiture de transport avec chauffeur, y compris la nécessité d'indiquer le motif sur la note de frais, telles que décrites dans le passage 6."
+    },
+    {
+      "id": "Q56",
+      "empreinte": "9daed24611bf",
+      "critere": "pertinence",
+      "verdict": false,
+      "raison": "La réponse fournit une information spécifique sur le remboursement des taxis/voitures avec chauffeur, mais elle ne cite pas explicitement le contenu de l'article 8.3 de la politique notes de frais."
+    },
+    {
+      "id": "Q56",
+      "empreinte": "9daed24611bf",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que le taxi ou le VTC n'est remboursé que si aucun transport en commun ne permet le trajet, avec le motif indiqué sur la note de frais, ce qui correspond aux informations essentielles de la référence."
+    },
+    {
+      "id": "Q59",
+      "empreinte": "1ed8092d2332",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique le plafond de 130 € pour Paris avec petit déjeuner compris, la priorité de réservation via l'agence de voyages de Kalyo, et la nécessité de demander une facture à son nom si réservation personnelle, toutes ces informations sont présentes dans les passages fournis."
+    },
+    {
+      "id": "Q59",
+      "empreinte": "1ed8092d2332",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement le plafond pour une nuit d'hôtel à Paris, répondant ainsi à la question posée."
+    },
+    {
+      "id": "Q59",
+      "empreinte": "1ed8092d2332",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique le plafond de 130 € avec petit déjeuner compris, ce qui correspond à l'information essentielle de la référence."
+    },
+    {
+      "id": "Q60",
+      "empreinte": "6490eefc04bc",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique qu'il faut prévenir le service RH au moins un mois avant le congé de paternité, ce qui est mentionné dans les passages 1 et 2. Elle précise également que le congé de paternité suit les règles légales et qu'une partie se prend immédiatement après le congé de naissance, ce qui est tiré du passage 2."
+    },
+    {
+      "id": "Q60",
+      "empreinte": "6490eefc04bc",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique quand prévenir pour le congé de paternité et mentionne le congé de naissance, couvrant ainsi les deux aspects de la question."
+    },
+    {
+      "id": "Q60",
+      "empreinte": "6490eefc04bc",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique qu'il faut prévenir le service RH au moins un mois avant le congé de paternité, ce qui correspond à l'information essentielle de la référence."
+    },
+    {
+      "id": "Q61",
+      "empreinte": "acee813ac1bd",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse mentionne que pour un salarié en forfait jours à 80 %, il dispose de 8 jours de RTT, ce qui est confirmé par le passage 3. Elle indique également que pour le temps partiel en forfait annuel en jours, un salarié à 80 % dispose de 8 jours, ce qui est confirmé par le passage 2. Enfin, elle indique que le solde est consultable dans l'espace RH, ce qui est confirmé par le passage 1."
+    },
+    {
+      "id": "Q61",
+      "empreinte": "acee813ac1bd",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement le nombre de RTT pour un salarié à 80% (8 jours) et mentionne la possibilité de consulter le solde personnel."
+    },
+    {
+      "id": "Q61",
+      "empreinte": "acee813ac1bd",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que pour un salarié à 80 %, il dispose de 8 jours de RTT, ce qui correspond à l'information essentielle de la référence."
+    },
+    {
+      "id": "Q62",
+      "empreinte": "d01a1a3a884d",
+      "critere": "fidelite",
+      "verdict": true,
+      "raison": "La réponse indique que la déclaration doit se faire chaque semaine dans l'espace RH avant le début de la semaine concernée, ce qui est confirmé par les passages 1 et 2. Elle mentionne également que cela sert au calcul de l'indemnité et établit la présence, ce qui est également confirmé par le passage 1."
+    },
+    {
+      "id": "Q62",
+      "empreinte": "d01a1a3a884d",
+      "critere": "pertinence",
+      "verdict": true,
+      "raison": "La réponse indique clairement où le salarié doit déclarer ses jours de télétravail, en mentionnant l'espace RH."
+    },
+    {
+      "id": "Q62",
+      "empreinte": "d01a1a3a884d",
+      "critere": "exactitude",
+      "verdict": true,
+      "raison": "La réponse indique que la déclaration doit se faire dans l'espace RH chaque semaine, avant le début de la semaine concernée, ce qui correspond aux informations essentielles de la référence."
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
 import { creerLlm, type Llm } from "../llm.ts";
 import type { Base } from "../stockage/base.ts";
 import { lireIndexation } from "../stockage/schema.ts";
+import { mmr } from "./diversite.ts";
 import { aDesIndices, extraireFiltres } from "./filtres-extraits.ts";
 import { fusionner } from "./fusion.ts";
 import { chercherHybride } from "./hybride.ts";
@@ -13,7 +14,7 @@ import { chercherPleinTexte } from "./plein-texte.ts";
 import { RECHERCHE, type Reglages } from "./reglages.ts";
 import { crossEncoder, parLeLlm, reclasser, type Reclasseur } from "./rerank.ts";
 import { transformer } from "./transformations.ts";
-import { chercher, similarites, type Filtres, type Resultat } from "./vectorielle.ts";
+import { chercher, similarites, vecteurs, type Filtres, type Resultat } from "./vectorielle.ts";
 import { enrichir } from "./vocabulaire.ts";
 
 // La date du jour, à l'heure locale (sv-SE écrit AAAA-MM-JJ)
@@ -46,6 +47,7 @@ export async function trouverPassages(
   outils: Outils = outilsParDefaut(),
   profondeur = k,
 ): Promise<Resultat[]> {
+  if (reglages.reclassement && reglages.diversite !== null) throw new Error("Reclassement et diversité ne se combinent pas : choisissez l'un ou l'autre");
   const indexation = await lireIndexation(base);
   if (indexation && indexation.modele !== nomDuModele()) {
     throw new Error(`La base a été indexée avec ${indexation.modele}, le projet est réglé sur ${nomDuModele()} : relancez npm run indexer -- --reconstruire`);
@@ -64,9 +66,10 @@ export async function trouverPassages(
   let requetes = reglages.transformation ? await transformer(question, reglages.transformation, llm()) : [question];
   if (reglages.transformation === "multiplier" || reglages.transformation === "decomposer") requetes = [...new Set([question, ...requetes])];
   // 3. Une recherche par requête. Quand une étape choisira ensuite parmi des candidats (la fusion de plusieurs requêtes,
-  // le reclassement), chaque recherche en propose reglages.candidats ; sinon, les k premiers suffisent (ou la profondeur
-  // demandée par les traces)
-  const n = requetes.length > 1 || reglages.reclassement ? Math.max(k, reglages.candidats) : Math.max(k, profondeur);
+  // le reclassement, MMR), chaque recherche en propose reglages.candidats ; sinon, les k premiers suffisent (ou la
+  // profondeur demandée par les traces)
+  const choix = requetes.length > 1 || reglages.reclassement || reglages.diversite !== null;
+  const n = choix ? Math.max(k, reglages.candidats) : Math.max(k, profondeur);
   const chercherTout = async (f: Filtres) => {
     const listes: Resultat[][] = [];
     for (const requete of requetes) listes.push(await chercherUneFois(base, requete, n, f, reglages));
@@ -84,13 +87,17 @@ export async function trouverPassages(
   // d'abstention du chapitre 7. Le plein texte donne un score BM25, sans maximum ; après une transformation, les scores
   // viennent des requêtes du LLM : on les recalcule avec la question
   if (reglages.mode === "plein-texte" || reglages.transformation) resultats = await avecSimilarites(base, question, resultats);
-  // 5. Le choix des k passages parmi les candidats : le reclasseur lit la question et chaque candidat ; sinon, les
-  // premiers. Le classement continue au-delà de k quand les traces demandent une profondeur
+  // 5. Le choix des k passages parmi les candidats : le reclasseur lit la question et chaque candidat ; ou MMR, qui écarte
+  // les redites ; sinon, les premiers. Le classement continue au-delà de k quand les traces demandent une profondeur
   const rendre = Math.max(k, profondeur);
   if (reglages.reclassement) {
     const reclasseur = reglages.reclasseur === "llm" ? parLeLlm(llm()) : outils.crossEncoder;
     if (!reclasseur) throw new Error("Ces réglages demandent un cross-encoder : passez-le dans les outils");
     return reclasser(question, resultats, reclasseur, rendre);
+  }
+  if (reglages.diversite !== null) {
+    const v = await vecteurs(base, resultats.map((r) => r.id));
+    return mmr(resultats.map((r) => ({ ...r, vecteur: v.get(r.id)! })), rendre, reglages.diversite);
   }
   return resultats.slice(0, rendre);
 }
