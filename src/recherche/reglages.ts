@@ -1,6 +1,7 @@
 // Les réglages de la recherche de Rhéa (chapitre 9). Chaque étape ajoutée au fil du chapitre a le sien ; elle n'entre
 // dans RECHERCHE qu'après avoir été mesurée sur le jeu d'évaluation. Ce fichier ne fait que décrire : il ne lit pas .env
 // et ne se connecte à rien, les outils et les tests peuvent l'importer sans rien lancer
+import type { Transformation } from "./transformations.ts";
 
 // vectorielle : les passages les plus proches par le sens (chapitre 6) ; plein-texte : ceux qui contiennent les mots ;
 // hybride : les deux, fusionnés par leurs rangs
@@ -17,6 +18,7 @@ export type Reglages = {
   vocabulaire: boolean; // enrichir la requête du plein texte avec les sigles et synonymes du lexique (leçon 4)
   reclassement: boolean; // reclasser les candidats (leçon 5)
   reclasseur: (typeof RECLASSEURS)[number]; // le cross-encoder local de .env, ou le LLM du projet
+  transformation: Transformation | null; // transformer la question avec le LLM avant de chercher (leçon 6)
 };
 
 // Les réglages de Rhéa : ceux de l'API et des évaluations, sauf option contraire. Chacun a été choisi sur le jeu
@@ -28,4 +30,5 @@ export const RECHERCHE: Reglages = {
   vocabulaire: false,
   reclassement: false,
   reclasseur: "cross-encoder",
+  transformation: null,
 };

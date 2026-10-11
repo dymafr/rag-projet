@@ -6,10 +6,12 @@ import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
 import { creerLlm, type Llm } from "../llm.ts";
 import type { Base } from "../stockage/base.ts";
 import { lireIndexation } from "../stockage/schema.ts";
+import { fusionner } from "./fusion.ts";
 import { chercherHybride } from "./hybride.ts";
 import { chercherPleinTexte } from "./plein-texte.ts";
 import { RECHERCHE, type Reglages } from "./reglages.ts";
 import { crossEncoder, parLeLlm, reclasser, type Reclasseur } from "./rerank.ts";
+import { transformer } from "./transformations.ts";
 import { chercher, similarites, type Filtres, type Resultat } from "./vectorielle.ts";
 import { enrichir } from "./vocabulaire.ts";
 
@@ -54,15 +56,26 @@ export async function trouverPassages(
   // 1. Les filtres : acces, en attendant le chapitre 13, qui filtrera selon le rôle de chaque salarié (Rhéa ne lit ni les
   // documents réservés aux managers ni les tickets) ; la date du jour
   const filtres: Filtres = { enVigueurLe: date, acces: ["tous"] };
-  // 2. La recherche. Quand le reclassement choisira ensuite parmi des candidats, la recherche en propose
-  // reglages.candidats ; sinon, les k premiers suffisent (ou la profondeur demandée par les traces)
-  const n = reglages.reclassement ? Math.max(k, reglages.candidats) : Math.max(k, profondeur);
-  let resultats = await chercherUneFois(base, question, n, filtres, reglages);
-  // 3. Le score de chaque passage doit être sa similarité cosinus avec la question : c'est elle que compare le seuil
-  // d'abstention du chapitre 7. Le plein texte donne un score BM25, sans maximum : on calcule la similarité des passages
-  // qu'il a trouvés
-  if (reglages.mode === "plein-texte") resultats = await avecSimilarites(base, question, resultats);
-  // 4. Le choix des k passages parmi les candidats : le reclasseur lit la question et chaque candidat ; sinon, les
+  // 2. Les requêtes : la question, ou ce que le LLM en a fait. Plusieurs formulations ou sous-questions : la question
+  // d'origine est cherchée aussi (une seule fois, si le LLM la rend telle quelle)
+  let requetes = reglages.transformation ? await transformer(question, reglages.transformation, llm()) : [question];
+  if (reglages.transformation === "multiplier" || reglages.transformation === "decomposer") requetes = [...new Set([question, ...requetes])];
+  // 3. Une recherche par requête. Quand une étape choisira ensuite parmi des candidats (la fusion de plusieurs requêtes,
+  // le reclassement), chaque recherche en propose reglages.candidats ; sinon, les k premiers suffisent (ou la profondeur
+  // demandée par les traces)
+  const n = requetes.length > 1 || reglages.reclassement ? Math.max(k, reglages.candidats) : Math.max(k, profondeur);
+  const listes: Resultat[][] = [];
+  for (const requete of requetes) listes.push(await chercherUneFois(base, requete, n, filtres, reglages));
+  let resultats = listes[0];
+  if (listes.length > 1) {
+    const parId = new Map(listes.flat().map((r) => [r.id, r]));
+    resultats = fusionner(listes.map((l) => l.map((r) => r.id))).slice(0, n).map((id) => parId.get(id)!);
+  }
+  // 4. Le score de chaque passage doit être sa similarité cosinus avec la question : c'est elle que compare le seuil
+  // d'abstention du chapitre 7. Le plein texte donne un score BM25, sans maximum ; après une transformation, les scores
+  // viennent des requêtes du LLM : on les recalcule avec la question
+  if (reglages.mode === "plein-texte" || reglages.transformation) resultats = await avecSimilarites(base, question, resultats);
+  // 5. Le choix des k passages parmi les candidats : le reclasseur lit la question et chaque candidat ; sinon, les
   // premiers. Le classement continue au-delà de k quand les traces demandent une profondeur
   const rendre = Math.max(k, profondeur);
   if (reglages.reclassement) {
