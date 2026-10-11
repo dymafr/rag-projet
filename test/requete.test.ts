@@ -1,8 +1,9 @@
-// Tests de ce que le LLM fait de la question avant la recherche : transformations, filtres extraits.
+// Tests de ce que le LLM fait de la question avant la recherche : transformations, filtres extraits, condensation.
 // Le LLM est un faux, qui rend des réponses écrites à l'avance et note ce qu'on lui a demandé. Lancement : npm test
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { Llm } from "../src/llm.ts";
+import { condenser } from "../src/recherche/conversation.ts";
 import { aDesIndices, extraireFiltres } from "../src/recherche/filtres-extraits.ts";
 import { transformer } from "../src/recherche/transformations.ts";
 
@@ -52,4 +53,21 @@ test("filtres extraits : seuls des mots entiers déclenchent le LLM (« mai » n
   assert.equal(aDesIndices("Qu'avait-on en mai 2025 ?"), true);
   assert.equal(aDesIndices("Combien l'an dernier ?"), true);
   assert.equal(aDesIndices("Que dit la FAQ ?"), true);
+});
+
+test("condenser : la question de suite devient autonome ; une première question ne coûte aucun appel", async () => {
+  const premiere = fauxLlm();
+  assert.equal(await condenser("Combien de RTT ai-je par an ?", [], premiere.llm), "Combien de RTT ai-je par an ?");
+  assert.equal(premiere.recus.length, 0);
+  const historique = [{ question: "Combien de RTT ai-je par an ?", reponse: "10 jours par an pour un temps plein." }];
+  const { llm, recus } = fauxLlm('{"question": "Combien de RTT ai-je par an à 80 % ?"}');
+  assert.equal(await condenser("Et à 80 % ?", historique, llm), "Combien de RTT ai-je par an à 80 % ?");
+  assert.match(recus[0], /Salarié : Combien de RTT ai-je par an \?/); // l'historique est dans le prompt
+});
+
+test("condenser : seuls les derniers échanges sont envoyés, et une réponse illisible laisse la question telle quelle", async () => {
+  const historique = Array.from({ length: 5 }, (_, i) => ({ question: `question ${i + 1}`, reponse: `réponse ${i + 1}` }));
+  const { llm, recus } = fauxLlm("pas du JSON", "toujours pas");
+  assert.equal(await condenser("Et après ?", historique, llm), "Et après ?");
+  assert.ok(!recus[0].includes("question 2") && recus[0].includes("question 3") && recus[0].includes("question 5"));
 });

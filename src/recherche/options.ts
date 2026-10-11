@@ -13,6 +13,7 @@ export const OPTIONS_RECHERCHE = {
   reclasseur: { type: "string" }, // cross-encoder ou llm
   transformation: { type: "string" }, // reecrire, multiplier, hyde ou decomposer
   "filtres-extraits": { type: "boolean" },
+  condensation: { type: "boolean" },
 } as const;
 
 // Les valeurs lues par parseArgs : absentes si l'option n'est pas donnée
@@ -25,6 +26,7 @@ type Valeurs = {
   reclasseur?: string;
   transformation?: string;
   "filtres-extraits"?: boolean;
+  condensation?: boolean;
 };
 
 const parmi = <T extends string>(valeur: string, liste: readonly T[], option: string): T => {
@@ -55,6 +57,7 @@ export function lireReglages(v: Valeurs): Reglages {
   if (v.reclasseur !== undefined) r.reclasseur = parmi(v.reclasseur, RECLASSEURS, "reclasseur");
   if (v.transformation !== undefined) r.transformation = parmi(v.transformation, TRANSFORMATIONS, "transformation");
   if (v["filtres-extraits"] !== undefined) r.filtresExtraits = v["filtres-extraits"];
+  if (v.condensation !== undefined) r.condensation = v.condensation;
   if (r.reclassement && r.reclasseur === "llm" && r.candidats > CANDIDATS_LLM) {
     throw new Error(`Le LLM reclasse ${CANDIDATS_LLM} candidats au plus : ajoutez --candidats ${CANDIDATS_LLM}`);
   }
@@ -69,6 +72,7 @@ export function decrire(r: Reglages): string {
     r.reclassement && `reclassement ${r.reclasseur} sur ${r.candidats}`,
     r.transformation,
     r.filtresExtraits && "filtres extraits",
+    r.condensation && "condensation",
   ]
     .filter(Boolean)
     .join(", ");

@@ -1,8 +1,8 @@
 // Évaluer l'abstention sur les réponses enregistrées : le tableau des cinq cas, les deux taux d'erreur, et la barrière
 // des questions interdites. Aucun appel au LLM : l'exactitude vient des verdicts déjà rendus par le juge.
 // « Arrivée jusqu'au LLM » parle du LLM qui rédige : depuis le chapitre 9, une question peut passer par le LLM plus tôt,
-// pour extraire ses filtres. Avec un modèle local, elle reste sur la machine ; avec un fournisseur en ligne, elle part
-// chez lui, même quand Rhéa s'abstient ensuite
+// pour extraire ses filtres ou condenser une question de suite. Avec un modèle local, elle reste sur la machine ; avec
+// un fournisseur en ligne, elle part chez lui, même quand Rhéa s'abstient ensuite
 // Lancement : npm run eval:abstention -- [--reponses eval/reponses.json] [--jugements eval/jugements.json]
 import { parseArgs } from "node:util";
 import { type Cas, tableauAbstention } from "../eval/abstention.ts";

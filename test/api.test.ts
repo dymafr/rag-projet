@@ -71,6 +71,26 @@ test("repondreEnFlux ignore une citation qui désigne un passage absent", async 
   assert.deepEqual(sources.map((s) => s.numero), [1]);
 });
 
+test("repondreEnFlux condense une question de suite, cherche la question autonome et l'annonce à la page", async () => {
+  let cherchee = "";
+  const d: Dependances = {
+    ...dependances(llm({ type: "texte", texte: "Huit jours [1]." }, { type: "fin", usage })),
+    chercher: async (question) => {
+      cherchee = question;
+      return [faq];
+    },
+    condenser: async () => "Combien de RTT ai-je par an à 80 % ?",
+  };
+  const historique = [{ question: "Combien de RTT ai-je par an ?", reponse: "10 jours pour un temps plein [1]." }];
+  const liste = await evenements(repondreEnFlux("Et à 80 % ?", d, undefined, historique));
+  assert.deepEqual(liste[0], { nom: "question", donnees: { question: "Combien de RTT ai-je par an à 80 % ?" } });
+  assert.equal(cherchee, "Combien de RTT ai-je par an à 80 % ?");
+  // Sans historique, aucune condensation : la question est cherchée telle quelle, sans événement question
+  const seule = await evenements(repondreEnFlux("Combien de RTT ai-je par an ?", d));
+  assert.equal(cherchee, "Combien de RTT ai-je par an ?");
+  assert.ok(!seule.some((e) => e.nom === "question"));
+});
+
 // Un serveur de test sur un port libre, arrêté à la fin
 async function avecServeur(d: Dependances, essai: (adresse: string) => Promise<void>) {
   const serveur = creerServeur(d);
@@ -96,6 +116,24 @@ test("le serveur répond en flux à POST /ask, refuse une question vide et sert 
     assert.equal((await fetch(`${adresse}/ask`, { method: "POST", headers: ENTETES_JSON, body: "pas du JSON" })).status, 400);
     const page = await fetch(`${adresse}/`);
     assert.match(await page.text(), /<title>Rhéa/);
+  });
+});
+
+test("le serveur transmet l'historique de la conversation, et refuse un historique mal formé ou trop long", async () => {
+  let recu: unknown;
+  const d: Dependances = { ...dependances(llm({ type: "texte", texte: "Huit jours [1]." }, { type: "fin", usage })), condenser: async (q, h) => ((recu = h), q) };
+  await avecServeur(d, async (adresse) => {
+    const historique = [{ question: "Combien de RTT ?", reponse: "10 jours." }];
+    const ok = await fetch(`${adresse}/ask`, { method: "POST", headers: ENTETES_JSON, body: JSON.stringify({ question: "Et à 80 % ?", historique }) });
+    await ok.text();
+    assert.deepEqual(recu, historique);
+    const mal = await fetch(`${adresse}/ask`, { method: "POST", headers: ENTETES_JSON, body: JSON.stringify({ question: "Et ?", historique: [{ question: "?" }] }) });
+    assert.deepEqual([mal.status, await mal.json()], [400, { erreur: "historique : chaque réponse doit être un texte" }]);
+    const vide = await fetch(`${adresse}/ask`, { method: "POST", headers: ENTETES_JSON, body: JSON.stringify({ question: "Et ?", historique: [{ question: " ", reponse: "…" }] }) });
+    assert.deepEqual(await vide.json(), { erreur: "historique : une question est vide" });
+    const long = Array.from({ length: 4 }, () => ({ question: "Combien ?", reponse: "…" }));
+    const tropLong = await fetch(`${adresse}/ask`, { method: "POST", headers: ENTETES_JSON, body: JSON.stringify({ question: "Et ?", historique: long }) });
+    assert.deepEqual(await tropLong.json(), { erreur: "historique trop long : 3 échanges au plus" });
   });
 });
 

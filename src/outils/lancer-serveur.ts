@@ -7,15 +7,19 @@ import { MODELE_DU_SEUIL } from "../generation/abstention.ts";
 import { creerGenerateurEnFlux } from "../generation/generateur.ts";
 import { BUDGET_PASSAGES, PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
-import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
+import { condenser } from "../recherche/conversation.ts";
+import { aujourdhui, outilsParDefaut, trouverPassages } from "../recherche/passages.ts";
+import { RECHERCHE } from "../recherche/reglages.ts";
 
 const PORT = Number(process.env.PORT ?? 3000);
 if (nomDuModele() !== MODELE_DU_SEUIL) {
   console.warn(`Attention : le seuil d'abstention a été mesuré avec ${MODELE_DU_SEUIL}, pas avec ${nomDuModele()}. Relancez npm run seuils`);
 }
 const systeme = await lirePromptSysteme();
+const outils = outilsParDefaut(); // le LLM et le cross-encoder de .env, pour les réglages de recherche qui en demandent
 const serveur = creerServeur({
-  chercher: (question, date) => trouverPassages(pool, question, PASSAGES_DEMANDES, date),
+  chercher: (question, date) => trouverPassages(pool, question, PASSAGES_DEMANDES, date, RECHERCHE, outils),
+  condenser: RECHERCHE.condensation ? (question, historique) => condenser(question, historique, outils.llm) : undefined,
   generer: creerGenerateurEnFlux(),
   systeme,
   budget: BUDGET_PASSAGES,

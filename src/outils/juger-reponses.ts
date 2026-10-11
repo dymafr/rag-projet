@@ -25,7 +25,8 @@ for (const r of reponses.filter((r) => r.abstention === null)) {
   const criteres = reference ? CRITERES_JUGES : (["fidelite", "pertinence"] as const);
   const verdicts = [];
   for (const critere of criteres) {
-    const j = await juger(llm, critere, { question: r.question, reponse: r.texte, passages: r.passages, reference });
+    // Une question de suite est jugée sous sa forme autonome : seule, « Et à 80 % ? » ne dit pas ce qu'elle demande
+    const j = await juger(llm, critere, { question: r.autonome ?? r.question, reponse: r.texte, passages: r.passages, reference });
     jugements.push({ id: r.id, empreinte: empreinte(r.texte), critere, verdict: j.verdict, raison: j.raison });
     verdicts.push(`${critere} ${j.verdict === null ? "?" : j.verdict ? "oui" : "non"}`);
   }

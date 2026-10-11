@@ -13,6 +13,7 @@ export const FichierDeTraces = z.object({
     z.object({
       id: z.string(),
       question: z.string(),
+      autonome: z.string().optional(), // une question de suite, condensée avec son historique (leçon 8)
       candidats: z.array(z.object({ id: z.string(), score: z.number() })),
     }),
   ),

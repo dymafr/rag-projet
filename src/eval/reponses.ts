@@ -9,6 +9,7 @@ import { BUDGET_PASSAGES, PASSAGES_DEMANDES } from "../generation/prompt.ts";
 export const ReponseEnregistree = z.object({
   id: z.string(),
   question: z.string(),
+  autonome: z.string().optional(), // une question de suite, condensée avec son historique (chapitre 9)
   date: z.iso.date(), // la date du jour donnée à Rhéa
   trouves: z.array(z.object({ id: z.string(), score: z.number() })), // les passages de la recherche, dans l'ordre
   passages: z.array(z.object({ numero: z.number(), id: z.string(), texte: z.string() })), // ceux envoyés au LLM, numérotés

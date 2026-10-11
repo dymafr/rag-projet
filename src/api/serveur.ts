@@ -3,12 +3,26 @@ import { once } from "node:events";
 import { readFileSync } from "node:fs";
 import http from "node:http";
 import { z } from "zod";
+import { TOURS } from "../recherche/conversation.ts";
 import { repondreEnFlux, type Dependances } from "./rhea.ts";
 
-const TAILLE_MAX = 16 * 1024; // 16 Kio : largement assez pour une question
+const TAILLE_MAX = 64 * 1024; // 64 Kio : assez pour une question et les derniers échanges, même en caractères de 3 octets
+const Question = z.string("la question doit être un texte").trim().min(1, "la question est vide").max(1000, "la question dépasse 1 000 caractères");
+const Echange = z.strictObject({
+  question: z
+    .string("historique : chaque question doit être un texte")
+    .trim()
+    .min(1, "historique : une question est vide")
+    .max(1000, "historique : une question dépasse 1 000 caractères"),
+  reponse: z.string("historique : chaque réponse doit être un texte").max(4000, "historique : une réponse dépasse 4 000 caractères"),
+});
 const Demande = z.strictObject(
-  { question: z.string("la question doit être un texte").trim().min(1, "la question est vide").max(1000, "la question dépasse 1 000 caractères") },
-  "attendu : un objet JSON avec la seule clé question",
+  {
+    question: Question,
+    // Les échanges précédents de la conversation, s'il y en a (chapitre 9) : les TOURS derniers, ceux que lit la condensation
+    historique: z.array(Echange).max(TOURS, `historique trop long : ${TOURS} échanges au plus`).default([]),
+  },
+  "attendu : un objet JSON avec la clé question, et l'historique s'il y en a un",
 );
 // La page de chat, lue une fois au démarrage : son chemin part de ce fichier, pas du dossier d'où l'on lance Node
 const PAGE = readFileSync(new URL("../../public/index.html", import.meta.url));
@@ -51,11 +65,11 @@ export function creerServeur(dependances: Dependances): http.Server {
       console.log("Client parti avant la fin : réponse abandonnée");
     });
 
-    let question: string;
+    let demande: z.infer<typeof Demande>;
     try {
-      const demande = Demande.safeParse(await lireJson(req));
-      if (!demande.success) return repondreJson(res, 400, { erreur: demande.error.issues[0].message });
-      question = demande.data.question;
+      const lue = Demande.safeParse(await lireJson(req));
+      if (!lue.success) return repondreJson(res, 400, { erreur: lue.error.issues[0].message });
+      demande = lue.data;
     } catch (erreur) {
       const tropGros = erreur instanceof RangeError;
       return repondreJson(res, tropGros ? 413 : 400, { erreur: tropGros ? "corps trop gros" : "JSON invalide" });
@@ -67,7 +81,7 @@ export function creerServeur(dependances: Dependances): http.Server {
     res.writeHead(200, { "Content-Type": "text/event-stream", "Cache-Control": "no-cache", "X-Accel-Buffering": "no" });
     res.flushHeaders(); // les en-têtes partent tout de suite, sans attendre la recherche
     try {
-      for await (const { nom, donnees } of repondreEnFlux(question, dependances, annulation.signal)) {
+      for await (const { nom, donnees } of repondreEnFlux(demande.question, dependances, annulation.signal, demande.historique)) {
         if (!res.write(evenementSSE(nom, donnees))) await once(res, "drain", { signal: annulation.signal });
       }
     } catch (erreur) {

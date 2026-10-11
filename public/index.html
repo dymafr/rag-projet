@@ -48,10 +48,15 @@ const champ = document.getElementById("question");
 const envoyer = document.getElementById("envoyer");
 const arreter = document.getElementById("arreter");
 let annulation = null;
+// Les échanges terminés sans erreur, envoyés avec la question suivante : « Et à 80 % ? » se comprend alors. Chacun garde
+// la question telle que Rhéa l'a comprise : la suivante se condense mieux à partir d'une question complète
+const historique = [];
+const ECHANGES = 3; // les trois derniers suffisent
 
 // Lire un flux SSE reçu en réponse à un POST : EventSource ne sait faire que des GET, on lit donc le corps avec fetch
 async function demander(question, surEvenement, signal) {
-  const reponse = await fetch("/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }), signal });
+  const corps = JSON.stringify({ question, historique: historique.slice(-ECHANGES) });
+  const reponse = await fetch("/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: corps, signal });
   if (!reponse.ok) throw new Error((await reponse.json().catch(() => ({}))).erreur ?? `HTTP ${reponse.status}`);
   const lecteur = reponse.body.pipeThrough(new TextDecoderStream()).getReader();
   let tampon = "";
@@ -107,26 +112,32 @@ document.getElementById("formulaire").addEventListener("submit", async (evenemen
   conversation.append(bulle, liste, pied);
   let commence = false;
   let termine = false; // vrai à l'événement fin, ou erreur : sinon, le flux s'est arrêté en route
+  let enErreur = false; // un échange en erreur n'entre pas dans l'historique
+  let comprise = question; // la question autonome, si Rhéa l'a condensée
   annulation = new AbortController();
   envoyer.hidden = envoyer.disabled = true;
   arreter.hidden = false;
   try {
     await demander(question, (nom, donnees) => {
-      if (nom === "texte") {
+      if (nom === "question") {
+        comprise = donnees.question;
+        pied.textContent = `Question comprise : ${comprise}`;
+      } else if (nom === "texte") {
         if (!commence) { bulle.textContent = ""; commence = true; }
         bulle.textContent += donnees.texte;
       } else if (nom === "sources") afficherSources(liste, donnees);
       else if (nom === "abstention") { bulle.textContent = donnees.message; bulle.classList.add("abstention"); liste.replaceChildren(); }
-      else if (nom === "erreur") { termine = true; bulle.textContent = `Erreur : ${donnees.message}`; bulle.classList.add("erreur"); }
+      else if (nom === "erreur") { termine = enErreur = true; bulle.textContent = `Erreur : ${donnees.message}`; bulle.classList.add("erreur"); }
       else if (nom === "fin") {
         termine = true;
-        pied.textContent = donnees.usage
+        pied.textContent = (pied.textContent ? `${pied.textContent} ; ` : "") + (donnees.usage
           ? `${donnees.usage.entree} tokens en entrée, ${donnees.usage.sortie} en sortie ; prompt ${donnees.prompt}`
-          : `sans appel au LLM ; prompt ${donnees.prompt}`;
+          : `sans réponse rédigée par le LLM ; prompt ${donnees.prompt}`);
       }
       window.scrollTo(0, document.body.scrollHeight);
     }, annulation.signal);
     if (!termine) bulle.textContent += " (réponse interrompue)";
+    else if (!enErreur) historique.push({ question: comprise.slice(0, 1000), reponse: bulle.textContent.slice(0, 4000) });
   } catch (erreur) {
     bulle.textContent = erreur.name === "AbortError" ? `${bulle.textContent} (arrêté)` : `Erreur : ${erreur.message}`;
   } finally {

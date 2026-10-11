@@ -14,8 +14,9 @@ import type { Enregistrement, ReponseEnregistree } from "../eval/reponses.ts";
 import { creerGenerateurEnFlux } from "../generation/generateur.ts";
 import { BUDGET_PASSAGES, PASSAGES_DEMANDES, type PromptAugmente } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
+import { condenser } from "../recherche/conversation.ts";
 import { decrire, lireReglages, OPTIONS_RECHERCHE } from "../recherche/options.ts";
-import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
+import { aujourdhui, outilsParDefaut, trouverPassages } from "../recherche/passages.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 
 const { values } = parseArgs({
@@ -33,6 +34,7 @@ if (!Number.isInteger(k) || k < 1 || !Number.isInteger(budget) || budget < 1) {
   throw new Error("--k et --budget attendent des nombres entiers positifs, par exemple --k 8 --budget 1500");
 }
 const reglages = lireReglages(values);
+const outils = outilsParDefaut(); // le LLM et le cross-encoder de .env
 const systeme = await lirePromptSysteme();
 const generer = creerGenerateurEnFlux();
 const jour = aujourdhui();
@@ -40,21 +42,33 @@ const jour = aujourdhui();
 const reponses: ReponseEnregistree[] = [];
 for (const q of await lireJeu()) {
   // Rhéa telle qu'en production, avec un espion : il garde les passages trouvés, puis le prompt envoyé au LLM
-  const espion: { trouves: Resultat[]; prompt?: PromptAugmente } = { trouves: [] };
+  const espion: { trouves: Resultat[]; prompt?: PromptAugmente; autonome?: string } = { trouves: [] };
   const debut = performance.now();
-  const evenements = repondreEnFlux(q.question, {
-    chercher: async (question, date) => {
-      espion.trouves = await trouverPassages(pool, question, k, date, reglages);
-      return espion.trouves;
+  const evenements = repondreEnFlux(
+    q.question,
+    {
+      chercher: async (question, date) => {
+        espion.trouves = await trouverPassages(pool, question, k, date, reglages, outils);
+        return espion.trouves;
+      },
+      generer: (prompt, signal) => {
+        espion.prompt = prompt;
+        return generer(prompt, signal);
+      },
+      systeme,
+      budget,
+      date: () => q.date ?? jour,
+      // Une question de suite est condensée avec son historique, comme dans la page de chat (chapitre 9)
+      condenser: reglages.condensation
+        ? async (question, historique) => {
+            espion.autonome = await condenser(question, historique, outils.llm);
+            return espion.autonome;
+          }
+        : undefined,
     },
-    generer: (prompt, signal) => {
-      espion.prompt = prompt;
-      return generer(prompt, signal);
-    },
-    systeme,
-    budget,
-    date: () => q.date ?? jour,
-  });
+    undefined, // pas d'annulation
+    q.categorie === "couverte" ? q.historique : undefined,
+  );
   let texte = "";
   let sources: ReponseEnregistree["sources"] = [];
   let abstention = false;
@@ -68,6 +82,7 @@ for (const q of await lireJeu()) {
   reponses.push({
     id: q.id,
     question: q.question,
+    ...(espion.autonome !== undefined && { autonome: espion.autonome }),
     date: q.date ?? jour,
     trouves: espion.trouves.map((r) => ({ id: r.id, score: Number(r.score.toFixed(4)) })),
     passages: (espion.prompt?.passages ?? []).map((p, i) => ({ numero: i + 1, id: p.id, texte: p.texte })),

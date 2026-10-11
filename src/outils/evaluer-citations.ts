@@ -29,7 +29,7 @@ for (const r of reponses.filter((r) => r.abstention === null)) {
     const cites = r.passages.filter((p) => numeros.includes(p.numero));
     if (cites.length < numeros.length) return false; // un numéro qui ne désigne aucun passage reçu n'établit rien
     appels++;
-    const j = await juger(llm, "soutien", { question: r.question, reponse: phrase, passages: cites });
+    const j = await juger(llm, "soutien", { question: r.autonome ?? r.question, reponse: phrase, passages: cites }); // la forme autonome d'une question de suite
     if (j.verdict === null) illisibles++;
     return j.verdict === true; // un verdict illisible compte comme non appuyé (et il est compté)
   });
