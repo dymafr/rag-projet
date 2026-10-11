@@ -11,6 +11,7 @@ const Schema = z
     EMBEDDING_PROVIDER: z.enum(["transformers", "openai", "voyage", "ollama"]).default("transformers"),
     EMBEDDING_MODEL: z.string().min(1, "indiquez le modèle d'embedding"),
     EMBEDDING_DIMENSIONS: z.coerce.number().int().positive().optional(), // taille réduite des vecteurs, si le modèle le permet
+    RERANK_MODEL: z.string().min(1).default("onnx-community/bge-reranker-v2-m3-ONNX"), // le cross-encoder local (chapitre 9)
     ANTHROPIC_API_KEY: z.string().optional(),
     OPENAI_API_KEY: z.string().optional(),
     VOYAGE_API_KEY: z.string().optional(),

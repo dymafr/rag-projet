@@ -1,5 +1,5 @@
 // Mesurer la récupération de Rhéa sur le jeu d'évaluation : pour chaque question couverte, les passages trouvés
-// comparés aux passages attendus, puis la moyenne de chaque métrique. Aucun appel au LLM : la mesure est rapide et gratuite
+// comparés aux passages attendus, puis la moyenne de chaque métrique. Pas de réponse rédigée ; seules des options appellent le LLM
 // Lancement : npm run eval:recherche -- [--k 8] [--minimums eval/minimums.json] [--traces eval/traces/vectorielle.json]
 //             et les options de recherche (src/recherche/options.ts) : [--mode vectorielle] [--vocabulaire]…
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -13,7 +13,7 @@ import { Minimums, mesurerRecuperation, moyennes, sousLeMinimum } from "../eval/
 import type { FichierDeTraces } from "../eval/traces.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { decrire, lireReglages, OPTIONS_RECHERCHE } from "../recherche/options.ts";
-import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
+import { aujourdhui, outilsParDefaut, trouverPassages } from "../recherche/passages.ts";
 
 const { values } = parseArgs({
   allowNegative: true, // --no-vocabulaire : désactiver une option booléenne
@@ -34,15 +34,16 @@ if (values.minimums) {
 const k = Number(values.k);
 if (!Number.isInteger(k) || k < 1) throw new Error("--k attend un nombre entier positif, par exemple --k 8");
 const reglages = lireReglages(values);
+const outils = outilsParDefaut();
 // On regarde plus loin que k pour dire où sont tombés les passages manqués
-const PROFONDEUR = Math.max(k, 50);
+const PROFONDEUR = 50;
 
 // Les questions hors corpus et interdites n'ont pas de passages attendus : elles serviront à mesurer l'abstention
 const couvertes = (await lireJeu()).filter((q) => q.categorie === "couverte");
 const mesures = [];
 const traces: FichierDeTraces["traces"] = [];
 for (const q of couvertes) {
-  const resultats = await trouverPassages(pool, q.question, PROFONDEUR, q.date, reglages);
+  const resultats = await trouverPassages(pool, q.question, k, q.date, reglages, outils, PROFONDEUR);
   traces.push({ id: q.id, question: q.question, candidats: resultats.map((r) => ({ id: r.id, score: Number(r.score.toFixed(4)) })) });
   const trouves = resultats.map((r) => r.id);
   const m = mesurerRecuperation(trouves, q.passages, k);

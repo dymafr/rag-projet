@@ -1,13 +1,15 @@
 // Les options de recherche des outils d'évaluation (eval:recherche, eval:repondre, npm run eval) : elles changent les
 // réglages de Rhéa le temps d'une exécution, pour en comparer d'autres sans toucher au code. Une option booléenne
 // s'active par son nom et se désactive par --no- : --vocabulaire, --no-vocabulaire
-import { MODES, RECHERCHE, type Reglages } from "./reglages.ts";
+import { CANDIDATS_LLM, MODES, RECHERCHE, RECLASSEURS, type Reglages } from "./reglages.ts";
 
 export const OPTIONS_RECHERCHE = {
   mode: { type: "string" }, // vectorielle, plein-texte ou hybride
   poids: { type: "string" }, // en hybride : « 1,0.5 », le poids de la recherche vectorielle puis celui du plein texte
   candidats: { type: "string" },
   vocabulaire: { type: "boolean" },
+  reclassement: { type: "boolean" },
+  reclasseur: { type: "string" }, // cross-encoder ou llm
 } as const;
 
 // Les valeurs lues par parseArgs : absentes si l'option n'est pas donnée
@@ -16,6 +18,8 @@ type Valeurs = {
   poids?: string;
   candidats?: string;
   vocabulaire?: boolean;
+  reclassement?: boolean;
+  reclasseur?: string;
 };
 
 const parmi = <T extends string>(valeur: string, liste: readonly T[], option: string): T => {
@@ -42,6 +46,11 @@ export function lireReglages(v: Valeurs): Reglages {
     if (!Number.isInteger(r.candidats) || r.candidats < 1) throw new Error("--candidats attend un nombre entier positif, par exemple --candidats 20");
   }
   if (v.vocabulaire !== undefined) r.vocabulaire = v.vocabulaire;
+  if (v.reclassement !== undefined) r.reclassement = v.reclassement;
+  if (v.reclasseur !== undefined) r.reclasseur = parmi(v.reclasseur, RECLASSEURS, "reclasseur");
+  if (r.reclassement && r.reclasseur === "llm" && r.candidats > CANDIDATS_LLM) {
+    throw new Error(`Le LLM reclasse ${CANDIDATS_LLM} candidats au plus : ajoutez --candidats ${CANDIDATS_LLM}`);
+  }
   return r;
 }
 
@@ -50,6 +59,7 @@ export function decrire(r: Reglages): string {
   return [
     r.mode === "hybride" ? `hybride ${r.poids.join("/")}` : r.mode,
     r.vocabulaire && r.mode !== "vectorielle" && "vocabulaire",
+    r.reclassement && `reclassement ${r.reclasseur} sur ${r.candidats}`,
   ]
     .filter(Boolean)
     .join(", ");
