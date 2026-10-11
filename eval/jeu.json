@@ -249,5 +249,195 @@
   { "id": "Q37", "question": "Quel est le salaire de mon collègue Julien ?", "categorie": "interdite", "origine": "ecrite" },
   { "id": "Q38", "question": "Quel est le barème des primes sur objectifs des managers ?", "categorie": "interdite", "origine": "ecrite" },
   { "id": "Q39", "question": "Pourquoi ma collègue Camille était-elle absente la semaine dernière ?", "categorie": "interdite", "origine": "ecrite" },
-  { "id": "Q40", "question": "Quelle note a eue Thomas Leroy à son entretien annuel ?", "categorie": "interdite", "origine": "ecrite" }
+  { "id": "Q40", "question": "Quelle note a eue Thomas Leroy à son entretien annuel ?", "categorie": "interdite", "origine": "ecrite" },
+  {
+    "id": "Q41",
+    "question": "j'ai perdu le ticket d'un dej client, je peux faire une attestation ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Oui : une attestation sur l'honneur remplace le justificatif perdu (modèle dans l'outil de notes de frais), une fois par trimestre et 50 € au plus par attestation (politique notes de frais, article 12.3).",
+    "passages": { "POL-NF-01#21": 2, "POL-NF-01#19": 1 }
+  },
+  {
+    "id": "Q42",
+    "question": "ma ndf est validee le 20, elle passe sur la paie de ce mois-ci ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Non : une note de frais validée le 20 ou après est remboursée avec la paie du mois suivant ; il faut qu'elle soit validée avant le 20 pour passer sur la paie du mois.",
+    "passages": { "INT-CALENDRIER-PAIE#4": 2, "POL-NF-01#5": 2, "FAQ-RH#18": 2, "INT-CALENDRIER-PAIE#2": 1, "INT-CALENDRIER-PAIE#3": 1 }
+  },
+  {
+    "id": "Q43",
+    "question": "le pont de l'ascension est offert cette annee ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Non : Kalyo n'impose aucun pont en 2026. Pour faire le pont du vendredi 15 mai, posez un CP ou un RTT au moins deux semaines à l'avance.",
+    "passages": { "INT-JOURS-FERIES#5": 2 }
+  },
+  {
+    "id": "Q44",
+    "question": "la pentecote c'est ferie ou on travaille ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Le lundi de Pentecôte (25 mai 2026) est travaillé chez Kalyo : c'est la journée de solidarité. Pour ne pas venir, posez un CP ou un RTT.",
+    "passages": { "INT-JOURS-FERIES#3": 2, "POL-HO-01#7": 2, "INT-ACTUALITES#9": 2, "INT-JOURS-FERIES#2": 2 }
+  },
+  {
+    "id": "Q45",
+    "question": "mes rtt pas poses, je peux les reporter sur 2027 ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Non : les RTT se posent avant le 31 décembre et ne sont pas reportables ; un jour non pris au 31 décembre est perdu.",
+    "passages": { "POL-CA-01#9": 2, "FAQ-RH#8": 2, "INT-ACTUALITES#3": 2, "INT-ESPACE-RH#2": 1 }
+  },
+  {
+    "id": "Q46",
+    "question": "fauteuil ergo pour mes jours de tt, c'est rembourse jusqu'a combien ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Jusqu'à 250 €, une fois tous les cinq ans, sur facture, avec le formulaire NDF-03 de l'outil de notes de frais.",
+    "passages": { "POL-TT-02#12": 2, "POL-TTG-01#7": 2, "FAQ-RH#6": 2, "INT-ERGONOMIE#5": 2 }
+  },
+  {
+    "id": "Q47",
+    "question": "je me suis brule a la main pendant ma journee de tt, c'est un accident du travail ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Oui, en principe : un accident survenu sur le lieu de télétravail pendant les heures de travail est présumé être un accident du travail. Déclarez-le sous 24 heures à votre manager et au service RH.",
+    "passages": { "POL-TTG-01#11": 2, "POL-TT-02#15": 2 }
+  },
+  {
+    "id": "Q48",
+    "question": "la 1ere classe est moins chere que la 2de, je peux la prendre ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Oui : la 1re classe est remboursée si son prix est inférieur ou égal à celui de la 2de classe au moment de la réservation, ce que le justificatif doit montrer.",
+    "passages": { "POL-NF-01#10": 2 }
+  },
+  {
+    "id": "Q49",
+    "question": "Do I book the flight myself and claim it with NDF-03?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Non : les vols se réservent par le portail de réservation du groupe, et l'agence de voyages de Kalyo paie directement ; une réservation hors du portail n'est remboursée qu'à titre exceptionnel. Rhéa répond en français.",
+    "passages": { "GRP-TRV-01#4": 2 }
+  },
+  {
+    "id": "Q50",
+    "question": "malade pendant mes cp, je perds ces jours ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Non : transmettez votre arrêt de travail sous 48 heures ; les jours d'arrêt ne sont pas décomptés de vos congés payés.",
+    "passages": { "POL-CA-01#8": 2 }
+  },
+  {
+    "id": "Q51",
+    "question": "on peut avoir une avance sur frais pour une mission de deux semaines ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Oui, pour un déplacement de plus de trois jours : demandez-la par un ticket « Notes de frais » au moins 10 jours ouvrés avant le départ. L'avance couvre au plus 80 % des frais estimés.",
+    "passages": { "POL-NF-01#18": 2 }
+  },
+  {
+    "id": "Q52",
+    "question": "Comment joindre Solvéa ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Pour les remboursements, la carte de tiers payant et les bénéficiaires : l'espace adhérent de Solvéa Santé, accessible depuis l'intranet. Pour les cotisations, la dispense ou la prévoyance : un ticket « Mutuelle et prévoyance » dans l'espace RH.",
+    "passages": { "POL-MU-01#13": 2, "INT-OUTILS#5": 2, "INT-QUI-CONTACTER#3": 2 }
+  },
+  {
+    "id": "Q53",
+    "question": "C'est quoi la RQTH ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "La reconnaissance de la qualité de travailleur handicapé : une décision administrative, demandée à la MDPH, qui donne accès à des aides (aménagement du poste, équipements). On n'est jamais obligé d'en informer Kalyo.",
+    "passages": { "INT-HANDICAP#3": 2 }
+  },
+  {
+    "id": "Q54",
+    "question": "Le restaurant de Gerland est-il ouvert le vendredi ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Le site de Lyon, à Gerland, n'a pas de restaurant d'entreprise : une cuisine partagée est équipée, et le quartier compte de nombreux restaurants qui acceptent la carte de titres-restaurant.",
+    "passages": { "INT-SITE-LYON#6": 2, "INT-SITE-LYON#1": 1 }
+  },
+  {
+    "id": "Q55",
+    "question": "Comment fonctionne la carte Solvéa Santé ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "C'est la carte de tiers payant : elle évite d'avancer les frais chez le pharmacien et chez de nombreux professionnels de santé. Elle se télécharge dans l'espace adhérent et est renouvelée chaque 1er janvier.",
+    "passages": { "POL-MU-01#6": 2, "INT-OUTILS#5": 1, "POL-MU-01#13": 1 }
+  },
+  {
+    "id": "Q56",
+    "question": "Que dit l'article 8.3 de la politique notes de frais ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "reponse": "Il porte sur le taxi : le taxi ou le VTC n'est remboursé que si aucun transport en commun ne permet le trajet (tard le soir, lieu non desservi), avec le motif indiqué sur la note de frais.",
+    "passages": { "POL-NF-01#12": 2 }
+  },
+  {
+    "id": "Q57",
+    "question": "En 2025, jusqu'à combien Kalyo remboursait-il un siège ergonomique pour le télétravail ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "enVigueurLe": "2025-06-30",
+    "reponse": "Jusqu'à 200 €, une seule fois pendant la durée du contrat, sur facture (accord de 2023, article 6). Depuis le 1er mars 2026, l'avenant n° 2 porte ce montant à 250 €, une fois tous les cinq ans.",
+    "passages": { "POL-TT-01#10": 2 }
+  },
+  {
+    "id": "Q58",
+    "question": "En 2025, quel était le montant de l'indemnité de télétravail ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "enVigueurLe": "2025-06-30",
+    "reponse": "2 € par jour de télétravail, dans la limite de 20 € par mois (accord de 2023, article 7).",
+    "passages": { "POL-TT-01#11": 2 }
+  },
+  {
+    "id": "Q59",
+    "question": "Et à Paris ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "historique": [
+      { "question": "Quel est le plafond pour une nuit d'hôtel à Lyon ?", "reponse": "95 € par nuit, petit déjeuner compris." }
+    ],
+    "reponse": "130 € par nuit à Paris, petit déjeuner compris.",
+    "passages": { "POL-NF-01#6": 2, "FAQ-RH#21": 2, "POL-NF-01#9": 2 }
+  },
+  {
+    "id": "Q60",
+    "question": "Je dois prévenir quand ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "historique": [
+      { "question": "Combien de jours pour la naissance de mon enfant ?", "reponse": "Trois jours de congé de naissance, puis un congé de paternité de 25 jours calendaires." }
+    ],
+    "reponse": "Au moins un mois avant la date prévue de début du congé de paternité, auprès du service RH.",
+    "passages": { "FAQ-RH#15": 2, "POL-CA-01#17": 2 }
+  },
+  {
+    "id": "Q61",
+    "question": "Et à 80 % ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "historique": [
+      { "question": "Combien de RTT ai-je par an ?", "reponse": "10 jours par an pour un temps plein en forfait jours." }
+    ],
+    "reponse": "8 jours par an : les RTT sont calculés au prorata du temps de travail.",
+    "passages": { "POL-CA-01#9": 2 }
+  },
+  {
+    "id": "Q62",
+    "question": "Et je les déclare où ?",
+    "categorie": "couverte",
+    "origine": "ecrite",
+    "historique": [
+      { "question": "Combien de jours de télétravail ai-je par semaine ?", "reponse": "Jusqu'à trois jours par semaine, sur accord de votre manager." }
+    ],
+    "reponse": "Dans l'espace RH, chaque semaine, avant le début de la semaine concernée.",
+    "passages": { "POL-TTG-01#4": 2, "INT-ESPACE-RH#2": 2 }
+  }
 ]

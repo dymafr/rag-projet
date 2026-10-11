@@ -30,7 +30,8 @@ let erreurs = 0;
 for (const q of jeu) {
   if (q.categorie !== "couverte") continue;
   for (const id of Object.keys(q.passages)) {
-    const p = probleme(id, q.date ?? aujourdhui()); // la date de la question, sinon celle du jour
+    // La date dont parle la question, sinon celle où elle est posée, sinon aujourd'hui
+    const p = probleme(id, q.enVigueurLe ?? q.date ?? aujourdhui());
     if (p) {
       console.log(`${q.id} : le passage ${id} est ${p}`);
       erreurs++;

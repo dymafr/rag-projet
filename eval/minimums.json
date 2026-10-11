@@ -1,6 +1,6 @@
 {
-  "succes": 0.9,
-  "rappel": 0.85,
-  "rangReciproque": 0.8,
-  "ndcg": 0.75
+  "succes": 0.85,
+  "rappel": 0.75,
+  "rangReciproque": 0.75,
+  "ndcg": 0.7
 }

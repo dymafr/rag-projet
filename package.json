@@ -46,7 +46,8 @@
     "eval:abstention": "node src/outils/evaluer-abstention.ts",
     "eval": "node --env-file=.env src/outils/evaluer.ts",
     "eval:bilan": "node src/outils/faire-le-bilan.ts",
-    "eval:erreurs": "node src/outils/analyser-erreurs.ts"
+    "eval:erreurs": "node src/outils/analyser-erreurs.ts",
+    "eval:diagnostic": "node src/outils/diagnostiquer.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

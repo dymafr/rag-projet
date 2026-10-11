@@ -21,6 +21,14 @@ test("une question couverte a une réponse et au moins un passage qui répond", 
   assert.equal(QuestionDeReference.safeParse(sansReponse).success, false);
 });
 
+test("une question couverte peut suivre une conversation ou parler d'une autre date que le jour où elle est posée", () => {
+  const historique = [{ question: "Combien de RTT ai-je par an ?", reponse: "10 jours par an pour un temps plein." }];
+  assert.ok(QuestionDeReference.safeParse({ ...couverte, question: "Et à 80 % ?", historique }).success);
+  assert.equal(QuestionDeReference.safeParse({ ...couverte, historique: [] }).success, false); // une conversation vide n'en est pas une
+  assert.ok(QuestionDeReference.safeParse({ ...couverte, enVigueurLe: "2026-01-15" }).success);
+  assert.equal(QuestionDeReference.safeParse({ ...couverte, enVigueurLe: "janvier 2026" }).success, false);
+});
+
 test("une question hors corpus ou interdite n'a ni réponse ni passages", () => {
   const horsCorpus = { id: "Q31", question: "Quelle est la météo à Lyon demain ?", categorie: "hors-corpus", origine: "ecrite" };
   assert.ok(QuestionDeReference.safeParse(horsCorpus).success);

@@ -19,6 +19,11 @@ export const QuestionDeReference = z.discriminatedUnion("categorie", [
     categorie: z.literal("couverte"),
     reponse: z.string().min(1), // la réponse de référence, courte, tirée des documents
     passages: z.record(z.string(), Pertinence).refine((p) => Object.values(p).includes(2), "au moins un passage doit répondre (pertinence 2)"),
+    // Une question de suite dans une conversation (« Et pour un décès ? ») : les échanges qui la précèdent
+    historique: z.array(z.strictObject({ question: z.string().min(1), reponse: z.string().min(1) })).min(1).optional(),
+    // La date dont parle la question (« en janvier 2026 »), quand ce n'est pas aujourd'hui : les passages attendus
+    // s'appliquaient ce jour-là
+    enVigueurLe: z.iso.date().optional(),
   }),
   z.strictObject({ ...Commun, categorie: z.enum(["hors-corpus", "interdite"]) }),
 ]);

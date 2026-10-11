@@ -4,3 +4,4 @@ carte-des-sens.svg
 .cache/
 donnees/
 eval/candidates.json
+eval/traces/

@@ -56,7 +56,10 @@ if (values.comparer) {
   const base = lue.data;
   // Une comparaison suppose le même jeu de questions et les mêmes réglages : on prévient si le jeu ou k diffèrent
   if (base.configuration.jeu !== undefined && base.configuration.jeu !== c.jeu) {
-    console.log("\nAttention : la ligne de base a été mesurée sur un autre jeu d'évaluation ; seules les questions communes sont comparées");
+    console.log(
+      "\nAttention : la ligne de base a été mesurée sur un autre jeu d'évaluation. Les moyennes ne portent pas sur les mêmes questions ;" +
+        " seul le test de McNemar compare les questions communes. Refaites la ligne de base sur ce jeu : npm run eval -- --ligne-de-base",
+    );
   }
   if (base.configuration.k !== c.k) console.log(`\nAttention : k vaut ${base.configuration.k} dans la ligne de base et ${c.k} ici`);
   const ecart = (avant: number, apres: number, unite: "pts" | "") =>

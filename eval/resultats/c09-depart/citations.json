@@ -1,0 +1,1660 @@
+{
+  "date": "2026-10-11",
+  "juge": "ollama gemma4:e4b",
+  "consignes": "58839fbf3789",
+  "reponses": "eval/resultats/c09-depart/reponses.json",
+  "resultats": [
+    {
+      "id": "Q01",
+      "empreinte": "f25a060e20ba",
+      "phrases": [
+        {
+          "texte": "Depuis le 1er mars 2026, vous pouvez télétravailler jusqu'à trois jours par semaine, sur accord de votre manager.",
+          "numeros": [
+            1,
+            2,
+            3,
+            5
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Chaque équipe doit fixer avec son manager au moins un jour de présence commun sur site par semaine.",
+          "numeros": [
+            1,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez déclarer vos jours de télétravail chaque semaine dans l'espace RH avant le début de la semaine concernée.",
+          "numeros": [
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q02",
+      "empreinte": "709bf788ea8a",
+      "phrases": [
+        {
+          "texte": "Vous pouvez télétravailler au maximum 2 jours par semaine.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Ces jours sont fixés avec votre manager et doivent être déclarés dans l'espace RH.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q03",
+      "empreinte": "081d6291a0ae",
+      "phrases": [
+        {
+          "texte": "Depuis le 1er mars 2026, vous pouvez télétravailler jusqu'à 3 jours par semaine, sur accord de votre manager.",
+          "numeros": [
+            1,
+            3,
+            4,
+            5,
+            7
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Chaque équipe doit fixer avec son manager au moins un jour de présence commun sur site, qui ne peut pas être un jour de télétravail.",
+          "numeros": [
+            1,
+            4
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez déclarer chaque semaine vos jours de télétravail dans l'espace RH avant le début de la semaine concernée.",
+          "numeros": [
+            4
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q04",
+      "empreinte": "0f187db013f3",
+      "phrases": [
+        {
+          "texte": "Le plafond pour un repas avec un client à Paris est de 45 € par personne, boissons comprises.",
+          "numeros": [
+            1,
+            2,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez indiquer le nom et la société des invités sur la note de frais.",
+          "numeros": [
+            1,
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q05",
+      "empreinte": "19bd319fc09e",
+      "phrases": [
+        {
+          "texte": "Le plafond pour un repas avec un client à Berlin est de 35 € par personne, boissons comprises.",
+          "numeros": [
+            2,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez indiquer le nom et la société des invités sur la note de frais.",
+          "numeros": [
+            1,
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": false
+    },
+    {
+      "id": "Q06",
+      "empreinte": "202a4f5bb532",
+      "phrases": [
+        {
+          "texte": "Vous devez utiliser le code d'absence EMA pour un enfant malade.",
+          "numeros": [
+            1,
+            5
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez prévenir votre manager le jour même, puis poser le code EMA dans l'espace RH et joindre le certificat médical dans les 48 heures.",
+          "numeros": [
+            5
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Kalyo accorde trois jours par an et par enfant de moins de 16 ans, rémunérés à 100 %.",
+          "numeros": [
+            1,
+            5
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q07",
+      "empreinte": "46ffd42502b0",
+      "phrases": [
+        {
+          "texte": "Pour votre mariage, vous avez droit à cinq jours ouvrés.",
+          "numeros": [
+            1,
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez poser le code EVF dans l'espace RH et joindre l'acte de mariage.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous pouvez prendre ces jours dans la semaine qui précède ou qui suit la cérémonie.",
+          "numeros": [
+            1,
+            4
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q08",
+      "empreinte": "cbfeb7dfc9c2",
+      "phrases": [
+        {
+          "texte": "Le salaire est versé le dernier jour ouvré de chaque mois.",
+          "numeros": [
+            1,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Le bulletin de paie est déposé la veille dans votre coffre-fort numérique, accessible depuis l'espace RH.",
+          "numeros": [
+            1,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Vous pouvez consulter le calendrier de paie 2026 pour les dates précises.",
+          "numeros": [
+            7
+          ],
+          "appuyee": false,
+          "utiles": [
+            false
+          ]
+        }
+      ],
+      "rappel": 0.6666666666666666,
+      "precision": 0.8,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q09",
+      "empreinte": "633eec2a7714",
+      "phrases": [
+        {
+          "texte": "Kalyo rembourse 60 % du prix de votre abonnement de transport en commun pour vos trajets domicile-site.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez déposer votre justificatif dans l'espace RH, rubrique « Mes documents », une fois par an en janvier ou dès la souscription.",
+          "numeros": [
+            8
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Le remboursement apparaîtra chaque mois sur votre bulletin de paie.",
+          "numeros": [
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q10",
+      "empreinte": "9374c487c402",
+      "phrases": [
+        {
+          "texte": "Le télétravail depuis l'étranger n'est jamais autorisé, même pour quelques jours, car cela n'est pas permis pour des raisons de sécurité sociale, de fiscalité et de sécurité informatique.",
+          "numeros": [
+            2,
+            5
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Pour prolonger vos vacances, vous devez poser des jours de congé.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q11",
+      "empreinte": "ac748cfa880f",
+      "phrases": [
+        {
+          "texte": "Chaque semaine complète d'astreinte vous donne droit à une indemnité forfaitaire de 150 € brut.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Cette prime forfaitaire de 150 € est versée avec la paie du mois suivant.",
+          "numeros": [
+            6
+          ],
+          "appuyee": false,
+          "utiles": [
+            false
+          ]
+        },
+        {
+          "texte": "Si vous avez des interventions, celles-ci sont payées en heures majorées.",
+          "numeros": [
+            2,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        }
+      ],
+      "rappel": 0.6666666666666666,
+      "precision": 0.75,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q12",
+      "empreinte": "f2f5b6c5d50b",
+      "phrases": [
+        {
+          "texte": "Les frais se déclarent avec le formulaire NDF-03 dans l'outil de notes de frais.",
+          "numeros": [
+            1,
+            2,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez joindre la photo ou le scan du justificatif pour chaque dépense.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous pouvez soumettre ce formulaire à votre manager dans les 30 jours suivant la dépense.",
+          "numeros": [
+            1,
+            2,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            false,
+            true,
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 0.8571428571428571,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q13",
+      "empreinte": "dcc7c918f0d4",
+      "phrases": [
+        {
+          "texte": "Pour un salarié à temps plein en forfait jours, vous disposez de 10 jours de RTT par an.",
+          "numeros": [
+            1,
+            2,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Si vous êtes à temps partiel, les RTT sont calculés au prorata.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous pouvez consulter votre solde personnel dans l'espace RH.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q14",
+      "empreinte": "161c90d1e774",
+      "phrases": [
+        {
+          "texte": "Vous devez vous présenter à 9 h 30 à l'accueil du site.",
+          "numeros": [
+            1,
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            false
+          ]
+        },
+        {
+          "texte": "Votre manager vous accueillera à cette heure.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 0.6666666666666666,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q15",
+      "empreinte": "9231895c3704",
+      "phrases": [
+        {
+          "texte": "Oui, vous pouvez demander un congé sans solde pour une durée d'un mois à six mois.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "La demande doit être effectuée dans l'espace RH avec le code CSS, au moins deux mois avant la date de départ souhaitée.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez ensuite obtenir l'acceptation de votre manager et du service RH.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q16",
+      "empreinte": "c5250e1a74d0",
+      "phrases": [
+        {
+          "texte": "Kalyo verse une indemnité forfaitaire de 2,50 € par jour de télétravail.",
+          "numeros": [
+            1,
+            2,
+            3,
+            6
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "texte": "Cette indemnité est plafonnée à 30 € par mois.",
+          "numeros": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Elle est calculée automatiquement à partir des jours déclarés dans l'espace RH et versée avec la paie du mois suivant.",
+          "numeros": [
+            1,
+            2,
+            3,
+            6
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true,
+            true,
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 0.9230769230769231,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q17",
+      "empreinte": "e16f791e4351",
+      "phrases": [
+        {
+          "texte": "Le remboursement kilométrique dépend de la puissance fiscale de votre véhicule et de la distance professionnelle parcourue dans l'année.",
+          "numeros": [
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous pouvez consulter le barème détaillé dans l'outil de notes de frais qui applique automatiquement la tranche correspondante.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Pour effectuer votre demande, vous devez joindre à la note de frais le trajet, le nombre de kilomètres et la carte grise du véhicule.",
+          "numeros": [
+            2,
+            4
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q18",
+      "empreinte": "3827bd6e3c78",
+      "phrases": [
+        {
+          "texte": "Oui, Kalyo propose une aide via le forfait mobilités durables qui rembourse jusqu'à 300 € par an pour les frais liés au vélo, à la trottinette ou au covoiturage.",
+          "numeros": [
+            1,
+            6
+          ],
+          "appuyee": true,
+          "utiles": [
+            false,
+            true
+          ]
+        },
+        {
+          "texte": "Pour en bénéficier, vous devez faire la demande dans l'espace RH en ouvrant un ticket « Transport », en joignant une déclaration sur l'honneur et vos justificatifs.",
+          "numeros": [
+            1,
+            6
+          ],
+          "appuyee": true,
+          "utiles": [
+            false,
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 0.5,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q19",
+      "empreinte": "c8ebf351a6cc",
+      "phrases": [
+        {
+          "texte": "Chaque salarié bénéficie d'un droit à la déconnexion, ce qui signifie qu'aucune réponse n'est attendue aux messages et appels professionnels entre 20 h et 8 h, ainsi que le week-end.",
+          "numeros": [
+            1,
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Pendant les jours de télétravail, aucun salarié n'est tenu de lire ni de répondre aux messages et appels professionnels de 20 h à 8 h et le week-end.",
+          "numeros": [
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Si vous êtes régulièrement sollicité en dehors de ces plages, vous devez en parler à votre manager ou ouvrir un ticket de catégorie « Autre » dans l'espace RH.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q20",
+      "empreinte": "f7a9340cc404",
+      "phrases": [
+        {
+          "texte": "En novembre 2026, le 1er novembre est la Toussaint, qui tombe un dimanche.",
+          "numeros": [
+            2,
+            4
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            false
+          ]
+        },
+        {
+          "texte": "Le 11 novembre est un jour férié chômé.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous pouvez consulter le calendrier complet des jours fériés 2026 dans la documentation RH.",
+          "numeros": [
+            1
+          ],
+          "appuyee": false,
+          "utiles": [
+            false
+          ]
+        }
+      ],
+      "rappel": 0.6666666666666666,
+      "precision": 0.5,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q21",
+      "empreinte": "4302c2c7ef0e",
+      "phrases": [
+        {
+          "texte": "La durée de votre préavis dépend de votre statut et de votre classification.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Elle est fixée par la convention collective des bureaux d'études techniques (Syntec) et rappelée dans votre contrat de travail.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "En cas de doute, vous pouvez ouvrir un ticket « Autre » dans l'espace RH.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q22",
+      "empreinte": "73128b621a6d",
+      "phrases": [
+        {
+          "texte": "Au moindre doute concernant un message, ne cliquez pas et n'ouvrez pas la pièce jointe.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez signaler ce message au support informatique via un ticket ou en appelant le poste 4012.",
+          "numeros": [
+            1,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q23",
+      "empreinte": "d415bbc336f3",
+      "phrases": [
+        {
+          "texte": "Pour un voyage d'affaires en Allemagne, vous recevez une allocation journalière de 60 EUR par jour.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Cette allocation couvre les repas et les petites dépenses accessoires.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez soumettre votre demande via l'espace RH.",
+          "numeros": [],
+          "appuyee": null,
+          "utiles": []
+        }
+      ],
+      "rappel": 0.6666666666666666,
+      "precision": 1,
+      "sansCitation": 1,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q24",
+      "empreinte": "ab1a4d227872",
+      "phrases": [
+        {
+          "texte": "Chez Kalyo, deux régimes de durée du travail coexistent sur les sites de Lyon et de Nantes.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Le premier est le forfait annuel de 218 jours pour les cadres autonomes, et le second est le régime de 35 heures hebdomadaires avec horaires variables pour le support informatique, la finance et la paie.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q25",
+      "empreinte": "3f05227167ad",
+      "phrases": [
+        {
+          "texte": "Vous devez compléter votre auto-évaluation au plus tard deux jours ouvrés avant l'entretien.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous pouvez préparer cet entretien en remplissant votre auto-évaluation dans l'espace RH.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q26",
+      "empreinte": "f77dcbc2a806",
+      "phrases": [
+        {
+          "texte": "Si vous avez plus d'un an d'ancienneté, Kalyo maintient votre salaire à 100 % dès le premier jour d'arrêt, pour une durée maximale de 90 jours sur douze mois consécutifs.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Au-delà de ces 90 jours, le contrat de prévoyance prend le relais.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Pour signaler votre maladie, vous devez prévenir votre manager le jour même et envoyer votre arrêt de travail au service RH sous 48 heures via l'espace RH, rubrique « Mes absences », avec le code MAL.",
+          "numeros": [
+            1,
+            2
+          ],
+          "appuyee": false,
+          "utiles": [
+            false,
+            false
+          ]
+        }
+      ],
+      "rappel": 0.6666666666666666,
+      "precision": 0.5,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q28",
+      "empreinte": "e8a6da52aceb",
+      "phrases": [
+        {
+          "texte": "Vous ne devez jamais laisser votre ordinateur sans surveillance dans un train, un café ou une voiture.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Veuillez verrouiller votre session chaque fois que vous quittez votre poste, même pour quelques minutes, au bureau comme à la maison.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q29",
+      "empreinte": "7d1289bd75ae",
+      "phrases": [
+        {
+          "texte": "Pour un salarié à temps partiel en dessous d'un mi-temps, le remboursement de l'abonnement de transport est calculé au prorata des heures travaillées.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Le remboursement de 60 % du prix de votre abonnement de transport en commun est versé chaque mois sur votre bulletin de paie.",
+          "numeros": [
+            2,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            false,
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez déposer votre justificatif une fois par an dans l'espace RH.",
+          "numeros": [
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 0.75,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q30",
+      "empreinte": "9ca9c162cb69",
+      "phrases": [
+        {
+          "texte": "Si la décision de retour à votre ancien poste vient de Kalyo, le déménagement de retour est pris en charge dans les mêmes conditions que le déménagement initial.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Si la décision vient de vous, les frais de déménagement restent à votre charge.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q41",
+      "empreinte": "22f56dfeaa57",
+      "phrases": [
+        {
+          "texte": "En cas de perte d'un justificatif, vous pouvez le remplacer par une attestation sur l'honneur, dont le modèle est disponible dans l'outil de notes de frais.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Cette possibilité est limitée à une fois par trimestre et à 50 € au plus par attestation.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez conserver les originaux jusqu'au remboursement pour les dépenses en général.",
+          "numeros": [
+            6
+          ],
+          "appuyee": false,
+          "utiles": [
+            false
+          ]
+        }
+      ],
+      "rappel": 0.6666666666666666,
+      "precision": 0.6666666666666666,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q42",
+      "empreinte": "2b7144036ff3",
+      "phrases": [
+        {
+          "texte": "Si votre note de frais est validée le 20 ou après, elle sera remboursée avec la paie du mois suivant.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Par exemple, une note validée le 22 avril 2026 est remboursée avec la paie du 29 mai 2026.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez soumettre vos notes dans les 30 jours qui suivent la dépense.",
+          "numeros": [
+            1,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q45",
+      "empreinte": "3ab7607bb47d",
+      "phrases": [
+        {
+          "texte": "Les RTT ne sont pas reportables.",
+          "numeros": [
+            4
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Les salariés à temps plein en forfait jours doivent poser leurs 10 jours de RTT avant le 31 décembre 2026.",
+          "numeros": [
+            1,
+            4
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            false
+          ]
+        },
+        {
+          "texte": "Vous pouvez consulter votre solde dans l'espace RH, rubrique « Mes absences ».",
+          "numeros": [
+            1,
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 0.8,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q46",
+      "empreinte": "3f27c9ccdded",
+      "phrases": [
+        {
+          "texte": "Chaque salarié en télétravail régulier peut faire rembourser un siège ergonomique jusqu'à 250 €, une fois tous les cinq ans, sur présentation de la facture.",
+          "numeros": [
+            3
+          ],
+          "appuyee": false,
+          "utiles": [
+            false
+          ]
+        },
+        {
+          "texte": "Vous devez présenter la facture pour bénéficier de ce remboursement.",
+          "numeros": [
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 0.5,
+      "precision": 0.5,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q47",
+      "empreinte": "92223159cd19",
+      "phrases": [
+        {
+          "texte": "Un accident survenu sur votre lieu de télétravail pendant les plages de travail est présumé être un accident du travail.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez déclarer cet accident sous 24 heures à votre manager et au service RH en précisant les circonstances.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q48",
+      "empreinte": "943486dfea89",
+      "phrases": [
+        {
+          "texte": "Si le prix de la 1re classe est inférieur ou égal à celui de la 2de classe au moment de la réservation, vous pouvez la prendre, à condition que cela apparaisse sur le justificatif.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Pour les trajets en train, il est conseillé de réserver le plus tôt possible, de préférence via le portail de réservation du groupe.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q49",
+      "empreinte": "5602626c3b9c",
+      "phrases": [
+        {
+          "texte": "Pour les vols, vous devez les réserver via le portail de réservation de groupe.",
+          "numeros": [
+            4
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Les réservations effectuées en dehors de ce portail ne sont remboursées qu'en cas d'exception, avec une explication écrite.",
+          "numeros": [
+            4
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q50",
+      "empreinte": "e4aa08877c66",
+      "phrases": [
+        {
+          "texte": "Si vous tombez malade pendant vos congés payés, les jours d'arrêt ne sont pas décomptés de vos CP.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez transmettre votre arrêt de travail sous 48 heures.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous pouvez également déposer votre arrêt de travail dans l'espace RH rubrique « Mes absences » sous 48 heures.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q51",
+      "empreinte": "529e3915975d",
+      "phrases": [
+        {
+          "texte": "Pour un déplacement de plus de trois jours, vous pouvez demander une avance sur frais par un ticket de catégorie « Notes de frais » dans l'espace RH, au moins 10 jours ouvrés avant le départ.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Cette avance couvre au plus 80 % des frais estimés.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous devez donc pouvoir demander cette avance pour votre mission de deux semaines en respectant ce délai.",
+          "numeros": [],
+          "appuyee": null,
+          "utiles": []
+        }
+      ],
+      "rappel": 0.6666666666666666,
+      "precision": 1,
+      "sansCitation": 1,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q52",
+      "empreinte": "854242fd349a",
+      "phrases": [
+        {
+          "texte": "Pour les remboursements et les bénéficiaires, vous devez utiliser l'espace adhérent de Solvéa Santé.",
+          "numeros": [
+            2,
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true,
+            true
+          ]
+        },
+        {
+          "texte": "Pour les cotisations, la dispense ou la prévoyance, veuillez ouvrir un ticket « Mutuelle et prévoyance » dans l'espace RH.",
+          "numeros": [
+            1,
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            false,
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 0.75,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q53",
+      "empreinte": "73191f7c7cbd",
+      "phrases": [
+        {
+          "texte": "La reconnaissance de la qualité de travailleur handicapé (RQTH) est une décision administrative qui reconnaît que votre état de santé limite certaines de vos capacités de travail.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Elle vous donne accès à des aides telles que l'aménagement du poste ou le financement d'équipements.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Vous n'êtes jamais obligé d'informer Kalyo de votre RQTH.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q55",
+      "empreinte": "7af4e1e0e433",
+      "phrases": [
+        {
+          "texte": "Pour obtenir votre carte de tiers payant, vous devez vous rendre dans l'espace adhérent de Solvéa Santé.",
+          "numeros": [
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Cet espace vous permet également de suivre vos remboursements.",
+          "numeros": [
+            3
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "La carte est renouvelée chaque 1er janvier.",
+          "numeros": [
+            7
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": true
+    },
+    {
+      "id": "Q60",
+      "empreinte": "c913e1e862c3",
+      "phrases": [
+        {
+          "texte": "Pour une absence prévisible, vous devez faire votre demande dans l'espace RH, rubrique « Mes absences »,.",
+          "numeros": [
+            5
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Si vous êtes malade, vous devez prévenir votre manager le jour même, puis envoyer votre arrêt de travail au service RH sous 48 heures depuis l'espace RH rubrique « Mes absences »,.",
+          "numeros": [
+            8
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        },
+        {
+          "texte": "Pour demander des congés, vous devez le faire au moins deux semaines à l'avance, ou un mois à l'avance pour une absence de plus de cinq jours ouvrés consécutifs,.",
+          "numeros": [
+            1
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 1,
+      "precision": 1,
+      "sansCitation": 0,
+      "sourceAttendue": false
+    },
+    {
+      "id": "Q62",
+      "empreinte": "5616ef62b63c",
+      "phrases": [
+        {
+          "texte": "Pourriez-vous préciser de quoi vous parlez afin que je puisse vous orienter correctement ?",
+          "numeros": [],
+          "appuyee": null,
+          "utiles": []
+        },
+        {
+          "texte": "Si votre question concerne les attestations de fin de formation, vous devez les déposer dans l'espace RH, rubrique « Mes documents ».",
+          "numeros": [
+            1
+          ],
+          "appuyee": false,
+          "utiles": [
+            false
+          ]
+        },
+        {
+          "texte": "Si vous parlez de jours de télétravail, vous les déclarez chaque semaine dans l'espace RH avant le début de la semaine concernée.",
+          "numeros": [
+            2
+          ],
+          "appuyee": true,
+          "utiles": [
+            true
+          ]
+        }
+      ],
+      "rappel": 0.3333333333333333,
+      "precision": 0.5,
+      "sansCitation": 1,
+      "sourceAttendue": true
+    }
+  ]
+}
