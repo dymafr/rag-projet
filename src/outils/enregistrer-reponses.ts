@@ -1,7 +1,8 @@
 // Poser à Rhéa les questions du jeu d'évaluation et enregistrer tout ce qu'il faut pour juger ses réponses ensuite :
 // les passages trouvés, ceux envoyés au LLM, la réponse, les sources et l'abstention éventuelle
 // Lancement : npm run eval:repondre -- [--sortie eval/reponses.json] [--k 8] [--budget 1500]
-// --k et --budget changent les réglages de Rhéa le temps d'une évaluation, pour en comparer d'autres sans toucher au code
+// --k et --budget changent les réglages de Rhéa le temps d'une évaluation, pour en comparer d'autres sans toucher au code,
+// comme les options de recherche du chapitre 9 (src/recherche/options.ts)
 import { writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import { repondreEnFlux } from "../api/rhea.ts";
@@ -13,11 +14,13 @@ import type { Enregistrement, ReponseEnregistree } from "../eval/reponses.ts";
 import { creerGenerateurEnFlux } from "../generation/generateur.ts";
 import { BUDGET_PASSAGES, PASSAGES_DEMANDES, type PromptAugmente } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
+import { decrire, lireReglages, OPTIONS_RECHERCHE } from "../recherche/options.ts";
 import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 
 const { values } = parseArgs({
   options: {
+    ...OPTIONS_RECHERCHE,
     sortie: { type: "string", default: "eval/reponses.json" },
     k: { type: "string", default: String(PASSAGES_DEMANDES) },
     budget: { type: "string", default: String(BUDGET_PASSAGES) },
@@ -28,6 +31,7 @@ const budget = Number(values.budget);
 if (!Number.isInteger(k) || k < 1 || !Number.isInteger(budget) || budget < 1) {
   throw new Error("--k et --budget attendent des nombres entiers positifs, par exemple --k 8 --budget 1500");
 }
+const reglages = lireReglages(values);
 const systeme = await lirePromptSysteme();
 const generer = creerGenerateurEnFlux();
 const jour = aujourdhui();
@@ -39,7 +43,7 @@ for (const q of await lireJeu()) {
   const debut = performance.now();
   const evenements = repondreEnFlux(q.question, {
     chercher: async (question, date) => {
-      espion.trouves = await trouverPassages(pool, question, k, date);
+      espion.trouves = await trouverPassages(pool, question, k, date, reglages);
       return espion.trouves;
     },
     generer: (prompt, signal) => {
@@ -83,6 +87,7 @@ const enregistrement: Enregistrement = {
   prompt: `v${systeme.version} ${systeme.empreinte}`,
   k,
   budget,
+  recherche: decrire(reglages),
   reponses,
 };
 await writeFile(values.sortie, `${JSON.stringify(enregistrement, null, 2)}\n`);

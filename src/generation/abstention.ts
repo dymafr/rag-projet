@@ -12,8 +12,12 @@ export const MODELE_DU_SEUIL = "transformers Xenova/bge-m3";
 export const MESSAGE_ABSTENTION =
   "Je ne trouve pas cette information dans la documentation RH de Kalyo. Pour une question RH, vous pouvez ouvrir un ticket dans l'espace RH.";
 
+// Le score du passage le plus proche de la question (0 sans passage). Ce n'est pas forcément celui du premier : depuis le
+// chapitre 9, la fusion et le reclassement changent l'ordre des passages, pas leurs scores
+export const meilleurScore = (resultats: Resultat[]) => Math.max(0, ...resultats.map((r) => r.score));
+
 // 1. Avant le LLM : même le passage le plus proche est loin de la question
-export const horsCorpus = (resultats: Resultat[], seuil = SEUIL) => (resultats[0]?.score ?? 0) < seuil;
+export const horsCorpus = (resultats: Resultat[], seuil = SEUIL) => meilleurScore(resultats) < seuil;
 
 // 2. Après le LLM : pas de source, pas de réponse. Quand la réponse donne des extraits (en JSON, ou avec Claude),
 // il en faut au moins un retrouvé dans son passage ; sinon, au moins un numéro de passage cité

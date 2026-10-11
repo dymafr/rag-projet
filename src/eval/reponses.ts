@@ -29,6 +29,7 @@ export const Enregistrement = z.object({
   // Les réglages de Rhéa pendant l'enregistrement ; un enregistrement plus ancien, sans eux, a utilisé ceux par défaut
   k: z.number().default(PASSAGES_DEMANDES), // les passages demandés à la recherche
   budget: z.number().default(BUDGET_PASSAGES), // les tokens réservés aux passages dans le prompt
+  recherche: z.string().optional(), // les réglages de la recherche, en clair (chapitre 9 ; absent : la recherche vectorielle)
   reponses: z.array(ReponseEnregistree),
 });
 export type Enregistrement = z.infer<typeof Enregistrement>;

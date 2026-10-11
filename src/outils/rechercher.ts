@@ -2,12 +2,13 @@
 // Lancement : npm run rechercher -- "votre question" [--k 5] [--site lyon] [--type politique] [--langue fr] [--plan]
 //             [--date 2026-01-15] (les règles en vigueur ce jour-là ; par défaut aujourd'hui) [--toutes-versions]
 //             options de démonstration : --index (passer par l'index HNSW, comme sur une grande table), --sans-iteratif
-//             --mode plein-texte : chercher les mots de la question plutôt que son sens (chapitre 9)
+//             --mode plein-texte : chercher les mots de la question plutôt que son sens ; --mode hybride : les deux (chapitre 9)
 import { parseArgs } from "node:util";
 import { pool } from "../db.ts";
 import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
+import { chercherHybride } from "../recherche/hybride.ts";
 import { chercherPleinTexte, requetePleinTexte } from "../recherche/plein-texte.ts";
-import { MODES, type Reglages } from "../recherche/reglages.ts";
+import { MODES, RECHERCHE, type Reglages } from "../recherche/reglages.ts";
 import { chercher, requete, type Filtres } from "../recherche/vectorielle.ts";
 import { lireIndexation } from "../stockage/schema.ts";
 
@@ -23,7 +24,7 @@ const { values, positionals } = parseArgs({
     plan: { type: "boolean", default: false }, // afficher comment PostgreSQL a mené la recherche
     index: { type: "boolean", default: false },
     "sans-iteratif": { type: "boolean", default: false },
-    mode: { type: "string", default: "vectorielle" }, // vectorielle ou plein-texte
+    mode: { type: "string", default: "vectorielle" }, // vectorielle, plein-texte ou hybride
   },
 });
 const question = positionals[0] ?? "Combien de jours de télétravail par semaine ?";
@@ -36,6 +37,10 @@ const filtres: Filtres = { sites: values.site, types: values.type, langue: value
 const mode = values.mode as Reglages["mode"];
 if (!MODES.includes(mode)) {
   console.error(`--mode attend ${MODES.join(", ")}, pas « ${values.mode} »`);
+  process.exit(1);
+}
+if (mode === "hybride" && values.plan) {
+  console.error("--plan montre une seule requête SQL : la recherche hybride en lance deux");
   process.exit(1);
 }
 const pleinTexte = mode === "plein-texte";
@@ -65,8 +70,12 @@ if (!pleinTexte && indexation && indexation.modele !== nomDuModele()) {
 
 const vecteur = pleinTexte ? [] : (await vectoriser([question], "requete"))[0];
 const debut = performance.now();
-// score : la similarité cosinus en recherche vectorielle ; en plein texte, le score BM25, qui n'a pas de maximum
-const resultats = pleinTexte ? await chercherPleinTexte(client, question, k, filtres) : await chercher(client, vecteur, k, filtres);
+// score : la similarité cosinus en recherche vectorielle et hybride ; en plein texte, le score BM25, qui n'a pas de maximum
+const resultats = pleinTexte
+  ? await chercherPleinTexte(client, question, k, filtres)
+  : mode === "hybride"
+    ? await chercherHybride(client, question, vecteur, k, filtres, RECHERCHE) // les poids de Rhéa
+    : await chercher(client, vecteur, k, filtres);
 console.log(`« ${question} »  ${mode}  ${JSON.stringify(filtres)}`);
 console.log(`${resultats.length} chunks sur ${k} demandés, en ${(performance.now() - debut).toFixed(1)} ms\n`);
 for (const { id, score, texte } of resultats) console.log(`  ${score.toFixed(3)}  ${id.padEnd(16)} ${apercu(texte)}…`);

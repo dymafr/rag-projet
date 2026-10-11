@@ -3,7 +3,8 @@
 // Lancement : npm run seuils
 import { pool } from "../db.ts";
 import { nomDuModele } from "../embeddings/fournisseurs.ts";
-import { MODELE_DU_SEUIL, SEUIL } from "../generation/abstention.ts";
+import { meilleurScore, MODELE_DU_SEUIL, SEUIL } from "../generation/abstention.ts";
+import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { trouverPassages } from "../recherche/passages.ts";
 
 const questionsCouvertes = [
@@ -35,10 +36,11 @@ const questionsHorsCorpus = [
   "Ai-je droit à un congé sabbatique ?",
 ];
 
-// Le score du meilleur passage pour chaque question, du plus haut au plus bas
+// Le score du meilleur passage pour chaque question, du plus haut au plus bas. On cherche comme Rhéa (les k passages de
+// sa recherche) : depuis le chapitre 9, le plus proche n'est pas forcément le premier
 async function meilleursScores(questions: string[]) {
   const scores = [];
-  for (const question of questions) scores.push({ question, score: (await trouverPassages(pool, question, 1))[0]?.score ?? 0 });
+  for (const question of questions) scores.push({ question, score: meilleurScore(await trouverPassages(pool, question, PASSAGES_DEMANDES)) });
   return scores.sort((a, b) => b.score - a.score);
 }
 const scoresCouverts = await meilleursScores(questionsCouvertes);

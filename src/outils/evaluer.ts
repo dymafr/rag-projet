@@ -2,16 +2,19 @@
 // citations, puis le bilan, comparé à la ligne de base si elle existe. Chaque exécution garde ses fichiers dans son
 // propre dossier ; relancer une exécution du même nom remplace ses fichiers
 // Lancement : npm run eval -- [--nom AAAA-MM-JJ] [--k 8] [--budget 1500] [--ligne-de-base]
+//             et les options de recherche du chapitre 9 (src/recherche/options.ts), transmises à eval:repondre
 import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import { BUDGET_PASSAGES, PASSAGES_DEMANDES } from "../generation/prompt.ts";
+import { OPTIONS_RECHERCHE } from "../recherche/options.ts";
 import { aujourdhui } from "../recherche/passages.ts";
 
 const LIGNE_DE_BASE = "eval/ligne-de-base.json";
 const { values } = parseArgs({
   options: {
+    ...OPTIONS_RECHERCHE,
     nom: { type: "string", default: aujourdhui() }, // le nom du dossier : la date, ou le nom d'une expérience
     k: { type: "string", default: String(PASSAGES_DEMANDES) },
     budget: { type: "string", default: String(BUDGET_PASSAGES) },
@@ -34,7 +37,13 @@ function etape(outil: string, options: string[]) {
     process.exit(1);
   }
 }
-etape("enregistrer-reponses.ts", ["--sortie", `${dossier}/reponses.json`, "--k", values.k, "--budget", values.budget]);
+// Les options de recherche données, telles quelles : --mode plein-texte, --poids 1,0.5…
+const recherche = Object.keys(OPTIONS_RECHERCHE).flatMap((cle) => {
+  const valeur = values[cle as keyof typeof OPTIONS_RECHERCHE];
+  if (valeur === undefined) return [];
+  return [`--${cle}`, valeur];
+});
+etape("enregistrer-reponses.ts", ["--sortie", `${dossier}/reponses.json`, "--k", values.k, "--budget", values.budget, ...recherche]);
 etape("juger-reponses.ts", ["--reponses", `${dossier}/reponses.json`, "--sortie", `${dossier}/jugements.json`]);
 etape("evaluer-citations.ts", ["--reponses", `${dossier}/reponses.json`, "--sortie", `${dossier}/citations.json`]);
 etape("faire-le-bilan.ts", [

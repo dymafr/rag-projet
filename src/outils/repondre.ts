@@ -5,7 +5,7 @@ import { parseArgs } from "node:util";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
 import { nomDuModele } from "../embeddings/fournisseurs.ts";
-import { appuyee, horsCorpus, MESSAGE_ABSTENTION, MODELE_DU_SEUIL, SEUIL } from "../generation/abstention.ts";
+import { appuyee, horsCorpus, meilleurScore, MESSAGE_ABSTENTION, MODELE_DU_SEUIL, SEUIL } from "../generation/abstention.ts";
 import { ligneDeSource, numerosDesSources, verifierCitations } from "../generation/citations.ts";
 import { creerGenerateur, type Generation } from "../generation/generateur.ts";
 import { assembler, BUDGET_PASSAGES, estimerTokens, PASSAGES_DEMANDES } from "../generation/prompt.ts";
@@ -45,7 +45,7 @@ const prompt = assembler(question, resultats, { systeme: systeme.texte, budget, 
 // Avant le LLM : une question trop loin de tous les passages, ou sans aucun passage gardé, n'est pas envoyée
 if (horsCorpus(resultats, seuil) || prompt.passages.length === 0) {
   const raison = horsCorpus(resultats, seuil)
-    ? `le meilleur passage n'a qu'un score de ${(resultats[0]?.score ?? 0).toFixed(3)}, sous le seuil de ${seuil}`
+    ? `le meilleur passage n'a qu'un score de ${meilleurScore(resultats).toFixed(3)}, sous le seuil de ${seuil}`
     : "aucun passage ne tient dans le budget";
   console.log(`« ${question} »\nRhéa s'abstient sans appeler le LLM : ${raison}\n`);
   console.log(MESSAGE_ABSTENTION);

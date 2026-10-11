@@ -1,7 +1,7 @@
 // Mesurer la récupération de Rhéa sur le jeu d'évaluation : pour chaque question couverte, les passages trouvés
 // comparés aux passages attendus, puis la moyenne de chaque métrique. Aucun appel au LLM : la mesure est rapide et gratuite
 // Lancement : npm run eval:recherche -- [--k 8] [--minimums eval/minimums.json] [--traces eval/traces/vectorielle.json]
-//             [--mode plein-texte] (une autre façon de chercher que celle de Rhéa)
+//             et les options de recherche (src/recherche/options.ts) : [--mode vectorielle] [--poids 1,0.5] [--candidats 50]
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { parseArgs } from "node:util";
@@ -12,15 +12,15 @@ import { lireJeu } from "../eval/jeu.ts";
 import { Minimums, mesurerRecuperation, moyennes, sousLeMinimum } from "../eval/recuperation.ts";
 import type { FichierDeTraces } from "../eval/traces.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
+import { decrire, lireReglages, OPTIONS_RECHERCHE } from "../recherche/options.ts";
 import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
-import { MODES, RECHERCHE, type Reglages } from "../recherche/reglages.ts";
 
 const { values } = parseArgs({
   options: {
+    ...OPTIONS_RECHERCHE,
     k: { type: "string", default: String(PASSAGES_DEMANDES) },
     minimums: { type: "string" },
     traces: { type: "string" },
-    mode: { type: "string", default: RECHERCHE.mode },
   },
 });
 // Les minimums sont lus avant la mesure : un fichier mal écrit s'arrête tout de suite, pas après la recherche
@@ -32,8 +32,7 @@ if (values.minimums) {
 }
 const k = Number(values.k);
 if (!Number.isInteger(k) || k < 1) throw new Error("--k attend un nombre entier positif, par exemple --k 8");
-if (!MODES.includes(values.mode as Reglages["mode"])) throw new Error(`--mode attend ${MODES.join(" ou ")}, pas « ${values.mode} »`);
-const reglages: Reglages = { ...RECHERCHE, mode: values.mode as Reglages["mode"] };
+const reglages = lireReglages(values);
 // On regarde plus loin que k pour dire où sont tombés les passages manqués
 const PROFONDEUR = Math.max(k, 50);
 
@@ -60,13 +59,13 @@ await pool.end();
 
 // Les traces : les candidats de chaque question, pour les analyser ensuite sans relancer la recherche (npm run eval:diagnostic)
 if (values.traces) {
-  const fichier: FichierDeTraces = { date: aujourdhui(), embeddings: nomDuModele(), recherche: reglages.mode, profondeur: PROFONDEUR, traces };
+  const fichier: FichierDeTraces = { date: aujourdhui(), embeddings: nomDuModele(), recherche: decrire(reglages), profondeur: PROFONDEUR, traces };
   await mkdir(dirname(values.traces), { recursive: true });
   await writeFile(values.traces, `${JSON.stringify(fichier, null, 2)}\n`);
 }
 
 const moy = moyennes(mesures);
-console.log(`\n${couvertes.length} questions couvertes, recherche ${reglages.mode}, k = ${k}`);
+console.log(`\n${couvertes.length} questions couvertes, recherche ${decrire(reglages)}, k = ${k}`);
 console.log(`succès@${k} ${moy.succes.toFixed(3)}  rappel@${k} ${moy.rappel.toFixed(3)}  précision@${k} ${moy.precision.toFixed(3)}  MRR ${moy.rangReciproque.toFixed(3)}  nDCG@${k} ${moy.ndcg.toFixed(3)}`);
 
 // En intégration continue : le code de sortie 1 fait échouer le job quand une moyenne passe sous son minimum

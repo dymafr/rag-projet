@@ -1,7 +1,7 @@
 // Tests de l'abstention : le seuil avant le LLM, et la règle « pas de source, pas de réponse » après. Lancement : npm test
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { appuyee, horsCorpus, SEUIL } from "../src/generation/abstention.ts";
+import { appuyee, horsCorpus, meilleurScore, SEUIL } from "../src/generation/abstention.ts";
 import type { Resultat } from "../src/recherche/vectorielle.ts";
 
 const resultat = (score: number): Resultat => ({ id: "FAQ-RH#2", document: "FAQ-RH", titres: [], texte: "…", score });
@@ -11,6 +11,9 @@ test("horsCorpus regarde le meilleur passage, et juge hors corpus une recherche 
   assert.equal(horsCorpus([resultat(0.799)], 0.81), true);
   assert.equal(horsCorpus([]), true);
   assert.equal(horsCorpus([resultat(0.799)], 0.75), false);
+  assert.equal(horsCorpus([resultat(0.7), resultat(0.888)], 0.81), false); // le meilleur score, même en second (chapitre 9)
+  assert.equal(meilleurScore([resultat(0.31), resultat(0.47)]), 0.47);
+  assert.equal(meilleurScore([]), 0);
   assert.ok(SEUIL > 0 && SEUIL < 1);
 });
 
