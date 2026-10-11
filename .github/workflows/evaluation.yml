@@ -1,6 +1,7 @@
 # Évaluer Rhéa à chaque push et à chaque pull request : les tests, puis la récupération sur le jeu d'évaluation.
-# Aucun LLM ni aucune clé : les embeddings sont calculés en local et la base tourne dans un conteneur, comme sur votre
-# machine. Les étapes avec un LLM (réponses, juge) coûtent et demandent un secret : elles se lancent à la main
+# Aucun LLM ni aucune clé : les embeddings sont calculés en local, la base tourne dans un conteneur, comme sur votre
+# machine, et la recherche est mesurée sans ses étapes à LLM (--sans-llm, chapitre 9). Les étapes avec un LLM (réponses,
+# juge, filtres extraits de la question…) coûtent et demandent un secret : elles se lancent à la main
 name: Évaluation
 
 on:
@@ -43,5 +44,6 @@ jobs:
       - run: npm run decouper
       - run: npm run indexer
       - run: npm run eval:verifier
-      # Échoue si une moyenne passe sous son minimum (eval/minimums.json)
-      - run: npm run eval:recherche -- --minimums eval/minimums.json
+      # Échoue si une moyenne passe sous son minimum (eval/minimums.json). --sans-llm : sans les filtres extraits de la
+      # question, que Rhéa demande au LLM (les questions qui en ont besoin échouent ici, les minimums en tiennent compte)
+      - run: npm run eval:recherche -- --minimums eval/minimums.json --sans-llm

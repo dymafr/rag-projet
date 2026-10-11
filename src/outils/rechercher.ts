@@ -4,9 +4,12 @@
 //             options de démonstration : --index (passer par l'index HNSW, comme sur une grande table), --sans-iteratif
 //             --mode plein-texte : chercher les mots de la question plutôt que son sens ; --mode hybride : les deux (chapitre 9)
 //             --vocabulaire : ajouter aux mots cherchés en plein texte les sigles et synonymes du lexique (chapitre 9)
+//             --filtres-extraits : ajouter les filtres que la question précise (une date, un type), extraits par le LLM
 import { parseArgs } from "node:util";
 import { pool } from "../db.ts";
 import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
+import { creerLlm } from "../llm.ts";
+import { extraireFiltres } from "../recherche/filtres-extraits.ts";
 import { chercherHybride } from "../recherche/hybride.ts";
 import { chercherPleinTexte, requetePleinTexte } from "../recherche/plein-texte.ts";
 import { MODES, RECHERCHE, type Reglages } from "../recherche/reglages.ts";
@@ -28,6 +31,7 @@ const { values, positionals } = parseArgs({
     "sans-iteratif": { type: "boolean", default: false },
     mode: { type: "string", default: "vectorielle" }, // vectorielle, plein-texte ou hybride
     vocabulaire: { type: "boolean", default: false },
+    "filtres-extraits": { type: "boolean", default: false },
   },
 });
 const question = positionals[0] ?? "Combien de jours de télétravail par semaine ?";
@@ -52,6 +56,11 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(values.date)) {
   process.exit(1);
 }
 if (!values["toutes-versions"]) filtres.enVigueurLe = values.date;
+if (values["filtres-extraits"]) {
+  const extraits = await extraireFiltres(question, values.date, creerLlm()); // une date remplace celle du jour
+  console.log(`Filtres extraits par le LLM : ${JSON.stringify(extraits)}`);
+  Object.assign(filtres, extraits);
+}
 // Les mots que cherche le plein texte : la question, et les autres façons de dire ses sigles et abréviations
 const motsCles = values.vocabulaire && mode !== "vectorielle" ? enrichir(question) : question;
 if (motsCles !== question) console.log(`Mots-clés du plein texte : ${motsCles}`);

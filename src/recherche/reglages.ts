@@ -19,6 +19,7 @@ export type Reglages = {
   reclassement: boolean; // reclasser les candidats (leçon 5)
   reclasseur: (typeof RECLASSEURS)[number]; // le cross-encoder local de .env, ou le LLM du projet
   transformation: Transformation | null; // transformer la question avec le LLM avant de chercher (leçon 6)
+  filtresExtraits: boolean; // appliquer la date ou le type de document que la question précise (leçon 7)
 };
 
 // Les réglages de Rhéa : ceux de l'API et des évaluations, sauf option contraire. Chacun a été choisi sur le jeu
@@ -31,4 +32,5 @@ export const RECHERCHE: Reglages = {
   reclassement: false,
   reclasseur: "cross-encoder",
   transformation: null,
+  filtresExtraits: true,
 };

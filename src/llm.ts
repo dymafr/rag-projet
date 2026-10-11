@@ -42,7 +42,7 @@ function appelOpenAI(modele: string): Llm {
   return async (debut, fin) => {
     const document = { type: "input_text" as const, text: debut, prompt_cache_breakpoint: { mode: "explicit" as const } };
     const input = [{ role: "user" as const, content: [document] }, { role: "user" as const, content: fin }];
-    const reponse = await client.responses.create({ model: modele, input, max_output_tokens: MAX_TOKENS });
+    const reponse = await client.responses.create({ model: modele, input, max_output_tokens: MAX_TOKENS, store: false }); // sinon OpenAI garde la réponse ; Rhéa n'en a pas besoin
     const usage = reponse.usage;
     return {
       texte: reponse.output_text,

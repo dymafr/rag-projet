@@ -1,4 +1,5 @@
-// Afficher le prompt augmenté qu'on enverrait au LLM pour une question, sans l'envoyer
+// Afficher le prompt augmenté qu'on enverrait au LLM pour une question, sans l'envoyer. La recherche, elle, peut appeler
+// le LLM pour extraire les filtres que précise la question (une date, un type de document : chapitre 9)
 // Lancement : npm run prompt -- "votre question" [--k 8] [--budget 1500] [--date 2026-01-15]
 import { parseArgs } from "node:util";
 import { pool } from "../db.ts";

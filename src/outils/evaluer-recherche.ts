@@ -1,7 +1,9 @@
 // Mesurer la récupération de Rhéa sur le jeu d'évaluation : pour chaque question couverte, les passages trouvés
-// comparés aux passages attendus, puis la moyenne de chaque métrique. Pas de réponse rédigée ; seules des options appellent le LLM
+// comparés aux passages attendus, puis la moyenne de chaque métrique. Pas de réponse rédigée : le LLM ne sert qu'aux
+// filtres extraits de la question (leçon 7) et aux options qui le demandent. --sans-llm coupe les premiers et refuse
+// les secondes : la mesure redevient rapide, gratuite, et se passe d'Ollama, comme en intégration continue
 // Lancement : npm run eval:recherche -- [--k 8] [--minimums eval/minimums.json] [--traces eval/traces/vectorielle.json]
-//             et les options de recherche (src/recherche/options.ts) : [--mode vectorielle] [--vocabulaire]…
+//             [--sans-llm] et les options de recherche (src/recherche/options.ts) : [--mode vectorielle] [--vocabulaire]…
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { parseArgs } from "node:util";
@@ -13,7 +15,7 @@ import { Minimums, mesurerRecuperation, moyennes, sousLeMinimum } from "../eval/
 import type { FichierDeTraces } from "../eval/traces.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { decrire, lireReglages, OPTIONS_RECHERCHE } from "../recherche/options.ts";
-import { aujourdhui, outilsParDefaut, trouverPassages } from "../recherche/passages.ts";
+import { aujourdhui, outilsParDefaut, trouverPassages, type Outils } from "../recherche/passages.ts";
 
 const { values } = parseArgs({
   allowNegative: true, // --no-vocabulaire : désactiver une option booléenne
@@ -22,6 +24,7 @@ const { values } = parseArgs({
     k: { type: "string", default: String(PASSAGES_DEMANDES) },
     minimums: { type: "string" },
     traces: { type: "string" },
+    "sans-llm": { type: "boolean", default: false },
   },
 });
 // Les minimums sont lus avant la mesure : un fichier mal écrit s'arrête tout de suite, pas après la recherche
@@ -34,7 +37,14 @@ if (values.minimums) {
 const k = Number(values.k);
 if (!Number.isInteger(k) || k < 1) throw new Error("--k attend un nombre entier positif, par exemple --k 8");
 const reglages = lireReglages(values);
-const outils = outilsParDefaut();
+// --sans-llm : les étapes du LLM sont coupées, les options qui le demandent sont refusées, et la recherche ne reçoit
+// pas de LLM (une étape oubliée s'arrêterait avec un message, au lieu d'attendre Ollama)
+if (values["sans-llm"]) {
+  if (reglages.transformation || (reglages.reclassement && reglages.reclasseur === "llm")) throw new Error("--sans-llm : ces options demandent le LLM");
+  reglages.filtresExtraits = false;
+}
+const { llm, crossEncoder } = outilsParDefaut();
+const outils: Outils = values["sans-llm"] ? { crossEncoder } : { llm, crossEncoder };
 // On regarde plus loin que k pour dire où sont tombés les passages manqués
 const PROFONDEUR = 50;
 

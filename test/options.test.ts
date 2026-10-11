@@ -9,7 +9,7 @@ test("options : sans option, les réglages de Rhéa ; une option les change le t
   assert.deepEqual(lireReglages({}), RECHERCHE);
   const r = lireReglages({ mode: "vectorielle", poids: "1,0.25", candidats: "20" });
   assert.deepEqual([r.mode, r.poids, r.candidats], ["vectorielle", [1, 0.25], 20]);
-  assert.equal(decrire(lireReglages({ vocabulaire: true })), "hybride 1/0.5, vocabulaire");
+  assert.equal(decrire(lireReglages({ vocabulaire: true, "filtres-extraits": false })), "hybride 1/0.5, vocabulaire");
 });
 
 test("options : une valeur invalide est refusée avec un message", () => {

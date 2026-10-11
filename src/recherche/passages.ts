@@ -6,6 +6,7 @@ import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
 import { creerLlm, type Llm } from "../llm.ts";
 import type { Base } from "../stockage/base.ts";
 import { lireIndexation } from "../stockage/schema.ts";
+import { aDesIndices, extraireFiltres } from "./filtres-extraits.ts";
 import { fusionner } from "./fusion.ts";
 import { chercherHybride } from "./hybride.ts";
 import { chercherPleinTexte } from "./plein-texte.ts";
@@ -54,8 +55,10 @@ export async function trouverPassages(
     return outils.llm;
   };
   // 1. Les filtres : acces, en attendant le chapitre 13, qui filtrera selon le rôle de chaque salarié (Rhéa ne lit ni les
-  // documents réservés aux managers ni les tickets) ; la date du jour
+  // documents réservés aux managers ni les tickets) ; la date du jour, sauf si la question en précise une autre. Le LLM
+  // n'est appelé que si la question contient un indice (une année, un mois, un type de document…)
   const filtres: Filtres = { enVigueurLe: date, acces: ["tous"] };
+  const extraits = reglages.filtresExtraits && aDesIndices(question) ? await extraireFiltres(question, date, llm()) : {};
   // 2. Les requêtes : la question, ou ce que le LLM en a fait. Plusieurs formulations ou sous-questions : la question
   // d'origine est cherchée aussi (une seule fois, si le LLM la rend telle quelle)
   let requetes = reglages.transformation ? await transformer(question, reglages.transformation, llm()) : [question];
@@ -64,8 +67,14 @@ export async function trouverPassages(
   // le reclassement), chaque recherche en propose reglages.candidats ; sinon, les k premiers suffisent (ou la profondeur
   // demandée par les traces)
   const n = requetes.length > 1 || reglages.reclassement ? Math.max(k, reglages.candidats) : Math.max(k, profondeur);
-  const listes: Resultat[][] = [];
-  for (const requete of requetes) listes.push(await chercherUneFois(base, requete, n, filtres, reglages));
+  const chercherTout = async (f: Filtres) => {
+    const listes: Resultat[][] = [];
+    for (const requete of requetes) listes.push(await chercherUneFois(base, requete, n, f, reglages));
+    return listes;
+  };
+  let listes = await chercherTout({ ...filtres, ...extraits });
+  // Un filtre extrait à tort peut écarter tous les passages : dans ce cas, on cherche sans les filtres extraits
+  if (Object.keys(extraits).length > 0 && listes.every((l) => l.length === 0)) listes = await chercherTout(filtres);
   let resultats = listes[0];
   if (listes.length > 1) {
     const parId = new Map(listes.flat().map((r) => [r.id, r]));

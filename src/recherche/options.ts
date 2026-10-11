@@ -1,6 +1,6 @@
 // Les options de recherche des outils d'évaluation (eval:recherche, eval:repondre, npm run eval) : elles changent les
 // réglages de Rhéa le temps d'une exécution, pour en comparer d'autres sans toucher au code. Une option booléenne
-// s'active par son nom et se désactive par --no- : --vocabulaire, --no-vocabulaire
+// s'active par son nom et se désactive par --no- : --vocabulaire, --no-filtres-extraits
 import { CANDIDATS_LLM, MODES, RECHERCHE, RECLASSEURS, type Reglages } from "./reglages.ts";
 import { TRANSFORMATIONS } from "./transformations.ts";
 
@@ -12,6 +12,7 @@ export const OPTIONS_RECHERCHE = {
   reclassement: { type: "boolean" },
   reclasseur: { type: "string" }, // cross-encoder ou llm
   transformation: { type: "string" }, // reecrire, multiplier, hyde ou decomposer
+  "filtres-extraits": { type: "boolean" },
 } as const;
 
 // Les valeurs lues par parseArgs : absentes si l'option n'est pas donnée
@@ -23,6 +24,7 @@ type Valeurs = {
   reclassement?: boolean;
   reclasseur?: string;
   transformation?: string;
+  "filtres-extraits"?: boolean;
 };
 
 const parmi = <T extends string>(valeur: string, liste: readonly T[], option: string): T => {
@@ -52,6 +54,7 @@ export function lireReglages(v: Valeurs): Reglages {
   if (v.reclassement !== undefined) r.reclassement = v.reclassement;
   if (v.reclasseur !== undefined) r.reclasseur = parmi(v.reclasseur, RECLASSEURS, "reclasseur");
   if (v.transformation !== undefined) r.transformation = parmi(v.transformation, TRANSFORMATIONS, "transformation");
+  if (v["filtres-extraits"] !== undefined) r.filtresExtraits = v["filtres-extraits"];
   if (r.reclassement && r.reclasseur === "llm" && r.candidats > CANDIDATS_LLM) {
     throw new Error(`Le LLM reclasse ${CANDIDATS_LLM} candidats au plus : ajoutez --candidats ${CANDIDATS_LLM}`);
   }
@@ -65,6 +68,7 @@ export function decrire(r: Reglages): string {
     r.vocabulaire && r.mode !== "vectorielle" && "vocabulaire",
     r.reclassement && `reclassement ${r.reclasseur} sur ${r.candidats}`,
     r.transformation,
+    r.filtresExtraits && "filtres extraits",
   ]
     .filter(Boolean)
     .join(", ");

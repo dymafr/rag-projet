@@ -42,7 +42,8 @@ const resultats = await trouverPassages(pool, question, k, values.date);
 await pool.end();
 const prompt = assembler(question, resultats, { systeme: systeme.texte, budget, mesure: estimerTokens, date: values.date });
 
-// Avant le LLM : une question trop loin de tous les passages, ou sans aucun passage gardé, n'est pas envoyée
+// Avant le LLM qui rédige : une question trop loin de tous les passages, ou sans aucun passage gardé, n'obtient pas
+// de réponse (la recherche a pu appeler le LLM pour extraire les filtres de la question : chapitre 9)
 if (horsCorpus(resultats, seuil) || prompt.passages.length === 0) {
   const raison = horsCorpus(resultats, seuil)
     ? `le meilleur passage n'a qu'un score de ${meilleurScore(resultats).toFixed(3)}, sous le seuil de ${seuil}`
