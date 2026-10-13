@@ -57,6 +57,7 @@
     "@anthropic-ai/sdk": "^0.128.0",
     "@huggingface/transformers": "^4.3.0",
     "@joplin/turndown-plugin-gfm": "^1.0.68",
+    "@modelcontextprotocol/server": "^2.3.1",
     "cheerio": "^1.2.0",
     "openai": "^7.23.0",
     "pg": "^8.23.0",
