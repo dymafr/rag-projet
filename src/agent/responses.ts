@@ -44,12 +44,14 @@ function lireArguments(texte: string): unknown {
 }
 
 export function agentResponses(client: OpenAI, modele: string, reglages: ReglagesAgent = {}): LlmAgent {
-  return async (systeme, messages, outils) => {
+  return async (systeme, messages, outils, options = {}) => {
     const reponse = await client.responses.create({
       model: modele,
       instructions: systeme,
       input: versResponses(messages),
       tools: outils.map(outilResponses),
+      // Dernier tour : OpenAI n'appelle plus d'outil. Ollama ignore ce réglage : la consigne de la boucle le demande, et un appel rendu quand même n'est pas exécuté
+      ...(options.sansOutil && { tool_choice: "none" as const }),
       max_output_tokens: MAX_TOKENS,
       store: false, // OpenAI ne garde pas la conversation : on la renvoie entière à chaque tour
       ...reglages,

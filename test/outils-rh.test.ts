@@ -5,9 +5,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { PGlite } from "@electric-sql/pglite";
 import { executer } from "../src/agent/boucle.ts";
-import { calculerIndemniteKm, consulterSolde, ouvrirTicket } from "../src/agent/outils-rh.ts";
+import { calculerIndemniteKm, consulterProfil, consulterSolde, ouvrirTicket } from "../src/agent/outils-rh.ts";
 import { indemnite } from "../src/rh/bareme.ts";
-import { SCHEMA_DEMANDES } from "../src/rh/donnees.ts";
+import { moisRevolus, SCHEMA_DEMANDES } from "../src/rh/donnees.ts";
 
 let base: PGlite;
 before(async () => {
@@ -66,4 +66,21 @@ test("ouvrir_ticket enregistre la demande au nom du salarié connecté, et refus
   assert.deepEqual(rows, [{ matricule: "K0101", statut: "ouverte" }]);
   const refuse = await executer({ id: "t", nom: "ouvrir_ticket", arguments: { ...args, categorie: "Salaires" } }, [outil], contexte);
   assert.ok(refuse.erreur && /categorie/.test(refuse.resultat.texte));
+});
+
+test("moisRevolus compte un mois quand son jour anniversaire est atteint", () => {
+  assert.equal(moisRevolus("2026-04-29", "2026-10-13"), 5);
+  assert.equal(moisRevolus("2026-04-29", "2026-10-29"), 6);
+  assert.equal(moisRevolus("2025-08-19", "2026-10-13"), 13);
+  assert.equal(moisRevolus("2026-01-31", "2026-02-28"), 1); // le dernier jour de février
+  assert.equal(moisRevolus("2026-04-29", "2026-01-01"), 0); // avant l'entrée
+});
+
+test("consulter_profil donne la situation du salarié de la session, avec son ancienneté à la date du jour", async () => {
+  const { texte } = await consulterProfil(base).executer({}, { date: "2026-10-13", matricule: "K0022" });
+  assert.match(texte, /matricule K0022/);
+  assert.match(texte, /manager : Marine Marchand/);
+  assert.match(texte, /entré chez Kalyo le 2026-04-29 : 5 mois d'ancienneté révolus au 2026-10-13/);
+  const anonyme = await consulterProfil(base).executer({}, { date: "2026-10-13" });
+  assert.match(anonyme.texte, /Aucun salarié n'est connecté/);
 });

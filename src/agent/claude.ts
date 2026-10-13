@@ -27,8 +27,12 @@ const blocDeResultat = (m: Extract<Message, { role: "outil" }>): Anthropic.ToolR
 export function versClaude(messages: Message[]): Anthropic.MessageParam[] {
   const liste: Anthropic.MessageParam[] = [];
   for (const m of messages) {
-    if (m.role === "utilisateur") liste.push({ role: "user", content: m.texte });
-    else if (m.role === "assistant") {
+    if (m.role === "utilisateur") {
+      // Après des résultats d'outils (la consigne du dernier tour), le texte rejoint leur message, à la suite
+      const precedent = liste.at(-1);
+      if (precedent?.role === "user" && Array.isArray(precedent.content)) precedent.content.push({ type: "text", text: m.texte });
+      else liste.push({ role: "user", content: m.texte });
+    } else if (m.role === "assistant") {
       const contenu = (m.brut as Anthropic.ContentBlockParam[] | undefined) ?? [
         ...(m.texte ? [{ type: "text" as const, text: m.texte }] : []),
         ...m.appels.map((a) => ({ type: "tool_use" as const, id: a.id, name: a.nom, input: a.arguments })),
@@ -59,13 +63,14 @@ export function lireReponseAgent(blocs: Anthropic.ContentBlock[]): { texte: stri
 }
 
 export function agentClaude(client: Anthropic, modele: string): LlmAgent {
-  return async (systeme, messages, outils) => {
+  return async (systeme, messages, outils, options = {}) => {
     const reponse = await client.messages.create({
       model: modele,
       max_tokens: MAX_TOKENS,
       system: systeme,
       messages: versClaude(messages),
-      tools: outils.map(outilClaude),
+      tools: outils.map(outilClaude), // toujours déclarés, comme aux tours précédents : c'est tool_choice qui interdit l'appel
+      ...(options.sansOutil && { tool_choice: { type: "none" as const } }),
     });
     // end_turn : une réponse ; tool_use : des demandes d'appel. Le reste (refus, limite de tokens) n'est ni l'un ni l'autre
     if (reponse.stop_reason !== "end_turn" && reponse.stop_reason !== "tool_use") {

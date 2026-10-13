@@ -58,6 +58,37 @@ export async function lireSolde(base: Base, matricule: string): Promise<Solde | 
   };
 }
 
+export type Profil = {
+  matricule: string;
+  site: string;
+  service: string;
+  poste: string;
+  manager: string | null;
+  date_entree: string;
+  temps_travail: number;
+  forfait_jours: boolean;
+};
+
+// La situation d'un salarié (leçon 4) : son poste, son manager (une jointure de la table sur elle-même), son entrée
+export async function lireProfil(base: Base, matricule: string): Promise<Profil | null> {
+  const { rows } = await base.query<Profil>(
+    `SELECT a.matricule, a.site, a.service, a.poste, m.prenom || ' ' || m.nom AS manager,
+            to_char(a.date_entree, 'YYYY-MM-DD') AS date_entree, a.temps_travail, a.forfait_jours
+       FROM salaries a LEFT JOIN salaries m ON m.matricule = a.manager WHERE a.matricule = $1`,
+    [matricule],
+  );
+  return rows[0] ?? null;
+}
+
+// L'ancienneté en mois révolus à une date (AAAA-MM-JJ) : un mois compte quand son jour anniversaire est atteint, ou
+// le dernier jour d'un mois trop court (entré un 31 : le 30 avril). Un calcul de dates ne se confie pas au LLM non plus
+export function moisRevolus(debut: string, date: string): number {
+  const [a1, m1, j1] = debut.split("-").map(Number);
+  const [a2, m2, j2] = date.split("-").map(Number);
+  const anniversaire = Math.min(j1, new Date(Date.UTC(a2, m2, 0)).getUTCDate()); // Date.UTC(a, m, 0) : le dernier jour du mois m
+  return Math.max(0, (a2 - a1) * 12 + (m2 - m1) - (j2 < anniversaire ? 1 : 0)); // 0 avant la date d'entrée
+}
+
 export async function ouvrirDemande(base: Base, demande: { matricule: string; categorie: string; objet: string; message: string }): Promise<number> {
   const { rows } = await base.query<{ id: number }>(
     "INSERT INTO demandes_rh (matricule, categorie, objet, message) VALUES ($1, $2, $3, $4) RETURNING id",

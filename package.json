@@ -50,7 +50,8 @@
     "eval:diagnostic": "node src/outils/diagnostiquer.ts",
     "eval:contexte": "node --env-file=.env src/outils/analyser-contexte.ts",
     "agent": "node --env-file=.env src/outils/agent.ts",
-    "donnees:rh": "node --env-file=.env src/outils/charger-donnees-rh.ts"
+    "donnees:rh": "node --env-file=.env src/outils/charger-donnees-rh.ts",
+    "eval:agent": "node --env-file=.env src/outils/evaluer-agent.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

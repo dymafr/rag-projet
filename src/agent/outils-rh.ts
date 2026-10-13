@@ -4,7 +4,7 @@
 // le solde d'un collègue ou ouvrir un ticket à son nom
 import { z } from "zod";
 import { detail, indemnite } from "../rh/bareme.ts";
-import { CATEGORIES, lireSolde, ouvrirDemande } from "../rh/donnees.ts";
+import { CATEGORIES, lireProfil, lireSolde, moisRevolus, ouvrirDemande } from "../rh/donnees.ts";
 import type { Base } from "../stockage/base.ts";
 import { definirOutil, type Contexte } from "./outil.ts";
 
@@ -19,8 +19,8 @@ export const consulterSolde = (base: Base) =>
   definirOutil({
     nom: "consulter_solde",
     description:
-      "Donne le solde de congés payés et de RTT du salarié qui pose la question (et de lui seul). " +
-      "Sans paramètre : le salarié est celui de la session.",
+      "Donne le solde de congés payés et de RTT du salarié qui pose la question. Sans paramètre : le salarié est celui de " +
+      "la session ; le solde d'un autre salarié ne peut pas être consulté.",
     parametres: z.object({}),
     async executer(_args, contexte) {
       const matricule = connecte(contexte);
@@ -40,12 +40,39 @@ export const consulterSolde = (base: Base) =>
     },
   });
 
+// Leçon 4 : une deuxième source, la table des salariés. Une règle qui dépend de la situation du salarié (ancienneté,
+// site, temps partiel) demande deux appels : la règle dans les documents, la situation dans la base
+export const consulterProfil = (base: Base) =>
+  definirOutil({
+    nom: "consulter_profil",
+    description:
+      "Donne la situation du salarié qui pose la question (et de lui seul) : site, service, poste, manager, date d'entrée " +
+      "et ancienneté, temps de travail, forfait jours. Sans paramètre : le salarié est celui de la session. Quand une règle " +
+      "dépend de cette situation (ancienneté, site, temps partiel), appelez aussi chercher_documents pour la règle.",
+    parametres: z.object({}),
+    async executer(_args, contexte) {
+      const matricule = connecte(contexte);
+      if (!matricule) return { texte: ANONYME };
+      const p = await lireProfil(base, matricule);
+      if (!p) return { texte: `Aucun salarié trouvé pour le matricule ${matricule}.` };
+      const mois = moisRevolus(p.date_entree, contexte.date);
+      const anciennete = mois >= 12 ? `${Math.floor(mois / 12)} an(s) et ${mois % 12} mois` : `${mois} mois`;
+      const texte = [
+        `Profil du salarié connecté (matricule ${p.matricule}) :`,
+        `- site : ${p.site === "lyon" ? "Lyon" : "Nantes"} ; service : ${p.service} ; poste : ${p.poste} ; manager : ${p.manager ?? "aucun"} ;`,
+        `- entré chez Kalyo le ${p.date_entree} : ${anciennete} d'ancienneté révolus au ${contexte.date} ;`,
+        `- temps de travail : ${p.temps_travail} % ; forfait jours : ${p.forfait_jours ? "oui" : "non"}.`,
+      ].join("\n");
+      return { texte };
+    },
+  });
+
 export const calculerIndemniteKm = () =>
   definirOutil({
     nom: "calculer_indemnite_km",
     description:
       "Calcule l'indemnité kilométrique d'un trajet professionnel en voiture personnelle, avec le barème de la politique " +
-      "notes de frais de Kalyo. Ne faites jamais ce calcul vous-même.",
+      "notes de frais de Kalyo. Ne faites jamais ce calcul vous-même. Si la distance ou la puissance manque, demandez-la au salarié.",
     // Deux paramètres seulement : le cumul de l'année, que la tranche demande aussi, le LLM le réclamait au salarié
     // même facultatif. L'outil de notes de frais le connaît : l'outil le rappelle dans sa réponse
     parametres: z.object({
@@ -67,7 +94,8 @@ export const ouvrirTicket = (base: Base) =>
     nom: "ouvrir_ticket",
     description:
       "Ouvre un ticket dans l'espace RH, au nom du salarié connecté. À appeler dès que le salarié demande d'ouvrir un " +
-      "ticket : l'appel crée le ticket, l'annoncer sans appeler ne crée rien.",
+      "ticket, avec ce qu'il a dit, sans lui redemander son accord : l'appel crée le ticket, l'annoncer sans appeler ne " +
+      "crée rien. Ne l'appelez pas s'il ne l'a pas demandé.",
     parametres: z.object({
       categorie: z.enum(CATEGORIES).describe("La catégorie du ticket dans l'espace RH"),
       objet: z.string().trim().min(5).max(120).describe("L'objet du ticket, en une ligne"),

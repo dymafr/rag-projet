@@ -16,9 +16,17 @@ export const chercherDocuments = (chercher: Chercher) =>
       "Cherche dans la documentation RH de Kalyo (politiques, accords, FAQ, intranet) les passages utiles à une question " +
       "sur les règles RH (congés, télétravail, notes de frais, paie, mutuelle, formation, astreintes) ou sur la vie pratique " +
       "des sites de Lyon et de Nantes (horaires, accès, stationnement, contacts). Renvoie des passages " +
-      "balisés, à citer par leur source entre crochets. Pour comparer deux cas (deux sites, deux périodes), cherchez chacun séparément.",
+      "balisés, à citer par leur source entre crochets. Pour comparer deux cas (deux sites, deux périodes), cherchez chacun " +
+      "séparément ; si les passages ne répondent pas, cherchez une autre fois avec d'autres mots.",
     parametres: z.object({
-      requete: z.string().trim().min(3).max(300).describe("Ce que vous cherchez, en français : une question ou des mots-clés"),
+      // Une question entière plutôt que des mots-clés : le modèle d'embedding compare des phrases (essai du 13 octobre :
+      // « ancienneté télétravail Kalyo » manque l'article sur l'éligibilité, que la question entière trouve en premier)
+      requete: z
+        .string()
+        .trim()
+        .min(3)
+        .max(300)
+        .describe("Une question complète en français, comme le salarié la poserait, et non une liste de mots-clés"),
     }),
     async executer({ requete }, contexte) {
       const resultats = await chercher(requete, contexte.date);

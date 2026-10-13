@@ -4,20 +4,35 @@
 import { z } from "zod";
 import { finDuMessage } from "../generation/prompt.ts";
 import type { Usage } from "../llm.ts";
+import type { Echange } from "../recherche/conversation.ts";
 import type { AppelOutil, LlmAgent, Message } from "./llm-agent.ts";
 import type { Contexte, Outil, ResultatOutil } from "./outil.ts";
 
-// Un tour : un appel au LLM. Au-delà de TOURS_MAX, la boucle s'arrête : un agent qui tourne en rond coûte sans rien rendre
+// Un tour : un appel au LLM. Au-delà de TOURS_MAX, la boucle s'arrête : un agent qui tourne en rond coûte sans rien rendre.
+// Le dernier tour se fait sans outil (leçon 4) : le LLM doit répondre avec ce qu'il a déjà trouvé
 export const TOURS_MAX = 5;
+export const DERNIER_TOUR =
+  "Tu ne peux plus appeler d'outil. Réponds maintenant à la question avec ce que tes outils ont déjà rendu, et dis ce qui manque.";
+// Si le LLM demande encore un appel au dernier tour (Ollama ignore tool_choice), la boucle répond à sa place
+export const RECHERCHE_INACHEVEE = "Je n'ai pas pu terminer ma recherche. Reformulez votre question, ou ouvrez un ticket dans l'espace RH.";
 
-export type Agent = { llm: LlmAgent; outils: Outil[]; systeme: string; toursMax?: number };
+// chercherDAbord (leçon 4) : le code fait la première recherche avant le premier tour, avec la question, ou, pour une
+// question de suite, la question autonome que rend condenser (chapitre 9, leçon 8)
+export type Agent = {
+  llm: LlmAgent;
+  outils: Outil[];
+  systeme: string;
+  toursMax?: number;
+  chercherDAbord?: boolean;
+  condenser?: (question: string, historique: Echange[]) => Promise<string>;
+};
 
 export type Etape =
   | { type: "appel"; tour: number; appel: AppelOutil }
   // detail : la cause d'un échec de l'outil, pour le terminal ; le LLM ne reçoit qu'un message général
   | { type: "resultat"; tour: number; appel: AppelOutil; resultat: ResultatOutil; erreur: boolean; detail?: string; duree: number }
   | { type: "reponse"; tour: number; texte: string; usage: Usage }
-  | { type: "limite"; tour: number; usage: Usage };
+  | { type: "limite"; tour: number }; // le dernier tour commence : plus d'outil
 
 type Execution = { resultat: ResultatOutil; erreur: boolean; detail?: string };
 
@@ -45,22 +60,49 @@ const ajouter = (total: Usage, usage: Usage) => {
   total.sortie += usage.sortie;
 };
 
-export async function* agir(question: string, agent: Agent, contexte: Contexte): AsyncGenerator<Etape> {
-  // Le premier message : la date du jour (certaines règles changent), puis la question, comme au chapitre 7
-  const messages: Message[] = [{ role: "utilisateur", texte: finDuMessage(question, contexte.date) }];
+// historique : les échanges précédents de la conversation (chapitre 9, leçon 8). L'agent les lit tels quels : il n'a pas
+// besoin d'une question condensée, il écrit lui-même ses requêtes
+export async function* agir(question: string, agent: Agent, contexte: Contexte, historique: Echange[] = []): AsyncGenerator<Etape> {
+  // Les échanges précédents, puis la date du jour (certaines règles changent) et la question, comme au chapitre 7
+  const messages: Message[] = [
+    ...historique.flatMap((e): Message[] => [
+      { role: "utilisateur", texte: e.question },
+      { role: "assistant", texte: e.reponse, appels: [] },
+    ]),
+    { role: "utilisateur", texte: finDuMessage(question, contexte.date) },
+  ];
   const usage: Usage = { entree: 0, enCache: 0, sortie: 0 }; // le total de la conversation
   const toursMax = agent.toursMax ?? TOURS_MAX;
+  // 0. Une recherche d'office, comme dans le pipeline du chapitre 9 : le LLM ne peut plus décider de ne pas chercher.
+  // Elle entre dans la conversation comme s'il l'avait demandée (tour 0) ; il décide de la suite
+  if (agent.chercherDAbord) {
+    const requete = historique.length > 0 && agent.condenser ? await agent.condenser(question, historique) : question;
+    const appel: AppelOutil = { id: "recherche-d-office", nom: "chercher_documents", arguments: { requete } };
+    messages.push({ role: "assistant", texte: "", appels: [appel] });
+    yield { type: "appel", tour: 0, appel };
+    const debut = performance.now();
+    const { resultat, erreur, detail } = await executer(appel, agent.outils, contexte);
+    yield { type: "resultat", tour: 0, appel, resultat, erreur, detail, duree: performance.now() - debut };
+    messages.push({ role: "outil", id: appel.id, nom: appel.nom, texte: resultat.texte, passages: resultat.passages, erreur });
+  }
   for (let tour = 1; tour <= toursMax; tour++) {
-    // 1. Le LLM lit toute la conversation : la question, ses demandes précédentes et leurs résultats
-    const reponse = await agent.llm(agent.systeme, messages, agent.outils);
+    // 1. Au dernier tour (s'il y en a eu d'autres avant), plus d'outil : une consigne le dit au LLM
+    const dernier = tour === toursMax && tour > 1;
+    if (dernier) {
+      messages.push({ role: "utilisateur", texte: DERNIER_TOUR });
+      yield { type: "limite", tour };
+    }
+    // 2. Le LLM lit toute la conversation : la question, ses demandes précédentes et leurs résultats
+    const reponse = await agent.llm(agent.systeme, messages, agent.outils, { sansOutil: dernier });
     ajouter(usage, reponse.usage);
     messages.push({ role: "assistant", texte: reponse.texte, appels: reponse.appels, brut: reponse.brut });
-    // 2. Aucune demande d'appel : il a répondu
-    if (reponse.appels.length === 0) {
-      yield { type: "reponse", tour, texte: reponse.texte, usage };
+    // 3. Aucune demande d'appel : il a répondu. Au dernier tour, une demande n'est plus exécutée : la boucle répond à sa place
+    if (reponse.appels.length === 0 || tour === toursMax) {
+      const texte = reponse.appels.length === 0 ? reponse.texte : RECHERCHE_INACHEVEE;
+      yield { type: "reponse", tour, texte, usage };
       return;
     }
-    // 3. Sinon, chaque appel demandé est exécuté (un LLM peut en demander plusieurs à la fois), et son résultat ajouté
+    // 4. Sinon, chaque appel demandé est exécuté (un LLM peut en demander plusieurs à la fois), et son résultat ajouté
     for (const appel of reponse.appels) {
       yield { type: "appel", tour, appel };
       const debut = performance.now();
@@ -69,5 +111,4 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte):
       messages.push({ role: "outil", id: appel.id, nom: appel.nom, texte: resultat.texte, passages: resultat.passages, erreur });
     }
   }
-  yield { type: "limite", tour: toursMax, usage };
 }

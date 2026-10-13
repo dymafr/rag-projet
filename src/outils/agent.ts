@@ -1,25 +1,29 @@
 // Poser une question à Rhéa en agent : le LLM décide s'il cherche, et quoi. Chaque étape s'affiche : les appels
 // d'outil demandés, leurs résultats, puis la réponse et ses sources
-// Lancement : npm run agent -- "votre question" [--matricule K0101] [--date 2026-10-13] [--tours 5]
+// Lancement : npm run agent -- "votre question" [--matricule K0101] [--date 2026-10-13] [--tours 5] [--no-chercher-d-abord]
 // --matricule : le salarié connecté. Il n'y a pas de vraie connexion dans ce projet : l'option la simule
 import { parseArgs } from "node:util";
 import { agir, TOURS_MAX } from "../agent/boucle.ts";
 import { chercherDocuments } from "../agent/chercher.ts";
 import { creerLlmAgent } from "../agent/llm-agent.ts";
-import { calculerIndemniteKm, consulterSolde, ouvrirTicket } from "../agent/outils-rh.ts";
+import { calculerIndemniteKm, consulterProfil, consulterSolde, ouvrirTicket } from "../agent/outils-rh.ts";
 import { sourcesCitees } from "../agent/sources.ts";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
+import { creerLlm } from "../llm.ts";
+import { condenser, type Echange } from "../recherche/conversation.ts";
 import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
+  allowNegative: true,
   options: {
     date: { type: "string", default: aujourdhui() },
     matricule: { type: "string" },
+    "chercher-d-abord": { type: "boolean", default: true }, // --no-chercher-d-abord : laisser le LLM décider seul
     tours: { type: "string", default: String(TOURS_MAX) },
   },
 });
@@ -35,10 +39,19 @@ const systeme = await lirePromptSysteme("prompts/rhea-agent.md");
 const outils = [
   chercherDocuments((requete, date) => trouverPassages(pool, requete, PASSAGES_DEMANDES, date)),
   consulterSolde(pool),
+  consulterProfil(pool),
   calculerIndemniteKm(),
   ouvrirTicket(pool),
 ];
-const agent = { llm: creerLlmAgent(), outils, systeme: systeme.texte, toursMax };
+const llmSimple = creerLlm(); // le LLM sans outils, pour condenser une question de suite (chapitre 9)
+const agent = {
+  llm: creerLlmAgent(),
+  outils,
+  systeme: systeme.texte,
+  toursMax,
+  chercherDAbord: values["chercher-d-abord"],
+  condenser: (question: string, historique: Echange[]) => condenser(question, historique, llmSimple),
+};
 
 const secondes = (ms: number) => (ms / 1000).toFixed(1);
 // Ce que l'outil a rendu, en une ligne : les passages et le meilleur d'entre eux, ou le début du texte
@@ -57,14 +70,14 @@ const debut = performance.now();
 try {
   for await (const etape of agir(question, agent, { date: values.date, matricule: values.matricule })) {
     if (etape.type === "appel") {
-      console.log(`Tour ${etape.tour} : ${etape.appel.nom}(${JSON.stringify(etape.appel.arguments)})`);
+      const quand = etape.tour === 0 ? "D'office" : `Tour ${etape.tour}`; // tour 0 : la recherche faite par le code
+      console.log(`${quand} : ${etape.appel.nom}(${JSON.stringify(etape.appel.arguments)})`);
     } else if (etape.type === "resultat") {
       vus.push(...(etape.resultat.passages ?? []));
       console.log(`         → ${resume(etape.resultat, etape.erreur)} en ${secondes(etape.duree)} s`);
       if (etape.detail) console.log(`           (cause, gardée hors du prompt : ${etape.detail})`);
     } else if (etape.type === "limite") {
-      console.log(`\nRhéa s'arrête après ${etape.tour} tours sans avoir répondu.`);
-      console.log(`Tokens : ${etape.usage.entree} en entrée ; ${etape.usage.sortie} en sortie`);
+      console.log(`Tour ${etape.tour} : dernier tour, sans outil (--tours ${toursMax})`);
     } else {
       console.log(`Tour ${etape.tour} : réponse, en ${secondes(performance.now() - debut)} s au total\n\n${etape.texte.trim()}`);
       const { citees, inventees } = sourcesCitees(etape.texte, vus);

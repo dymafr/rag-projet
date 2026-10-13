@@ -5,10 +5,10 @@ import assert from "node:assert/strict";
 import type Anthropic from "@anthropic-ai/sdk";
 import type OpenAI from "openai";
 import { z } from "zod";
-import { agir, executer, type Etape } from "../src/agent/boucle.ts";
+import { agir, DERNIER_TOUR, executer, RECHERCHE_INACHEVEE, type Etape } from "../src/agent/boucle.ts";
 import { chercherDocuments } from "../src/agent/chercher.ts";
 import { agentClaude, lireReponseAgent, versClaude } from "../src/agent/claude.ts";
-import type { LlmAgent, Message, ReponseAgent } from "../src/agent/llm-agent.ts";
+import type { LlmAgent, Message, OptionsAppel, ReponseAgent } from "../src/agent/llm-agent.ts";
 import { definirOutil, schemaJson } from "../src/agent/outil.ts";
 import { agentResponses, versResponses } from "../src/agent/responses.ts";
 import { sourcesCitees } from "../src/agent/sources.ts";
@@ -21,12 +21,14 @@ const contexte = { date: "2026-10-13" };
 // Un faux LLM : il rend, tour après tour, les réponses du scénario, et garde une copie de la conversation reçue
 function fauxLlm(...scenario: Partial<ReponseAgent>[]) {
   const recus: Message[][] = [];
-  const llm: LlmAgent = async (_systeme, messages) => {
+  const options: (OptionsAppel | undefined)[] = [];
+  const llm: LlmAgent = async (_systeme, messages, _outils, opts) => {
     recus.push(structuredClone(messages));
+    options.push(opts);
     const suivante = scenario[recus.length - 1] ?? {};
     return { texte: "", appels: [], usage, brut: [], ...suivante };
   };
-  return { llm, recus };
+  return { llm, recus, options };
 }
 const recherche = chercherDocuments(async () => [faq]);
 async function etapes(flux: AsyncGenerator<Etape>) {
@@ -56,12 +58,39 @@ test("agir répond sans outil quand le LLM ne demande rien", async () => {
   assert.deepEqual(liste.map((e) => e.type), ["reponse"]);
 });
 
-test("agir s'arrête après toursMax appels au LLM, même si le LLM demande encore", async () => {
-  const encore = { appels: [{ id: "a", nom: "chercher_documents", arguments: { requete: "congés" } }] };
-  const { llm, recus } = fauxLlm(encore, encore, encore);
+test("agir fait son dernier tour sans outil, et répond à la place d'un LLM qui demande encore", async () => {
+  const encore = { texte: "Je vais vérifier.", appels: [{ id: "a", nom: "chercher_documents", arguments: { requete: "congés" } }] };
+  const { llm, recus, options } = fauxLlm(encore, encore, encore);
   const liste = await etapes(agir("Question ?", { llm, outils: [recherche], systeme: "", toursMax: 2 }, contexte));
-  assert.equal(recus.length, 2);
-  assert.deepEqual(liste.at(-1), { type: "limite", tour: 2, usage: { entree: 200, enCache: 0, sortie: 20 } });
+  assert.deepEqual(liste.map((e) => e.type), ["appel", "resultat", "limite", "reponse"]);
+  assert.deepEqual(options.map((o) => o?.sansOutil), [false, true]);
+  const consigne = recus[1].at(-1)!;
+  assert.ok(consigne.role === "utilisateur" && consigne.texte === DERNIER_TOUR);
+  assert.deepEqual(liste.at(-1), { type: "reponse", tour: 2, texte: RECHERCHE_INACHEVEE, usage: { entree: 200, enCache: 0, sortie: 20 } });
+});
+
+test("chercherDAbord fait la première recherche avant le premier tour, avec la question telle quelle", async () => {
+  const { llm, recus } = fauxLlm({ texte: "Trois jours [FAQ-RH#2]." });
+  const liste = await etapes(agir("Combien de jours ?", { llm, outils: [recherche], systeme: "", chercherDAbord: true }, contexte));
+  assert.deepEqual(liste.map((e) => [e.type, e.tour]), [["appel", 0], ["resultat", 0], ["reponse", 1]]);
+  assert.deepEqual(liste[0].type === "appel" && liste[0].appel.arguments, { requete: "Combien de jours ?" });
+  // Le LLM reçoit la recherche comme s'il l'avait demandée : son appel, puis le résultat
+  assert.deepEqual(recus[0].map((m) => m.role), ["utilisateur", "assistant", "outil"]);
+});
+
+test("chercherDAbord cherche la question autonome d'une question de suite", async () => {
+  const { llm } = fauxLlm({ texte: "Dans l'espace RH." });
+  const condenser = async (question: string) => `${question} (télétravail)`;
+  const historique = [{ question: "Combien de jours de télétravail ?", reponse: "Trois." }];
+  const liste = await etapes(agir("Et je les déclare où ?", { llm, outils: [recherche], systeme: "", chercherDAbord: true, condenser }, contexte, historique));
+  assert.deepEqual(liste[0].type === "appel" && liste[0].appel.arguments, { requete: "Et je les déclare où ? (télétravail)" });
+});
+
+test("agir donne au LLM les échanges précédents, puis la date et la question", async () => {
+  const { llm, recus } = fauxLlm({ texte: "Dans l'espace RH." });
+  await etapes(agir("Et je les déclare où ?", { llm, outils: [recherche], systeme: "" }, contexte, [{ question: "Combien de jours ?", reponse: "Trois." }]));
+  assert.deepEqual(recus[0].map((m) => m.role), ["utilisateur", "assistant", "utilisateur"]);
+  assert.ok(recus[0][2].role === "utilisateur" && recus[0][2].texte.endsWith("Question : Et je les déclare où ?"));
 });
 
 test("executer renvoie au LLM une erreur pour un outil inconnu ou des arguments refusés", async () => {
@@ -154,6 +183,10 @@ test("versClaude met les résultats d'un tour dans un seul message user, les pas
   assert.equal(t1.tool_use_id, "t1");
   assert.equal((t1.content as Anthropic.SearchResultBlockParam[])[0].type, "search_result");
   assert.deepEqual([t2.tool_use_id, t2.content, t2.is_error], ["t2", "Outil inconnu", true]);
+  // La consigne du dernier tour rejoint le message des résultats, après eux
+  const fin = versClaude([...deux, { role: "utilisateur", texte: DERNIER_TOUR }]);
+  assert.equal(fin.length, 3);
+  assert.deepEqual((fin[2].content as Anthropic.ContentBlockParam[]).map((b) => b.type), ["tool_result", "tool_result", "text"]);
 });
 
 test("lireReponseAgent lit les demandes d'appel et ajoute la source de chaque passage cité, une seule fois", () => {
