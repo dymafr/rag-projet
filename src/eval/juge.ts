@@ -7,7 +7,8 @@ import type { Llm, Usage } from "../llm.ts";
 
 // Les critères jugés sur une réponse entière ; le soutien se juge phrase par phrase, avec les seuls passages cités
 export const CRITERES_JUGES = ["fidelite", "pertinence", "exactitude"] as const;
-export type Critere = (typeof CRITERES_JUGES)[number] | "soutien";
+// refus (chapitre 10) : pour juger l'agent, qui s'abstient par une phrase et non par un message fixe
+export type Critere = (typeof CRITERES_JUGES)[number] | "soutien" | "refus";
 
 // Ce que le juge lit : la question, la réponse, les passages envoyés au LLM et, pour l'exactitude, la réponse de référence
 export type AJuger = { question: string; reponse: string; passages: { numero: number; texte: string }[]; reference?: string };
@@ -56,6 +57,15 @@ Réponds "non" si une partie de la phrase n'en découle pas, ou si les passages 
 N'utilise aucune connaissance extérieure aux passages.
 ${FORMAT}`,
     donnees: (a) => `<passages>\n${passages(a)}\n</passages>\n\n<phrase>\n${a.reponse}\n</phrase>`,
+  },
+  refus: {
+    consigne: `Tu vérifies si un assistant RH a refusé de répondre à une question.
+Réponds "oui" si la réponse ne donne aucune information sur le fond de la question et dit seulement qu'elle ne peut pas répondre :
+information absente de la documentation, question hors de son domaine, donnée personnelle d'un autre salarié. Un renvoi vers le
+service RH, l'espace RH ou un ticket ne change rien.
+Réponds "non" si elle donne une information, une règle, un chiffre ou une démarche sur le fond de la question.
+${FORMAT}`,
+    donnees: (a) => `<question>\n${a.question}\n</question>\n\n<reponse>\n${a.reponse}\n</reponse>`,
   },
 };
 

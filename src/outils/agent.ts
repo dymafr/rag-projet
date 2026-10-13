@@ -2,6 +2,7 @@
 // d'outil demandés, leurs résultats, puis la réponse et ses sources
 // Lancement : npm run agent -- "votre question" [--matricule K0101] [--date 2026-10-13] [--tours 5] [--recherche secours]
 //             [--oui] (accepter d'office les actions, pour une démo enregistrée)
+//             [--sources fichiers] (leçon 7 : chercher sans vecteurs, dans donnees/textes, avec les outils d'un agent de code)
 // --matricule : le salarié connecté. Il n'y a pas de vraie connexion dans ce projet : l'option la simule.
 // Chaque appel d'outil s'ajoute au journal du jour, dans journal/ (leçon 5)
 import { createInterface } from "node:readline/promises";
@@ -10,9 +11,10 @@ import { agir, TOURS_MAX, type Recherche } from "../agent/boucle.ts";
 import { journalJsonl } from "../agent/journal.ts";
 import type { AppelOutil } from "../agent/llm-agent.ts";
 import { chercherDocuments } from "../agent/chercher.ts";
+import { DOSSIER_TEXTES, outilsFichiers } from "../agent/fichiers.ts";
 import { creerLlmAgent } from "../agent/llm-agent.ts";
 import { calculerIndemniteKm, consulterProfil, consulterSolde, ouvrirTicket } from "../agent/outils-rh.ts";
-import { sourcesCitees } from "../agent/sources.ts";
+import { fichiersCites, sourcesCitees } from "../agent/sources.ts";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
@@ -31,20 +33,25 @@ const { values, positionals } = parseArgs({
     recherche: { type: "string", default: "secours" }, // libre, office ou secours : qui décide de la première recherche
     tours: { type: "string", default: String(TOURS_MAX) },
     oui: { type: "boolean", default: false },
+    sources: { type: "string", default: "documents" }, // documents (la recherche de Rhéa) ou fichiers (leçon 7)
   },
 });
 const question = (positionals[0] ?? "Combien de jours de télétravail ai-je par semaine ?").trim();
 const toursMax = Number(values.tours);
 if (!["libre", "office", "secours"].includes(values.recherche)) throw new Error("--recherche attend libre, office ou secours");
+if (!["documents", "fichiers"].includes(values.sources)) throw new Error("--sources attend documents ou fichiers");
+const surFichiers = values.sources === "fichiers";
 const matriculeValide = values.matricule === undefined || /^K\d{4}$/.test(values.matricule);
 if (!question || !/^\d{4}-\d{2}-\d{2}$/.test(values.date) || !Number.isInteger(toursMax) || toursMax < 1 || !matriculeValide) {
   console.error("Attendu : une question, --date au format AAAA-MM-JJ, --tours entier positif, --matricule au format K0101");
   process.exit(1);
 }
 
-const systeme = await lirePromptSysteme("prompts/rhea-agent.md");
+const systeme = await lirePromptSysteme(surFichiers ? "prompts/rhea-fichiers.md" : "prompts/rhea-agent.md");
+// Leçon 7 : sur fichiers, les trois outils d'un agent de code remplacent la recherche de Rhéa
+const recherches = surFichiers ? outilsFichiers(DOSSIER_TEXTES) : [chercherDocuments((requete, date) => trouverPassages(pool, requete, PASSAGES_DEMANDES, date))];
 const outils = [
-  chercherDocuments((requete, date) => trouverPassages(pool, requete, PASSAGES_DEMANDES, date)),
+  ...recherches,
   consulterSolde(pool),
   consulterProfil(pool),
   calculerIndemniteKm(),
@@ -73,7 +80,8 @@ const agent = {
   outils,
   systeme: systeme.texte,
   toursMax,
-  recherche: values.recherche as Recherche,
+  // La recherche imposée passe par chercher_documents : sur fichiers, le LLM décide seul
+  recherche: (surFichiers ? "libre" : values.recherche) as Recherche,
   condenser: (question: string, historique: Echange[]) => condenser(question, historique, llmSimple),
   confirmer,
   journaliser: journalJsonl(),
@@ -92,6 +100,7 @@ function resume(resultat: { texte: string; passages?: Resultat[] }, erreur: bool
 const qui = values.matricule ? `salarié ${values.matricule}` : "aucun salarié connecté";
 console.log(`« ${question} »  (${config.LLM_PROVIDER}, prompt v${systeme.version} ${systeme.empreinte}, date ${values.date}, ${qui})\n`);
 const vus: Resultat[] = []; // tous les passages rendus par les outils : seules leurs sources peuvent être citées
+const fichiersVus = new Set<string>(); // sur fichiers : ceux qui ont été lus, ou où une ligne a été trouvée
 const debut = performance.now();
 try {
   for await (const etape of agir(question, agent, { date: values.date, matricule: values.matricule })) {
@@ -101,6 +110,7 @@ try {
       console.log(`${quand} : ${etape.appel.nom}(${JSON.stringify(etape.appel.arguments)})`);
     } else if (etape.type === "resultat") {
       vus.push(...(etape.resultat.passages ?? []));
+      for (const m of etape.resultat.texte.matchAll(/^([A-Z0-9-]+)\.md(?:, lignes|:\d+:)/gm)) fichiersVus.add(m[1]);
       const statut = etape.statut === "refusé" || etape.statut === "limite" ? `${etape.statut.toUpperCase()} : ` : "";
       console.log(`         → ${statut}${resume(etape.resultat, etape.erreur && !statut)} en ${secondes(etape.duree)} s`);
       if (etape.detail) console.log(`           (cause, gardée hors du prompt : ${etape.detail})`);
@@ -109,10 +119,17 @@ try {
       console.log(`Tour ${etape.tour} : dernier tour, sans outil (${raison})`);
     } else {
       console.log(`Tour ${etape.tour} : réponse, en ${secondes(performance.now() - debut)} s au total\n\n${etape.texte.trim()}`);
-      const { citees, inventees } = sourcesCitees(etape.texte, vus);
-      console.log(`\nSources citées :${citees.length + inventees.length === 0 ? " aucune" : ""}`);
-      for (const p of citees) console.log(`  [${p.id}]  ${p.titres.join(" > ")}`);
-      for (const id of inventees) console.log(`  [${id}]  INTROUVABLE : aucun outil n'a rendu ce passage`);
+      if (surFichiers) {
+        const { cites, inventes } = fichiersCites(etape.texte, fichiersVus);
+        console.log(`\nFichiers cités :${cites.length + inventes.length === 0 ? " aucun" : ""}`);
+        for (const id of cites) console.log(`  [${id}.md]`);
+        for (const id of inventes) console.log(`  [${id}.md]  INTROUVABLE : ni lu, ni trouvé par chercher_texte`);
+      } else {
+        const { citees, inventees } = sourcesCitees(etape.texte, vus);
+        console.log(`\nSources citées :${citees.length + inventees.length === 0 ? " aucune" : ""}`);
+        for (const p of citees) console.log(`  [${p.id}]  ${p.titres.join(" > ")}`);
+        for (const id of inventees) console.log(`  [${id}]  INTROUVABLE : aucun outil n'a rendu ce passage`);
+      }
       console.log(`\nTokens : ${etape.usage.entree} en entrée, dont ${etape.usage.enCache} relus dans le cache ; ${etape.usage.sortie} en sortie`);
     }
   }

@@ -51,7 +51,9 @@
     "eval:contexte": "node --env-file=.env src/outils/analyser-contexte.ts",
     "agent": "node --env-file=.env src/outils/agent.ts",
     "donnees:rh": "node --env-file=.env src/outils/charger-donnees-rh.ts",
-    "eval:agent": "node --env-file=.env src/outils/evaluer-agent.ts"
+    "eval:agent": "node --env-file=.env src/outils/evaluer-agent.ts",
+    "eval:agent:juger": "node --env-file=.env src/outils/juger-agent.ts",
+    "textes": "node src/outils/exporter-textes.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
