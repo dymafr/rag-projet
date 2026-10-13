@@ -18,11 +18,11 @@ export type Generateur = (prompt: PromptAugmente, json?: DemandeJson) => Promise
 export type Morceau = { type: "texte"; texte: string } | { type: "citation"; citation: Citation } | { type: "fin"; usage: Usage };
 export type GenerateurEnFlux = (prompt: PromptAugmente, signal?: AbortSignal) => AsyncGenerator<Morceau>;
 
-const LOCAL: Reglages = { temperature: 0, reasoning: { effort: "none" }, max_output_tokens: 1024 }; // voir openai.ts
+export const LOCAL: Reglages = { temperature: 0, reasoning: { effort: "none" }, max_output_tokens: 1024 }; // voir openai.ts
 
 // Le conseil d'Ollama (« Ollama est-il lancé ? ») ne vaut que pour une erreur de son API : serveur arrêté, modèle absent.
 // Une réponse coupée ou refusée, que signale openai.ts, garde son propre message
-function conseilSiErreurOllama(erreur: Error): never {
+export function conseilSiErreurOllama(erreur: Error): never {
   if (erreur instanceof OpenAI.APIError) conseilOllama(erreur);
   throw erreur;
 }

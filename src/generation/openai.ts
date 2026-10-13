@@ -19,7 +19,7 @@ export type Reglages = { temperature?: number; reasoning?: { effort: "none" }; m
 // En JSON (leçon 5) : le schéma que la réponse doit suivre, tiré du schéma zod par le helper du SDK
 export const FORMAT_JSON = zodTextFormat(ReponseRhea, "reponse_rhea");
 
-const usageDe = (usage?: OpenAI.Responses.ResponseUsage) => ({
+export const usageDe = (usage?: OpenAI.Responses.ResponseUsage) => ({
   entree: usage?.input_tokens ?? 0,
   enCache: usage?.input_tokens_details?.cached_tokens ?? 0,
   sortie: usage?.output_tokens ?? 0,

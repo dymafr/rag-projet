@@ -42,7 +42,7 @@ export function lireReponse(blocs: Anthropic.ContentBlock[]) {
   return { texte, citations };
 }
 
-function usageDe({ input_tokens, cache_creation_input_tokens, cache_read_input_tokens, output_tokens }: Anthropic.Usage) {
+export function usageDe({ input_tokens, cache_creation_input_tokens, cache_read_input_tokens, output_tokens }: Anthropic.Usage) {
   const enCache = cache_read_input_tokens ?? 0;
   return { entree: input_tokens + (cache_creation_input_tokens ?? 0) + enCache, enCache, sortie: output_tokens };
 }

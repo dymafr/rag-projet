@@ -27,11 +27,13 @@ export const CITER =
 
 // 1. Un passage entre balises, avec son numéro (celui que Rhéa citera), son identifiant et son chemin de titres.
 // Une balise passage ou passages écrite dans le texte ou le titre, ouvrante ou fermante, quelles que soient la casse et les
-// espaces, est neutralisée : un passage ne peut ni fermer la liste ni en ouvrir un autre. Cela rend une injection plus difficile, sans l'empêcher
-export function baliser(passage: Resultat, numero: number): string {
+// espaces, est neutralisée : un passage ne peut ni fermer la liste ni en ouvrir un autre. Cela rend une injection plus difficile, sans l'empêcher.
+// Sans numéro (l'agent du chapitre 10, qui cherche plusieurs fois), le passage se cite par sa source
+export function baliser(passage: Resultat, numero?: number): string {
   const titre = passage.titres.join(" > ").replaceAll('"', "'").replace(/<(\s*\/?\s*passages?)/gi, "&lt;$1");
   const texte = passage.texte.replace(/<(\s*\/?\s*passages?)/gi, "&lt;$1");
-  return `<passage numero="${numero}" source="${passage.id}" titre="${titre}">\n${texte}\n</passage>`;
+  const attribut = numero === undefined ? "" : `numero="${numero}" `;
+  return `<passage ${attribut}source="${passage.id}" titre="${titre}">\n${texte}\n</passage>`;
 }
 
 // 2. Les passages, du plus proche au moins proche, tant qu'ils tiennent dans le budget. Un passage trop long
