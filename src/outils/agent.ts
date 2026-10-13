@@ -1,10 +1,12 @@
 // Poser une question à Rhéa en agent : le LLM décide s'il cherche, et quoi. Chaque étape s'affiche : les appels
 // d'outil demandés, leurs résultats, puis la réponse et ses sources
-// Lancement : npm run agent -- "votre question" [--date 2026-10-13] [--tours 5]
+// Lancement : npm run agent -- "votre question" [--matricule K0101] [--date 2026-10-13] [--tours 5]
+// --matricule : le salarié connecté. Il n'y a pas de vraie connexion dans ce projet : l'option la simule
 import { parseArgs } from "node:util";
 import { agir, TOURS_MAX } from "../agent/boucle.ts";
 import { chercherDocuments } from "../agent/chercher.ts";
 import { creerLlmAgent } from "../agent/llm-agent.ts";
+import { calculerIndemniteKm, consulterSolde, ouvrirTicket } from "../agent/outils-rh.ts";
 import { sourcesCitees } from "../agent/sources.ts";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
@@ -17,18 +19,25 @@ const { values, positionals } = parseArgs({
   allowPositionals: true,
   options: {
     date: { type: "string", default: aujourdhui() },
+    matricule: { type: "string" },
     tours: { type: "string", default: String(TOURS_MAX) },
   },
 });
 const question = (positionals[0] ?? "Combien de jours de télétravail ai-je par semaine ?").trim();
 const toursMax = Number(values.tours);
-if (!question || !/^\d{4}-\d{2}-\d{2}$/.test(values.date) || !Number.isInteger(toursMax) || toursMax < 1) {
-  console.error("Attendu : une question, --date au format AAAA-MM-JJ, --tours entier positif");
+const matriculeValide = values.matricule === undefined || /^K\d{4}$/.test(values.matricule);
+if (!question || !/^\d{4}-\d{2}-\d{2}$/.test(values.date) || !Number.isInteger(toursMax) || toursMax < 1 || !matriculeValide) {
+  console.error("Attendu : une question, --date au format AAAA-MM-JJ, --tours entier positif, --matricule au format K0101");
   process.exit(1);
 }
 
 const systeme = await lirePromptSysteme("prompts/rhea-agent.md");
-const outils = [chercherDocuments((requete, date) => trouverPassages(pool, requete, PASSAGES_DEMANDES, date))];
+const outils = [
+  chercherDocuments((requete, date) => trouverPassages(pool, requete, PASSAGES_DEMANDES, date)),
+  consulterSolde(pool),
+  calculerIndemniteKm(),
+  ouvrirTicket(pool),
+];
 const agent = { llm: creerLlmAgent(), outils, systeme: systeme.texte, toursMax };
 
 const secondes = (ms: number) => (ms / 1000).toFixed(1);
@@ -41,11 +50,12 @@ function resume(resultat: { texte: string; passages?: Resultat[] }, erreur: bool
   return ligne.length > 100 ? `${ligne.slice(0, 100)}…` : ligne;
 }
 
-console.log(`« ${question} »  (${config.LLM_PROVIDER}, prompt v${systeme.version} ${systeme.empreinte}, date ${values.date})\n`);
+const qui = values.matricule ? `salarié ${values.matricule}` : "aucun salarié connecté";
+console.log(`« ${question} »  (${config.LLM_PROVIDER}, prompt v${systeme.version} ${systeme.empreinte}, date ${values.date}, ${qui})\n`);
 const vus: Resultat[] = []; // tous les passages rendus par les outils : seules leurs sources peuvent être citées
 const debut = performance.now();
 try {
-  for await (const etape of agir(question, agent, { date: values.date })) {
+  for await (const etape of agir(question, agent, { date: values.date, matricule: values.matricule })) {
     if (etape.type === "appel") {
       console.log(`Tour ${etape.tour} : ${etape.appel.nom}(${JSON.stringify(etape.appel.arguments)})`);
     } else if (etape.type === "resultat") {
