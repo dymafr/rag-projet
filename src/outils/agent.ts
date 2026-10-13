@@ -1,9 +1,14 @@
 // Poser une question à Rhéa en agent : le LLM décide s'il cherche, et quoi. Chaque étape s'affiche : les appels
 // d'outil demandés, leurs résultats, puis la réponse et ses sources
-// Lancement : npm run agent -- "votre question" [--matricule K0101] [--date 2026-10-13] [--tours 5] [--no-chercher-d-abord]
-// --matricule : le salarié connecté. Il n'y a pas de vraie connexion dans ce projet : l'option la simule
+// Lancement : npm run agent -- "votre question" [--matricule K0101] [--date 2026-10-13] [--tours 5] [--recherche secours]
+//             [--oui] (accepter d'office les actions, pour une démo enregistrée)
+// --matricule : le salarié connecté. Il n'y a pas de vraie connexion dans ce projet : l'option la simule.
+// Chaque appel d'outil s'ajoute au journal du jour, dans journal/ (leçon 5)
+import { createInterface } from "node:readline/promises";
 import { parseArgs } from "node:util";
-import { agir, TOURS_MAX } from "../agent/boucle.ts";
+import { agir, TOURS_MAX, type Recherche } from "../agent/boucle.ts";
+import { journalJsonl } from "../agent/journal.ts";
+import type { AppelOutil } from "../agent/llm-agent.ts";
 import { chercherDocuments } from "../agent/chercher.ts";
 import { creerLlmAgent } from "../agent/llm-agent.ts";
 import { calculerIndemniteKm, consulterProfil, consulterSolde, ouvrirTicket } from "../agent/outils-rh.ts";
@@ -23,12 +28,14 @@ const { values, positionals } = parseArgs({
   options: {
     date: { type: "string", default: aujourdhui() },
     matricule: { type: "string" },
-    "chercher-d-abord": { type: "boolean", default: true }, // --no-chercher-d-abord : laisser le LLM décider seul
+    recherche: { type: "string", default: "secours" }, // libre, office ou secours : qui décide de la première recherche
     tours: { type: "string", default: String(TOURS_MAX) },
+    oui: { type: "boolean", default: false },
   },
 });
 const question = (positionals[0] ?? "Combien de jours de télétravail ai-je par semaine ?").trim();
 const toursMax = Number(values.tours);
+if (!["libre", "office", "secours"].includes(values.recherche)) throw new Error("--recherche attend libre, office ou secours");
 const matriculeValide = values.matricule === undefined || /^K\d{4}$/.test(values.matricule);
 if (!question || !/^\d{4}-\d{2}-\d{2}$/.test(values.date) || !Number.isInteger(toursMax) || toursMax < 1 || !matriculeValide) {
   console.error("Attendu : une question, --date au format AAAA-MM-JJ, --tours entier positif, --matricule au format K0101");
@@ -44,13 +51,32 @@ const outils = [
   ouvrirTicket(pool),
 ];
 const llmSimple = creerLlm(); // le LLM sans outils, pour condenser une question de suite (chapitre 9)
+
+// La confirmation, dans le terminal : le salarié lit l'action et répond. Sans terminal (une commande lancée par un script),
+// personne ne peut répondre : l'action est refusée, sauf avec --oui
+async function confirmer(_appel: AppelOutil, action: string): Promise<boolean> {
+  if (values.oui) {
+    console.log(`         ? Rhéa veut ${action}. Accepté d'office (--oui)`);
+    return true;
+  }
+  if (!process.stdin.isTTY) {
+    console.log(`         ? Rhéa veut ${action}. Refusé : personne pour confirmer`);
+    return false;
+  }
+  const terminal = createInterface({ input: process.stdin, output: process.stdout });
+  const reponse = await terminal.question(`         ? Rhéa veut ${action}. Confirmez-vous ? (o/N) `);
+  terminal.close();
+  return /^o(ui)?$/i.test(reponse.trim());
+}
 const agent = {
   llm: creerLlmAgent(),
   outils,
   systeme: systeme.texte,
   toursMax,
-  chercherDAbord: values["chercher-d-abord"],
+  recherche: values.recherche as Recherche,
   condenser: (question: string, historique: Echange[]) => condenser(question, historique, llmSimple),
+  confirmer,
+  journaliser: journalJsonl(),
 };
 
 const secondes = (ms: number) => (ms / 1000).toFixed(1);
@@ -70,14 +96,17 @@ const debut = performance.now();
 try {
   for await (const etape of agir(question, agent, { date: values.date, matricule: values.matricule })) {
     if (etape.type === "appel") {
-      const quand = etape.tour === 0 ? "D'office" : `Tour ${etape.tour}`; // tour 0 : la recherche faite par le code
+      // tour 0 : la recherche d'office ; « Secours » : celle du code quand le LLM n'a rien appelé
+      const quand = etape.tour === 0 ? "D'office" : etape.appel.id === "recherche-de-secours" ? `Tour ${etape.tour}, secours` : `Tour ${etape.tour}`;
       console.log(`${quand} : ${etape.appel.nom}(${JSON.stringify(etape.appel.arguments)})`);
     } else if (etape.type === "resultat") {
       vus.push(...(etape.resultat.passages ?? []));
-      console.log(`         → ${resume(etape.resultat, etape.erreur)} en ${secondes(etape.duree)} s`);
+      const statut = etape.statut === "refusé" || etape.statut === "limite" ? `${etape.statut.toUpperCase()} : ` : "";
+      console.log(`         → ${statut}${resume(etape.resultat, etape.erreur && !statut)} en ${secondes(etape.duree)} s`);
       if (etape.detail) console.log(`           (cause, gardée hors du prompt : ${etape.detail})`);
     } else if (etape.type === "limite") {
-      console.log(`Tour ${etape.tour} : dernier tour, sans outil (--tours ${toursMax})`);
+      const raison = etape.raison === "tokens" ? "budget de tokens atteint" : `--tours ${toursMax}`;
+      console.log(`Tour ${etape.tour} : dernier tour, sans outil (${raison})`);
     } else {
       console.log(`Tour ${etape.tour} : réponse, en ${secondes(performance.now() - debut)} s au total\n\n${etape.texte.trim()}`);
       const { citees, inventees } = sourcesCitees(etape.texte, vus);

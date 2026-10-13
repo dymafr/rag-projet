@@ -101,6 +101,8 @@ export const ouvrirTicket = (base: Base) =>
       objet: z.string().trim().min(5).max(120).describe("L'objet du ticket, en une ligne"),
       message: z.string().trim().min(10).max(2000).describe("La demande du salarié, reformulée clairement, sans donnée de santé"),
     }),
+    aConfirmer: ({ categorie, objet, message }) =>
+      `ouvrir un ticket « ${categorie} » dans l'espace RH : « ${objet} », avec ce message : « ${message.replace(/\s+/g, " ")} »`,
     async executer({ categorie, objet, message }, contexte) {
       const matricule = connecte(contexte);
       if (!matricule) return { texte: "Aucun salarié n'est connecté : aucun ticket n'a été ouvert. Proposez de se connecter à l'espace RH." };

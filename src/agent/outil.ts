@@ -16,6 +16,9 @@ export type Outil<P extends z.ZodObject = z.ZodObject> = {
   description: string;
   parametres: P;
   executer: (args: z.infer<P>, contexte: Contexte) => Promise<ResultatOutil>;
+  // Leçon 5 : un outil qui agit (il crée, modifie, envoie) décrit l'action en une ligne ; la boucle la montre au salarié
+  // et attend son accord avant d'exécuter
+  aConfirmer?: (args: z.infer<P>) => string;
 };
 
 // definirOutil ne fait rien à l'exécution : il garde le lien entre le schéma et les arguments que reçoit executer

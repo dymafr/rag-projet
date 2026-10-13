@@ -11,46 +11,80 @@ import type { Contexte, Outil, ResultatOutil } from "./outil.ts";
 // Un tour : un appel au LLM. Au-delà de TOURS_MAX, la boucle s'arrête : un agent qui tourne en rond coûte sans rien rendre.
 // Le dernier tour se fait sans outil (leçon 4) : le LLM doit répondre avec ce qu'il a déjà trouvé
 export const TOURS_MAX = 5;
+// Les garde-fous de la leçon 5 : un budget de tokens pour toute la question (entrée et sortie, tous tours compris), et un
+// nombre d'appels par outil. Une question de Rhéa en demande 1 500 à 6 000 avec le modèle local
+export const TOKENS_MAX = 20_000;
+export const APPELS_PAR_OUTIL = 3;
 export const DERNIER_TOUR =
   "Tu ne peux plus appeler d'outil. Réponds maintenant à la question avec ce que tes outils ont déjà rendu, et dis ce qui manque.";
 // Si le LLM demande encore un appel au dernier tour (Ollama ignore tool_choice), la boucle répond à sa place
 export const RECHERCHE_INACHEVEE = "Je n'ai pas pu terminer ma recherche. Reformulez votre question, ou ouvrez un ticket dans l'espace RH.";
 
-// chercherDAbord (leçon 4) : le code fait la première recherche avant le premier tour, avec la question, ou, pour une
-// question de suite, la question autonome que rend condenser (chapitre 9, leçon 8)
+// Ce que la boucle écrit dans le journal pour chaque appel d'outil (leçon 5)
+export type Statut = "ok" | "erreur" | "refusé" | "limite";
+export type EntreeJournal = {
+  horodatage: string;
+  matricule: string | null; // une donnée personnelle : le chapitre 13 fixera qui lit le journal, et combien de temps on le garde
+  tour: number;
+  outil: string;
+  arguments: unknown;
+  statut: Statut;
+  duree_ms: number;
+  resultat: string; // le début du texte rendu au LLM
+};
+
+export type Recherche = "libre" | "office" | "secours";
+
 export type Agent = {
   llm: LlmAgent;
   outils: Outil[];
   systeme: string;
   toursMax?: number;
-  chercherDAbord?: boolean;
+  // recherche (leçon 4) : qui décide de la première recherche. libre : le LLM seul. office : le code cherche avant le
+  // premier tour. secours : le LLM décide ; s'il répond sans appeler aucun outil, le code cherche et lui redemande.
+  // Le code cherche la question, ou, pour une question de suite, la question autonome que rend condenser (chapitre 9)
+  recherche?: Recherche;
   condenser?: (question: string, historique: Echange[]) => Promise<string>;
+  // Leçon 5. confirmer : demande au salarié son accord avant une action ; absent, aucune action ne s'exécute
+  tokensMax?: number;
+  appelsParOutil?: number;
+  confirmer?: (appel: AppelOutil, resume: string) => Promise<boolean>;
+  journaliser?: (entree: EntreeJournal) => Promise<void>;
 };
 
 export type Etape =
   | { type: "appel"; tour: number; appel: AppelOutil }
   // detail : la cause d'un échec de l'outil, pour le terminal ; le LLM ne reçoit qu'un message général
-  | { type: "resultat"; tour: number; appel: AppelOutil; resultat: ResultatOutil; erreur: boolean; detail?: string; duree: number }
+  | { type: "resultat"; tour: number; appel: AppelOutil; resultat: ResultatOutil; erreur: boolean; statut: Statut; detail?: string; duree: number }
   | { type: "reponse"; tour: number; texte: string; usage: Usage }
-  | { type: "limite"; tour: number }; // le dernier tour commence : plus d'outil
+  | { type: "limite"; tour: number; raison: "tours" | "tokens" }; // le dernier tour commence : plus d'outil
 
-type Execution = { resultat: ResultatOutil; erreur: boolean; detail?: string };
+type Execution = { resultat: ResultatOutil; erreur: boolean; statut: Statut; detail?: string };
 
 // Exécuter une demande d'appel. L'outil doit exister et les arguments passer la validation zod : le LLM écrit ces
-// arguments, rien ne garantit qu'ils soient justes. Sinon, il reçoit l'erreur en résultat, et peut corriger son appel
-export async function executer(appel: AppelOutil, outils: Outil[], contexte: Contexte): Promise<Execution> {
+// arguments, rien ne garantit qu'ils soient justes. Sinon, il reçoit l'erreur en résultat, et peut corriger son appel.
+// Un outil qui agit (aConfirmer) attend l'accord du salarié : c'est le code qui le demande, pas le LLM
+export async function executer(appel: AppelOutil, outils: Outil[], contexte: Contexte, confirmer?: Agent["confirmer"]): Promise<Execution> {
   const outil = outils.find((o) => o.nom === appel.nom);
   if (!outil) {
-    return { resultat: { texte: `Outil inconnu : ${appel.nom}. Outils disponibles : ${outils.map((o) => o.nom).join(", ")}` }, erreur: true };
+    const texte = `Outil inconnu : ${appel.nom}. Outils disponibles : ${outils.map((o) => o.nom).join(", ")}`;
+    return { resultat: { texte }, erreur: true, statut: "erreur" };
   }
   const lus = outil.parametres.safeParse(appel.arguments);
-  if (!lus.success) return { resultat: { texte: `Arguments refusés :\n${z.prettifyError(lus.error)}` }, erreur: true };
+  if (!lus.success) return { resultat: { texte: `Arguments refusés :\n${z.prettifyError(lus.error)}` }, erreur: true, statut: "erreur" };
+  if (outil.aConfirmer) {
+    const accord = confirmer ? await confirmer(appel, outil.aConfirmer(lus.data)) : false;
+    if (!accord) {
+      const texte = "Le salarié n'a pas confirmé : rien n'a été fait. Dites-le-lui, sans réessayer.";
+      return { resultat: { texte }, erreur: false, statut: "refusé" };
+    }
+  }
   try {
-    return { resultat: await outil.executer(lus.data, contexte), erreur: false };
+    return { resultat: await outil.executer(lus.data, contexte), erreur: false, statut: "ok" };
   } catch (erreur) {
     // Le détail (requête SQL, chemin de fichier…) ne part pas au LLM, qui pourrait le répéter au salarié
     const texte = "L'outil a échoué. Répondez sans lui, ou proposez d'ouvrir un ticket dans l'espace RH.";
-    return { resultat: { texte }, erreur: true, detail: (erreur as Error).message };
+    return { resultat: { texte }, erreur: true, statut: "erreur", detail: (erreur as Error).message };
   }
 }
 
@@ -73,42 +107,84 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
   ];
   const usage: Usage = { entree: 0, enCache: 0, sortie: 0 }; // le total de la conversation
   const toursMax = agent.toursMax ?? TOURS_MAX;
-  // 0. Une recherche d'office, comme dans le pipeline du chapitre 9 : le LLM ne peut plus décider de ne pas chercher.
-  // Elle entre dans la conversation comme s'il l'avait demandée (tour 0) ; il décide de la suite
-  if (agent.chercherDAbord) {
-    const requete = historique.length > 0 && agent.condenser ? await agent.condenser(question, historique) : question;
-    const appel: AppelOutil = { id: "recherche-d-office", nom: "chercher_documents", arguments: { requete } };
-    messages.push({ role: "assistant", texte: "", appels: [appel] });
-    yield { type: "appel", tour: 0, appel };
+  const tokensMax = agent.tokensMax ?? TOKENS_MAX;
+  const appelsParOutil = agent.appelsParOutil ?? APPELS_PAR_OUTIL;
+  const appelsFaits = new Map<string, number>();
+
+  // Un appel d'outil : la limite d'appels, l'exécution (avec la confirmation s'il le faut), le journal, puis le résultat
+  // ajouté à la conversation
+  async function* traiter(appel: AppelOutil, tour: number): AsyncGenerator<Etape> {
+    yield { type: "appel", tour, appel };
     const debut = performance.now();
-    const { resultat, erreur, detail } = await executer(appel, agent.outils, contexte);
-    yield { type: "resultat", tour: 0, appel, resultat, erreur, detail, duree: performance.now() - debut };
+    const n = (appelsFaits.get(appel.nom) ?? 0) + 1;
+    appelsFaits.set(appel.nom, n);
+    const { resultat, erreur, statut, detail } =
+      n > appelsParOutil
+        ? { resultat: { texte: `Limite atteinte : ${appelsParOutil} appels de ${appel.nom} pour cette question. Répondez avec ce que vous avez.` }, erreur: true, statut: "limite" as const, detail: undefined }
+        : await executer(appel, agent.outils, contexte, agent.confirmer);
+    const duree = performance.now() - debut;
+    await agent.journaliser?.({
+      horodatage: new Date().toISOString(),
+      matricule: contexte.matricule ?? null,
+      tour,
+      outil: appel.nom,
+      arguments: appel.arguments,
+      statut,
+      duree_ms: Math.round(duree),
+      resultat: resultat.texte.slice(0, 200),
+    });
+    yield { type: "resultat", tour, appel, resultat, erreur, statut, detail, duree };
     messages.push({ role: "outil", id: appel.id, nom: appel.nom, texte: resultat.texte, passages: resultat.passages, erreur });
   }
+
+  // Une recherche imposée par le code. Elle entre dans la conversation comme si le LLM l'avait demandée
+  async function* imposerRecherche(tour: number, id: string): AsyncGenerator<Etape> {
+    const requete = historique.length > 0 && agent.condenser ? await agent.condenser(question, historique) : question;
+    const appel: AppelOutil = { id, nom: "chercher_documents", arguments: { requete } };
+    messages.push({ role: "assistant", texte: "", appels: [appel] });
+    yield* traiter(appel, tour);
+  }
+
+  // 0. Une recherche d'office, comme dans le pipeline du chapitre 9 : le LLM ne peut plus décider de ne pas chercher (tour 0)
+  const recherche = agent.recherche ?? "libre";
+  if (recherche === "office") yield* imposerRecherche(0, "recherche-d-office");
   for (let tour = 1; tour <= toursMax; tour++) {
-    // 1. Au dernier tour (s'il y en a eu d'autres avant), plus d'outil : une consigne le dit au LLM
-    const dernier = tour === toursMax && tour > 1;
+    // 1. Au dernier tour (s'il y en a eu d'autres avant), plus d'outil : une consigne le dit au LLM. Le budget de tokens
+    // épuisé avance ce dernier tour
+    const budgetEpuise = usage.entree + usage.sortie >= tokensMax;
+    const dernier = tour > 1 && (tour === toursMax || budgetEpuise);
     if (dernier) {
       messages.push({ role: "utilisateur", texte: DERNIER_TOUR });
-      yield { type: "limite", tour };
+      yield { type: "limite", tour, raison: budgetEpuise ? "tokens" : "tours" };
     }
     // 2. Le LLM lit toute la conversation : la question, ses demandes précédentes et leurs résultats
     const reponse = await agent.llm(agent.systeme, messages, agent.outils, { sansOutil: dernier });
     ajouter(usage, reponse.usage);
+    // 3. La recherche de secours : au premier tour, le LLM a répondu sans appeler aucun outil. Sa réponse est écartée (ses
+    // tokens sont dépensés) ; le code cherche, et le LLM répond au tour suivant avec les passages
+    if (recherche === "secours" && tour === 1 && reponse.appels.length === 0 && tour < toursMax) {
+      yield* imposerRecherche(1, "recherche-de-secours");
+      continue;
+    }
     messages.push({ role: "assistant", texte: reponse.texte, appels: reponse.appels, brut: reponse.brut });
-    // 3. Aucune demande d'appel : il a répondu. Au dernier tour, une demande n'est plus exécutée : la boucle répond à sa place
-    if (reponse.appels.length === 0 || tour === toursMax) {
+    // 4. Aucune demande d'appel : il a répondu. Au dernier tour, une demande n'est plus exécutée : la boucle répond à sa place
+    if (reponse.appels.length === 0 || dernier || tour === toursMax) {
       const texte = reponse.appels.length === 0 ? reponse.texte : RECHERCHE_INACHEVEE;
       yield { type: "reponse", tour, texte, usage };
       return;
     }
-    // 4. Sinon, chaque appel demandé est exécuté (un LLM peut en demander plusieurs à la fois), et son résultat ajouté
+    // 5. Sinon, chaque appel demandé est traité (un LLM peut en demander plusieurs à la fois)
+    let refus = false;
     for (const appel of reponse.appels) {
-      yield { type: "appel", tour, appel };
-      const debut = performance.now();
-      const { resultat, erreur, detail } = await executer(appel, agent.outils, contexte);
-      yield { type: "resultat", tour, appel, resultat, erreur, detail, duree: performance.now() - debut };
-      messages.push({ role: "outil", id: appel.id, nom: appel.nom, texte: resultat.texte, passages: resultat.passages, erreur });
+      for await (const etape of traiter(appel, tour)) {
+        if (etape.type === "resultat" && etape.statut === "refusé") refus = true;
+        yield etape;
+      }
+    }
+    // 6. Une action refusée : la boucle répond elle-même. Rendre la parole au LLM, c'est le laisser affirmer l'avoir faite
+    if (refus) {
+      yield { type: "reponse", tour, texte: "Je n'ai rien fait : vous n'avez pas confirmé l'action demandée.", usage };
+      return;
     }
   }
 }
