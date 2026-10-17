@@ -62,7 +62,8 @@
     "mastra": "node --env-file=.env src/outils/mastra.ts",
     "eval:systeme": "node --env-file=.env src/outils/evaluer-systeme.ts",
     "eval:comparer": "node src/outils/comparer-systemes.ts",
-    "eval:c12": "node --env-file=.env src/outils/evaluer-c12.ts"
+    "eval:c12": "node --env-file=.env src/outils/evaluer-c12.ts",
+    "organigramme": "node --env-file=.env src/outils/organigramme.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

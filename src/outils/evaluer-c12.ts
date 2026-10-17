@@ -10,6 +10,7 @@ import { agir, type Agent } from "../agent/boucle.ts";
 import { chercherDocuments } from "../agent/chercher.ts";
 import { creerLlmAgent } from "../agent/llm-agent.ts";
 import { calculerIndemniteKm, consulterProfil, consulterSolde, ouvrirTicket } from "../agent/outils-rh.ts";
+import { consulterOrganigramme } from "../agent/organigramme.ts";
 import { pool } from "../db.ts";
 import { FAMILLES, lireJeuAuDela, verdict, type Verdict } from "../eval/au-dela.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
@@ -32,6 +33,7 @@ const agent: Agent = {
     chercherDocuments((requete, date) => trouverPassages(pool, requete, PASSAGES_DEMANDES, date)),
     consulterSolde(pool),
     consulterProfil(pool),
+    consulterOrganigramme(pool), // leçon 2
     calculerIndemniteKm(),
     ouvrirTicket(pool),
   ],
@@ -47,7 +49,9 @@ try {
     const debut = performance.now();
     const outils: string[] = [];
     let reponse = "";
-    for await (const etape of agir(q.question, agent, { date: values.date, matricule: q.matricule })) {
+    // Leçon 2 : avec un salarié connecté, sa fiche de l'organigramme d'office, comme dans npm run agent
+    const office = q.matricule ? [{ id: "organigramme-d-office", nom: "consulter_organigramme", arguments: { personne: null } }] : [];
+    for await (const etape of agir(q.question, { ...agent, appelsDOffice: office }, { date: values.date, matricule: q.matricule })) {
       if (etape.type === "appel") outils.push(etape.appel.nom);
       if (etape.type === "reponse") reponse = etape.texte.trim();
     }

@@ -14,6 +14,7 @@ import { chercherDocuments } from "../agent/chercher.ts";
 import { DOSSIER_TEXTES, outilsFichiers } from "../agent/fichiers.ts";
 import { creerLlmAgent } from "../agent/llm-agent.ts";
 import { calculerIndemniteKm, consulterProfil, consulterSolde, ouvrirTicket } from "../agent/outils-rh.ts";
+import { consulterOrganigramme } from "../agent/organigramme.ts";
 import { fichiersCites, sourcesCitees } from "../agent/sources.ts";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
@@ -54,6 +55,7 @@ const outils = [
   ...recherches,
   consulterSolde(pool),
   consulterProfil(pool),
+  consulterOrganigramme(pool), // chapitre 12, leçon 2
   calculerIndemniteKm(),
   ouvrirTicket(pool),
 ];
@@ -85,6 +87,10 @@ const agent = {
   condenser: (question: string, historique: Echange[]) => condenser(question, historique, llmSimple),
   confirmer,
   journaliser: journalJsonl(),
+  // Chapitre 12, leçon 2 : avec un salarié connecté, sa fiche de l'organigramme d'office (son manager, sa chaîne). Essai
+  // du 17 octobre : à « Qui est mon manager ? », le modèle local répondait sans appeler l'outil, faute de savoir qui
+  // est le salarié ; pour un collègue nommé, il l'appelait de lui-même
+  appelsDOffice: values.matricule ? [{ id: "organigramme-d-office", nom: "consulter_organigramme", arguments: { personne: null } }] : [],
 };
 
 const secondes = (ms: number) => (ms / 1000).toFixed(1);

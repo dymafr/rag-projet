@@ -44,6 +44,9 @@ export type Agent = {
   // premier tour. secours : le LLM décide ; s'il répond sans appeler aucun outil, le code cherche et lui redemande.
   // Le code cherche la question, ou, pour une question de suite, la question autonome que rend condenser (chapitre 9)
   recherche?: Recherche;
+  // Chapitre 12 : des appels que le code fait lui-même avant le premier tour, comme la recherche d'office (par exemple
+  // la fiche du salarié connecté dans l'organigramme). Le LLM n'a plus à décider de les demander
+  appelsDOffice?: AppelOutil[];
   condenser?: (question: string, historique: Echange[]) => Promise<string>;
   // Leçon 5. confirmer : demande au salarié son accord avant une action ; absent, aucune action ne s'exécute
   tokensMax?: number;
@@ -61,6 +64,17 @@ export type Etape =
 
 type Execution = { resultat: ResultatOutil; erreur: boolean; statut: Statut; detail?: string };
 
+// Chapitre 12 : un modèle local omet souvent un champ facultatif (nullable) au lieu de l'envoyer à null, comme le
+// demande le schéma. On complète ces champs à null avant la validation : l'appel garde le sens que le LLM lui donnait
+function completerNulls(parametres: z.ZodObject, args: unknown): unknown {
+  if (typeof args !== "object" || args === null || Array.isArray(args)) return args;
+  const complet: Record<string, unknown> = { ...args };
+  for (const [nom, schema] of Object.entries(parametres.shape)) {
+    if (!(nom in complet) && (schema as z.ZodType).safeParse(null).success) complet[nom] = null;
+  }
+  return complet;
+}
+
 // Exécuter une demande d'appel. L'outil doit exister et les arguments passer la validation zod : le LLM écrit ces
 // arguments, rien ne garantit qu'ils soient justes. Sinon, il reçoit l'erreur en résultat, et peut corriger son appel.
 // Un outil qui agit (aConfirmer) attend l'accord du salarié : c'est le code qui le demande, pas le LLM
@@ -70,7 +84,7 @@ export async function executer(appel: AppelOutil, outils: Outil[], contexte: Con
     const texte = `Outil inconnu : ${appel.nom}. Outils disponibles : ${outils.map((o) => o.nom).join(", ")}`;
     return { resultat: { texte }, erreur: true, statut: "erreur" };
   }
-  const lus = outil.parametres.safeParse(appel.arguments);
+  const lus = outil.parametres.safeParse(completerNulls(outil.parametres, appel.arguments));
   if (!lus.success) return { resultat: { texte: `Arguments refusés :\n${z.prettifyError(lus.error)}` }, erreur: true, statut: "erreur" };
   if (outil.aConfirmer) {
     const accord = confirmer ? await confirmer(appel, outil.aConfirmer(lus.data)) : false;
@@ -148,6 +162,10 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
   // 0. Une recherche d'office, comme dans le pipeline du chapitre 9 : le LLM ne peut plus décider de ne pas chercher (tour 0)
   const recherche = agent.recherche ?? "libre";
   if (recherche === "office") yield* imposerRecherche(0, "recherche-d-office");
+  for (const appel of agent.appelsDOffice ?? []) {
+    messages.push({ role: "assistant", texte: "", appels: [appel] });
+    yield* traiter(appel, 0);
+  }
   for (let tour = 1; tour <= toursMax; tour++) {
     // 1. Au dernier tour (s'il y en a eu d'autres avant), plus d'outil : une consigne le dit au LLM. Le budget de tokens
     // épuisé avance ce dernier tour
