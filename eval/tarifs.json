@@ -1,0 +1,9 @@
+{
+  "date": "2026-10-16",
+  "source": "https://developers.openai.com/api/docs/pricing",
+  "modeles": {
+    "openai gpt-6-luna": { "entree": 0.1, "enCache": 0.01, "ecritureCache": 0.125, "sortie": 0.5 },
+    "openai gpt-6.1-sol": { "entree": 2, "enCache": 0.1, "ecritureCache": 2.5, "sortie": 10 }
+  },
+  "fileSearchPour1000": 2.5
+}

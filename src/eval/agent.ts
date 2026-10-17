@@ -1,5 +1,6 @@
 // Ce que npm run eval:agent enregistre pour chaque question, et le bilan que npm run eval:agent:juger en tire : une
 // question réussie est, comme au chapitre 8, une réponse exacte à une question couverte, ou un refus sur les autres
+import type { Usage } from "../llm.ts";
 import { mcNemar } from "./statistiques.ts";
 
 export type TraceAgent = {
@@ -18,9 +19,13 @@ export type TraceAgent = {
   tokens: number;
   secondes: number;
   reponse: string;
+  // Chapitre 11 : le détail des tokens, pour en calculer le coût, et les appels de recherche facturés à l'unité (file_search)
+  usage?: Usage;
+  recherchesFacturees?: number;
 };
 
-export type FichierAgent = { date: string; prompt: string; toursMax: number; llm?: string; traces: TraceAgent[] };
+// systeme : chapitre 11, le système comparé (maison, langchain, file-search) ; absent : l'agent du chapitre 10
+export type FichierAgent = { date: string; prompt: string; toursMax: number; llm?: string; systeme?: string; traces: TraceAgent[] };
 
 // Les verdicts du juge pour une question : exactitude et fidélité pour une question couverte, refus pour les autres
 export type VerdictsAgent = { id: string; categorie: string; exactitude?: boolean | null; fidelite?: boolean | null; refus?: boolean | null };

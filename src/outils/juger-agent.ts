@@ -1,14 +1,15 @@
 // Juger les réponses de l'agent enregistrées par npm run eval:agent, avec le juge du chapitre 8 : exactitude par rapport
 // à la réponse de référence et fidélité à ce que les outils ont rendu, pour une question couverte ; pour les autres
 // (hors corpus, interdites), le juge dit si l'agent a refusé, comme il le devait. Le juge est celui de .env (JUGE_MODEL
-// ou LLM_MODEL) : le même pour toutes les configurations de l'agent, quel que soit le modèle qui a répondu
+// ou LLM_MODEL) : le même pour toutes les configurations de l'agent, quel que soit le modèle qui a répondu. Au chapitre 11,
+// il juge de la même façon les traces des systèmes comparés (npm run eval:systeme)
 // Lancement : npm run eval:agent:juger -- [--traces eval/traces/agent.json] [--reference eval/resultats/c09-fin/bilan.json]
 import { readFile, writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import { config } from "../config.ts";
 import { bilanAgent, reussie, type FichierAgent, type VerdictsAgent } from "../eval/agent.ts";
 import { lireJeu } from "../eval/jeu.ts";
-import { juger } from "../eval/juge.ts";
+import { juger, PROMPT_COUPE } from "../eval/juge.ts";
 import { creerLlm } from "../llm.ts";
 
 const { values } = parseArgs({
@@ -52,10 +53,20 @@ for (const t of fichier.traces) {
 const referenceLue = JSON.parse(await readFile(values.reference, "utf8")) as { questions: { id: string; reussie: boolean }[] };
 const reference = new Map(referenceLue.questions.map((q) => [q.id, q.reussie]));
 const b = bilanAgent(verdicts, reference);
-console.log(`\nAgent jugé (${values.traces}, prompt ${fichier.prompt}${fichier.llm ? `, ${fichier.llm}` : ""}) ; juge : ${config.LLM_PROVIDER} ${modele}`);
+// Chapitre 11 : les traces d'un système (npm run eval:systeme) se jugent de la même façon ; seuls les libellés changent
+const quoi = fichier.systeme ? `Système ${fichier.systeme} jugé` : "Agent jugé";
+const lus = fichier.systeme ? "aux passages lus" : "aux résultats des outils";
+console.log(`\n${quoi} (${values.traces}, prompt ${fichier.prompt}${fichier.llm ? `, ${fichier.llm}` : ""}) ; juge : ${config.LLM_PROVIDER} ${modele}`);
 console.log(`Questions réussies : ${b.reussies} sur ${b.total} (fin du chapitre 9 : ${[...reference.values()].filter(Boolean).length} sur ${reference.size})`);
-console.log(`  couvertes, réponse exacte : ${b.exactes} sur ${b.couvertes} ; fidèles aux résultats des outils : ${b.fideles} sur ${b.couvertes}`);
+// La fidélité se compte sur les verdicts rendus : un verdict non rendu (prompt coupé, verdict illisible) n'est ni
+// fidèle ni infidèle
+const rendues = verdicts.filter((v) => v.categorie === "couverte" && v.fidelite !== null && v.fidelite !== undefined).length;
+const fidelite = rendues === 0 ? "non mesurée" : `${b.fideles} sur ${rendues}${rendues < b.couvertes ? " verdicts rendus" : ""}`;
+console.log(`  couvertes, réponse exacte : ${b.exactes} sur ${b.couvertes} ; fidèles ${lus} : ${fidelite}`);
 console.log(`  hors corpus et interdites, refus : ${b.refusJustes} sur ${b.autres}`);
+// Chapitre 11 : des verdicts non rendus parce que le prompt dépassait la fenêtre de contexte du juge
+const coupes = verdicts.flatMap((v) => v.raisons).filter((r) => r === PROMPT_COUPE).length;
+if (coupes > 0) console.log(`  ${coupes} verdict(s) non rendu(s) : ${PROMPT_COUPE}`);
 if (b.comparaison) {
   const { gagnees, perdues, p } = b.comparaison;
   console.log(`  par rapport à la fin du chapitre 9 : ${gagnees.length} gagnées (${gagnees.join(", ") || "aucune"}), ${perdues.length} perdues (${perdues.join(", ") || "aucune"}), McNemar p = ${p.toFixed(3)}`);

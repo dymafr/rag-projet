@@ -3,6 +3,7 @@
 // à celui d'un humain, réponse par réponse
 import { readFile } from "node:fs/promises";
 import { z } from "zod";
+import { estimerTokens } from "../generation/prompt.ts";
 import type { Llm, Usage } from "../llm.ts";
 
 // Les critères jugés sur une réponse entière ; le soutien se juge phrase par phrase, avec les seuls passages cités
@@ -80,6 +81,17 @@ export function lireJson(texte: string): unknown {
 
 export type Jugement = { verdict: boolean | null; raison: string; essais: number; usage: Usage };
 
+// Chapitre 11 : un modèle local ne garde qu'un nombre limité de tokens (sa fenêtre de contexte, réglée dans Ollama). Un
+// prompt plus long est coupé sans erreur, par le début : le juge ne voit plus sa consigne ni les premiers passages, et
+// son verdict ne vaut rien. On le repère : le modèle a compté bien moins de tokens que le prompt n'en contient (estimation
+// à 3 caractères par token, chapitre 7, qui en surestime plutôt le nombre). Un prompt court tient dans toutes les fenêtres.
+// Un fournisseur qui rendrait 0 token échapperait au contrôle : Ollama, Claude et OpenAI rendent toujours leur compte
+export const PROMPT_COUPE = "prompt coupé : il dépasse la fenêtre de contexte du juge";
+export function coupe(prompt: string, tokensComptes: number): boolean {
+  const estimes = estimerTokens(prompt);
+  return estimes > 1000 && tokensComptes > 0 && tokensComptes < estimes / 2;
+}
+
 // Un essai, puis un second si le verdict est illisible. Après deux échecs, le verdict reste null : la réponse
 // est comptée comme non jugée, plutôt que d'arrêter toute l'évaluation
 export async function juger(llm: Llm, critere: Critere, aJuger: AJuger): Promise<Jugement> {
@@ -91,6 +103,8 @@ export async function juger(llm: Llm, critere: Critere, aJuger: AJuger): Promise
     usage.entree += resultat.usage.entree;
     usage.enCache += resultat.usage.enCache;
     usage.sortie += resultat.usage.sortie;
+    // Un prompt coupé : pas de verdict, plutôt qu'un verdict rendu sans avoir tout lu
+    if (coupe(`${consigne}\n\n${donnees(aJuger)}`, resultat.usage.entree)) return { verdict: null, raison: PROMPT_COUPE, essais: essai, usage };
     const lu = Verdict.safeParse(lireJson(resultat.texte));
     if (lu.success) return { verdict: lu.data.verdict === "oui", raison: lu.data.raison, essais: essai, usage };
     rappel = `\n\nAttention : une première réponse était illisible. ${FORMAT}`;

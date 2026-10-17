@@ -6,7 +6,9 @@ import OpenAI from "openai";
 import { config } from "./config.ts";
 import { conseilOllama, ollama } from "./ollama.ts";
 
-export type Usage = { entree: number; enCache: number; sortie: number }; // enCache : tokens d'entrée relus dans le cache
+// enCache : tokens d'entrée relus dans le cache ; ecritCache (chapitre 11) : tokens d'entrée écrits dans le cache, facturés
+// plus cher que les autres par certains fournisseurs, absent quand le fournisseur ne le dit pas
+export type Usage = { entree: number; enCache: number; sortie: number; ecritCache?: number };
 export type Llm = (debut: string, fin: string) => Promise<{ texte: string; usage: Usage }>;
 
 const MAX_TOKENS = 1024; // de quoi répondre, même si le modèle réfléchit avant
@@ -44,9 +46,15 @@ function appelOpenAI(modele: string): Llm {
     const input = [{ role: "user" as const, content: [document] }, { role: "user" as const, content: fin }];
     const reponse = await client.responses.create({ model: modele, input, max_output_tokens: MAX_TOKENS, store: false }); // sinon OpenAI garde la réponse ; Rhéa n'en a pas besoin
     const usage = reponse.usage;
+    const ecrits = usage?.input_tokens_details?.cache_write_tokens; // chapitre 11 : tokens écrits dans le cache, facturés à part
     return {
       texte: reponse.output_text,
-      usage: { entree: usage?.input_tokens ?? 0, enCache: usage?.input_tokens_details?.cached_tokens ?? 0, sortie: usage?.output_tokens ?? 0 },
+      usage: {
+        entree: usage?.input_tokens ?? 0,
+        enCache: usage?.input_tokens_details?.cached_tokens ?? 0,
+        sortie: usage?.output_tokens ?? 0,
+        ...(ecrits !== undefined && { ecritCache: ecrits }),
+      },
     };
   };
 }

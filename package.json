@@ -59,7 +59,9 @@
     "store:repondre": "node --env-file=.env src/outils/store-repondre.ts",
     "store:supprimer": "node --env-file=.env src/outils/store-supprimer.ts",
     "langchain": "node --env-file=.env src/outils/langchain.ts",
-    "mastra": "node --env-file=.env src/outils/mastra.ts"
+    "mastra": "node --env-file=.env src/outils/mastra.ts",
+    "eval:systeme": "node --env-file=.env src/outils/evaluer-systeme.ts",
+    "eval:comparer": "node src/outils/comparer-systemes.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { comparer } from "../src/eval/calibration.ts";
-import { CRITERES, juger } from "../src/eval/juge.ts";
+import { coupe, CRITERES, juger, PROMPT_COUPE } from "../src/eval/juge.ts";
 import { empreinte } from "../src/eval/reponses.ts";
 import { wilson } from "../src/eval/statistiques.ts";
 import type { Llm } from "../src/llm.ts";
@@ -83,4 +83,15 @@ test("l'intervalle de Wilson s'élargit quand on a peu de cas", () => {
   const sur300 = wilson(270, 300); // le même taux sur dix fois plus de cas : un intervalle bien plus étroit
   assert.ok(sur300.haut - sur300.bas < sur30.haut - sur30.bas);
   assert.deepEqual(wilson(0, 0), { bas: 0, haut: 1 });
+});
+
+test("un prompt coupé par la fenêtre de contexte du juge ne donne pas de verdict (chapitre 11)", async () => {
+  // 8 longs passages : le prompt fait environ 30 000 caractères, et le modèle n'en a compté que 2 051 tokens
+  const long = { ...aJuger, passages: Array.from({ length: 8 }, (_, i) => ({ numero: i + 1, texte: "Article du guide. ".repeat(200) })) };
+  const llm: Llm = async () => ({ texte: '{"raison": "Rien ne le dit.", "verdict": "non"}', usage: { entree: 2051, enCache: 0, sortie: 20 } });
+  const j = await juger(llm, "fidelite", long);
+  assert.equal(j.verdict, null);
+  assert.equal(j.raison, PROMPT_COUPE);
+  assert.equal(coupe("court", 3), false); // un prompt court tient dans toutes les fenêtres
+  assert.equal(coupe("x".repeat(9000), 2900), false); // 3 000 tokens estimés, 2 900 comptés : rien de coupé
 });

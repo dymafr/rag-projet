@@ -2,6 +2,7 @@
 // seul le client change (new OpenAI() ou le client ollama de src/ollama.ts)
 import type OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
+import type { Usage } from "../llm.ts";
 import type { Generation, Morceau } from "./generateur.ts";
 import type { PromptAugmente } from "./prompt.ts";
 import { ReponseRhea, type DemandeJson } from "./structure.ts";
@@ -19,11 +20,17 @@ export type Reglages = { temperature?: number; reasoning?: { effort: "none" }; m
 // En JSON (leçon 5) : le schéma que la réponse doit suivre, tiré du schéma zod par le helper du SDK
 export const FORMAT_JSON = zodTextFormat(ReponseRhea, "reponse_rhea");
 
-export const usageDe = (usage?: OpenAI.Responses.ResponseUsage) => ({
-  entree: usage?.input_tokens ?? 0,
-  enCache: usage?.input_tokens_details?.cached_tokens ?? 0,
-  sortie: usage?.output_tokens ?? 0,
-});
+// Chapitre 11 : les tokens écrits dans le cache, quand l'API les donne (OpenAI les facture plus cher que l'entrée ; Ollama
+// ne les donne pas)
+export function usageDe(usage?: OpenAI.Responses.ResponseUsage): Usage {
+  const ecrits = usage?.input_tokens_details?.cache_write_tokens;
+  return {
+    entree: usage?.input_tokens ?? 0,
+    enCache: usage?.input_tokens_details?.cached_tokens ?? 0,
+    sortie: usage?.output_tokens ?? 0,
+    ...(ecrits !== undefined && { ecritCache: ecrits }),
+  };
+}
 
 export async function repondreAvecResponses(
   client: OpenAI,
