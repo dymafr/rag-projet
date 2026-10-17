@@ -1,0 +1,21 @@
+[
+  { "id": "L1", "famille": "locale", "question": "Combien de jours de télétravail ai-je par semaine ?", "matricule": "K0101", "attendu": ["trois|3"] },
+  { "id": "L2", "famille": "locale", "question": "Dans quel délai dois-je envoyer une note de frais ?", "matricule": "K0101", "attendu": ["30 jours"] },
+  { "id": "R1", "famille": "relationnelle", "question": "Qui est mon manager ?", "matricule": "K0101", "attendu": ["Sylvain Rousseau"] },
+  { "id": "R2", "famille": "relationnelle", "question": "Qui valide mes congés ?", "matricule": "K0042", "attendu": ["Eva Guérin"] },
+  { "id": "R3", "famille": "relationnelle", "question": "Qui est le manager de mon manager ?", "matricule": "K0042", "attendu": ["Noémie Millet"] },
+  { "id": "R4", "famille": "relationnelle", "question": "Qui valide les congés d'Adèle Lucas ?", "attendu": ["Eva Guérin"] },
+  { "id": "R5", "famille": "relationnelle", "question": "Combien de personnes compte l'équipe d'Eva Guérin ?", "attendu": ["9"] },
+  { "id": "R6", "famille": "relationnelle", "question": "Qui est le manager de la référente handicap ?", "attendu": ["Alice Lucas"] },
+  { "id": "R7", "famille": "relationnelle", "question": "À qui dois-je faire valider ma note de frais ?", "matricule": "K0012", "attendu": ["Aurélie Fontaine"] },
+  { "id": "S1", "famille": "statistique", "question": "Combien de jours de RTT me reste-t-il ?", "matricule": "K0101", "attendu": ["9"] },
+  { "id": "S2", "famille": "statistique", "question": "Combien de salariés ont plus de 20 jours de congés payés en reliquat ?", "matricule": "K0006", "attendu": ["11"] },
+  { "id": "S3", "famille": "statistique", "question": "Quelle est la moyenne des RTT restants des salariés de Nantes au forfait jours ?", "matricule": "K0006", "attendu": ["4,3"] },
+  { "id": "S4", "famille": "statistique", "question": "Combien de jours de congés en reliquat mon équipe a-t-elle au total ?", "matricule": "K0035", "attendu": ["96"] },
+  { "id": "S5", "famille": "statistique", "question": "Combien de salariés du site de Nantes sont au forfait jours ?", "matricule": "K0006", "attendu": ["67"] },
+  { "id": "S6", "famille": "statistique", "question": "Qui, dans mon équipe, a le moins de RTT restants ?", "matricule": "K0095", "attendu": ["Nathan Guillot"] },
+  { "id": "S7", "famille": "statistique", "question": "Combien de salariés ont plus de 20 jours de congés payés en reliquat ?", "matricule": "K0042", "interdit": ["11"] },
+  { "id": "G1", "famille": "globale", "question": "Quels textes de Kalyo ont été remplacés par un texte plus récent ?" },
+  { "id": "G2", "famille": "globale", "question": "Quels délais faut-il respecter pour poser une absence, toutes politiques confondues ?" },
+  { "id": "G3", "famille": "globale", "question": "De quels grands sujets parle la documentation RH de Kalyo ?" }
+]
