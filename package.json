@@ -53,7 +53,11 @@
     "donnees:rh": "node --env-file=.env src/outils/charger-donnees-rh.ts",
     "eval:agent": "node --env-file=.env src/outils/evaluer-agent.ts",
     "eval:agent:juger": "node --env-file=.env src/outils/juger-agent.ts",
-    "textes": "node src/outils/exporter-textes.ts"
+    "textes": "node src/outils/exporter-textes.ts",
+    "store:creer": "node --env-file=.env src/outils/store-creer.ts",
+    "store:chercher": "node --env-file=.env src/outils/store-chercher.ts",
+    "store:repondre": "node --env-file=.env src/outils/store-repondre.ts",
+    "store:supprimer": "node --env-file=.env src/outils/store-supprimer.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

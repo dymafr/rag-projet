@@ -12,6 +12,7 @@ const Schema = z
     EMBEDDING_MODEL: z.string().min(1, "indiquez le modèle d'embedding"),
     EMBEDDING_DIMENSIONS: z.coerce.number().int().positive().optional(), // taille réduite des vecteurs, si le modèle le permet
     RERANK_MODEL: z.string().min(1).default("onnx-community/bge-reranker-v2-m3-ONNX"), // le cross-encoder local (chapitre 9)
+    FILE_SEARCH_MODEL: z.string().optional(), // le modèle OpenAI qui répond avec l'outil file_search (chapitre 11)
     ANTHROPIC_API_KEY: z.string().optional(),
     OPENAI_API_KEY: z.string().optional(),
     VOYAGE_API_KEY: z.string().optional(),
