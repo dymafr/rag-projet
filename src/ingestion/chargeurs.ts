@@ -8,14 +8,20 @@ import { lireBalisesMeta, lireEnteteYaml, lireYamlVoisin, metadonneesDuTicket, v
 import { pdfVersMarkdown } from "./pdf.ts";
 import { chargerTickets, texteDuTicket } from "./tickets.ts";
 
-// Les dossiers du corpus à indexer. Les soldes de congés, en SQL, serviront au chapitre 10
-const DOSSIERS = ["politiques", "accords", "managers", "groupe", "intranet", "faq", "tickets"];
+// Les dossiers du corpus à indexer. Les soldes de congés, en SQL, serviront au chapitre 10. Chapitre 12 : scans, où
+// npm run scans écrit, à côté de chaque image, sa transcription en Markdown (les images elles-mêmes ne sont pas lues ici)
+const DOSSIERS = ["politiques", "accords", "managers", "groupe", "intranet", "faq", "tickets", "scans"];
 const FORMATS = [".pdf", ".html", ".md", ".json"];
 
 export async function listerFichiers(racine = "corpus"): Promise<string[]> {
   const fichiers: string[] = [];
   for (const dossier of DOSSIERS) {
-    for (const nom of (await readdir(join(racine, dossier))).sort()) {
+    // Un corpus sans document scanné n'a pas de dossier scans ; les autres dossiers, eux, sont obligatoires
+    const noms = await readdir(join(racine, dossier)).catch((erreur) => {
+      if (dossier === "scans" && erreur.code === "ENOENT") return [];
+      throw erreur;
+    });
+    for (const nom of noms.sort()) {
       if (FORMATS.includes(extname(nom))) fichiers.push(join(racine, dossier, nom));
     }
   }
@@ -36,7 +42,10 @@ export async function charger(chemin: string): Promise<Document[]> {
     }
     case ".md": {
       const { entete, texte } = separerEntete(await readFile(chemin, "utf8"));
-      return [document(chemin, texte, lireEnteteYaml(entete))];
+      const brutes = lireEnteteYaml(entete);
+      // Chapitre 12 : une transcription faite par un modèle de vision se relit avant d'être crue
+      if ((brutes as { relue?: boolean } | null)?.relue === false) console.warn(`${chemin} : transcription pas encore relue (relue: false)`);
+      return [document(chemin, texte, brutes)];
     }
     case ".pdf":
       return [document(chemin, await pdfVersMarkdown(chemin), await lireYamlVoisin(chemin))];

@@ -12,6 +12,8 @@ Kalyo est une entreprise de services numériques **fictive** : 180 salariés, de
 | `faq/` | La FAQ RH | Markdown, métadonnées dans l'en-tête YAML |
 | `tickets/` | Cent tickets RH : 95 traités, avec la réponse du service RH, et 5 en cours | JSON |
 | `soldes/` | Les salariés fictifs et leurs soldes de congés et de RTT | SQL |
+| `scans/` | Une note de service du site de Nantes, scannée (chapitre 12), et sa transcription relue | JPEG, YAML, Markdown |
+| `formulaires/` | Une note de frais NDF-03 remplie à la main, scannée en trois qualités (chapitre 12) : à lire, pas à indexer | JPEG |
 
 ## Métadonnées
 

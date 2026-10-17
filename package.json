@@ -64,7 +64,9 @@
     "eval:comparer": "node src/outils/comparer-systemes.ts",
     "eval:c12": "node --env-file=.env src/outils/evaluer-c12.ts",
     "organigramme": "node --env-file=.env src/outils/organigramme.ts",
-    "sql": "node --env-file=.env src/outils/sql.ts"
+    "sql": "node --env-file=.env src/outils/sql.ts",
+    "scans": "node --env-file=.env src/outils/scans.ts",
+    "note-de-frais": "node --env-file=.env src/outils/note-de-frais.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

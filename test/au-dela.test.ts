@@ -7,7 +7,7 @@ import { contient, lireJeuAuDela, verdict } from "../src/eval/au-dela.ts";
 test("eval/jeu-c12.json est valide, avec des identifiants uniques et chaque famille représentée", async () => {
   const jeu = await lireJeuAuDela();
   assert.equal(new Set(jeu.map((q) => q.id)).size, jeu.length);
-  for (const famille of ["locale", "relationnelle", "statistique", "globale"]) {
+  for (const famille of ["locale", "relationnelle", "statistique", "visuelle", "globale"]) {
     assert.ok(jeu.some((q) => q.famille === famille), famille);
   }
   // Une question globale n'a pas de mot attendu : elle n'est pas notée

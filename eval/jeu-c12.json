@@ -15,6 +15,9 @@
   { "id": "S5", "famille": "statistique", "question": "Combien de salariés du site de Nantes sont au forfait jours ?", "matricule": "K0006", "attendu": ["67"] },
   { "id": "S6", "famille": "statistique", "question": "Qui, dans mon équipe, a le moins de RTT restants ?", "matricule": "K0095", "attendu": ["Nathan Guillot"] },
   { "id": "S7", "famille": "statistique", "question": "Combien de salariés ont plus de 20 jours de congés payés en reliquat ?", "matricule": "K0042", "interdit": ["11"] },
+  { "id": "V1", "famille": "visuelle", "question": "L'abri à vélos du site de Nantes sera-t-il ouvert le 5 novembre 2026 ?", "attendu": ["fermé"] },
+  { "id": "V2", "famille": "visuelle", "question": "Pendant les travaux de la cour, où ranger mon vélo sur le site de Nantes ?", "attendu": ["rez-de-chaussée"] },
+  { "id": "V3", "famille": "visuelle", "question": "Jusqu'à quand l'abri à vélos de Nantes est-il fermé ?", "attendu": ["13 novembre"] },
   { "id": "G1", "famille": "globale", "question": "Quels textes de Kalyo ont été remplacés par un texte plus récent ?" },
   { "id": "G2", "famille": "globale", "question": "Quels délais faut-il respecter pour poser une absence, toutes politiques confondues ?" },
   { "id": "G3", "famille": "globale", "question": "De quels grands sujets parle la documentation RH de Kalyo ?" }

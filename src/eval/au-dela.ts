@@ -1,17 +1,18 @@
 // Le jeu du chapitre 12 : des questions « au-delà du texte ». Une question relationnelle se répond en suivant des liens
 // entre personnes (qui est le manager de qui) ; une question statistique, en calculant sur un tableau (combien, quelle
 // moyenne) ; une question globale porte sur tout le corpus (quels textes ont été remplacés). Les questions locales,
-// celles que le RAG des chapitres précédents traite déjà, servent de témoins : elles ne doivent pas régresser.
+// celles que le RAG des chapitres précédents traite déjà, servent de témoins : elles ne doivent pas régresser. Une
+// question visuelle (leçon 4) se répond par un document qui n'existe qu'en image, un scan.
 // La vérification est mécanique, sans juge : la réponse doit contenir chaque mot attendu (un nom, un nombre) et aucun
 // mot interdit. Un mot attendu peut avoir des variantes, séparées par | : « trois|3 ». Une question globale n'a pas de
 // réponse courte à vérifier : elle n'est pas notée
 import { readFile } from "node:fs/promises";
 import { z } from "zod";
 
-export const FAMILLES = ["locale", "relationnelle", "statistique", "globale"] as const;
+export const FAMILLES = ["locale", "relationnelle", "statistique", "visuelle", "globale"] as const;
 
 export const QuestionAuDela = z.strictObject({
-  id: z.string().regex(/^[LRSG]\d+$/),
+  id: z.string().regex(/^[LRSVG]\d+$/),
   famille: z.enum(FAMILLES),
   question: z.string().trim().min(1),
   matricule: z.string().regex(/^K\d{4}$/).optional(), // le salarié connecté, si la question parle de « moi »

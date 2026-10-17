@@ -35,9 +35,9 @@ test("une page enregistrée deux fois, avec un autre menu, a la même empreinte 
   assert.equal(a, b);
 });
 
-test("tout le corpus se charge : 16 PDF, 15 pages, la FAQ et 95 tickets, sans doublon", async () => {
+test("tout le corpus se charge : 16 PDF, 15 pages, la FAQ, 95 tickets et la note scannée, sans doublon", async () => {
   const documents = (await Promise.all((await listerFichiers()).map(charger))).flat();
-  assert.equal(documents.length, 16 + 15 + 1 + 95);
+  assert.equal(documents.length, 16 + 15 + 1 + 95 + 1); // + la note de service scannée et transcrite (chapitre 12)
   assert.equal(dedoublonner(documents).doublons.length, 0);
   const frais = documents.find((d) => d.id === "POL-NF-01")!;
   assert.equal(frais.titre, "Politique notes de frais et déplacements");

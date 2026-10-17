@@ -29,9 +29,9 @@ export function valider(brutes: unknown, source: string): Metadonnees {
   return resultat.data;
 }
 
-// PDF : un fichier YAML voisin, du même nom
+// PDF, et image scannée (chapitre 12) : un fichier YAML voisin, du même nom
 export async function lireYamlVoisin(cheminPdf: string): Promise<unknown> {
-  const cheminYaml = cheminPdf.replace(/\.pdf$/, ".yaml");
+  const cheminYaml = cheminPdf.replace(/\.(pdf|jpe?g|png)$/i, ".yaml");
   const yaml = await readFile(cheminYaml, "utf8").catch((erreur) => {
     if (erreur.code === "ENOENT") throw new Error(`${cheminPdf} : métadonnées manquantes (pas de fichier ${cheminYaml})`);
     throw erreur; // une autre erreur de lecture (droits, disque) reste telle quelle
