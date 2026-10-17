@@ -57,12 +57,19 @@
     "store:creer": "node --env-file=.env src/outils/store-creer.ts",
     "store:chercher": "node --env-file=.env src/outils/store-chercher.ts",
     "store:repondre": "node --env-file=.env src/outils/store-repondre.ts",
-    "store:supprimer": "node --env-file=.env src/outils/store-supprimer.ts"
+    "store:supprimer": "node --env-file=.env src/outils/store-supprimer.ts",
+    "langchain": "node --env-file=.env src/outils/langchain.ts",
+    "mastra": "node --env-file=.env src/outils/mastra.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
     "@huggingface/transformers": "^4.3.0",
     "@joplin/turndown-plugin-gfm": "^1.0.68",
+    "@langchain/anthropic": "1.5.12",
+    "@langchain/core": "1.2.17",
+    "@langchain/openai": "1.6.2",
+    "@langchain/pgvector": "0.1.0",
+    "@mastra/core": "1.75.0",
     "@modelcontextprotocol/server": "^2.3.1",
     "cheerio": "^1.2.0",
     "openai": "^7.23.0",

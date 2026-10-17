@@ -92,6 +92,21 @@ test("index forcé et filtre sélectif : sans parcours itératif, il manque des 
   }
 });
 
+test("reconstruction : une vue construite sur chunks (celle de LangChain, chapitre 11) ne bloque pas la bascule", async () => {
+  const autre = await nouvelleBase();
+  try {
+    await creerTable(autre, 2);
+    await autre.query("CREATE VIEW chunks_langchain AS SELECT id, texte, embedding FROM chunks");
+    await creerTable(autre, 2, "vector", "chunks_nouveau");
+    await creerIndex(autre, "vector", "chunks_nouveau");
+    await basculer(autre); // sans CASCADE : « cannot drop table chunks because other objects depend on it »
+    const { rows } = await autre.query<{ vue: string | null }>("SELECT to_regclass('chunks_langchain')::text AS vue");
+    assert.equal(rows[0].vue, null); // la vue est partie avec l'ancienne table
+  } finally {
+    await autre.close();
+  }
+});
+
 test("reconstruction : la nouvelle table remplace l'ancienne, avec ses index, et accepte un upsert", async () => {
   const autre = await nouvelleBase(); // une base à part : celle des autres tests ne change pas
   try {

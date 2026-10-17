@@ -75,7 +75,9 @@ export async function ecrireIndexation(base: Base, { modele, dimension, stockage
 // Remplace la table chunks par chunks_nouveau, reconstruite à côté. À faire dans une transaction :
 // une recherche voit l'ancienne table ou la nouvelle, jamais une table à moitié remplie
 export async function basculer(base: Base) {
-  await base.query("DROP TABLE IF EXISTS chunks");
+  // CASCADE : une vue construite sur chunks (celle de LangChain, chapitre 11) disparaît avec l'ancienne table, sinon
+  // PostgreSQL refuse de la supprimer ; npm run langchain recrée la vue à son prochain lancement
+  await base.query("DROP TABLE IF EXISTS chunks CASCADE");
   await base.query("ALTER TABLE chunks_nouveau RENAME TO chunks");
   await base.query("ALTER INDEX chunks_nouveau_pkey RENAME TO chunks_pkey");
   await base.query("ALTER INDEX chunks_nouveau_embedding_idx RENAME TO chunks_embedding_idx");
