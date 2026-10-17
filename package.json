@@ -63,7 +63,8 @@
     "eval:systeme": "node --env-file=.env src/outils/evaluer-systeme.ts",
     "eval:comparer": "node src/outils/comparer-systemes.ts",
     "eval:c12": "node --env-file=.env src/outils/evaluer-c12.ts",
-    "organigramme": "node --env-file=.env src/outils/organigramme.ts"
+    "organigramme": "node --env-file=.env src/outils/organigramme.ts",
+    "sql": "node --env-file=.env src/outils/sql.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
@@ -76,6 +77,7 @@
     "@mastra/core": "1.75.0",
     "@modelcontextprotocol/server": "^2.3.1",
     "cheerio": "^1.2.0",
+    "libpg-query": "18.1.5",
     "openai": "^7.23.0",
     "pg": "^8.23.0",
     "pgvector": "^0.3.0",

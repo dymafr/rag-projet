@@ -16,6 +16,7 @@ import { DOSSIER_TEXTES, outilsFichiers } from "../agent/fichiers.ts";
 import { creerLlmAgent } from "../agent/llm-agent.ts";
 import { calculerIndemniteKm, consulterProfil, consulterSolde, ouvrirTicket } from "../agent/outils-rh.ts";
 import { consulterOrganigramme } from "../agent/organigramme.ts";
+import { interrogerSoldes } from "../agent/soldes-sql.ts";
 import { fichiersCites, sourcesCitees } from "../agent/sources.ts";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
@@ -57,6 +58,7 @@ const outils = [
   consulterSolde(pool),
   consulterProfil(pool),
   consulterOrganigramme(pool), // chapitre 12, leçon 2
+  interrogerSoldes(pool, creerLlm()), // chapitre 12, leçon 3
   calculerIndemniteKm(),
   ouvrirTicket(pool),
 ];
