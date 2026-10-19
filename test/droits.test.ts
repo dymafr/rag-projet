@@ -1,6 +1,7 @@
 // Tests du contrôle d'accès documentaire (chapitre 13, leçon 1) : le profil lu dans l'annuaire, le filtre obligatoire,
 // et la sécurité par ligne sur chunks, sur une vraie base PostgreSQL, PGlite. Trois passages, un par niveau d'accès,
-// avec un vecteur factice. Pas de Docker. Lancement : npm test
+// avec un vecteur factice ; puis le branchement des deux barrières dans trouverPassages (leçon 5). Pas de Docker.
+// Lancement : npm test
 import { after, before, test } from "node:test";
 import assert from "node:assert/strict";
 import { PGlite } from "@electric-sql/pglite";
@@ -8,7 +9,7 @@ import { unaccent } from "@electric-sql/pglite/contrib/unaccent";
 import { vector } from "@electric-sql/pglite-pgvector";
 import type { Chunk } from "../src/decoupage/chunk.ts";
 import type { Document } from "../src/ingestion/document.ts";
-import { basePour, NIVEAUX, profilDeSession, profilDuSalarie, SCHEMA_DROITS, type Profil } from "../src/recherche/droits.ts";
+import { basePour, NIVEAUX, profilDeSession, profilDuSalarie, SCHEMA_DROITS, type Connexions, type Profil } from "../src/recherche/droits.ts";
 import { chercherPleinTexte } from "../src/recherche/plein-texte.ts";
 import { chercher } from "../src/recherche/vectorielle.ts";
 import { insererParLots, ligne } from "../src/stockage/chunks.ts";
@@ -117,4 +118,32 @@ test("une vue lit la table avec les droits de son propriétaire, sauf en securit
   const { VUE } = await import("../src/frameworks/langchain.ts");
   await base.exec(`${VUE};\n    GRANT SELECT ON chunks_langchain TO rhea_recherche;`);
   assert.deepEqual(await lignes("salarie", "SELECT id FROM chunks_langchain"), ["POL-CP-01#1"]);
+});
+
+// Chaque barrière a son test ci-dessus ; celui-ci vérifie qu'elles sont branchées sur le profil, là où la recherche les
+// pose (passages.ts). Une connexion espionne note chaque requête et la connexion qui la reçoit, et ne rend aucune ligne
+test("trouverPassages branche les deux barrières sur le profil : la base restreinte à ses niveaux, et le filtre", async () => {
+  // passages.ts lit la configuration dès l'import : des valeurs factices suffisent (ce fichier de test a son propre
+  // processus), ni LLM, ni modèle d'embedding, ni base ne sont appelés
+  const factices = { LLM_PROVIDER: "ollama", LLM_MODEL: "factice", EMBEDDING_PROVIDER: "transformers", EMBEDDING_MODEL: "factice" };
+  Object.assign(process.env, factices, { DATABASE_URL: "postgres://factice@localhost/factice" });
+  const { trouverPassages } = await import("../src/recherche/passages.ts");
+  const { RECHERCHE } = await import("../src/recherche/reglages.ts");
+  const notees: { client: boolean; sql: string; parametres: unknown[] }[] = [];
+  const espionne = (client: boolean) => ({
+    query: async (sql: string, parametres: unknown[] = []) => {
+      notees.push({ client, sql, parametres });
+      return { rows: sql.includes("to_regclass") ? [{ nom: null }] : [] }; // pas de table indexation : rien à comparer
+    },
+  });
+  const pool = { ...espionne(false), connect: async () => ({ ...espionne(true), release: () => {} }) } as unknown as Connexions;
+  await trouverPassages(pool, "Quel est le barème des primes ?", 3, "salarie", "2026-10-13", { ...RECHERCHE, mode: "plein-texte", filtresExtraits: false }, {});
+  const recherches = notees.filter((n) => /\bchunks\b/.test(n.sql));
+  assert.ok(recherches.length > 0);
+  for (const r of recherches) {
+    assert.ok(r.client, "la recherche passe par basePour, pas directement par le pool");
+    assert.ok(r.parametres.some((p) => JSON.stringify(p) === JSON.stringify(NIVEAUX.salarie)), "le filtre porte les niveaux du profil");
+  }
+  const niveaux = notees.filter((n) => n.sql.includes("set_config('rhea.niveaux'")).map((n) => n.parametres[0]);
+  assert.ok(niveaux.length > 0 && niveaux.every((n) => n === "tous"), "la base est restreinte aux niveaux du profil");
 });

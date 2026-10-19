@@ -90,7 +90,9 @@ export async function trouverPassages(
   // 4. Le score de chaque passage doit être sa similarité cosinus avec la question : c'est elle que compare le seuil
   // d'abstention du chapitre 7. Le plein texte donne un score BM25, sans maximum ; après une transformation, les scores
   // viennent des requêtes du LLM : on les recalcule avec la question
-  if (reglages.mode === "plein-texte" || reglages.transformation) resultats = await avecSimilarites(base, question, resultats);
+  if ((reglages.mode === "plein-texte" || reglages.transformation) && resultats.length > 0) { // aucun passage : rien à noter
+    resultats = await avecSimilarites(base, question, resultats);
+  }
   // 5. Le choix des k passages parmi les candidats : le reclasseur lit la question et chaque candidat ; ou MMR, qui écarte
   // les redites ; sinon, les premiers. Le classement continue au-delà de k quand les traces demandent une profondeur
   const rendre = Math.max(k, profondeur);

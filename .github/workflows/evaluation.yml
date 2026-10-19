@@ -48,3 +48,6 @@ jobs:
       # question ni la condensation des questions de suite, que Rhéa demande au LLM (les questions qui en ont besoin
       # échouent ici, les minimums en tiennent compte)
       - run: npm run eval:recherche -- --minimums eval/minimums.json --sans-llm
+      # Chapitre 13 : le jeu d'attaques, sans LLM. Aucun passage interdit ne doit atteindre le modèle, pour aucune attaque :
+      # une seule réussite fait échouer le job. Avec le LLM (plusieurs essais par attaque), il se lance à la main
+      - run: npm run eval:attaques -- --sans-llm
