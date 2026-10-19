@@ -1,6 +1,7 @@
 // Les chargeurs : chaque fichier du corpus devient un ou plusieurs documents au format commun
 import { readdir, readFile } from "node:fs/promises";
-import { extname, join } from "node:path";
+import { dirname, extname, join } from "node:path";
+import { lireAnnuaire, masquer } from "../rgpd/minimisation.ts";
 import { normaliser, type Document } from "./document.ts";
 import { htmlVersMarkdown } from "./html.ts";
 import { separerEntete } from "./markdown.ts";
@@ -50,11 +51,14 @@ export async function charger(chemin: string): Promise<Document[]> {
     case ".pdf":
       return [document(chemin, await pdfVersMarkdown(chemin), await lireYamlVoisin(chemin))];
     case ".json": {
-      // Un fichier de tickets : un document par ticket clos qui a une réponse
+      // Un fichier de tickets : un document par ticket clos qui a une réponse. Chapitre 13 : les coordonnées et les noms
+      // des collègues sont masqués, sujet compris (la minimisation), d'après l'annuaire voisin, corpus/soldes/soldes.sql ; sans annuaire
+      // (un petit corpus de test), seuls les motifs s'appliquent. Les données personnelles qui restent sont signalées
       const tickets = (await chargerTickets(chemin)).filter((t) => t.statut === "clos" && t.reponse);
+      const noms = await lireAnnuaire(join(dirname(dirname(chemin)), "soldes", "soldes.sql")).catch(() => []);
       return tickets.map((t) => {
-        const texte = normaliser(texteDuTicket(t)); // les données personnelles se cherchent dans le texte normalisé
-        return document(`${chemin}#${t.id}`, texte, metadonneesDuTicket(t, texte));
+        const texte = masquer(normaliser(texteDuTicket(t)), noms).texte; // sur le texte normalisé : espaces insécables comprises
+        return document(`${chemin}#${t.id}`, texte, metadonneesDuTicket({ ...t, sujet: masquer(normaliser(t.sujet), noms).texte }, texte));
       });
     }
     default:

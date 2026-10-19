@@ -68,7 +68,8 @@ export function detecterLangue(texte: string): "fr" | "en" {
   return compter(COURANTS.en) > compter(COURANTS.fr) ? "en" : "fr";
 }
 
-// Tickets : les champs du ticket. Tant qu'ils ne sont pas anonymisés (chapitre 13), seul le service RH y a accès
+// Tickets : les champs du ticket. Même minimisés (chapitre 13), ils restent des données personnelles : seul le service RH
+// y a accès
 export function metadonneesDuTicket(ticket: Ticket, texte: string): unknown {
   return {
     id: ticket.id,

@@ -6,6 +6,7 @@ import { pipeline } from "@huggingface/transformers";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
 import { conseilOllama, ollama } from "../ollama.ts";
+import { destinations } from "../rgpd/localisation.ts";
 
 async function verifier(nom: string, test: () => Promise<string>) {
   try {
@@ -48,6 +49,10 @@ console.log(
   `Clés       : Anthropic ${presence(config.ANTHROPIC_API_KEY)}, ` +
     `OpenAI ${presence(config.OPENAI_API_KEY)}, Voyage ${presence(config.VOYAGE_API_KEY)}\n`,
 );
+// Chapitre 13 : où partent les questions et les passages, brique par brique. Il suffit d'une seule pour qu'ils sortent
+console.log("Où partent les données :");
+for (const d of destinations(config)) console.log(`  ${d.locale ? "ici   " : "DEHORS"} ${d.brique} : ${d.ou}`);
+console.log("");
 
 // 1. Le modèle qui rédige les réponses existe-t-il, et la clé y donne-t-elle accès ?
 await verifier("modèle de génération", async () => {

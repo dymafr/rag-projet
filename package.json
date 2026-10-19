@@ -28,6 +28,7 @@
     "contextualiser": "node --env-file=.env src/outils/contextualiser.ts",
     "comparer": "node --env-file=.env src/outils/comparer.ts",
     "indexer": "node --env-file=.env src/outils/indexer.ts",
+    "effacer": "node --env-file=.env src/outils/effacer.ts",
     "mesurer:index": "node --env-file=.env src/outils/mesurer-index.ts",
     "rechercher": "node --env-file=.env src/outils/rechercher.ts",
     "enregistrer": "node --env-file=.env src/outils/enregistrer-exemples.ts",

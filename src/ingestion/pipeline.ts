@@ -3,6 +3,7 @@ import { appendFile, mkdir, readFile, rename, writeFile } from "node:fs/promises
 import { dirname } from "node:path";
 import { charger, listerFichiers } from "./chargeurs.ts";
 import { dedoublonner, empreinte, type Document } from "./document.ts";
+import { lireEffacements, REGISTRE } from "../rgpd/effacements.ts";
 import { reperer } from "./injection.ts";
 import { lierVersions } from "./metadonnees.ts";
 
@@ -11,14 +12,15 @@ export type Bilan = {
   erreurs: { fichier: string; message: string }[];
   doublons: string[];
   quarantaine: { id: string; regles: string[] }[]; // chapitre 13 : les tickets écartés, à relire
+  effaces: string[]; // chapitre 13 : les documents inscrits au registre des effacements, encore présents à la source
   nouveaux: string[];
   modifies: string[];
   supprimes: string[];
 };
 
-type Options = { racine?: string; sortie?: string; journal?: string };
+type Options = { racine?: string; sortie?: string; journal?: string; effacements?: string };
 
-export async function ingerer({ racine = "corpus", sortie = "donnees/documents.jsonl", journal = "donnees/ingestion.log" }: Options = {}): Promise<Bilan> {
+export async function ingerer({ racine = "corpus", sortie = "donnees/documents.jsonl", journal = "donnees/ingestion.log", effacements = REGISTRE }: Options = {}): Promise<Bilan> {
   // 1. Charger chaque fichier. Une erreur est notée, et on passe au fichier suivant
   const charges: Document[] = [];
   const erreurs: Bilan["erreurs"] = [];
@@ -35,7 +37,11 @@ export async function ingerer({ racine = "corpus", sortie = "donnees/documents.j
   // Il reste dans le corpus, et le journal le signale pour qu'un humain le relise ; son texte n'est jamais recopié.
   // Les autres documents sont écrits par le service RH : on leur fait confiance
   const quarantaine: Bilan["quarantaine"] = [];
+  // Et un document inscrit au registre des effacements (chapitre 13, leçon 3) ne revient pas, même s'il est encore à la source
+  const registre = new Set((await lireEffacements(effacements)).map((e) => e.id));
+  const effaces: string[] = [];
   const admis = charges.filter((document) => {
+    if (registre.has(document.id)) return (effaces.push(document.id), false);
     const regles = document.metadonnees.type === "ticket" ? reperer(`${document.titre}\n${document.texte}`) : []; // le sujet aussi : un salarié l'écrit
     if (regles.length > 0) quarantaine.push({ id: document.id, regles });
     return regles.length === 0;
@@ -73,11 +79,12 @@ export async function ingerer({ racine = "corpus", sortie = "donnees/documents.j
     `${date} documents ${documents.length}, ${comptes}, doublons ${doublons.length}, erreurs ${erreurs.length}`,
     ...erreurs.map((e) => `${date} ERREUR ${e.message.replaceAll("\n", " ")}`),
     ...quarantaine.map((q) => `${date} QUARANTAINE ${q.id} (${q.regles.join(", ")})`),
+    ...effaces.map((id) => `${date} EFFACÉ ${id} (registre des effacements)`),
   ];
   await mkdir(dirname(journal), { recursive: true });
   await appendFile(journal, lignes.join("\n") + "\n");
 
-  return { documents, erreurs, doublons: doublons.map((d) => d.doublon.source), quarantaine, nouveaux, modifies, supprimes };
+  return { documents, erreurs, doublons: doublons.map((d) => d.doublon.source), quarantaine, effaces, nouveaux, modifies, supprimes };
 }
 
 // L'empreinte de chaque document du fichier précédent, s'il existe

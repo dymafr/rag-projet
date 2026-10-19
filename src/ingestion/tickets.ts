@@ -43,7 +43,8 @@ export function texteDuTicket(ticket: Ticket): string {
   return `Question : ${question}\n\nRéponse du service RH : ${reponse}`;
 }
 
-// Les données personnelles qu'un motif sait repérer. On les signale ici ; le chapitre 13 les traitera
+// Les données personnelles qu'un motif sait repérer, signalées dans les métadonnées. Le chapitre 13 masque les coordonnées
+// et les noms (src/rgpd/minimisation.ts) ; ce qui reste, la santé par exemple, fait souvent le sens de la question
 const MOTIFS: Record<string, RegExp> = {
   téléphone: /\b0\d(?:[ .]?\d{2}){4}\b/,
   santé: /malad|arr[eê]t de travail|enceinte|grossesse|accouch|handicap|h[oô]pital|m[eé]decin|fi[eè]vre|grippe|angine|varicelle|hernie|op[eé]r[eé]|alzheimer/i,
