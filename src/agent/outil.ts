@@ -11,7 +11,8 @@ export type Contexte = { date: string; matricule?: string; profil: Profil };
 
 // Ce que rend un outil : un texte pour le LLM et, pour une recherche, les passages trouvés (leurs sources pourront être
 // citées, et Claude les reçoit en blocs search_result)
-export type ResultatOutil = { texte: string; passages?: Resultat[] };
+// nonFiable (chapitre 13) : le résultat contient un texte écrit par un tiers, un ticket
+export type ResultatOutil = { texte: string; passages?: Resultat[]; nonFiable?: boolean };
 
 export type Outil<P extends z.ZodObject = z.ZodObject> = {
   nom: string; // lettres, chiffres et _ : les API refusent les espaces et les accents

@@ -28,10 +28,10 @@ export async function listerFichiers(racine = "corpus"): Promise<string[]> {
   return fichiers;
 }
 
-// Un document : son identifiant et son titre viennent de ses métadonnées, validées au passage
+// Un document : son identifiant et son titre viennent de ses métadonnées, validées au passage ; le titre normalisé comme le texte
 function document(source: string, markdown: string, brutes: unknown): Document {
   const metadonnees = valider(brutes, source);
-  return { id: metadonnees.id, source, titre: metadonnees.titre, texte: normaliser(markdown), metadonnees };
+  return { id: metadonnees.id, source, titre: normaliser(metadonnees.titre), texte: normaliser(markdown), metadonnees: { ...metadonnees, titre: normaliser(metadonnees.titre) } };
 }
 
 export async function charger(chemin: string): Promise<Document[]> {

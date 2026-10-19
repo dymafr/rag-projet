@@ -35,6 +35,14 @@ export type EntreeJournal = {
 
 export type Recherche = "libre" | "office" | "secours";
 
+// Chapitre 13, leçon 2 : la règle de deux. Une question ne doit pas réunir trois choses : un texte écrit par un tiers
+// (un ticket), des données réservées, et une action. Rhéa lit des données réservées par nature : dès qu'un outil a
+// rendu un texte non fiable, plus aucune action pour cette question. Une consigne cachée dans un ticket peut encore
+// tromper le LLM ; elle ne peut plus rien lui faire faire. La boucle répond alors elle-même, comme après un refus
+export const REGLE_DE_DEUX =
+  "Je n'ai rien fait : une action m'a été demandée après la lecture d'un ticket, un texte écrit par un salarié, et " +
+  "après un tel texte je n'en exécute aucune. Si vous vouliez cette action, demandez-la dans une nouvelle question.";
+
 // Chapitre 13 : pour un manager ou le service RH, le profil, avant la date. Ce n'est pas le LLM qui décide de ce que le
 // salarié peut lire : la recherche ne lui rend que ce qui est permis. Mais sans savoir à qui il parle, il refusait à une
 // manager un passage marqué « réservé aux managers » (essai du 19 octobre). Pour un salarié, le message ne change pas :
@@ -132,6 +140,8 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
   const tokensMax = agent.tokensMax ?? TOKENS_MAX;
   const appelsParOutil = agent.appelsParOutil ?? APPELS_PAR_OUTIL;
   const appelsFaits = new Map<string, number>();
+  let nonFiableLu = false; // un outil a-t-il rendu un texte écrit par un tiers ?
+  let bloquee = false; // une action a-t-elle été refusée par la règle de deux ?
 
   // Un appel d'outil : la limite d'appels, l'exécution (avec la confirmation s'il le faut), le journal, puis le résultat
   // ajouté à la conversation
@@ -140,10 +150,16 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
     const debut = performance.now();
     const n = (appelsFaits.get(appel.nom) ?? 0) + 1;
     appelsFaits.set(appel.nom, n);
-    const { resultat, erreur, statut, detail } =
-      n > appelsParOutil
-        ? { resultat: { texte: `Limite atteinte : ${appelsParOutil} appels de ${appel.nom} pour cette question. Répondez avec ce que vous avez.` }, erreur: true, statut: "limite" as const, detail: undefined }
-        : await executer(appel, agent.outils, contexte, agent.confirmer);
+    const action = agent.outils.find((o) => o.nom === appel.nom)?.aConfirmer !== undefined;
+    let execution: Execution;
+    if (n > appelsParOutil) {
+      execution = { resultat: { texte: `Limite atteinte : ${appelsParOutil} appels de ${appel.nom} pour cette question. Répondez avec ce que vous avez.` }, erreur: true, statut: "limite" };
+    } else if (action && nonFiableLu) {
+      bloquee = true; // la règle de deux : l'action n'est même pas proposée au salarié
+      execution = { resultat: { texte: "Action refusée : un ticket a été lu pour cette question (règle de deux)." }, erreur: false, statut: "refusé", detail: "règle de deux : un ticket a été lu" };
+    } else execution = await executer(appel, agent.outils, contexte, agent.confirmer);
+    const { resultat, erreur, statut, detail } = execution;
+    if (resultat.nonFiable) nonFiableLu = true;
     const duree = performance.now() - debut;
     await agent.journaliser?.({
       horodatage: new Date().toISOString(),
@@ -209,7 +225,7 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
     }
     // 6. Une action refusée : la boucle répond elle-même. Rendre la parole au LLM, c'est le laisser affirmer l'avoir faite
     if (refus) {
-      yield { type: "reponse", tour, texte: "Je n'ai rien fait : vous n'avez pas confirmé l'action demandée.", usage };
+      yield { type: "reponse", tour, texte: bloquee ? REGLE_DE_DEUX : "Je n'ai rien fait : vous n'avez pas confirmé l'action demandée.", usage };
       return;
     }
   }

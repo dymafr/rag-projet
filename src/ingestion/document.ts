@@ -1,5 +1,6 @@
 // Le modèle commun : quel que soit son format d'origine, chaque source devient un Document
 import { createHash } from "node:crypto";
+import { retirerInvisibles } from "./injection.ts";
 import type { Metadonnees } from "./metadonnees.ts";
 
 export type Document = {
@@ -12,7 +13,7 @@ export type Document = {
 
 // Un même texte doit toujours s'écrire avec les mêmes caractères
 export function normaliser(texte: string): string {
-  return texte
+  return retirerInvisibles(texte) // chapitre 13 : rien à l'écran, mais lu par le LLM
     .normalize("NFC") // « é » : un seul caractère, jamais « e » suivi d'un accent
     .replace(/[\u00a0\u202f]/g, " ") // espaces insécables
     .replace(/\r\n?/g, "\n") // fins de ligne Windows

@@ -14,6 +14,8 @@ console.log(`${documents.length} documents écrits dans donnees/documents.jsonl 
 console.log(`  nouveaux : ${nouveaux.length}${detail(nouveaux)}, modifiés : ${modifies.length}${detail(modifies)}, ` +
   `supprimés : ${supprimes.length}${detail(supprimes)}, inchangés : ${inchanges}`);
 for (const source of bilan.doublons) console.log(`  Doublon écarté : ${source}`);
+// Chapitre 13 : un ticket qui s'adresse à l'assistant attend qu'un humain le relise. On ne montre jamais son texte
+for (const { id, regles } of bilan.quarantaine) console.log(`  En quarantaine : ${id} (${regles.join(", ")}), à relire avant de l'indexer`);
 
 // Une erreur n'arrête pas l'ingestion, mais elle se voit : message, journal et code de sortie
 for (const { message } of bilan.erreurs) console.error(`  Erreur : ${message}`);

@@ -3,7 +3,7 @@
 // chercher plusieurs fois, des numéros se répéteraient d'une recherche à l'autre
 import { z } from "zod";
 import { horsCorpus, meilleurScore, SEUIL } from "../generation/abstention.ts";
-import { baliser, BUDGET_PASSAGES, choisir, estimerTokens } from "../generation/prompt.ts";
+import { baliser, BUDGET_PASSAGES, choisir, estimerTokens, estUnTicket } from "../generation/prompt.ts";
 import type { Profil } from "../recherche/droits.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 import { definirOutil } from "./outil.ts";
@@ -40,6 +40,7 @@ export const chercherDocuments = (chercher: Chercher) =>
       }
       // Le budget du chapitre 7, à chaque recherche : les passages les plus proches, tant qu'ils tiennent
       const { passages } = choisir(resultats, BUDGET_PASSAGES, estimerTokens);
-      return { texte: passages.map((p) => baliser(p)).join("\n\n"), passages };
+      // Chapitre 13 : un ticket est un texte écrit par un salarié ; la boucle de l'agent en tient compte (règle de deux)
+      return { texte: passages.map((p) => baliser(p)).join("\n\n"), passages, nonFiable: passages.some(estUnTicket) };
     },
   });

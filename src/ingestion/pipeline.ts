@@ -3,12 +3,14 @@ import { appendFile, mkdir, readFile, rename, writeFile } from "node:fs/promises
 import { dirname } from "node:path";
 import { charger, listerFichiers } from "./chargeurs.ts";
 import { dedoublonner, empreinte, type Document } from "./document.ts";
+import { reperer } from "./injection.ts";
 import { lierVersions } from "./metadonnees.ts";
 
 export type Bilan = {
   documents: Document[];
   erreurs: { fichier: string; message: string }[];
   doublons: string[];
+  quarantaine: { id: string; regles: string[] }[]; // chapitre 13 : les tickets écartés, à relire
   nouveaux: string[];
   modifies: string[];
   supprimes: string[];
@@ -29,8 +31,18 @@ export async function ingerer({ racine = "corpus", sortie = "donnees/documents.j
     }
   }
 
+  // 1 bis. La quarantaine (chapitre 13) : un ticket dont une phrase s'adresse à l'assistant n'entre pas dans l'index.
+  // Il reste dans le corpus, et le journal le signale pour qu'un humain le relise ; son texte n'est jamais recopié.
+  // Les autres documents sont écrits par le service RH : on leur fait confiance
+  const quarantaine: Bilan["quarantaine"] = [];
+  const admis = charges.filter((document) => {
+    const regles = document.metadonnees.type === "ticket" ? reperer(`${document.titre}\n${document.texte}`) : []; // le sujet aussi : un salarié l'écrit
+    if (regles.length > 0) quarantaine.push({ id: document.id, regles });
+    return regles.length === 0;
+  });
+
   // 2. Dédoublonner. Deux textes différents ne peuvent pas porter le même identifiant : c'est lui que Rhéa cite
-  const { uniques, doublons } = dedoublonner(charges);
+  const { uniques, doublons } = dedoublonner(admis);
   const documents: Document[] = [];
   for (const document of uniques) {
     const autre = documents.find((d) => d.id === document.id);
@@ -60,11 +72,12 @@ export async function ingerer({ racine = "corpus", sortie = "donnees/documents.j
   const lignes = [
     `${date} documents ${documents.length}, ${comptes}, doublons ${doublons.length}, erreurs ${erreurs.length}`,
     ...erreurs.map((e) => `${date} ERREUR ${e.message.replaceAll("\n", " ")}`),
+    ...quarantaine.map((q) => `${date} QUARANTAINE ${q.id} (${q.regles.join(", ")})`),
   ];
   await mkdir(dirname(journal), { recursive: true });
   await appendFile(journal, lignes.join("\n") + "\n");
 
-  return { documents, erreurs, doublons: doublons.map((d) => d.doublon.source), nouveaux, modifies, supprimes };
+  return { documents, erreurs, doublons: doublons.map((d) => d.doublon.source), quarantaine, nouveaux, modifies, supprimes };
 }
 
 // L'empreinte de chaque document du fichier précédent, s'il existe
