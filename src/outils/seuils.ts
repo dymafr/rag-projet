@@ -40,7 +40,7 @@ const questionsHorsCorpus = [
 // sa recherche) : depuis le chapitre 9, le plus proche n'est pas forcément le premier
 async function meilleursScores(questions: string[]) {
   const scores = [];
-  for (const question of questions) scores.push({ question, score: meilleurScore(await trouverPassages(pool, question, PASSAGES_DEMANDES)) });
+  for (const question of questions) scores.push({ question, score: meilleurScore(await trouverPassages(pool, question, PASSAGES_DEMANDES, "salarie")) });
   return scores.sort((a, b) => b.score - a.score);
 }
 const scoresCouverts = await meilleursScores(questionsCouvertes);

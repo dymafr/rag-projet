@@ -20,7 +20,7 @@ import type { Resultat } from "../src/recherche/vectorielle.ts";
 
 const usage = { entree: 100, enCache: 0, sortie: 10 };
 const faq: Resultat = { id: "FAQ-RH#2", document: "FAQ-RH", titres: ["FAQ RH de Kalyo", "Télétravail"], texte: "Jusqu'à trois jours par semaine.", score: 0.888 };
-const contexte = { date: "2026-10-13" };
+const contexte = { date: "2026-10-13", profil: "salarie" as const };
 
 // Un faux LLM : il rend, tour après tour, les réponses du scénario, et garde une copie de la conversation reçue
 function fauxLlm(...scenario: Partial<ReponseAgent>[]) {
@@ -123,6 +123,13 @@ test("executer garde hors du prompt la cause d'un outil qui échoue", async () =
   assert.ok(erreur);
   assert.doesNotMatch(resultat.texte, /5433/);
   assert.equal(detail, "connexion refusée : 127.0.0.1:5433");
+});
+
+test("le message dit le profil d'un manager ou du service RH, pas celui d'un salarié (chapitre 13)", async () => {
+  const { llm, recus } = fauxLlm({ texte: "Voici le barème [MGR-PR-01#3]." });
+  await etapes(agir("Quel est le barème des primes ?", { llm, outils: [recherche], systeme: "" }, { ...contexte, profil: "manager" }));
+  const message = recus[0][0].role === "utilisateur" ? recus[0][0].texte : "";
+  assert.match(message, /^Profil du salarié connecté : manager\. Il a le droit de lire tout ce que rendent tes outils, y compris un passage réservé\.\nDate du jour : 2026-10-13\n\nQuestion : /);
 });
 
 test("chercher_documents balise les passages par leur source, ou dit qu'aucun n'est assez proche", async () => {

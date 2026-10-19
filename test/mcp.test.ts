@@ -15,7 +15,7 @@ let appels = 0; const recherche = chercherDocuments(async () => { appels += 1; r
 // Un client minimal : il envoie une requête et attend la réponse qui porte le même identifiant
 async function connecter() {
   const [client, serveur] = InMemoryTransport.createLinkedPair();
-  await creerServeurMcp([recherche], () => ({ date: "2026-10-13" })).connect(serveur);
+  await creerServeurMcp([recherche], () => ({ date: "2026-10-13", profil: "salarie" as const })).connect(serveur);
   const attentes = new Map<number, (message: any) => void>();
   client.onmessage = (message: any) => attentes.get(message.id)?.(message);
   await client.start();
@@ -53,5 +53,5 @@ test("un appel exécute l'outil ; des arguments invalides reviennent en erreur, 
 
 test("un outil qui agit ne s'expose pas par le serveur MCP", () => {
   const action = definirOutil({ nom: "envoyer", description: "", parametres: z.object({}), aConfirmer: () => "envoyer", executer: async () => ({ texte: "" }) });
-  assert.throws(() => creerServeurMcp([action], () => ({ date: "2026-10-13" })), /agit/);
+  assert.throws(() => creerServeurMcp([action], () => ({ date: "2026-10-13", profil: "salarie" as const })), /agit/);
 });

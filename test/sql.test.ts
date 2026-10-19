@@ -114,10 +114,10 @@ test("interroger répare une requête refusée : la raison du refus part au LLM,
 
 test("interroger_soldes donne le périmètre avec le résultat, et ne fait rien sans salarié connecté", async () => {
   const outil = interrogerSoldes(pool, fauxLlm(["```sql\nSELECT count(*) AS salaries FROM soldes_visibles WHERE cp_reliquat > 20\n```"]));
-  const { texte } = await outil.executer({ question: "Combien de salariés ont plus de 20 jours de reliquat ?" }, { date: "2026-10-17", matricule: "K0042" });
+  const { texte } = await outil.executer({ question: "Combien de salariés ont plus de 20 jours de reliquat ?" }, { date: "2026-10-17", matricule: "K0042", profil: "salarie" });
   assert.match(texte, /Périmètre : le salarié connecté ne voit que ses propres soldes/);
   assert.match(texte, /salaries : 0/); // K0042 a 16 jours : le chiffre ne porte que sur sa ligne, d'où le périmètre
-  const anonyme = await outil.executer({ question: "Combien de salariés ?" }, { date: "2026-10-17" });
+  const anonyme = await outil.executer({ question: "Combien de salariés ?" }, { date: "2026-10-17", profil: "salarie" });
   assert.match(anonyme.texte, /Aucun salarié n'est connecté/);
 });
 

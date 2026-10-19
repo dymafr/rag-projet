@@ -6,7 +6,8 @@ import type { Llm } from "../llm.ts";
 import { demanderJson } from "./llm-json.ts";
 import type { Filtres } from "./vectorielle.ts";
 
-// Les types que Rhéa peut lire (les tickets lui sont fermés : chapitre 13)
+// Les types qu'une question peut demander. Pas les tickets : seul le profil rh les lit, et c'est le filtre d'accès qui en
+// décide (chapitre 13, droits.ts), jamais la question
 const TYPES = ["politique", "accord", "faq", "intranet"] as const;
 
 // strictObject : une clé inattendue (un site, un auteur…) rend la réponse invalide plutôt que d'être ignorée en silence.

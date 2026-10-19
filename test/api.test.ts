@@ -6,11 +6,12 @@ import type { AddressInfo } from "node:net";
 import type Anthropic from "@anthropic-ai/sdk";
 import type OpenAI from "openai";
 import { repondreEnFlux, type Dependances, type Evenement } from "../src/api/rhea.ts";
-import { creerServeur, evenementSSE } from "../src/api/serveur.ts";
+import { creerServeur, evenementSSE, type DependancesServeur } from "../src/api/serveur.ts";
 import { streamerAvecClaude } from "../src/generation/claude.ts";
 import type { GenerateurEnFlux, Morceau } from "../src/generation/generateur.ts";
 import { streamerAvecResponses } from "../src/generation/openai.ts";
 import type { PromptAugmente } from "../src/generation/prompt.ts";
+import type { Profil } from "../src/recherche/droits.ts";
 import type { Resultat } from "../src/recherche/vectorielle.ts";
 
 const faq: Resultat = { id: "FAQ-RH#2", document: "FAQ-RH", titres: ["FAQ RH de Kalyo", "Télétravail"], texte: "Jusqu'à trois jours par semaine.", score: 0.888 };
@@ -19,8 +20,11 @@ const llm = (...morceaux: Morceau[]): GenerateurEnFlux =>
   async function* () {
     yield* morceaux;
   };
-const dependances = (generer: GenerateurEnFlux, score = 0.888, budget = 1500): Dependances => ({
+// Un annuaire de test : deux salariés connus (chapitre 13)
+const ANNUAIRE: Record<string, Profil> = { K0101: "salarie", K0035: "manager" };
+const dependances = (generer: GenerateurEnFlux, score = 0.888, budget = 1500): DependancesServeur => ({
   chercher: async () => [{ ...faq, score }],
+  profil: async (matricule) => ANNUAIRE[matricule] ?? null,
   generer,
   systeme: { version: "1", texte: "Tu es Rhéa.", empreinte: "abcd1234" },
   budget,
@@ -38,7 +42,7 @@ test("evenementSSE écrit le nom, les données en JSON sur une ligne, puis une l
 
 test("repondreEnFlux envoie le texte au fil de l'écriture, puis les sources citées, puis la fin", async () => {
   const generer = llm({ type: "texte", texte: "Trois jours " }, { type: "texte", texte: "[1]." }, { type: "fin", usage });
-  const liste = await evenements(repondreEnFlux("Combien de jours ?", dependances(generer)));
+  const liste = await evenements(repondreEnFlux("Combien de jours ?", "salarie", dependances(generer)));
   assert.deepEqual(liste.map((e) => e.nom), ["texte", "texte", "sources", "fin"]);
   assert.deepEqual(liste[2].donnees, [{ numero: 1, source: "FAQ-RH#2", titre: "FAQ RH de Kalyo > Télétravail", extraits: [] }]);
   assert.deepEqual(liste[3].donnees, { usage, prompt: "v1 abcd1234" });
@@ -49,31 +53,31 @@ test("repondreEnFlux s'abstient sans appeler le LLM sous le seuil, ou quand aucu
   const generer: GenerateurEnFlux = async function* () {
     appels++;
   };
-  const loin = await evenements(repondreEnFlux("Quelle météo ?", dependances(generer, 0.4)));
+  const loin = await evenements(repondreEnFlux("Quelle météo ?", "salarie", dependances(generer, 0.4)));
   assert.deepEqual(loin.map((e) => e.nom), ["abstention", "fin"]);
-  const sansPassage = await evenements(repondreEnFlux("Combien de jours ?", dependances(generer, 0.888, 5)));
+  const sansPassage = await evenements(repondreEnFlux("Combien de jours ?", "salarie", dependances(generer, 0.888, 5)));
   assert.deepEqual(sansPassage.map((e) => e.nom), ["abstention", "fin"]);
   assert.equal(appels, 0);
 });
 
 test("repondreEnFlux demande de remplacer une réponse sans source vérifiable", async () => {
-  const sansNumero = await evenements(repondreEnFlux("Rachat ?", dependances(llm({ type: "texte", texte: "Je ne sais pas." }, { type: "fin", usage }))));
+  const sansNumero = await evenements(repondreEnFlux("Rachat ?", "salarie", dependances(llm({ type: "texte", texte: "Je ne sais pas." }, { type: "fin", usage }))));
   assert.deepEqual(sansNumero.map((e) => e.nom), ["texte", "sources", "abstention", "fin"]);
   const citationFausse = llm({ type: "texte", texte: "Quatre jours." }, { type: "citation", citation: { numero: 1, texteCite: "Quatre jours par semaine." } }, { type: "fin", usage });
-  const liste = await evenements(repondreEnFlux("Combien ?", dependances(citationFausse)));
+  const liste = await evenements(repondreEnFlux("Combien ?", "salarie", dependances(citationFausse)));
   assert.deepEqual(liste.map((e) => e.nom), ["texte", "sources", "abstention", "fin"]);
 });
 
 test("repondreEnFlux ignore une citation qui désigne un passage absent", async () => {
   const horsLimites = llm({ type: "texte", texte: "Trois jours [1]." }, { type: "citation", citation: { numero: 3, texteCite: "?" } }, { type: "fin", usage });
-  const liste = await evenements(repondreEnFlux("Combien ?", dependances(horsLimites)));
+  const liste = await evenements(repondreEnFlux("Combien ?", "salarie", dependances(horsLimites)));
   const sources = liste.find((e) => e.nom === "sources")!.donnees as { numero: number }[];
   assert.deepEqual(sources.map((s) => s.numero), [1]);
 });
 
 test("repondreEnFlux condense une question de suite, cherche la question autonome et l'annonce à la page", async () => {
   let cherchee = "";
-  const d: Dependances = {
+  const d: DependancesServeur = {
     ...dependances(llm({ type: "texte", texte: "Huit jours [1]." }, { type: "fin", usage })),
     chercher: async (question) => {
       cherchee = question;
@@ -82,17 +86,17 @@ test("repondreEnFlux condense une question de suite, cherche la question autonom
     condenser: async () => "Combien de RTT ai-je par an à 80 % ?",
   };
   const historique = [{ question: "Combien de RTT ai-je par an ?", reponse: "10 jours pour un temps plein [1]." }];
-  const liste = await evenements(repondreEnFlux("Et à 80 % ?", d, undefined, historique));
+  const liste = await evenements(repondreEnFlux("Et à 80 % ?", "salarie", d, undefined, historique));
   assert.deepEqual(liste[0], { nom: "question", donnees: { question: "Combien de RTT ai-je par an à 80 % ?" } });
   assert.equal(cherchee, "Combien de RTT ai-je par an à 80 % ?");
   // Sans historique, aucune condensation : la question est cherchée telle quelle, sans événement question
-  const seule = await evenements(repondreEnFlux("Combien de RTT ai-je par an ?", d));
+  const seule = await evenements(repondreEnFlux("Combien de RTT ai-je par an ?", "salarie", d));
   assert.equal(cherchee, "Combien de RTT ai-je par an ?");
   assert.ok(!seule.some((e) => e.nom === "question"));
 });
 
 // Un serveur de test sur un port libre, arrêté à la fin
-async function avecServeur(d: Dependances, essai: (adresse: string) => Promise<void>) {
+async function avecServeur(d: DependancesServeur, essai: (adresse: string) => Promise<void>) {
   const serveur = creerServeur(d);
   await new Promise<void>((pret) => serveur.listen(0, "127.0.0.1", pret));
   try {
@@ -101,7 +105,7 @@ async function avecServeur(d: Dependances, essai: (adresse: string) => Promise<v
     serveur.close();
   }
 }
-const ENTETES_JSON = { "Content-Type": "application/json" };
+const ENTETES_JSON = { "Content-Type": "application/json", "X-Matricule": "K0101" }; // le salarié connecté (chapitre 13)
 
 test("le serveur répond en flux à POST /ask, refuse une question vide et sert la page de chat", async () => {
   await avecServeur(dependances(llm({ type: "texte", texte: "Trois jours [1]." }, { type: "fin", usage })), async (adresse) => {
@@ -121,7 +125,7 @@ test("le serveur répond en flux à POST /ask, refuse une question vide et sert 
 
 test("le serveur transmet l'historique de la conversation, et refuse un historique mal formé ou trop long", async () => {
   let recu: unknown;
-  const d: Dependances = { ...dependances(llm({ type: "texte", texte: "Huit jours [1]." }, { type: "fin", usage })), condenser: async (q, h) => ((recu = h), q) };
+  const d: DependancesServeur = { ...dependances(llm({ type: "texte", texte: "Huit jours [1]." }, { type: "fin", usage })), condenser: async (q, h) => ((recu = h), q) };
   await avecServeur(d, async (adresse) => {
     const historique = [{ question: "Combien de RTT ?", reponse: "10 jours." }];
     const ok = await fetch(`${adresse}/ask`, { method: "POST", headers: ENTETES_JSON, body: JSON.stringify({ question: "Et à 80 % ?", historique }) });
@@ -134,6 +138,26 @@ test("le serveur transmet l'historique de la conversation, et refuse un historiq
     const long = Array.from({ length: 4 }, () => ({ question: "Combien ?", reponse: "…" }));
     const tropLong = await fetch(`${adresse}/ask`, { method: "POST", headers: ENTETES_JSON, body: JSON.stringify({ question: "Et ?", historique: long }) });
     assert.deepEqual(await tropLong.json(), { erreur: "historique trop long : 3 échanges au plus" });
+  });
+});
+
+test("le serveur exige le salarié connecté (401), refuse un matricule inconnu (403) et cherche avec le profil de l'annuaire", async () => {
+  const profils: Profil[] = [];
+  const d: DependancesServeur = {
+    ...dependances(llm({ type: "texte", texte: "Trois jours [1]." }, { type: "fin", usage })),
+    chercher: async (_question, _date, profil) => (profils.push(profil), [faq]),
+  };
+  await avecServeur(d, async (adresse) => {
+    const poser = (entetes: Record<string, string>, corps: object = { question: "Combien de jours ?" }) =>
+      fetch(`${adresse}/ask`, { method: "POST", headers: { "Content-Type": "application/json", ...entetes }, body: JSON.stringify(corps) });
+    assert.equal((await poser({})).status, 401);
+    assert.equal((await poser({ "X-Matricule": "Morgane" })).status, 401);
+    assert.equal((await poser({ "X-Matricule": "K9999" })).status, 403);
+    // Le client ne choisit pas son profil : une clé de plus dans le corps est refusée
+    assert.equal((await poser({ "X-Matricule": "K0101" }, { question: "Combien ?", profil: "rh" })).status, 400);
+    await (await poser({ "X-Matricule": "K0035" })).text();
+    await (await poser({ "X-Matricule": "K0101" })).text();
+    assert.deepEqual(profils, ["manager", "salarie"]); // aucune recherche pour les demandes refusées
   });
 });
 

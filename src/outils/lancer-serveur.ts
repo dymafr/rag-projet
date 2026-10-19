@@ -8,6 +8,7 @@ import { creerGenerateurEnFlux } from "../generation/generateur.ts";
 import { BUDGET_PASSAGES, PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
 import { condenser } from "../recherche/conversation.ts";
+import { profilDuSalarie } from "../recherche/droits.ts";
 import { aujourdhui, outilsParDefaut, trouverPassages } from "../recherche/passages.ts";
 import { RECHERCHE } from "../recherche/reglages.ts";
 
@@ -18,7 +19,8 @@ if (nomDuModele() !== MODELE_DU_SEUIL) {
 const systeme = await lirePromptSysteme();
 const outils = outilsParDefaut(); // le LLM et le cross-encoder de .env, pour les réglages de recherche qui en demandent
 const serveur = creerServeur({
-  chercher: (question, date) => trouverPassages(pool, question, PASSAGES_DEMANDES, date, RECHERCHE, outils),
+  chercher: (question, date, profil) => trouverPassages(pool, question, PASSAGES_DEMANDES, profil, date, RECHERCHE, outils),
+  profil: (matricule) => profilDuSalarie(pool, matricule), // chapitre 13 : l'annuaire dit qui peut lire quoi
   condenser: RECHERCHE.condensation ? (question, historique) => condenser(question, historique, outils.llm) : undefined,
   generer: creerGenerateurEnFlux(),
   systeme,

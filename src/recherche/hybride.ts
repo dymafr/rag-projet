@@ -14,7 +14,7 @@ export async function chercherHybride(
   motsCles: string,
   vecteur: number[],
   k: number,
-  filtres: Filtres = {},
+  filtres: Filtres,
   options: { candidats?: number; poids?: [number, number] } = {},
 ): Promise<Resultat[]> {
   const { candidats = 50, poids = [1, 1] } = options;

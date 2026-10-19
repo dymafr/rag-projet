@@ -11,7 +11,7 @@ import type { Outil } from "../src/agent/outil.ts";
 import { fichiersCites } from "../src/agent/sources.ts";
 
 let lister: Outil, chercher: Outil, lire: Outil;
-const contexte = { date: "2026-10-13" };
+const contexte = { date: "2026-10-13", profil: "salarie" as const };
 before(async () => {
   const dossier = await mkdtemp(join(tmpdir(), "textes-"));
   await writeFile(join(dossier, "FAQ-RH.md"), "<!-- FAQ-RH · faq -->\n# FAQ RH de Kalyo\n\n## Jours fériés\n\nLe lundi de Pentecôte est travaillé : journée de solidarité.\n");

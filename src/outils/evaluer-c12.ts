@@ -17,6 +17,7 @@ import { FAMILLES, lireJeuAuDela, verdict, type Verdict } from "../eval/au-dela.
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
 import { creerLlm } from "../llm.ts";
+import { profilDeSession } from "../recherche/droits.ts";
 import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
 
 const { values } = parseArgs({
@@ -32,7 +33,7 @@ const systeme = await lirePromptSysteme("prompts/rhea-agent.md");
 const agent: Agent = {
   llm: creerLlmAgent(),
   outils: [
-    chercherDocuments((requete, date) => trouverPassages(pool, requete, PASSAGES_DEMANDES, date)),
+    chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date)),
     consulterSolde(pool),
     consulterProfil(pool),
     consulterOrganigramme(pool), // leçon 2
@@ -54,7 +55,9 @@ try {
     let reponse = "";
     // Leçon 2 : avec un salarié connecté, sa fiche de l'organigramme d'office, comme dans npm run agent
     const office = q.matricule ? [{ id: "organigramme-d-office", nom: "consulter_organigramme", arguments: { personne: null } }] : [];
-    for await (const etape of agir(q.question, { ...agent, appelsDOffice: office }, { date: values.date, matricule: q.matricule })) {
+    // Chapitre 13 : le profil du salarié de la question, lu dans l'annuaire ; sans salarié, les documents ouverts à tous
+    const contexte = { date: values.date, matricule: q.matricule, profil: await profilDeSession(pool, q.matricule) };
+    for await (const etape of agir(q.question, { ...agent, appelsDOffice: office }, contexte)) {
       if (etape.type === "appel") outils.push(etape.appel.nom);
       if (etape.type === "reponse") reponse = etape.texte.trim();
     }

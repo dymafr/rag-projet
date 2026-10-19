@@ -52,8 +52,9 @@ export function systemeMaison(pool: pg.Pool, systeme: PromptSysteme): Systeme {
     let abstention = false;
     const evenements = repondreEnFlux(
       question,
+      "salarie", // les questions du jeu sont celles d'un salarié
       {
-        chercher: (q, d) => trouverPassages(pool, q, PASSAGES_DEMANDES, d, RECHERCHE, outils),
+        chercher: (q, d, profil) => trouverPassages(pool, q, PASSAGES_DEMANDES, profil, d, RECHERCHE, outils),
         generer: (prompt, signal) => {
           lus = prompt.passages; // les passages que le LLM lira
           return generer(prompt, signal);

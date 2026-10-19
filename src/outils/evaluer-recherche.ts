@@ -57,7 +57,7 @@ const traces: FichierDeTraces["traces"] = [];
 for (const q of couvertes) {
   // Une question de suite est d'abord condensée avec son historique, comme le fait Rhéa (leçon 8)
   const question = reglages.condensation && q.historique ? await condenser(q.question, q.historique, llm) : q.question;
-  const resultats = await trouverPassages(pool, question, k, q.date, reglages, outils, PROFONDEUR);
+  const resultats = await trouverPassages(pool, question, k, "salarie", q.date, reglages, outils, PROFONDEUR); // les questions d'un salarié
   const autonome = question !== q.question ? { autonome: question } : {};
   traces.push({ id: q.id, question: q.question, ...autonome, candidats: resultats.map((r) => ({ id: r.id, score: Number(r.score.toFixed(4)) })) });
   const trouves = resultats.map((r) => r.id);

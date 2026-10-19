@@ -10,6 +10,7 @@ import { pool } from "../db.ts";
 import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
 import { dateDeFin, empreintes, insererParLots, ligne, metadonnees } from "../stockage/chunks.ts";
 import { mettreAJour, planifier, supprimer, type Empreintes } from "../stockage/incremental.ts";
+import { protegerChunks } from "../recherche/droits.ts";
 import { ajouterPleinTexte, basculer, creerIndex, creerTable, ecrireIndexation, lireIndexation } from "../stockage/schema.ts";
 
 const { values } = parseArgs({
@@ -95,6 +96,8 @@ try {
     await basculer(client);
     await ecrireIndexation(client, { modele, dimension, stockage });
   }
+  // La sécurité par ligne du chapitre 13, reposée à chaque fois : une table reconstruite n'en a pas
+  await protegerChunks(client);
   await client.query("COMMIT");
 } catch (erreur) {
   await client.query("ROLLBACK").catch(() => {}); // c'est la première erreur qui explique l'échec

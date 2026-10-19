@@ -39,9 +39,11 @@ export class EmbeddingsRhea extends Embeddings {
 
 // 2. Le magasin lit une table avec une colonne de métadonnées en JSON. Une vue la fabrique à partir de la table chunks,
 // sans rien copier. Les filtres de LangChain ne comparent que des nombres : les dates deviennent des entiers AAAAMMJJ,
-// et un texte toujours en vigueur reçoit une fin lointaine
+// et un texte toujours en vigueur reçoit une fin lointaine. security_invoker (chapitre 13) : la vue lit chunks avec les
+// droits de celui qui l'interroge ; sans lui, elle les lirait avec ceux de son propriétaire, et passerait outre la
+// sécurité par ligne
 export const VUE = `
-  CREATE OR REPLACE VIEW chunks_langchain AS
+  CREATE OR REPLACE VIEW chunks_langchain WITH (security_invoker = true) AS
   SELECT id, texte, embedding,
          jsonb_build_object(
            'document', document, 'titres', titres, 'type', type, 'acces', acces,
@@ -95,7 +97,7 @@ export function modeleLangChain(): BaseChatModel {
 }
 
 // 4. Brancher notre propre recherche : un retriever LangChain qui appelle trouverPassages, avec tous les réglages du
-// chapitre 9. La chaîne ne voit pas la différence
+// chapitre 9. La chaîne ne voit pas la différence. Le profil salarie, comme filtreLangChain : les documents ouverts à tous
 export class RetrieverRhea extends BaseRetriever {
   lc_namespace = ["rhea", "retrievers"];
   pool: pg.Pool;
@@ -108,7 +110,7 @@ export class RetrieverRhea extends BaseRetriever {
     this.date = date;
   }
   async _getRelevantDocuments(question: string): Promise<Document[]> {
-    const resultats = await trouverPassages(this.pool, question, this.k, this.date);
+    const resultats = await trouverPassages(this.pool, question, this.k, "salarie", this.date);
     return resultats.map(versDocument);
   }
 }

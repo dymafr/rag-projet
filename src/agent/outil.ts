@@ -1,11 +1,13 @@
 // Un outil que le LLM peut appeler : un nom, une description qui lui dit quand s'en servir, des paramètres décrits par un
 // schéma zod, et la fonction qui fait le travail. Le LLM ne fait que demander l'appel ; c'est notre code qui l'exécute
 import { z } from "zod";
+import type { Profil } from "../recherche/droits.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 
-// Ce que l'application sait de la conversation, et que le LLM ne choisit jamais : la date du jour et, au chapitre 10,
-// leçon 3, le salarié connecté. Un argument que le LLM écrit peut venir d'une question piégée ; le contexte, non
-export type Contexte = { date: string; matricule?: string };
+// Ce que l'application sait de la conversation, et que le LLM ne choisit jamais : la date du jour, le salarié connecté
+// (chapitre 10, leçon 3) et son profil, qui décide des documents qu'il peut lire (chapitre 13). Un argument que le LLM
+// écrit peut venir d'une question piégée ; le contexte, non
+export type Contexte = { date: string; matricule?: string; profil: Profil };
 
 // Ce que rend un outil : un texte pour le LLM et, pour une recherche, les passages trouvés (leurs sources pourront être
 // citées, et Claude les reçoit en blocs search_result)

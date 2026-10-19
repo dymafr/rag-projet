@@ -50,9 +50,9 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(values.date) || !Number.isInteger(toursMax) || t
 
 const systeme = await lirePromptSysteme(values.prompt ?? (surFichiers ? "prompts/rhea-fichiers.md" : "prompts/rhea-agent.md"));
 // Les outils de Rhéa, sans salarié connecté : les questions du jeu ne parlent de la situation de personne. Un ticket
-// demandé par erreur ne s'ouvrirait pas : sans salarié, l'outil ne fait rien
+// demandé par erreur ne s'ouvrirait pas : sans salarié, l'outil ne fait rien. Profil salarie : les documents ouverts à tous
 // Leçon 7 : sur fichiers, les trois outils d'un agent de code remplacent la recherche de Rhéa
-const recherches = surFichiers ? outilsFichiers(DOSSIER_TEXTES) : [chercherDocuments((requete, date) => trouverPassages(pool, requete, PASSAGES_DEMANDES, date))];
+const recherches = surFichiers ? outilsFichiers(DOSSIER_TEXTES) : [chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date))];
 const outils = [
   ...recherches,
   consulterSolde(pool),
@@ -84,7 +84,7 @@ try {
     const trace: TraceAgent = { id: q.id, categorie: q.categorie, question: q.question, appels: [], tours: 0, dernierTour: false, succes: null, documents: [], succesDocument: null, cites: [], inventees: [], tokens: 0, secondes: 0, reponse: "", resultats: [] };
     const documents = new Set<string>();
     const historique = q.categorie === "couverte" ? (q.historique ?? []) : [];
-    for await (const etape of agir(q.question, agent, { date: q.date ?? values.date }, historique)) {
+    for await (const etape of agir(q.question, agent, { date: q.date ?? values.date, profil: "salarie" }, historique)) {
       if (etape.type === "appel") trace.appels.push({ id: etape.appel.id, nom: etape.appel.nom, arguments: etape.appel.arguments });
       else if (etape.type === "resultat") {
         vus.push(...(etape.resultat.passages ?? []));

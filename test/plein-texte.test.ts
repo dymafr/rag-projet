@@ -46,6 +46,8 @@ after(async () => {
 });
 
 const ids = (resultats: { id: string }[]) => resultats.map((r) => r.id);
+// Le niveau d'accès est obligatoire (chapitre 13) : pour les tests qui portent sur autre chose, un lecteur qui lit tout
+const TOUT = { acces: ["tous", "manager", "rh"] };
 
 test("un code exact : le passage qui contient EMA arrive en tête", async () => {
   const resultats = await chercherPleinTexte(base, "Que veut dire le code EMA ?", 3, { acces: ["tous"], enVigueurLe: "2026-10-01" });
@@ -54,17 +56,17 @@ test("un code exact : le passage qui contient EMA arrive en tête", async () => 
 });
 
 test("les accents et les pluriels ne comptent pas : « fievre » trouve « fièvre », « conges » trouve « congés »", async () => {
-  assert.deepEqual(ids(await chercherPleinTexte(base, "fievre", 5)), ["CA#2"]);
-  assert.deepEqual(new Set(ids(await chercherPleinTexte(base, "conges", 5))), new Set(["CA#2", "CA#3"]));
+  assert.deepEqual(ids(await chercherPleinTexte(base, "fievre", 5, TOUT)), ["CA#2"]);
+  assert.deepEqual(new Set(ids(await chercherPleinTexte(base, "conges", 5, TOUT))), new Set(["CA#2", "CA#3"]));
 });
 
 test("un mot rare pèse plus qu'un mot répété partout (l'IDF) : « 12.3 » l'emporte sur « article »", async () => {
-  const resultats = await chercherPleinTexte(base, "Que dit l'article 12.3 ?", 2);
+  const resultats = await chercherPleinTexte(base, "Que dit l'article 12.3 ?", 2, TOUT);
   assert.deepEqual(ids(resultats), ["NF#1", "NF#2"]); // sans IDF, NF#2, qui a trois fois « article », passerait devant
 });
 
 test("les filtres de la recherche vectorielle s'appliquent : accès et version en vigueur", async () => {
-  const tous = ids(await chercherPleinTexte(base, "code EMA", 10));
+  const tous = ids(await chercherPleinTexte(base, "code EMA", 10, TOUT));
   assert.ok(tous.includes("MG#1") && tous.includes("FU#1"));
   const filtres = ids(await chercherPleinTexte(base, "code EMA", 10, { acces: ["tous"], enVigueurLe: "2026-10-01" }));
   assert.deepEqual(filtres, ["CA#1"]);
@@ -72,8 +74,8 @@ test("les filtres de la recherche vectorielle s'appliquent : accès et version e
 
 test("une question faite de mots vides ne trouve rien ; un passage ajouté ensuite est cherchable tout de suite", async () => {
   // « à » et « été » sont écartés avant de perdre leur accent : sans accent, « à » deviendrait « a », qui est dans CA#2
-  assert.deepEqual(await chercherPleinTexte(base, "à été que de c'est", 5), []);
+  assert.deepEqual(await chercherPleinTexte(base, "à été que de c'est", 5, TOUT), []);
   await ajouterPleinTexte(base); // une seconde fois : rien ne change
   await insererParLots(base, [passage("TP#1", "Le forfait mobilités durables rembourse un vélo.")]);
-  assert.deepEqual(ids(await chercherPleinTexte(base, "velo", 5)), ["TP#1"]);
+  assert.deepEqual(ids(await chercherPleinTexte(base, "velo", 5, TOUT)), ["TP#1"]);
 });

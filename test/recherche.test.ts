@@ -18,6 +18,8 @@ const question = (texte: string) => exemples.questions[texte];
 const TELETRAVAIL = "Combien de jours de télétravail par semaine ?";
 const REPAS = "Quel est le plafond pour un repas avec un client à Lyon ?";
 const ids = (resultats: { id: string }[]) => resultats.map((resultat) => resultat.id);
+// Le niveau d'accès est obligatoire (chapitre 13) : ces tests portent sur les autres filtres, avec un lecteur qui lit tout
+const TOUT = ["tous", "manager", "rh"];
 
 // Une base neuve en mémoire, avec l'extension vector
 async function nouvelleBase() {
@@ -41,7 +43,7 @@ after(async () => {
 });
 
 test("les chunks les plus proches arrivent du plus proche au moins proche", async () => {
-  const resultats = await chercher(base, question(TELETRAVAIL), 3);
+  const resultats = await chercher(base, question(TELETRAVAIL), 3, { acces: TOUT });
   // des passages sur le nombre de jours de télétravail : la FAQ, le guide, l'article 4 de l'accord ou de l'avenant.
   // Leurs scores sont proches : on ne fige pas leur ordre exact, qui peut changer d'un enregistrement à l'autre
   const attendus = ["FAQ-RH#2", "POL-TTG-01#3", "POL-TT-01#8", "POL-TT-02#10"];
@@ -51,28 +53,28 @@ test("les chunks les plus proches arrivent du plus proche au moins proche", asyn
 });
 
 test("en octobre 2026, l'accord de 2023, remplacé par l'avenant, ne sort plus", async () => {
-  const resultats = await chercher(base, question(TELETRAVAIL), 5, { enVigueurLe: "2026-10-01" });
+  const resultats = await chercher(base, question(TELETRAVAIL), 5, { acces: TOUT, enVigueurLe: "2026-10-01" });
   assert.ok(ids(resultats).includes("POL-TT-02#10"));
   assert.ok(!ids(resultats).includes("POL-TT-01#8"));
 });
 
 test("en janvier 2026, c'est l'accord de 2023 qui s'appliquait", async () => {
-  const resultats = await chercher(base, question(TELETRAVAIL), 3, { enVigueurLe: "2026-01-15" });
+  const resultats = await chercher(base, question(TELETRAVAIL), 3, { acces: TOUT, enVigueurLe: "2026-01-15" });
   assert.equal(resultats[0].id, "POL-TT-01#8");
   assert.ok(!ids(resultats).includes("POL-TT-02#10"));
 });
 
 test("le jour même où l'avenant entre en vigueur, c'est lui qui s'applique, et non plus l'accord de 2023", async () => {
-  const resultats = await chercher(base, question(TELETRAVAIL), 5, { types: ["accord"], enVigueurLe: "2026-03-01" });
+  const resultats = await chercher(base, question(TELETRAVAIL), 5, { acces: TOUT, types: ["accord"], enVigueurLe: "2026-03-01" });
   assert.ok(ids(resultats).includes("POL-TT-02#10"));
   assert.ok(!ids(resultats).includes("POL-TT-01#8"));
 });
 
 test("les filtres de type et de site s'appliquent avant de garder les k meilleurs", async () => {
-  assert.deepEqual(ids(await chercher(base, question(REPAS), 3, { types: ["faq"] })), ["FAQ-RH#19", "FAQ-RH#20", "FAQ-RH#21"]);
+  assert.deepEqual(ids(await chercher(base, question(REPAS), 3, { acces: TOUT, types: ["faq"] })), ["FAQ-RH#19", "FAQ-RH#20", "FAQ-RH#21"]);
   // trois tickets de Lyon et un de Nantes : à Nantes, il ne reste que le ticket nantais
-  assert.deepEqual(ids(await chercher(base, question(REPAS), 10, { types: ["ticket"], sites: ["nantes"] })), ["TK-2026-0027#1"]);
-  assert.equal((await chercher(base, question(REPAS), 10, { types: ["ticket"], sites: ["lyon"] })).length, 3);
+  assert.deepEqual(ids(await chercher(base, question(REPAS), 10, { acces: TOUT, types: ["ticket"], sites: ["nantes"] })), ["TK-2026-0027#1"]);
+  assert.equal((await chercher(base, question(REPAS), 10, { acces: TOUT, types: ["ticket"], sites: ["lyon"] })).length, 3);
 });
 
 test("index forcé et filtre sélectif : sans parcours itératif, il manque des résultats", async () => {
@@ -80,9 +82,9 @@ test("index forcé et filtre sélectif : sans parcours itératif, il manque des 
   await base.query("SET hnsw.ef_search = 4"); // l'index ne propose que 4 candidats
   try {
     await base.query("SET hnsw.iterative_scan = off");
-    const sans = await chercher(base, question(REPAS), 3, { langue: "en" });
+    const sans = await chercher(base, question(REPAS), 3, { acces: TOUT, langue: "en" });
     await base.query("SET hnsw.iterative_scan = strict_order");
-    const avec = await chercher(base, question(REPAS), 3, { langue: "en" });
+    const avec = await chercher(base, question(REPAS), 3, { acces: TOUT, langue: "en" });
     assert.ok(sans.length < 2, `sans parcours itératif : ${sans.length} résultats`);
     assert.deepEqual(new Set(ids(avec)), new Set(["GRP-TRV-01#16", "GRP-TRV-01#2"])); // les deux seuls chunks en anglais
   } finally {
@@ -145,6 +147,6 @@ test("indexation incrémentale sur la base : mise à jour des métadonnées et s
 
   for (const v of plan.aMettreAJour) await mettreAJour(base, v.id, metadonnees(v.document, v.dateFin), v.empreinte_meta);
   await supprimer(base, plan.aSupprimer);
-  const resultats = await chercher(base, question(TELETRAVAIL), 3, { types: ["accord"], enVigueurLe: "2026-10-01" });
+  const resultats = await chercher(base, question(TELETRAVAIL), 3, { acces: TOUT, types: ["accord"], enVigueurLe: "2026-10-01" });
   assert.deepEqual(ids(resultats), ["POL-TT-01#8"]);
 });

@@ -35,6 +35,14 @@ export type EntreeJournal = {
 
 export type Recherche = "libre" | "office" | "secours";
 
+// Chapitre 13 : pour un manager ou le service RH, le profil, avant la date. Ce n'est pas le LLM qui décide de ce que le
+// salarié peut lire : la recherche ne lui rend que ce qui est permis. Mais sans savoir à qui il parle, il refusait à une
+// manager un passage marqué « réservé aux managers » (essai du 19 octobre). Pour un salarié, le message ne change pas :
+// il ne reçoit que des documents ouverts à tous (une phrase de plus dans le prompt système, essayée le même jour, faisait
+// sauter des recherches au modèle local)
+export const profilConnecte = (profil: string) =>
+  `Profil du salarié connecté : ${profil}. Il a le droit de lire tout ce que rendent tes outils, y compris un passage réservé.`;
+
 export type Agent = {
   llm: LlmAgent;
   outils: Outil[];
@@ -117,7 +125,7 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
       { role: "utilisateur", texte: e.question },
       { role: "assistant", texte: e.reponse, appels: [] },
     ]),
-    { role: "utilisateur", texte: finDuMessage(question, contexte.date) },
+    { role: "utilisateur", texte: (contexte.profil === "salarie" ? "" : `${profilConnecte(contexte.profil)}\n`) + finDuMessage(question, contexte.date) },
   ];
   const usage: Usage = { entree: 0, enCache: 0, sortie: 0 }; // le total de la conversation
   const toursMax = agent.toursMax ?? TOURS_MAX;

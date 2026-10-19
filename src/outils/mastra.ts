@@ -14,9 +14,10 @@ const { values, positionals } = parseArgs({ allowPositionals: true, options: { d
 const question = positionals.join(" ");
 if (!question) throw new Error('Posez une question : npm run mastra -- "Combien de jours de télétravail par semaine ?"');
 
-const recherche = chercherDocuments((requete, date) => trouverPassages(pool, requete, PASSAGES_DEMANDES, date));
+const recherche = chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date));
 const systeme = await lirePromptSysteme("prompts/rhea-agent.md");
-const agent = agentMastra([recherche], { date: values.date }, systeme.texte);
+// Aucun salarié connecté : le profil le plus restreint, les documents ouverts à tous (chapitre 13)
+const agent = agentMastra([recherche], { date: values.date, profil: "salarie" }, systeme.texte);
 
 try {
   const debut = performance.now();

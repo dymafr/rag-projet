@@ -44,7 +44,7 @@ after(async () => {
 test("hybride : un passage trouvé par le seul plein texte entre dans la fusion, avec sa similarité cosinus", async () => {
   // Vectorielle (2 candidats) : CA#1, TT#1. Plein texte : EM#1, le seul qui contient « EMA ».
   // RRF : CA#1 1/61, EM#1 1/61 (à égalité, CA#1, cité par la première liste, passe devant), TT#1 1/62
-  const resultats = await chercherHybride(base, "code EMA", [1, 0], 3, {}, { candidats: 2, poids: [1, 1] });
+  const resultats = await chercherHybride(base, "code EMA", [1, 0], 3, { acces: ["tous"] }, { candidats: 2, poids: [1, 1] });
   assert.deepEqual(resultats.map((r) => r.id), ["CA#1", "EM#1", "TT#1"]);
   // Le score reste la similarité cosinus avec la question, celle que compare le seuil d'abstention, même pour EM#1
   assert.deepEqual(resultats.map((r) => Number(r.score.toFixed(3))), [1, 0, 0.8]);
@@ -52,6 +52,6 @@ test("hybride : un passage trouvé par le seul plein texte entre dans la fusion,
 
 test("hybride : le poids d'une recherche change l'ordre, pas les scores", async () => {
   // Plein texte pesé 0,5 : EM#1 ne vaut plus que 0,5/61 et passe derrière TT#1 (1/62)
-  const resultats = await chercherHybride(base, "code EMA", [1, 0], 3, {}, { candidats: 2, poids: [1, 0.5] });
+  const resultats = await chercherHybride(base, "code EMA", [1, 0], 3, { acces: ["tous"] }, { candidats: 2, poids: [1, 0.5] });
   assert.deepEqual(resultats.map((r) => r.id), ["CA#1", "TT#1", "EM#1"]);
 });

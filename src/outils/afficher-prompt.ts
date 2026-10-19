@@ -1,10 +1,11 @@
 // Afficher le prompt augmenté qu'on enverrait au LLM pour une question, sans l'envoyer. La recherche, elle, peut appeler
 // le LLM pour extraire les filtres que précise la question (une date, un type de document : chapitre 9)
-// Lancement : npm run prompt -- "votre question" [--k 8] [--budget 1500] [--date 2026-01-15]
+// Lancement : npm run prompt -- "votre question" [--k 8] [--budget 1500] [--date 2026-01-15] [--matricule K0035]
 import { parseArgs } from "node:util";
 import { pool } from "../db.ts";
 import { assembler, baliser, BUDGET_PASSAGES, estimerTokens, PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
+import { profilDeSession } from "../recherche/droits.ts";
 import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
 
 const { values, positionals } = parseArgs({
@@ -13,6 +14,7 @@ const { values, positionals } = parseArgs({
     k: { type: "string", default: String(PASSAGES_DEMANDES) }, // passages demandés à la recherche
     budget: { type: "string", default: String(BUDGET_PASSAGES) }, // tokens réservés aux passages dans le prompt
     date: { type: "string", default: aujourdhui() },
+    matricule: { type: "string" }, // le salarié connecté ; sans matricule, les documents ouverts à tous
   },
 });
 const question = (positionals[0] ?? "Combien de jours de télétravail ai-je par semaine ?").trim();
@@ -24,11 +26,12 @@ if (!question || !Number.isInteger(k) || k < 1 || !Number.isInteger(budget) || b
 }
 
 const systeme = await lirePromptSysteme();
-const resultats = await trouverPassages(pool, question, k, values.date);
+const profil = await profilDeSession(pool, values.matricule);
+const resultats = await trouverPassages(pool, question, k, profil, values.date);
 await pool.end();
 const prompt = assembler(question, resultats, { systeme: systeme.texte, budget, mesure: estimerTokens, date: values.date });
 
-console.log(`« ${question} » : ${resultats.length} passages trouvés, ${prompt.passages.length} gardés dans un budget de ${budget} tokens`);
+console.log(`« ${question} » (profil ${profil}) : ${resultats.length} passages trouvés, ${prompt.passages.length} gardés dans un budget de ${budget} tokens`);
 prompt.passages.forEach((p, i) => console.log(`  [${i + 1}]  ${p.score.toFixed(3)}  ${p.id.padEnd(18)} ${estimerTokens(baliser(p, i + 1))} tokens`));
 for (const p of prompt.ecartes) console.log(`  écarté ${p.score.toFixed(3)}  ${p.id.padEnd(18)} ${estimerTokens(baliser(p, 0))} tokens, plus de place`);
 const tokens = estimerTokens(prompt.systeme) + estimerTokens(prompt.utilisateur);

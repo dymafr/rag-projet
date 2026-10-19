@@ -36,7 +36,7 @@ let ecartes = 0;
 const manques: string[] = [];
 for (const q of couvertes) {
   const question = reglages.condensation && q.historique ? await condenser(q.question, q.historique, outils.llm) : q.question;
-  const trouves = await trouverPassages(pool, question, k, q.date, reglages, outils);
+  const trouves = await trouverPassages(pool, question, k, "salarie", q.date, reglages, outils);
   const prompt = choisir(values.voisins ? fusionnerVoisins(trouves) : trouves, budget, estimerTokens);
   const envoyes = prompt.passages.flatMap((p) => idsDuPassage(p.id)); // les chunks envoyés, morceaux recollés compris
   passages += prompt.passages.length;

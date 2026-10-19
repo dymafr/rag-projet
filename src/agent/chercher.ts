@@ -4,10 +4,11 @@
 import { z } from "zod";
 import { horsCorpus, meilleurScore, SEUIL } from "../generation/abstention.ts";
 import { baliser, BUDGET_PASSAGES, choisir, estimerTokens } from "../generation/prompt.ts";
+import type { Profil } from "../recherche/droits.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 import { definirOutil } from "./outil.ts";
 
-export type Chercher = (requete: string, date: string) => Promise<Resultat[]>;
+export type Chercher = (requete: string, date: string, profil: Profil) => Promise<Resultat[]>;
 
 export const chercherDocuments = (chercher: Chercher) =>
   definirOutil({
@@ -29,7 +30,8 @@ export const chercherDocuments = (chercher: Chercher) =>
         .describe("Une question complète en français, comme le salarié la poserait, et non une liste de mots-clés"),
     }),
     async executer({ requete }, contexte) {
-      const resultats = await chercher(requete, contexte.date);
+      // Le profil vient du contexte, jamais des arguments : le LLM choisit quoi chercher, pas où il a le droit de chercher
+      const resultats = await chercher(requete, contexte.date, contexte.profil);
       // Le seuil d'abstention du chapitre 7 : loin de tout passage, mieux vaut le dire au LLM que lui donner du hors sujet
       if (horsCorpus(resultats)) {
         const meilleur = meilleurScore(resultats).toFixed(3);

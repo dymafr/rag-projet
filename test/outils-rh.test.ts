@@ -26,7 +26,7 @@ test("indemnite applique la tranche de la distance annuelle, même quand le traj
 });
 
 test("calculer_indemnite_km donne le montant d'un premier trajet et rappelle que la tranche dépend de l'année", async () => {
-  const { texte } = await calculerIndemniteKm().executer({ km: 320, puissance_cv: 6 }, { date: "2026-10-13" });
+  const { texte } = await calculerIndemniteKm().executer({ km: 320, puissance_cv: 6 }, { date: "2026-10-13", profil: "salarie" as const });
   assert.match(texte, /212,80\s€/);
   assert.match(texte, /320 × 0,665/);
   assert.match(texte, /Au-delà de 5 000 km dans l'année/);
@@ -34,23 +34,23 @@ test("calculer_indemnite_km donne le montant d'un premier trajet et rappelle que
 
 test("consulter_solde lit le solde du salarié de la session, et rien sans salarié connecté", async () => {
   const outil = consulterSolde(base);
-  const { texte } = await outil.executer({}, { date: "2026-10-13", matricule: "K0101" });
+  const { texte } = await outil.executer({}, { date: "2026-10-13", matricule: "K0101", profil: "salarie" as const });
   assert.match(texte, /matricule K0101/);
   assert.match(texte, /9 jours restants \(10 acquis, 1 pris\)/);
   assert.match(texte, /12 jours, à poser avant le 31 mai 2027/);
-  const anonyme = await outil.executer({}, { date: "2026-10-13" });
+  const anonyme = await outil.executer({}, { date: "2026-10-13", profil: "salarie" as const });
   assert.match(anonyme.texte, /Aucun salarié n'est connecté/);
 });
 
 test("consulter_solde ne donne pas de RTT à un salarié qui n'est pas au forfait jours", async () => {
-  const { texte } = await consulterSolde(base).executer({}, { date: "2026-10-13", matricule: "K0012" });
+  const { texte } = await consulterSolde(base).executer({}, { date: "2026-10-13", matricule: "K0012", profil: "salarie" as const });
   assert.match(texte, /pas au forfait jours/);
 });
 
 test("un matricule écrit par le LLM ne remplace jamais celui de la session", async () => {
   // Le LLM ajoute un matricule aux arguments : zod l'écarte (champ inconnu), et l'outil lit celui de la session
   const appel = { id: "a", nom: "consulter_solde", arguments: { matricule: "K0042" } };
-  const { resultat, erreur } = await executer(appel, [consulterSolde(base)], { date: "2026-10-13", matricule: "K0101" });
+  const { resultat, erreur } = await executer(appel, [consulterSolde(base)], { date: "2026-10-13", matricule: "K0101", profil: "salarie" as const });
   assert.equal(erreur, false);
   assert.match(resultat.texte, /matricule K0101/);
   assert.doesNotMatch(resultat.texte, /K0042/);
@@ -58,7 +58,7 @@ test("un matricule écrit par le LLM ne remplace jamais celui de la session", as
 
 test("ouvrir_ticket enregistre la demande au nom du salarié connecté, et refuse une catégorie inconnue", async () => {
   const outil = ouvrirTicket(base);
-  const contexte = { date: "2026-10-13", matricule: "K0101" };
+  const contexte = { date: "2026-10-13", matricule: "K0101", profil: "salarie" as const };
   const args = { categorie: "Paie", objet: "Astreintes absentes de la paie", message: "Mes deux astreintes de septembre n'apparaissent pas sur ma fiche de paie." };
   const { texte } = await outil.executer(args as never, contexte);
   assert.match(texte, /^Ticket n° 1 ouvert dans la catégorie « Paie »/);
@@ -77,10 +77,10 @@ test("moisRevolus compte un mois quand son jour anniversaire est atteint", () =>
 });
 
 test("consulter_profil donne la situation du salarié de la session, avec son ancienneté à la date du jour", async () => {
-  const { texte } = await consulterProfil(base).executer({}, { date: "2026-10-13", matricule: "K0022" });
+  const { texte } = await consulterProfil(base).executer({}, { date: "2026-10-13", matricule: "K0022", profil: "salarie" as const });
   assert.match(texte, /matricule K0022/);
   assert.match(texte, /manager : Marine Marchand/);
   assert.match(texte, /entré chez Kalyo le 2026-04-29 : 5 mois d'ancienneté révolus au 2026-10-13/);
-  const anonyme = await consulterProfil(base).executer({}, { date: "2026-10-13" });
+  const anonyme = await consulterProfil(base).executer({}, { date: "2026-10-13", profil: "salarie" as const });
   assert.match(anonyme.texte, /Aucun salarié n'est connecté/);
 });

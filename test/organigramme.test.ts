@@ -64,16 +64,16 @@ test("verifier trouve la direction, et une boucle quand une erreur de saisie en 
 
 test("consulter_organigramme donne le manager du salarié connecté, ou la place d'une personne nommée", async () => {
   const outil = consulterOrganigramme(base);
-  const moi = await outil.executer({ personne: null }, { date: "2026-10-17", matricule: "K0042" });
+  const moi = await outil.executer({ personne: null }, { date: "2026-10-17", matricule: "K0042", profil: "salarie" as const });
   assert.match(moi.texte, /Le salarié connecté : Adèle Lucas \(K0042\)/);
   assert.match(moi.texte, /Manager : Eva Guérin \(K0035\), Responsable projets clients/);
   assert.match(moi.texte, /Au-dessus : Noémie Millet \(K0001\)/);
   // La fiche est un passage à citer, comme ceux de la documentation
   assert.match(moi.texte, /^<passage source="ORGANIGRAMME-K0042#1" titre="Organigramme de Kalyo > Adèle Lucas">/);
   assert.deepEqual(moi.passages?.map((p) => p.id), ["ORGANIGRAMME-K0042#1"]);
-  const eva = await outil.executer({ personne: "Eva Guerin" }, { date: "2026-10-17" });
+  const eva = await outil.executer({ personne: "Eva Guerin" }, { date: "2026-10-17", profil: "salarie" as const });
   assert.match(eva.texte, /Équipe directe \(9 personnes\)/);
-  const direction = await outil.executer({ personne: "Noémie Millet" }, { date: "2026-10-17" });
+  const direction = await outil.executer({ personne: "Noémie Millet" }, { date: "2026-10-17", profil: "salarie" as const });
   assert.match(direction.texte, /fait partie de la direction/);
   assert.match(direction.texte, /Équipe directe \(14 personnes\)/);
   assert.doesNotMatch(direction.texte, /autres/); // la liste ne s'abrège qu'au-delà de 20 personnes
@@ -83,16 +83,16 @@ test("consulter_organigramme donne le manager du salarié connecté, ou la place
 test("un champ facultatif omis par le LLM vaut null : l'appel sans argument vise le salarié connecté", async () => {
   // Constaté avec le modèle local : il envoie {} au lieu de {"personne": null}
   const appel = { id: "a", nom: "consulter_organigramme", arguments: {} };
-  const { resultat, erreur } = await executer(appel, [consulterOrganigramme(base)], { date: "2026-10-17", matricule: "K0042" });
+  const { resultat, erreur } = await executer(appel, [consulterOrganigramme(base)], { date: "2026-10-17", matricule: "K0042", profil: "salarie" as const });
   assert.equal(erreur, false);
   assert.match(resultat.texte, /Le salarié connecté : Adèle Lucas/);
 });
 
 test("consulter_organigramme demande de préciser un nom ambigu, et ne devine pas un nom inconnu", async () => {
   const outil = consulterOrganigramme(base);
-  assert.match((await outil.executer({ personne: "Lucas" }, { date: "2026-10-17" })).texte, /Plusieurs personnes correspondent/);
-  const inconnu = await outil.executer({ personne: "référente handicap" }, { date: "2026-10-17" });
+  assert.match((await outil.executer({ personne: "Lucas" }, { date: "2026-10-17", profil: "salarie" as const })).texte, /Plusieurs personnes correspondent/);
+  const inconnu = await outil.executer({ personne: "référente handicap" }, { date: "2026-10-17", profil: "salarie" as const });
   assert.match(inconnu.texte, /Personne ne s'appelle « référente handicap »/);
   assert.match(inconnu.texte, /cherchez d'abord son nom dans la documentation/); // un rôle n'est pas un nom
-  assert.match((await outil.executer({ personne: null }, { date: "2026-10-17" })).texte, /Aucun salarié n'est connecté/);
+  assert.match((await outil.executer({ personne: null }, { date: "2026-10-17", profil: "salarie" as const })).texte, /Aucun salarié n'est connecté/);
 });

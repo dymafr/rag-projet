@@ -11,7 +11,9 @@
   body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--fond); color: var(--texte); }
   main { max-width: 760px; margin: 0 auto; padding: 24px 16px 140px; }
   h1 { font-size: 22px; margin: 0 0 4px; }
-  .sous-titre { color: var(--doux); margin: 0 0 24px; }
+  .sous-titre { color: var(--doux); margin: 0 0 8px; }
+  .connexion { color: var(--doux); font-size: 14px; margin: 0 0 24px; }
+  select { font: inherit; padding: 4px 8px; border: 1px solid var(--bord); border-radius: 8px; background: var(--carte); }
   .question { margin: 24px 0 8px; font-weight: 600; }
   .reponse { background: var(--carte); border: 1px solid var(--bord); border-radius: 12px; padding: 14px 16px; white-space: pre-wrap; }
   .reponse.abstention { color: var(--doux); font-style: italic; }
@@ -33,6 +35,13 @@
 <main>
   <h1>Rhéa</h1>
   <p class="sous-titre">L'assistant RH de Kalyo répond à partir de la documentation RH, et cite ses sources.</p>
+  <!-- Chapitre 13 : pas de vraie connexion dans ce projet ; le salarié choisi part dans l'en-tête X-Matricule -->
+  <p class="connexion"><label>Connecté en tant que
+    <select id="matricule">
+      <option value="K0101">Morgane Moreau, développeuse (salarié)</option>
+      <option value="K0035">Eva Guérin, responsable projets clients (manager)</option>
+      <option value="K0006">Nora Leblanc, chargée RH (rh)</option>
+    </select></label></p>
   <div id="conversation" aria-live="polite"></div>
 </main>
 <form id="formulaire">
@@ -56,7 +65,8 @@ const ECHANGES = 3; // les trois derniers suffisent
 // Lire un flux SSE reçu en réponse à un POST : EventSource ne sait faire que des GET, on lit donc le corps avec fetch
 async function demander(question, surEvenement, signal) {
   const corps = JSON.stringify({ question, historique: historique.slice(-ECHANGES) });
-  const reponse = await fetch("/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: corps, signal });
+  const headers = { "Content-Type": "application/json", "X-Matricule": document.getElementById("matricule").value };
+  const reponse = await fetch("/ask", { method: "POST", headers, body: corps, signal });
   if (!reponse.ok) throw new Error((await reponse.json().catch(() => ({}))).erreur ?? `HTTP ${reponse.status}`);
   const lecteur = reponse.body.pipeThrough(new TextDecoderStream()).getReader();
   let tampon = "";
@@ -149,6 +159,11 @@ document.getElementById("formulaire").addEventListener("submit", async (evenemen
 });
 
 arreter.addEventListener("click", () => annulation?.abort());
+// Un autre salarié : une autre conversation, sans l'historique du précédent
+document.getElementById("matricule").addEventListener("change", () => {
+  historique.length = 0;
+  document.getElementById("conversation").replaceChildren();
+});
 </script>
 </body>
 </html>

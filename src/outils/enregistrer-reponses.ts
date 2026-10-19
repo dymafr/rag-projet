@@ -46,9 +46,10 @@ for (const q of await lireJeu()) {
   const debut = performance.now();
   const evenements = repondreEnFlux(
     q.question,
+    "salarie", // les questions du jeu sont celles d'un salarié
     {
-      chercher: async (question, date) => {
-        espion.trouves = await trouverPassages(pool, question, k, date, reglages, outils);
+      chercher: async (question, date, profil) => {
+        espion.trouves = await trouverPassages(pool, question, k, profil, date, reglages, outils);
         return espion.trouves;
       },
       generer: (prompt, signal) => {

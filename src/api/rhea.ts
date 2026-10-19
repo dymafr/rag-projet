@@ -7,11 +7,12 @@ import { assembler, estimerTokens } from "../generation/prompt.ts";
 import type { PromptSysteme } from "../generation/systeme.ts";
 import type { Usage } from "../llm.ts";
 import type { Echange } from "../recherche/conversation.ts";
+import type { Profil } from "../recherche/droits.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 
 // Ce dont Rhéa a besoin : en production, la base et le LLM de .env ; dans les tests, des faux
 export type Dependances = {
-  chercher: (question: string, date: string) => Promise<Resultat[]>;
+  chercher: (question: string, date: string, profil: Profil) => Promise<Resultat[]>;
   generer: GenerateurEnFlux;
   systeme: PromptSysteme;
   budget: number; // tokens réservés aux passages
@@ -28,8 +29,10 @@ export type Evenement =
   | { nom: "abstention"; donnees: { message: string } }
   | { nom: "fin"; donnees: { usage: Usage | null; prompt: string } };
 
+// profil : celui du salarié qui pose la question (chapitre 13). La recherche ne lit que ce qu'il a le droit de lire
 export async function* repondreEnFlux(
   posee: string,
+  profil: Profil,
   dependances: Dependances,
   signal?: AbortSignal,
   historique: Echange[] = [],
@@ -43,7 +46,7 @@ export async function* repondreEnFlux(
   if (question !== posee) yield { nom: "question", donnees: { question } };
   // 1. Avant le LLM qui rédige : une question trop loin de tous les passages, ou sans aucun passage gardé, n'obtient pas
   // de réponse rédigée (elle a pu passer par le LLM plus tôt, pour être condensée ou pour ses filtres : chapitre 9)
-  const resultats = await dependances.chercher(question, date);
+  const resultats = await dependances.chercher(question, date, profil);
   const prompt = assembler(question, resultats, { systeme: systeme.texte, budget, mesure: estimerTokens, date });
   if (horsCorpus(resultats) || prompt.passages.length === 0) {
     yield { nom: "abstention", donnees: { message: MESSAGE_ABSTENTION } };

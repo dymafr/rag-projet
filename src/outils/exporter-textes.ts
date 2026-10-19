@@ -1,6 +1,6 @@
 // Écrire le texte extrait de chaque document (chapitre 4) dans un fichier Markdown, donnees/textes/<id>.md : le corpus
 // tel qu'un agent de code le verrait, des fichiers à lister, parcourir et lire (leçon 7). Seuls les documents ouverts à
-// tous les salariés sont écrits, comme ceux que cherche Rhéa ; les versions remplacées aussi, avec leurs dates
+// tous les salariés sont écrits, ce que Rhéa cherche pour un salarié ; les versions remplacées aussi, avec leurs dates
 // Lancement : npm run textes (après npm run ingest)
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";

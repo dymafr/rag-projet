@@ -1,11 +1,12 @@
-// Les passages qui serviront à répondre, parmi les textes en vigueur ce jour-là et ouverts à tous les salariés. Au
-// chapitre 6, la recherche vectorielle seule ; le chapitre 9 ajoute d'autres étapes, chacune mesurée sur le jeu
-// d'évaluation avant d'entrer dans les réglages de Rhéa (reglages.ts)
+// Les passages qui serviront à répondre, parmi les textes en vigueur ce jour-là que le lecteur a le droit de lire
+// (chapitre 13). Au chapitre 6, la recherche vectorielle seule ; le chapitre 9 ajoute d'autres étapes, chacune mesurée
+// sur le jeu d'évaluation avant d'entrer dans les réglages de Rhéa (reglages.ts)
 import { config } from "../config.ts";
 import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
 import { creerLlm, type Llm } from "../llm.ts";
 import type { Base } from "../stockage/base.ts";
 import { lireIndexation } from "../stockage/schema.ts";
+import { basePour, NIVEAUX, type Connexions, type Profil } from "./droits.ts";
 import { mmr } from "./diversite.ts";
 import { aDesIndices, extraireFiltres } from "./filtres-extraits.ts";
 import { fusionner } from "./fusion.ts";
@@ -36,19 +37,21 @@ async function chercherUneFois(base: Base, requete: string, k: number, filtres: 
   return chercher(base, vecteur, k, filtres);
 }
 
-// k : les passages à rendre. profondeur : pour les traces de l'évaluation, combien de passages du classement rendre en
-// tout, au-delà de k ; les étapes qui choisissent parmi des candidats n'en reçoivent pas plus pour autant
+// k : les passages à rendre. profil : celui du lecteur, sans valeur par défaut, pour qu'aucun appel ne l'oublie.
+// profondeur : pour les traces de l'évaluation, combien de passages du classement rendre en tout, au-delà de k ; les
+// étapes qui choisissent parmi des candidats n'en reçoivent pas plus pour autant
 export async function trouverPassages(
-  base: Base,
+  pool: Connexions,
   question: string,
   k: number,
+  profil: Profil,
   date = aujourdhui(),
   reglages: Reglages = RECHERCHE,
   outils: Outils = outilsParDefaut(),
   profondeur = k,
 ): Promise<Resultat[]> {
   if (reglages.reclassement && reglages.diversite !== null) throw new Error("Reclassement et diversité ne se combinent pas : choisissez l'un ou l'autre");
-  const indexation = await lireIndexation(base);
+  const indexation = await lireIndexation(pool);
   if (indexation && indexation.modele !== nomDuModele()) {
     throw new Error(`La base a été indexée avec ${indexation.modele}, le projet est réglé sur ${nomDuModele()} : relancez npm run indexer -- --reconstruire`);
   }
@@ -56,10 +59,11 @@ export async function trouverPassages(
     if (!outils.llm) throw new Error("Ces réglages demandent un LLM : passez-le dans les outils");
     return outils.llm;
   };
-  // 1. Les filtres : acces, en attendant le chapitre 13, qui filtrera selon le rôle de chaque salarié (Rhéa ne lit ni les
-  // documents réservés aux managers ni les tickets) ; la date du jour, sauf si la question en précise une autre. Le LLM
-  // n'est appelé que si la question contient un indice (une année, un mois, un type de document…)
-  const filtres: Filtres = { enVigueurLe: date, acces: ["tous"] };
+  // 1. Les filtres : les niveaux d'accès du profil, et la date du jour, sauf si la question en précise une autre. Le LLM
+  // n'est appelé que si la question contient un indice (une année, un mois, un type de document…). Toutes les requêtes
+  // passent par une base restreinte au profil (droits.ts) : la sécurité par ligne double le filtre
+  const base = basePour(pool, profil);
+  const filtres: Filtres = { enVigueurLe: date, acces: NIVEAUX[profil] };
   const extraits = reglages.filtresExtraits && aDesIndices(question) ? await extraireFiltres(question, date, llm()) : {};
   // 2. Les requêtes : la question, ou ce que le LLM en a fait. Plusieurs formulations ou sous-questions : la question
   // d'origine est cherchée aussi (une seule fois, si le LLM la rend telle quelle)
@@ -75,7 +79,7 @@ export async function trouverPassages(
     for (const requete of requetes) listes.push(await chercherUneFois(base, requete, n, f, reglages));
     return listes;
   };
-  let listes = await chercherTout({ ...filtres, ...extraits });
+  let listes = await chercherTout({ ...filtres, ...extraits }); // extraits : une date, des types, jamais un niveau d'accès
   // Un filtre extrait à tort peut écarter tous les passages : dans ce cas, on cherche sans les filtres extraits
   if (Object.keys(extraits).length > 0 && listes.every((l) => l.length === 0)) listes = await chercherTout(filtres);
   let resultats = listes[0];

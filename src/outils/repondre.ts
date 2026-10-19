@@ -1,6 +1,8 @@
 // Poser une question à Rhéa : la recherche, le prompt augmenté, puis la réponse du LLM choisi dans .env
 // Lancement : npm run repondre -- "votre question" [--k 8] [--budget 1500] [--date 2026-01-15]
 //             [--json] (une réponse structurée, validée par zod) [--seuil 0.49] (le seuil d'abstention)
+//             [--matricule K0035] (le salarié connecté : la recherche ne lit que ce que son profil peut lire ; sans
+//             matricule, les documents ouverts à tous)
 import { parseArgs } from "node:util";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
@@ -11,6 +13,7 @@ import { creerGenerateur, type Generation } from "../generation/generateur.ts";
 import { assembler, BUDGET_PASSAGES, estimerTokens, PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { repondreEnJson } from "../generation/structure.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
+import { profilDeSession } from "../recherche/droits.ts";
 import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
 
 const { values, positionals } = parseArgs({
@@ -21,6 +24,7 @@ const { values, positionals } = parseArgs({
     date: { type: "string", default: aujourdhui() },
     json: { type: "boolean", default: false },
     seuil: { type: "string", default: String(SEUIL) },
+    matricule: { type: "string" },
   },
 });
 const question = (positionals[0] ?? "Combien de jours de télétravail ai-je par semaine ?").trim();
@@ -38,7 +42,8 @@ if (nomDuModele() !== MODELE_DU_SEUIL) {
 
 const generer = creerGenerateur();
 const systeme = await lirePromptSysteme();
-const resultats = await trouverPassages(pool, question, k, values.date);
+const profil = await profilDeSession(pool, values.matricule);
+const resultats = await trouverPassages(pool, question, k, profil, values.date);
 await pool.end();
 const prompt = assembler(question, resultats, { systeme: systeme.texte, budget, mesure: estimerTokens, date: values.date });
 

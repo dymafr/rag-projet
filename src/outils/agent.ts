@@ -3,7 +3,8 @@
 // Lancement : npm run agent -- "votre question" [--matricule K0101] [--date 2026-10-13] [--tours 5] [--recherche secours]
 //             [--oui] (accepter d'office les actions, pour une démo enregistrée)
 //             [--sources fichiers] (leçon 7 : chercher sans vecteurs, dans donnees/textes, avec les outils d'un agent de code)
-// --matricule : le salarié connecté. Il n'y a pas de vraie connexion dans ce projet : l'option la simule.
+// --matricule : le salarié connecté. Il n'y a pas de vraie connexion dans ce projet : l'option la simule. Son profil, lu
+// dans l'annuaire, décide des documents que la recherche peut lire (chapitre 13) ; sans matricule, ceux ouverts à tous
 // Chaque appel d'outil s'ajoute au journal du jour, dans journal/ (leçon 5)
 import { createInterface } from "node:readline/promises";
 import { parseArgs } from "node:util";
@@ -23,6 +24,7 @@ import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
 import { creerLlm } from "../llm.ts";
 import { condenser, type Echange } from "../recherche/conversation.ts";
+import { profilDeSession } from "../recherche/droits.ts";
 import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 
@@ -51,7 +53,7 @@ if (!question || !/^\d{4}-\d{2}-\d{2}$/.test(values.date) || !Number.isInteger(t
 
 const systeme = await lirePromptSysteme(surFichiers ? "prompts/rhea-fichiers.md" : "prompts/rhea-agent.md");
 // Leçon 7 : sur fichiers, les trois outils d'un agent de code remplacent la recherche de Rhéa
-const recherches = surFichiers ? outilsFichiers(DOSSIER_TEXTES) : [chercherDocuments((requete, date) => trouverPassages(pool, requete, PASSAGES_DEMANDES, date))];
+const recherches = surFichiers ? outilsFichiers(DOSSIER_TEXTES) : [chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date))];
 const outils = [
   ...recherches,
   consulterSolde(pool),
@@ -105,13 +107,14 @@ function resume(resultat: { texte: string; passages?: Resultat[] }, erreur: bool
   return ligne.length > 100 ? `${ligne.slice(0, 100)}…` : ligne;
 }
 
-const qui = values.matricule ? `salarié ${values.matricule}` : "aucun salarié connecté";
+const profil = await profilDeSession(pool, values.matricule);
+const qui = values.matricule ? `salarié ${values.matricule}, profil ${profil}` : "aucun salarié connecté, profil salarie";
 console.log(`« ${question} »  (${config.LLM_PROVIDER}, prompt v${systeme.version} ${systeme.empreinte}, date ${values.date}, ${qui})\n`);
 const vus: Resultat[] = []; // tous les passages rendus par les outils : seules leurs sources peuvent être citées
 const fichiersVus = new Set<string>(); // sur fichiers : ceux qui ont été lus, ou où une ligne a été trouvée
 const debut = performance.now();
 try {
-  for await (const etape of agir(question, agent, { date: values.date, matricule: values.matricule })) {
+  for await (const etape of agir(question, agent, { date: values.date, matricule: values.matricule, profil })) {
     if (etape.type === "appel") {
       // tour 0 : la recherche d'office ; « Secours » : celle du code quand le LLM n'a rien appelé
       const quand = etape.tour === 0 ? "D'office" : etape.appel.id === "recherche-de-secours" ? `Tour ${etape.tour}, secours` : `Tour ${etape.tour}`;

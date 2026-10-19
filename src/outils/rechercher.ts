@@ -5,11 +5,14 @@
 //             --mode plein-texte : chercher les mots de la question plutôt que son sens ; --mode hybride : les deux (chapitre 9)
 //             --vocabulaire : ajouter aux mots cherchés en plein texte les sigles et synonymes du lexique (chapitre 9)
 //             --filtres-extraits : ajouter les filtres que la question précise (une date, un type), extraits par le LLM
+//             --matricule K0035 : chercher avec les droits de ce salarié (chapitre 13) ; sans matricule, les documents
+//             ouverts à tous
 import { parseArgs } from "node:util";
 import { pool } from "../db.ts";
 import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
 import { creerLlm } from "../llm.ts";
 import { extraireFiltres } from "../recherche/filtres-extraits.ts";
+import { NIVEAUX, profilDeSession } from "../recherche/droits.ts";
 import { chercherHybride } from "../recherche/hybride.ts";
 import { chercherPleinTexte, requetePleinTexte } from "../recherche/plein-texte.ts";
 import { MODES, RECHERCHE, type Reglages } from "../recherche/reglages.ts";
@@ -32,6 +35,7 @@ const { values, positionals } = parseArgs({
     mode: { type: "string", default: "vectorielle" }, // vectorielle, plein-texte ou hybride
     vocabulaire: { type: "boolean", default: false },
     "filtres-extraits": { type: "boolean", default: false },
+    matricule: { type: "string" },
   },
 });
 const question = positionals[0] ?? "Combien de jours de télétravail par semaine ?";
@@ -40,7 +44,9 @@ if (!Number.isInteger(k) || k < 1) {
   console.error(`--k attend un nombre entier positif, pas « ${values.k} »`);
   process.exit(1);
 }
-const filtres: Filtres = { sites: values.site, types: values.type, langue: values.langue };
+// Les niveaux d'accès du profil : le filtre obligatoire du chapitre 13
+const profil = await profilDeSession(pool, values.matricule);
+const filtres: Filtres = { sites: values.site, types: values.type, langue: values.langue, acces: NIVEAUX[profil] };
 const mode = values.mode as Reglages["mode"];
 if (!MODES.includes(mode)) {
   console.error(`--mode attend ${MODES.join(", ")}, pas « ${values.mode} »`);
@@ -83,6 +89,11 @@ if (!pleinTexte && indexation && indexation.modele !== nomDuModele()) {
   process.exit(1);
 }
 
+// La seconde barrière (chapitre 13) : cette connexion, à nous seuls jusqu'à la fin, lit chunks sous le rôle
+// rhea_recherche, avec les niveaux du profil. false : pour toute la session, pas seulement une transaction
+await client.query("SELECT set_config('rhea.niveaux', $1, false)", [NIVEAUX[profil].join(",")]);
+await client.query("SET ROLE rhea_recherche");
+
 const vecteur = pleinTexte ? [] : (await vectoriser([question], "requete"))[0];
 const debut = performance.now();
 // score : la similarité cosinus en recherche vectorielle et hybride ; en plein texte, le score BM25, qui n'a pas de maximum
@@ -91,7 +102,7 @@ const resultats = pleinTexte
   : mode === "hybride"
     ? await chercherHybride(client, motsCles, vecteur, k, filtres, RECHERCHE) // les poids de Rhéa
     : await chercher(client, vecteur, k, filtres);
-console.log(`« ${question} »  ${mode}  ${JSON.stringify(filtres)}`);
+console.log(`« ${question} »  ${mode}  profil ${profil}  ${JSON.stringify(filtres)}`);
 console.log(`${resultats.length} chunks sur ${k} demandés, en ${(performance.now() - debut).toFixed(1)} ms\n`);
 for (const { id, score, texte } of resultats) console.log(`  ${score.toFixed(3)}  ${id.padEnd(16)} ${apercu(texte)}…`);
 

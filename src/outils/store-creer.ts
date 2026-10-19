@@ -30,7 +30,7 @@ const decoupage = taille
 const client = clientOpenAI();
 const documents = await lireDocuments();
 const parId = new Map(documents.map((d) => [d.id, d]));
-const ouverts = documents.filter((d) => d.metadonnees.acces === "tous"); // comme Rhéa : ni managers, ni RH, ni tickets
+const ouverts = documents.filter((d) => d.metadonnees.acces === "tous"); // comme Rhéa pour un salarié : ni managers, ni RH, ni tickets
 
 const vs = await client.vectorStores.create({ name: "rhea-kalyo", expires_after: { anchor: "last_active_at", days: JOURS_INACTIF } });
 console.log(`Vector store ${vs.id} créé`);

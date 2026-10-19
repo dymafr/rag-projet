@@ -11,7 +11,7 @@ export const K1 = 1.2;
 export const B = 0.75;
 
 // La requête SQL et ses valeurs. La question est $1 ; les filtres, les mêmes que ceux de la recherche vectorielle, suivent
-export function requetePleinTexte(question: string, k: number, filtres: Filtres = {}) {
+export function requetePleinTexte(question: string, k: number, filtres: Filtres) {
   const valeurs: unknown[] = [question];
   const where = ["c.tsv @@ r.mots", ...conditions(filtres, valeurs)].join(" AND ");
   const sql = `
@@ -23,7 +23,8 @@ export function requetePleinTexte(question: string, k: number, filtres: Filtres 
     frequences AS (
       -- 2. Pour chacun, le nombre de passages qui le contiennent (ndoc) : moins il y en a, plus le mot est discriminant.
       -- ts_stat relit toute la table à chaque question, tous les passages comptés (même ceux que les filtres écartent) :
-      -- rien sur quelques centaines de passages ; sur des millions, on calculerait ces nombres à l'indexation
+      -- rien sur quelques centaines de passages ; sur des millions, on calculerait ces nombres à l'indexation. Sous la
+      -- sécurité par ligne (chapitre 13), ts_stat et count(*) ne comptent que les passages que le lecteur peut lire
       SELECT word AS lexeme, ndoc FROM ts_stat('SELECT tsv FROM chunks')
       WHERE word IN (SELECT lexeme FROM unnest(to_tsvector('rhea', $1)))
     ),
@@ -49,7 +50,7 @@ export function requetePleinTexte(question: string, k: number, filtres: Filtres 
 }
 
 // score : le score BM25, qui ne se compare pas à une similarité cosinus (il n'a pas de maximum)
-export async function chercherPleinTexte(base: Base, question: string, k = 5, filtres: Filtres = {}): Promise<Resultat[]> {
+export async function chercherPleinTexte(base: Base, question: string, k: number, filtres: Filtres): Promise<Resultat[]> {
   const { sql, valeurs } = requetePleinTexte(question, k, filtres);
   const { rows } = await base.query<Resultat>(sql, valeurs);
   return rows;
