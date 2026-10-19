@@ -3,6 +3,7 @@
 // l'agent. Les mêmes définitions (nom, description, schéma zod) servent aux deux
 import { McpServer } from "@modelcontextprotocol/server";
 import type { Contexte, Outil } from "../agent/outil.ts";
+import { pourLeTerminal } from "../ingestion/secrets.ts";
 
 export function creerServeurMcp(outils: Outil[], contexte: () => Contexte): McpServer {
   const serveur = new McpServer({ name: "rhea", version: "1.0.0" }, { capabilities: { tools: {} } });
@@ -24,7 +25,7 @@ export function creerServeurMcp(outils: Outil[], contexte: () => Contexte): McpS
           return { content: [{ type: "text", text: texte }] };
         } catch (erreur) {
           // Le détail va dans le journal du client (sortie d'erreur), pas dans la réponse que lira son LLM
-          console.error(`Échec de ${outil.nom} :`, erreur);
+          console.error(`Échec de ${outil.nom} :`, pourLeTerminal(erreur));
           return { content: [{ type: "text", text: "L'outil a échoué. Réessayez plus tard." }], isError: true };
         }
       },

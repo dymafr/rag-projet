@@ -5,6 +5,7 @@ import { charger, listerFichiers } from "./chargeurs.ts";
 import { dedoublonner, empreinte, type Document } from "./document.ts";
 import { lireEffacements, REGISTRE } from "../rgpd/effacements.ts";
 import { reperer } from "./injection.ts";
+import { caviarder } from "./secrets.ts";
 import { lierVersions } from "./metadonnees.ts";
 
 export type Bilan = {
@@ -13,6 +14,7 @@ export type Bilan = {
   doublons: string[];
   quarantaine: { id: string; regles: string[] }[]; // chapitre 13 : les tickets écartés, à relire
   effaces: string[]; // chapitre 13 : les documents inscrits au registre des effacements, encore présents à la source
+  secrets: { id: string; regles: string[] }[]; // chapitre 13 : les documents où un secret a été caviardé, à révoquer
   nouveaux: string[];
   modifies: string[];
   supprimes: string[];
@@ -33,7 +35,19 @@ export async function ingerer({ racine = "corpus", sortie = "donnees/documents.j
     }
   }
 
-  // 1 bis. La quarantaine (chapitre 13) : un ticket dont une phrase s'adresse à l'assistant n'entre pas dans l'index.
+  // 1 bis. Chapitre 13. Les secrets d'abord, dans tous les documents : caviardés, et signalés pour être révoqués
+  const secrets: Bilan["secrets"] = [];
+  for (const document of charges) {
+    const titre = caviarder(document.titre); // le sujet d'un ticket, devenu son titre, s'écrit comme le message
+    const { texte, regles } = caviarder(document.texte);
+    const toutes = [...new Set([...titre.regles, ...regles])];
+    if (toutes.length === 0) continue;
+    document.titre = document.metadonnees.titre = titre.texte;
+    document.texte = texte;
+    secrets.push({ id: document.id, regles: toutes });
+  }
+
+  // Puis la quarantaine (chapitre 13) : un ticket dont une phrase s'adresse à l'assistant n'entre pas dans l'index.
   // Il reste dans le corpus, et le journal le signale pour qu'un humain le relise ; son texte n'est jamais recopié.
   // Les autres documents sont écrits par le service RH : on leur fait confiance
   const quarantaine: Bilan["quarantaine"] = [];
@@ -80,11 +94,12 @@ export async function ingerer({ racine = "corpus", sortie = "donnees/documents.j
     ...erreurs.map((e) => `${date} ERREUR ${e.message.replaceAll("\n", " ")}`),
     ...quarantaine.map((q) => `${date} QUARANTAINE ${q.id} (${q.regles.join(", ")})`),
     ...effaces.map((id) => `${date} EFFACÉ ${id} (registre des effacements)`),
+    ...secrets.map((s) => `${date} SECRET ${s.id} (${s.regles.join(", ")}) caviardé, à révoquer`),
   ];
   await mkdir(dirname(journal), { recursive: true });
   await appendFile(journal, lignes.join("\n") + "\n");
 
-  return { documents, erreurs, doublons: doublons.map((d) => d.doublon.source), quarantaine, effaces, nouveaux, modifies, supprimes };
+  return { documents, erreurs, doublons: doublons.map((d) => d.doublon.source), quarantaine, effaces, secrets, nouveaux, modifies, supprimes };
 }
 
 // L'empreinte de chaque document du fichier précédent, s'il existe

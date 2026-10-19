@@ -5,7 +5,8 @@
 //             [--sources fichiers] (leçon 7 : chercher sans vecteurs, dans donnees/textes, avec les outils d'un agent de code)
 // --matricule : le salarié connecté. Il n'y a pas de vraie connexion dans ce projet : l'option la simule. Son profil, lu
 // dans l'annuaire, décide des documents que la recherche peut lire (chapitre 13) ; sans matricule, ceux ouverts à tous
-// Chaque appel d'outil s'ajoute au journal du jour, dans journal/ (leçon 5)
+// Chaque appel d'outil s'ajoute au journal du jour, dans journal/ (leçon 5) : des références et un pseudonyme, gardés
+// six mois (chapitre 13)
 import { createInterface } from "node:readline/promises";
 import { parseArgs } from "node:util";
 import { agir, TOURS_MAX, type Recherche } from "../agent/boucle.ts";
@@ -22,6 +23,7 @@ import { config } from "../config.ts";
 import { pool } from "../db.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
+import { pourLeTerminal } from "../ingestion/secrets.ts";
 import { creerLlm } from "../llm.ts";
 import { condenser, type Echange } from "../recherche/conversation.ts";
 import { profilDeSession } from "../recherche/droits.ts";
@@ -124,7 +126,7 @@ try {
       for (const m of etape.resultat.texte.matchAll(/^([A-Z0-9-]+)\.md(?:, lignes|:\d+:)/gm)) fichiersVus.add(m[1]);
       const statut = etape.statut === "refusé" || etape.statut === "limite" ? `${etape.statut.toUpperCase()} : ` : "";
       console.log(`         → ${statut}${resume(etape.resultat, etape.erreur && !statut)} en ${secondes(etape.duree)} s`);
-      if (etape.detail) console.log(`           (cause, gardée hors du prompt : ${etape.detail})`);
+      if (etape.detail) console.log(`           (cause, gardée hors du prompt : ${pourLeTerminal(etape.detail)})`);
     } else if (etape.type === "limite") {
       const raison = etape.raison === "tokens" ? "budget de tokens atteint" : `--tours ${toursMax}`;
       console.log(`Tour ${etape.tour} : dernier tour, sans outil (${raison})`);

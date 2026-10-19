@@ -168,21 +168,34 @@ test("le serveur refuse un corps qui n'est pas déclaré en JSON (415), comme ce
   });
 });
 
-test("le serveur garde le détail d'une erreur pour son terminal et envoie un message générique", async () => {
+test("le serveur garde le détail d'une erreur pour son terminal, caviardé, et envoie un message générique", async () => {
+  const cle = `sk-proj-${"Ab3".repeat(16)}`; // une fausse clé, assemblée ici pour ne pas alerter les scanners de secrets
   const enPanne: GenerateurEnFlux = async function* () {
-    throw new Error("401 Incorrect API key provided: sk-test-1234");
+    throw new Error(`401 Incorrect API key provided: ${cle}`);
   };
   const journal = console.error;
-  console.error = () => {}; // le serveur journalise l'erreur : on garde la sortie des tests lisible
+  const terminal: string[] = [];
+  console.error = (...args: unknown[]) => void terminal.push(args.join(" ")); // ce que le serveur écrit dans son terminal
   try {
     await avecServeur(dependances(enPanne), async (adresse) => {
       const corps = await (await fetch(`${adresse}/ask`, { method: "POST", headers: ENTETES_JSON, body: JSON.stringify({ question: "Combien ?" }) })).text();
       assert.match(corps, /event: erreur\ndata: \{"message":"Rhéa n'a pas pu terminer sa réponse/);
-      assert.doesNotMatch(corps, /sk-test/);
+      assert.doesNotMatch(corps, /sk-proj/);
+    });
+    // La lecture du profil peut échouer aussi : même règle
+    const annuaireEnPanne = { ...dependances(enPanne), profil: async () => { throw new Error(`annuaire injoignable, clé ${cle}`); } };
+    await avecServeur(annuaireEnPanne, async (adresse) => {
+      const reponse = await fetch(`${adresse}/ask`, { method: "POST", headers: ENTETES_JSON, body: JSON.stringify({ question: "Combien ?" }) });
+      assert.equal(reponse.status, 500);
+      assert.doesNotMatch(await reponse.text(), /sk-proj/);
     });
   } finally {
     console.error = journal;
   }
+  // Chapitre 13 : le terminal garde la cause, pas la clé
+  assert.match(terminal.join("\n"), /401 Incorrect API key provided: \[secret retiré\]/);
+  assert.match(terminal.join("\n"), /annuaire injoignable, clé \[secret retiré\]/);
+  assert.ok(!terminal.join("\n").includes(cle));
 });
 
 const prompt: PromptAugmente = { systeme: "Tu es Rhéa.", utilisateur: "…", passages: [faq], ecartes: [], question: "Combien ?", date: "2026-10-05" };

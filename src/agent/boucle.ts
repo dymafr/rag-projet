@@ -5,6 +5,7 @@ import { z } from "zod";
 import { finDuMessage } from "../generation/prompt.ts";
 import type { Usage } from "../llm.ts";
 import type { Echange } from "../recherche/conversation.ts";
+import type { Profil } from "../recherche/droits.ts";
 import type { AppelOutil, LlmAgent, Message } from "./llm-agent.ts";
 import type { Contexte, Outil, ResultatOutil } from "./outil.ts";
 
@@ -20,17 +21,20 @@ export const DERNIER_TOUR =
 // Si le LLM demande encore un appel au dernier tour (Ollama ignore tool_choice), la boucle répond à sa place
 export const RECHERCHE_INACHEVEE = "Je n'ai pas pu terminer ma recherche. Reformulez votre question, ou ouvrez un ticket dans l'espace RH.";
 
-// Ce que la boucle écrit dans le journal pour chaque appel d'outil (leçon 5)
+// Ce que la boucle écrit dans le journal pour chaque appel d'outil (leçon 5). Chapitre 13, leçon 4 : des références,
+// jamais les données. Le journal (journal.ts) remplace le matricule par un pseudonyme avant d'écrire
 export type Statut = "ok" | "erreur" | "refusé" | "limite";
 export type EntreeJournal = {
   horodatage: string;
-  matricule: string | null; // une donnée personnelle : le chapitre 13 fixera qui lit le journal, et combien de temps on le garde
+  matricule: string | null;
+  profil: Profil; // les droits appliqués à la recherche
   tour: number;
   outil: string;
-  arguments: unknown;
+  champs: string[]; // le nom des arguments écrits par le LLM, pas leur valeur
   statut: Statut;
+  motif?: "règle de deux" | "non confirmée"; // pour une action refusée
   duree_ms: number;
-  resultat: string; // le début du texte rendu au LLM
+  passages: string[]; // les identifiants des passages rendus, pas leur texte
 };
 
 export type Recherche = "libre" | "office" | "secours";
@@ -150,7 +154,8 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
     const debut = performance.now();
     const n = (appelsFaits.get(appel.nom) ?? 0) + 1;
     appelsFaits.set(appel.nom, n);
-    const action = agent.outils.find((o) => o.nom === appel.nom)?.aConfirmer !== undefined;
+    const connu = agent.outils.find((o) => o.nom === appel.nom);
+    const action = connu?.aConfirmer !== undefined;
     let execution: Execution;
     if (n > appelsParOutil) {
       execution = { resultat: { texte: `Limite atteinte : ${appelsParOutil} appels de ${appel.nom} pour cette question. Répondez avec ce que vous avez.` }, erreur: true, statut: "limite" };
@@ -161,15 +166,19 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
     const { resultat, erreur, statut, detail } = execution;
     if (resultat.nonFiable) nonFiableLu = true;
     const duree = performance.now() - debut;
+    const args = appel.arguments;
     await agent.journaliser?.({
       horodatage: new Date().toISOString(),
       matricule: contexte.matricule ?? null,
+      profil: contexte.profil,
       tour,
-      outil: appel.nom,
-      arguments: appel.arguments,
+      // Le nom de l'outil et ceux des arguments viennent du LLM : on ne garde que ce que l'outil déclare (chapitre 13)
+      outil: connu ? appel.nom : "inconnu",
+      champs: connu && typeof args === "object" && args !== null ? Object.keys(args).filter((c) => c in connu.parametres.shape) : [],
       statut,
+      ...(statut === "refusé" && { motif: detail?.startsWith("règle de deux") ? ("règle de deux" as const) : ("non confirmée" as const) }),
       duree_ms: Math.round(duree),
-      resultat: resultat.texte.slice(0, 200),
+      passages: (resultat.passages ?? []).map((p) => p.id),
     });
     yield { type: "resultat", tour, appel, resultat, erreur, statut, detail, duree };
     messages.push({ role: "outil", id: appel.id, nom: appel.nom, texte: resultat.texte, passages: resultat.passages, erreur });

@@ -8,6 +8,7 @@ import { chercherDocuments } from "../agent/chercher.ts";
 import { calculerIndemniteKm } from "../agent/outils-rh.ts";
 import { pool } from "../db.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
+import { pourLeTerminal } from "../ingestion/secrets.ts";
 import { creerServeurMcp } from "../mcp/serveur.ts";
 import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
 
@@ -21,6 +22,6 @@ const outils = [chercherDocuments((requete, date, profil) => trouverPassages(poo
 // serveStdio sert les deux générations du protocole : celle de 2025 (une poignée de main initialize) et celle de 2026.
 // Le client ne dit pas qui l'utilise : le profil le plus restreint, les documents ouverts à tous (chapitre 13)
 serveStdio(() => creerServeurMcp(outils, () => ({ date: aujourdhui(), profil: "salarie" })), {
-  onerror: (erreur) => console.error("Serveur MCP :", erreur),
+  onerror: (erreur) => console.error("Serveur MCP :", pourLeTerminal(erreur)),
 });
 console.error("Rhéa écoute en MCP sur stdio (outils : chercher_documents, calculer_indemnite_km)");

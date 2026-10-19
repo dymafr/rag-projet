@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import http from "node:http";
 import { z } from "zod";
 import { TOURS } from "../recherche/conversation.ts";
+import { pourLeTerminal } from "../ingestion/secrets.ts";
 import type { Profil } from "../recherche/droits.ts";
 import { repondreEnFlux, type Dependances } from "./rhea.ts";
 
@@ -71,7 +72,7 @@ export function creerServeur(dependances: DependancesServeur): http.Server {
     try {
       profil = await dependances.profil(matricule);
     } catch (erreur) {
-      console.error("Erreur pendant la lecture du profil :", erreur);
+      console.error("Erreur pendant la lecture du profil :", pourLeTerminal(erreur));
       return repondreJson(res, 500, { erreur: "Rhéa n'a pas pu vérifier vos droits. Réessayez dans un instant." });
     }
     if (!profil) return repondreJson(res, 403, { erreur: "matricule inconnu" });
@@ -106,8 +107,9 @@ export function creerServeur(dependances: DependancesServeur): http.Server {
       }
     } catch (erreur) {
       if (annulation.signal.aborted) return; // le client est parti : personne à prévenir
-      // Le détail reste dans le terminal du serveur : un message d'erreur peut contenir un bout de clé, une requête SQL, un chemin
-      console.error("Erreur pendant la réponse :", erreur);
+      // Le détail reste dans le terminal du serveur : un message d'erreur peut contenir un bout de clé, une requête SQL, un
+      // chemin. Chapitre 13 : même là, un secret reconnu est caviardé ; le terminal finit souvent dans un journal
+      console.error("Erreur pendant la réponse :", pourLeTerminal(erreur));
       res.write(evenementSSE("erreur", { message: "Rhéa n'a pas pu terminer sa réponse. Réessayez dans un instant." }));
     }
     res.end();

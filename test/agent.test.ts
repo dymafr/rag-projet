@@ -274,10 +274,10 @@ test("agir limite les appels d'un même outil, puis journalise chaque appel avec
   const liste = await etapes(agir("Question ?", agent, { ...contexte, matricule: "K0101" }));
   const statuts = liste.flatMap((e) => (e.type === "resultat" ? [e.statut] : []));
   assert.deepEqual(statuts, ["ok", "ok", "limite"]);
-  assert.deepEqual(journal.map((e) => [e.tour, e.outil, e.statut, e.matricule]), [
-    [1, "chercher_documents", "ok", "K0101"],
-    [2, "chercher_documents", "ok", "K0101"],
-    [3, "chercher_documents", "limite", "K0101"],
+  assert.deepEqual(journal.map((e) => [e.tour, e.outil, e.statut, e.matricule, e.profil, e.champs, e.passages]), [
+    [1, "chercher_documents", "ok", "K0101", "salarie", ["requete"], ["FAQ-RH#2"]],
+    [2, "chercher_documents", "ok", "K0101", "salarie", ["requete"], ["FAQ-RH#2"]],
+    [3, "chercher_documents", "limite", "K0101", "salarie", ["requete"], []],
   ]);
 });
 
@@ -289,12 +289,16 @@ test("agir avance le dernier tour quand le budget de tokens est épuisé", async
   assert.deepEqual(options.map((o) => o?.sansOutil), [false, true]);
 });
 
-test("journalJsonl ajoute une ligne JSON par appel, dans le fichier du jour", async () => {
+test("journalJsonl ajoute une ligne JSON par appel, dans le fichier du jour, avec un pseudonyme au lieu du matricule", async () => {
   const dossier = await mkdtemp(join(tmpdir(), "journal-"));
-  const ecrire = journalJsonl(dossier);
-  const entree: EntreeJournal = { horodatage: "2026-10-13T12:00:00.000Z", matricule: "K0101", tour: 1, outil: "consulter_solde", arguments: {}, statut: "ok", duree_ms: 3, resultat: "Solde…" };
+  const ecrire = journalJsonl(dossier, { cle: join(dossier, "cle") });
+  const entree: EntreeJournal = { horodatage: "2026-10-13T12:00:00.000Z", matricule: "K0101", profil: "salarie", tour: 1, outil: "consulter_solde", champs: [], statut: "ok", duree_ms: 3, passages: [] };
   await ecrire(entree);
   await ecrire({ ...entree, tour: 2 });
-  const lignes = (await readFile(join(dossier, "agent-2026-10-13.jsonl"), "utf8")).trim().split("\n");
-  assert.deepEqual(lignes.map((l) => JSON.parse(l).tour), [1, 2]);
+  const brut = await readFile(join(dossier, "agent-2026-10-13.jsonl"), "utf8");
+  const lignes = brut.trim().split("\n").map((l) => JSON.parse(l));
+  assert.deepEqual(lignes.map((l) => l.tour), [1, 2]);
+  assert.doesNotMatch(brut, /K0101/);
+  assert.match(lignes[0].salarie, /^[0-9a-f]{16}$/);
+  assert.equal(lignes[0].salarie, lignes[1].salarie); // le même salarié, le même pseudonyme
 });
