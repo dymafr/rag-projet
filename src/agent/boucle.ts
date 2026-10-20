@@ -234,7 +234,7 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
     }
     // 6. Une action refusée : la boucle répond elle-même. Rendre la parole au LLM, c'est le laisser affirmer l'avoir faite
     if (refus) {
-      yield { type: "reponse", tour, texte: bloquee ? REGLE_DE_DEUX : "Je n'ai rien fait : vous n'avez pas confirmé l'action demandée.", usage };
+      yield { type: "reponse", tour, texte: bloquee ? REGLE_DE_DEUX : "Les actions que vous avez refusées n'ont pas été exécutées.", usage };
       return;
     }
   }
