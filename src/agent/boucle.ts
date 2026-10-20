@@ -44,7 +44,7 @@ export type Recherche = "libre" | "office" | "secours";
 // rendu un texte non fiable, plus aucune action pour cette question. Une consigne cachée dans un ticket peut encore
 // tromper le LLM ; elle ne peut plus rien lui faire faire. La boucle répond alors elle-même, comme après un refus
 export const REGLE_DE_DEUX =
-  "Je n'ai rien fait : une action m'a été demandée après la lecture d'un ticket, un texte écrit par un salarié, et " +
+  "Les actions demandées après la lecture d'un ticket n'ont pas été exécutées : un ticket est un texte écrit par un salarié, et " +
   "après un tel texte je n'en exécute aucune. Si vous vouliez cette action, demandez-la dans une nouvelle question.";
 
 // Chapitre 13 : pour un manager ou le service RH, le profil, avant la date. Ce n'est pas le LLM qui décide de ce que le
