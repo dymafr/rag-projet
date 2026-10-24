@@ -7,6 +7,7 @@ import { z } from "zod";
 import type { Usage } from "../llm.ts";
 import { PROFILS } from "../recherche/droits.ts";
 import type { EtapeTracee } from "../trace/trace.ts";
+import type { Accord } from "./barriere.ts";
 
 export const TYPES = [
   "un-passage",
@@ -21,18 +22,19 @@ export const TYPES = [
 ] as const;
 export type TypeDeQuestion = (typeof TYPES)[number];
 
-// Combien de questions de chaque type, dans le jeu de travail (240) et dans le jeu caché (160) : les mêmes proportions,
-// pour que le jeu caché mesure la même chose (leçon 2, npm run eval:taille pour le choix des tailles)
+// Combien de questions de chaque type, dans le jeu de travail et dans le jeu caché (160) : les mêmes proportions, pour
+// que le jeu caché mesure la même chose (leçon 2, npm run eval:taille pour le choix des tailles). Leçon 5 : chaque jeu
+// caché usé a rejoint le jeu de travail (240 + 160 + 160 = 560 questions), et un nouveau jeu caché l'a remplacé
 export const QUOTAS: Record<TypeDeQuestion, { travail: number; cache: number }> = {
-  "un-passage": { travail: 80, cache: 54 },
-  "plusieurs-passages": { travail: 30, cache: 20 },
-  "date-version": { travail: 20, cache: 13 },
-  conversation: { travail: 20, cache: 13 },
-  "hors-corpus": { travail: 30, cache: 20 },
-  interdite: { travail: 20, cache: 14 },
-  "donnees-structurees": { travail: 30, cache: 20 },
-  "document-scanne": { travail: 4, cache: 2 },
-  multilingue: { travail: 6, cache: 4 },
+  "un-passage": { travail: 188, cache: 54 },
+  "plusieurs-passages": { travail: 70, cache: 20 },
+  "date-version": { travail: 46, cache: 13 },
+  conversation: { travail: 46, cache: 13 },
+  "hors-corpus": { travail: 70, cache: 20 },
+  interdite: { travail: 48, cache: 14 },
+  "donnees-structurees": { travail: 70, cache: 20 },
+  "document-scanne": { travail: 8, cache: 2 },
+  multilingue: { travail: 14, cache: 4 },
 };
 
 const Motifs = z.array(
@@ -49,7 +51,7 @@ const Jour = z.iso.date();
 
 export const QuestionProduction = z
   .strictObject({
-    id: z.string().regex(/^(Q\d{2,}|[LRSV]\d|H\d{3})$/, "identifiant attendu : Q63, R4, H001…"),
+    id: z.string().regex(/^(Q\d{2,}|[LRSV]\d|[HIJ]\d{3})$/, "identifiant attendu : Q63, R4, H001, I001, J001…"),
     question: z.string().trim().min(1),
     type: z.enum(TYPES),
     categorie: z.enum(["couverte", "hors-corpus", "interdite"]),
@@ -132,6 +134,7 @@ export type ResultatQuestion = {
     erreur?: string; // la question a échoué (outil, LLM) : caviardée
   };
   verdict: Verdict;
+  verdictSecond?: Verdict; // leçon 5 : le verdict du second juge, s'il y en a un (--second-juge)
   trace: EtapeTracee[];
 };
 
@@ -141,10 +144,11 @@ export type Execution = {
   jeu: "travail" | "cache";
   empreinteDuJeu: string;
   date: string; // le jour de l'exécution
-  configuration: { generation: string; juge: string; embeddings: string; reclasseur: string | null; prompt: string; recherche: string };
+  configuration: { generation: string; juge: string; secondJuge?: string; embeddings: string; reclasseur: string | null; prompt: string; recherche: string };
   duree_ms: number;
   cout: number | null;
   bilan: Bilan & { parType: Record<string, Bilan>; parProfil: Record<string, Bilan>; parCategorie: Record<string, Bilan> };
+  accord?: Accord; // leçon 5 : avec un second juge, ce que les deux juges disent ensemble
   resultats: ResultatQuestion[];
 };
 

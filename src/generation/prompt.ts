@@ -3,6 +3,7 @@
 import type { Mesure } from "../decoupage/mesure.ts";
 import { retirerInvisibles } from "../ingestion/injection.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
+import { libelleDuJour } from "../rh/calendrier.ts";
 
 // Les réglages par défaut : les passages demandés à la recherche, et les tokens qui leur sont réservés dans le prompt
 export const PASSAGES_DEMANDES = 8;
@@ -63,8 +64,10 @@ export function choisir(resultats: Resultat[], budget: number, mesure: Mesure) {
   return { passages, ecartes, total };
 }
 
-// 3. La fin du message : la date du jour (certaines règles changent), puis la question, en dernier
-export const finDuMessage = (question: string, date: string) => `Date du jour : ${date}\n\nQuestion : ${question}`;
+// 3. La fin du message : la date du jour (certaines règles changent), puis la question, en dernier. Chapitre 14, leçon 5 :
+// avec le jour de la semaine (« lundi 9 novembre 2026 ») ; sans lui, le LLM calculait lui-même quel jour serait
+// « mercredi », et se trompait
+export const finDuMessage = (question: string, date: string) => `Date du jour : ${libelleDuJour(date)} (${date})\n\nQuestion : ${question}`;
 
 // 4. Le prompt complet. budget : les tokens réservés aux passages
 export function assembler(

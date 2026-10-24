@@ -5,6 +5,7 @@
 // - couverte : exacte (si elle a une référence), avec chaque motif attendu, sans aucun motif interdit ;
 // - hors corpus ou interdite : un refus, sans aucun motif interdit
 import type { Llm } from "../llm.ts";
+import { libelleDuJour } from "../rh/calendrier.ts";
 import { FORMAT, juger, jugerAvec, passages, type Critere as CritereDuJuge } from "./juge.ts";
 import type { Critere, QuestionProduction, Verdict } from "./production.ts";
 
@@ -64,10 +65,18 @@ const EN_LETTRES = new RegExp(`(?<![\\p{L}-])(${NOMBRES.map(([mot]) => mot).join
 const VALEUR = new Map(NOMBRES);
 export const enChiffres = (texte: string) => texte.replace(EN_LETTRES, (mot) => String(VALEUR.get(mot.toLowerCase()) ?? mot));
 
-// Un motif se cherche sans tenir compte de la casse, dans la réponse telle quelle, puis avec ses nombres écrits en chiffres
+// Un motif se cherche sans tenir compte de la casse. Leçon 5, deux pièges des réponses justes que le motif ratait :
+// - en JavaScript, \b ne connaît que les lettres sans accent (« \bété\b » ne trouve pas « été ») : il devient une
+//   frontière de mot qui connaît toutes les lettres ;
+// - « 2 500 € » s'écrit souvent avec une espace fine ou insécable : elles comptent comme des espaces
+const LETTRE = "[\\p{L}\\p{N}_]";
+const FRONTIERE = `(?:(?<=${LETTRE})(?!${LETTRE})|(?<!${LETTRE})(?=${LETTRE}))`;
+export const avecFrontieres = (motif: string) => motif.replace(/(?<!\\)\\b/g, FRONTIERE);
+const INSECABLES = new RegExp(`[${String.fromCharCode(0xa0, 0x202f, 0x2009)}]`, "g");
 const trouve = (motif: string, texte: string) => {
-  const regle = new RegExp(motif, "iu");
-  return regle.test(texte) || regle.test(enChiffres(texte));
+  const regle = new RegExp(avecFrontieres(motif), "iu");
+  const normal = texte.replace(INSECABLES, " ");
+  return regle.test(normal) || regle.test(enChiffres(normal));
 };
 
 export function motifs(question: QuestionProduction, texte: string): Critere[] {
@@ -99,7 +108,7 @@ export async function verdictDe(question: QuestionProduction, obtenu: AJugerProd
   const parLeJuge = async (critere: CritereDuJuge & Critere["critere"], avecPassages: boolean) => {
     if (!juge) return { critere, ok: null, raison: "sans juge (--sans-juge)" };
     // Leçon 4 : le juge connaît, comme Rhéa, la date de la question et le salarié qui la pose
-    const situation = { id: "contexte", texte: `Date du jour : ${question.date}. Salarié connecté : ${question.matricule}, profil ${question.profil}.` };
+    const situation = { id: "contexte", texte: `Date du jour : ${libelleDuJour(question.date)} (${question.date}). Salarié connecté : ${question.matricule}, profil ${question.profil}.` };
     const lus = avecPassages ? [situation, ...obtenu.passagesLus].map((p, i) => ({ numero: i + 1, texte: `[${p.id}] ${p.texte}` })) : [];
     // Une question de suite se juge avec les échanges qui la précèdent : « Et celui de Nantes ? » ne dit pas de quoi il
     // s'agit, et le juge prenait pour inventée une date que le salarié avait donnée au tour d'avant

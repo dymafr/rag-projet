@@ -4,6 +4,7 @@
 // (la configuration et les scores). Une exécution coupée reprend où elle s'était arrêtée (--reprendre).
 // Lancement : npm run eval:production -- [--nom 2026-10-20] [--questions Q01,Q63] [--types hors-corpus,interdite]
 //             [--sans-juge] [--reprendre] [--paralleles 4 : plusieurs questions à la fois, avec des modèles hébergés]
+//             [--second-juge openai:gpt-6-luna : chaque réponse jugée aussi par un second juge (leçon 5)]
 // Le jeu caché (--jeu cache) n'est rejoué que par la barrière de qualité (leçon 5) : sans --barriere, refusé. Il ne garde
 // que ses scores, jamais ses questions ni ses réponses : personne ne doit pouvoir régler Rhéa dessus
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
@@ -14,9 +15,11 @@ import { sourcesCitees } from "../agent/sources.ts";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
 import { nomDuModele } from "../embeddings/fournisseurs.ts";
+import { A_RELIRE, accordDe, lireJuge } from "../eval/barriere.ts";
 import { cout, lireTarifs } from "../eval/comparaison.ts";
 import { verdictDe } from "../eval/juger-production.ts";
 import { bilanDe, JEU_CACHE, JEU_DE_TRAVAIL, lireJeuProduction, TYPES, type Execution, type QuestionProduction, type ResultatQuestion } from "../eval/production.ts";
+import { empreinte as empreinteDuTexte } from "../eval/reponses.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
 import { pourLeTerminal } from "../ingestion/secrets.ts";
 import { creerLlm, type Usage } from "../llm.ts";
@@ -36,6 +39,7 @@ const { values } = parseArgs({
     reprendre: { type: "boolean", default: false },
     barriere: { type: "boolean", default: false },
     paralleles: { type: "string", default: "1" },
+    "second-juge": { type: "string" },
   },
 });
 const paralleles = Number(values.paralleles);
@@ -62,6 +66,9 @@ const tarifs = await lireTarifs();
 // Le juge : JUGE_MODEL chez JUGE_PROVIDER (chapitre 14 : un autre fournisseur que celui qui rédige, de préférence)
 const fournisseurDuJuge = config.JUGE_PROVIDER ?? config.LLM_PROVIDER;
 const juge = values["sans-juge"] ? null : creerLlm(config.JUGE_MODEL || config.LLM_MODEL, fournisseurDuJuge);
+// Leçon 5 : un second juge, d'un autre fournisseur. Une question ne passe la barrière que si les deux l'acceptent
+const secondJuge = values["second-juge"] && !values["sans-juge"] ? lireJuge(values["second-juge"]) : null;
+const second = secondJuge ? creerLlm(secondJuge.modele, secondJuge.fournisseur) : null;
 const cleTarif = `${config.LLM_PROVIDER} ${config.LLM_MODEL}`;
 
 // Une exécution à reprendre : les questions déjà faites, si le jeu n'a pas changé entre-temps
@@ -81,8 +88,9 @@ const debut = performance.now();
 const configuration: Execution["configuration"] = {
   generation: cleTarif,
   juge: juge ? `${fournisseurDuJuge} ${config.JUGE_MODEL || config.LLM_MODEL}` : "aucun",
+  ...(secondJuge && { secondJuge: `${secondJuge.fournisseur} ${secondJuge.modele}` }),
   embeddings: nomDuModele(),
-  reclasseur: !RECHERCHE_DE_PRODUCTION.reclassement ? null : config.RERANK_PROVIDER === "llm" ? `llm ${config.LLM_PROVIDER} ${config.LLM_MODEL}` : `${config.RERANK_PROVIDER} ${config.RERANK_MODEL}`,
+  reclasseur: !RECHERCHE_DE_PRODUCTION.reclassement ? null : config.RERANK_PROVIDER === "llm" ? `llm ${config.LLM_RECHERCHE_PROVIDER ?? config.LLM_PROVIDER} ${config.LLM_RECHERCHE_MODEL ?? config.LLM_MODEL}` : `${config.RERANK_PROVIDER} ${config.RERANK_MODEL}`,
   prompt: `v${systeme.version} ${systeme.empreinte}`,
   recherche: decrire(RECHERCHE_DE_PRODUCTION),
 };
@@ -100,6 +108,7 @@ async function enregistrer() {
     duree_ms: Math.round(performance.now() - debut),
     cout: couts.every((c) => c === null) ? null : couts.reduce<number>((s, c) => s + (c ?? 0), 0),
     bilan: bilanDe(resultats),
+    ...(second && { accord: accordDe(resultats) }),
     resultats: cache ? [] : resultats, // le jeu caché : les scores, jamais les questions
   };
   const { resultats: _, ...resume } = execution;
@@ -148,14 +157,21 @@ async function evaluer(q: QuestionProduction): Promise<ResultatQuestion> {
   // Le juge peut tomber en panne aussi (Ollama surchargé, limite de débit) : la question reste alors non jugée, et compte
   // comme un échec de suite, plutôt que d'arrêter toute l'exécution
   let verdict: ResultatQuestion["verdict"] = { reussie: null, criteres: [] };
+  let verdictSecond: ResultatQuestion["verdict"] | undefined;
   if (!erreur) {
     try {
       verdict = await verdictDe(q, { texte, passagesLus }, juge);
+      if (second) verdictSecond = await verdictDe(q, { texte, passagesLus }, second);
     } catch (e) {
       erreur = `juge en échec : ${pourLeTerminal(e instanceof Error ? e.message : e)}`;
     }
   }
-  const prix = cout(usage, 0, cleTarif, tarifs);
+  // Leçon 5 : le coût de la question entière, l'agent et les autres appels au LLM, que la trace note un par un avec leur
+  // modèle (le reclassement par le LLM, les filtres extraits, la condensation, le SQL) : ils coûtaient en silence
+  const appels = trace.etapes.filter((e) => e.nom === "appel-llm" && e.usage && e.modele);
+  const prixDesAppels = appels.map((e) => cout(e.usage!, 0, `${e.modele!.fournisseur} ${e.modele!.modele}`, tarifs));
+  const prixAgent = cout(usage, 0, cleTarif, tarifs);
+  const prix = prixAgent && prixDesAppels.every((p) => p !== null) ? { max: prixAgent.max + prixDesAppels.reduce((s, p) => s + p!.max, 0) } : null;
   return {
     question: q,
     obtenu: {
@@ -172,6 +188,7 @@ async function evaluer(q: QuestionProduction): Promise<ResultatQuestion> {
       ...(erreur && { erreur }),
     },
     verdict,
+    ...(second && { verdictSecond: verdictSecond ?? { reussie: null, criteres: [] } }),
     trace: trace.etapes,
   };
 }
@@ -199,7 +216,8 @@ async function travailleur() {
     resultats.sort((a, b) => rang.get(a.question.id)! - rang.get(b.question.id)!);
     await enregistrerParfois();
     // Le jeu caché : rien de la question à l'écran, seulement l'avancement
-    const etat = r.verdict.reussie === true ? "réussie " : r.verdict.reussie === false ? "ÉCHOUÉE " : "non jugée";
+    const etatDe = (v?: ResultatQuestion["verdict"]) => (v?.reussie === true ? "réussie " : v?.reussie === false ? "ÉCHOUÉE " : "non jugée");
+    const etat = second ? `${etatDe(r.verdict)} / ${etatDe(r.verdictSecond)}` : etatDe(r.verdict);
     const { erreur, duree_ms } = r.obtenu;
     const ligne = cache ? `${resultats.length}/${questions.length}` : `${q.id.padEnd(5)} ${q.type.padEnd(20)} ${etat} ${(duree_ms / 1000).toFixed(1).padStart(5)} s  ${q.question.slice(0, 70)}`;
     console.log(erreur && !cache ? `${ligne}\n      erreur : ${erreur}` : ligne);
@@ -217,3 +235,17 @@ await pool.end();
 
 const { reussies, jugees, total } = bilanDe(resultats);
 console.log(`\n${reussies} réussies sur ${total} (${jugees} jugées) : ${dossier}/resume.json`);
+if (second) {
+  const a = accordDe(resultats);
+  console.log(`Les deux juges : ${a.reussies} réussies, ${a.echouees} échouées, ${a.desaccords} désaccord(s), ${a.nonJugees} non jugée(s)`);
+  // Le jeu caché : le détail des désaccords va dans un fichier hors de git, pour le seul relecteur indépendant (leçon 5)
+  if (cache && a.desaccords > 0) {
+    const raisons = (v?: ResultatQuestion["verdict"]) => (v?.criteres ?? []).filter((c) => c.ok !== true).map((c) => `${c.critere} : ${c.raison}`);
+    const liste = resultats
+      .filter((r) => r.verdict.reussie !== null && r.verdictSecond?.reussie != null && r.verdict.reussie !== r.verdictSecond.reussie)
+      .map((r) => ({ id: r.question.id, question: r.question, reponse: r.obtenu.texte, empreinte: empreinteDuTexte(r.obtenu.texte), lus: r.obtenu.lus, premier: { reussie: r.verdict.reussie, raisons: raisons(r.verdict) }, second: { reussie: r.verdictSecond!.reussie, raisons: raisons(r.verdictSecond) } }));
+    await mkdir(A_RELIRE, { recursive: true });
+    await writeFile(`${A_RELIRE}/${values.nom}.json`, JSON.stringify({ execution: values.nom, juges: [configuration.juge, configuration.secondJuge], desaccords: liste }, null, 1));
+    console.log(`Désaccords à faire trancher par un relecteur indépendant : ${A_RELIRE}/${values.nom}.json (hors de git ; ne l'ouvrez pas vous-même)`);
+  }
+}

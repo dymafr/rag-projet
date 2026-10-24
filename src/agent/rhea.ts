@@ -15,7 +15,7 @@ import type { Agent, Recherche } from "./boucle.ts";
 import { chercherDocuments } from "./chercher.ts";
 import { creerLlmAgent } from "./llm-agent.ts";
 import { consulterOrganigramme } from "./organigramme.ts";
-import { calculerIndemniteKm, consulterProfil, consulterSolde, ouvrirTicket } from "./outils-rh.ts";
+import { calculerIndemniteKm, consulterCalendrier, consulterProfil, consulterSolde, ouvrirTicket } from "./outils-rh.ts";
 import { interrogerSoldes } from "./soldes-sql.ts";
 
 export const PROMPT_AGENT = "prompts/rhea-agent.md";
@@ -39,12 +39,14 @@ export function outilsDeRhea(pool: pg.Pool) {
     consulterOrganigramme(pool), // chapitre 12, leçon 2
     interrogerSoldes(pool, creerLlm()), // chapitre 12, leçon 3
     calculerIndemniteKm(),
+    consulterCalendrier(pool), // leçon 5
     ouvrirTicket(pool),
   ];
 }
 
 export function assemblerRhea(outils: Agent["outils"], options: OptionsRhea): Agent {
-  const llmSimple = creerLlm(); // le LLM sans outils, pour condenser une question de suite (chapitre 9)
+  // Le LLM sans outils, pour condenser une question de suite (chapitre 9) ; leçon 5 : celui des étapes de la recherche
+  const llmSimple = creerLlm(config.LLM_RECHERCHE_MODEL ?? config.LLM_MODEL, config.LLM_RECHERCHE_PROVIDER ?? config.LLM_PROVIDER);
   return {
     llm: creerLlmAgent(),
     modele: { fournisseur: config.LLM_PROVIDER, modele: config.LLM_MODEL }, // pour la trace et le coût de chaque réponse

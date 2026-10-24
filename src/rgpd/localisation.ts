@@ -33,14 +33,16 @@ export function destinations(c: Config): Destination[] {
     llm("juge d'évaluation", c.JUGE_MODEL || c.LLM_MODEL, c.JUGE_PROVIDER ?? c.LLM_PROVIDER), // chapitre 14 : son fournisseur à lui
     embeddings,
     // Chapitre 14, leçon 3 : avec CONTEXTUALISER=oui, npm run decouper envoie tout le corpus au LLM qui situe chaque passage
-    ...(c.CONTEXTUALISER ? [llm("contextualisation des passages", c.LLM_MODEL)] : []),
+    // (leçon 5 : celui des étapes de la recherche)
+    ...(c.CONTEXTUALISER ? [llm("contextualisation des passages", c.LLM_RECHERCHE_MODEL ?? c.LLM_MODEL, c.LLM_RECHERCHE_PROVIDER ?? c.LLM_PROVIDER)] : []),
     !c.RECLASSEMENT // chapitre 14, leçon 3 : sans reclassement, aucun passage ne part chez un reclasseur
       ? { brique: "reclassement", ou: "aucun (RECLASSEMENT=non)", locale: true }
       : c.RERANK_PROVIDER === "voyage"
       ? { brique: "reclassement", ou: `${SERVEURS.voyage} (${c.RERANK_MODEL})`, locale: false } // chapitre 14
-      : c.RERANK_PROVIDER === "llm" // chapitre 14 : le LLM lui-même
-        ? llm("reclassement", c.LLM_MODEL)
+      : c.RERANK_PROVIDER === "llm" // chapitre 14 : le LLM lui-même (leçon 5 : celui des étapes de la recherche)
+        ? llm("reclassement", c.LLM_RECHERCHE_MODEL ?? c.LLM_MODEL, c.LLM_RECHERCHE_PROVIDER ?? c.LLM_PROVIDER)
         : { brique: "reclassement", ou: `cette machine (Transformers.js, ${c.RERANK_MODEL})`, locale: true },
+    ...(c.LLM_RECHERCHE_MODEL ? [llm("filtres extraits et condensation", c.LLM_RECHERCHE_MODEL, c.LLM_RECHERCHE_PROVIDER)] : []),
     ...(vision ? [{ brique: "vision", ...parOllama(vision, c.OLLAMA_BASE_URL) }] : []),
     // Le RAG géré du chapitre 11 : les documents ouverts à tous, envoyés par npm run store:creer
     ...(c.FILE_SEARCH_MODEL ? [{ brique: "file_search (npm run store:…)", ou: `les serveurs d'OpenAI (${c.FILE_SEARCH_MODEL})`, locale: false }] : []),

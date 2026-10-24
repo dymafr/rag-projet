@@ -1,0 +1,9 @@
+{
+  "echecsPermis": 20,
+  "nonJugeesPermises": 0,
+  "juges": [
+    "anthropic:claude-haiku-5-5",
+    "openai:gpt-6-luna"
+  ],
+  "attaques": true
+}

@@ -32,6 +32,6 @@ test("assembler dit comment citer, met les passages numérotés, puis la date du
   assert.equal(prompt.systeme, "Tu es Rhéa.");
   assert.ok(prompt.utilisateur.startsWith(`${CITER}\n\n<passages>\n`));
   assert.match(prompt.utilisateur, /<passages>\n<passage numero="1" source="FAQ-RH#2"[\s\S]*numero="2" source="POL-TT-02#10"[\s\S]*<\/passages>/);
-  assert.ok(prompt.utilisateur.endsWith("Date du jour : 2026-10-05\n\nQuestion : Combien de jours ?"));
+  assert.ok(prompt.utilisateur.endsWith("Date du jour : lundi 5 octobre 2026 (2026-10-05)\n\nQuestion : Combien de jours ?"));
   assert.deepEqual(prompt.passages.map((p) => p.id), ["FAQ-RH#2", "POL-TT-02#10"]);
 });

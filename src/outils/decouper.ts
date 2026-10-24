@@ -86,11 +86,13 @@ if (positionals[0]) {
   const debut = performance.now();
   let chunks: Chunk[] = documents.flatMap((document) => decouperDocument(document, taille, modele.mesure));
   // Chapitre 14 : en production, chaque chunk est précédé d'une ou deux phrases qui le situent dans son document (chapitre
-  // 5, leçon 5), rédigées par le LLM de .env et gardées d'une fois sur l'autre (decoupage/contexte.ts)
+  // 5, leçon 5), rédigées par le LLM de .env et gardées d'une fois sur l'autre (decoupage/contexte.ts). Leçon 5 : par le
+  // LLM des étapes de la recherche, s'il en a un à lui (LLM_RECHERCHE_*)
   if (config.CONTEXTUALISER) {
-    const fait = await contextualiserLeCorpus(documents, chunks, creerLlm());
+    const [fournisseur, modele] = [config.LLM_RECHERCHE_PROVIDER ?? config.LLM_PROVIDER, config.LLM_RECHERCHE_MODEL ?? config.LLM_MODEL];
+    const fait = await contextualiserLeCorpus(documents, chunks, creerLlm(modele, fournisseur));
     chunks = fait.chunks;
-    console.log(`Contextes : ${fait.appels} chunks contextualisés par ${config.LLM_PROVIDER} ${config.LLM_MODEL} (${fait.usage.entree} tokens en entrée, dont ${fait.usage.enCache} relus dans le cache), les autres repris de ${CONTEXTES}`);
+    console.log(`Contextes : ${fait.appels} chunks contextualisés par ${fournisseur} ${modele} (${fait.usage.entree} tokens en entrée, dont ${fait.usage.enCache} relus dans le cache), les autres repris de ${CONTEXTES}`);
   }
   await writeFile("donnees/chunks.jsonl", chunks.map((chunk) => `${JSON.stringify(chunk)}\n`).join(""));
   const tailles = chunks.map((chunk) => chunk.taille).sort((a, b) => a - b);

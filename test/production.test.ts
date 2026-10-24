@@ -37,6 +37,20 @@ test("leçon 4 : un nombre écrit en lettres compte comme en chiffres, pour un m
   assert.equal(motifs(interdite, "La prime atteint quinze % du salaire.")[0].ok, false);
 });
 
+test("leçon 5 : une espace insécable ou fine compte comme une espace dans un motif", () => {
+  const montant = QuestionProduction.parse({ ...base, id: "Q67", question: "Combien ?", type: "un-passage", categorie: "couverte", attendu: ["2 ?500"] });
+  for (const espace of [" ", String.fromCharCode(0xa0), String.fromCharCode(0x202f)]) assert.equal(motifs(montant, `Jusqu'à 2${espace}500 €.`)[0].ok, true);
+});
+
+test("leçon 5 : \\b connaît les lettres accentuées, au début comme à la fin d'un mot", () => {
+  const ete = QuestionProduction.parse({ ...base, id: "Q68", question: "Quand ?", type: "un-passage", categorie: "couverte", attendu: ["\\bété\\b"] });
+  assert.equal(motifs(ete, "Cet été, oui.")[0].ok, true);
+  assert.equal(motifs(ete, "Ils ont été partis.")[0].ok, true);
+  assert.equal(motifs(ete, "Un étéphant.")[0].ok, false); // dans un autre mot : pas une frontière
+  assert.equal(motifs(solde, "Il vous reste 9 RTT.")[0].ok, true); // les chiffres, comme avant
+  assert.equal(motifs(solde, "Il vous reste 19 RTT.")[0].ok, false);
+});
+
 test("la décision : un critère faux fait échouer, un critère non jugé laisse la question non jugée, la fidélité ne décide pas", () => {
   const c = (critere: "exactitude" | "fidelite" | "refus" | "attendu", ok: boolean | null) => ({ critere, ok, raison: "" });
   assert.equal(decider(couverte, [c("exactitude", true), c("fidelite", false)]), true);
@@ -65,7 +79,7 @@ test("verdictDe demande au juge l'exactitude, puis la fidélité aux passages lu
   assert.match(demandes[0], /compares la réponse/);
   // Leçon 4 : l'exactitude lit aussi le contexte et les passages, pour accepter une information juste que la référence ne
   // donne pas (la date du jour, le salarié connecté, un détail d'un passage)
-  assert.match(lues[0], /<passage numero="1">\n\[contexte\] Date du jour : 2026-10-20\. Salarié connecté : K0101, profil salarie\./);
+  assert.match(lues[0], /<passage numero="1">\n\[contexte\] Date du jour : mardi 20 octobre 2026 \(2026-10-20\)\. Salarié connecté : K0101, profil salarie\./);
   assert.match(lues[0], /<passage numero="2">\n\[POL-TT-02#4\] 3 jours/);
   // Une question de suite se juge avec l'échange qui la précède
   const suite = QuestionProduction.parse({ ...base, id: "Q66", question: "Et à Nantes ?", type: "conversation", categorie: "couverte", reponse: "Trois jours aussi.", historique: [{ question: "Combien de jours de télétravail à Lyon ?", reponse: "Trois jours." }] });
