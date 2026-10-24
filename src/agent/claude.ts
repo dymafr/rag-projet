@@ -67,7 +67,10 @@ export function agentClaude(client: Anthropic, modele: string): LlmAgent {
     const reponse = await client.messages.create({
       model: modele,
       max_tokens: MAX_TOKENS,
-      system: systeme,
+      // Chapitre 14, leçon 6 : les outils et les consignes se répètent à chaque tour et à chaque question. Marqués
+      // cache_control, ils sont gardés quelques minutes : relus par l'appel suivant, ils coûtent une fraction du prix
+      // d'entrée (0,025 à 0,1 fois selon le modèle). Le marqueur sur les consignes couvre aussi les outils, qui viennent avant elles
+      ...(systeme && { system: [{ type: "text" as const, text: systeme, cache_control: { type: "ephemeral" as const } }] }),
       messages: versClaude(messages),
       tools: outils.map(outilClaude), // toujours déclarés, comme aux tours précédents : c'est tool_choice qui interdit l'appel
       ...(options.sansOutil && { tool_choice: { type: "none" as const } }),

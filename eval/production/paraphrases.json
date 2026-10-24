@@ -1,0 +1,18 @@
+[
+  { "id": "Q01", "paraphrase": "J'ai droit à combien de jours de télétravail par semaine ?" },
+  { "id": "Q04", "paraphrase": "Jusqu'à combien puis-je dépenser pour un déjeuner client à Paris ?" },
+  { "id": "Q06", "paraphrase": "Quel code d'absence poser quand mon enfant est malade ?" },
+  { "id": "Q07", "paraphrase": "Je me marie : combien de jours de congé ai-je ?" },
+  { "id": "Q08", "paraphrase": "À quelle date le salaire est-il versé ?" },
+  { "id": "Q09", "paraphrase": "Mon abonnement de transport en commun est-il remboursé ?" },
+  { "id": "Q11", "paraphrase": "Combien est payée une semaine d'astreinte ?" },
+  { "id": "Q12", "paraphrase": "Quel formulaire dois-je utiliser pour une note de frais ?" },
+  { "id": "Q13", "paraphrase": "J'ai combien de jours de RTT dans l'année ?" },
+  { "id": "Q14", "paraphrase": "À quelle heure dois-je être là le jour de mon arrivée ?" },
+  { "id": "Q16", "paraphrase": "Combien touche-t-on d'indemnité par jour de télétravail ?" },
+  { "id": "Q18", "paraphrase": "Est-ce que Kalyo aide à financer les trajets à vélo ?" },
+  { "id": "Q19", "paraphrase": "Suis-je obligé de répondre à mes e-mails le soir ?" },
+  { "id": "Q22", "paraphrase": "J'ai reçu un e-mail suspect, que dois-je faire ?" },
+  { "id": "Q45", "paraphrase": "Est-ce que je peux reporter mes RTT non posés sur l'année prochaine ?" },
+  { "id": "Q46", "paraphrase": "Quel est le plafond de remboursement d'un fauteuil ergonomique pour le télétravail ?" }
+]
