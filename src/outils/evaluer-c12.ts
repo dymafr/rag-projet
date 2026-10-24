@@ -13,7 +13,9 @@ import { calculerIndemniteKm, consulterProfil, consulterSolde, ouvrirTicket } fr
 import { consulterOrganigramme } from "../agent/organigramme.ts";
 import { interrogerSoldes } from "../agent/soldes-sql.ts";
 import { pool } from "../db.ts";
+import { nomDuModele } from "../embeddings/fournisseurs.ts";
 import { FAMILLES, lireJeuAuDela, verdict, type Verdict } from "../eval/au-dela.ts";
+import { plancherPour } from "../generation/abstention.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
 import { creerLlm } from "../llm.ts";
@@ -33,7 +35,7 @@ const systeme = await lirePromptSysteme("prompts/rhea-agent.md");
 const agent: Agent = {
   llm: creerLlmAgent(),
   outils: [
-    chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date)),
+    chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date), plancherPour(nomDuModele())),
     consulterSolde(pool),
     consulterProfil(pool),
     consulterOrganigramme(pool), // leçon 2

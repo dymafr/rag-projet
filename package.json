@@ -71,6 +71,8 @@
     "eval:attaques": "node --env-file=.env src/outils/attaquer.ts",
     "eval:production": "node --env-file=.env src/outils/evaluer-production.ts",
     "eval:recuperation": "node --env-file=.env src/outils/evaluer-recuperation.ts",
+    "eval:rejuger": "node --env-file=.env src/outils/rejuger.ts",
+    "eval:desaccords": "node --env-file=.env src/outils/desaccords.ts",
     "eval:jeu": "node --env-file=.env src/outils/verifier-production.ts",
     "eval:taille": "node src/outils/dimensionner.ts",
     "eval:doublons": "node --env-file=.env src/outils/doublons.ts",

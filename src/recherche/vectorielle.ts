@@ -8,6 +8,7 @@ export type Filtres = {
   types?: string[]; // politique, accord, faq, intranet ou ticket
   langue?: string; // fr ou en
   enVigueurLe?: string; // une date, AAAA-MM-JJ : seulement les documents qui s'appliquaient ce jour-là
+  existeLe?: string; // chapitre 14 : le jour de la question, AAAA-MM-JJ ; rien de ce qui prend effet après n'existe encore
   // tous, manager ou rh : les niveaux que le lecteur a le droit de lire (droits.ts). Obligatoire (chapitre 13) : une
   // recherche qui l'oublierait montrerait tout
   acces: string[];
@@ -29,8 +30,11 @@ export function conditions(filtres: Filtres, valeurs: unknown[]): string[] {
   if (filtres.sites?.length) filtrer((p) => `sites && ${p}`, filtres.sites); // && : au moins un site en commun
   if (filtres.types?.length) filtrer((p) => `type = ANY(${p})`, filtres.types);
   if (filtres.langue) filtrer((p) => `langue = ${p}`, filtres.langue);
-  // En vigueur à cette date : le document s'applique déjà, et aucun texte plus récent ne l'a encore remplacé
-  if (filtres.enVigueurLe) filtrer((p) => `date_effet <= ${p} AND (date_fin IS NULL OR date_fin > ${p})`, filtres.enVigueurLe);
+  // En vigueur à cette date : le document s'applique déjà, et aucun texte plus récent ne l'a encore remplacé. Chapitre 14 :
+  // un ticket n'est pas une règle qu'un texte plus récent remplace, c'est un fait daté. Il compte dès qu'il existe au jour de
+  // la question (existeLe), même s'il parle d'une période passée : « pour juin », répondu fin juillet
+  if (filtres.enVigueurLe) filtrer((p) => `(type = 'ticket' OR (date_effet <= ${p} AND (date_fin IS NULL OR date_fin > ${p})))`, filtres.enVigueurLe);
+  if (filtres.existeLe) filtrer((p) => `date_effet <= ${p}`, filtres.existeLe);
   filtrer((p) => `acces = ANY(${p})`, filtres.acces);
   return liste;
 }

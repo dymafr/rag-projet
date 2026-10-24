@@ -2,7 +2,7 @@
 // interdits), la décision, le juge (faux) et le bilan. Lancement : npm test
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { decider, motifs, verdictDe } from "../src/eval/juger-production.ts";
+import { decider, enChiffres, motifs, verdictDe } from "../src/eval/juger-production.ts";
 import { bilanDe, empreinteDe, JeuProduction, QuestionProduction, type ResultatQuestion } from "../src/eval/production.ts";
 import { auPlus, borneDesEchecs, regleDeTrois } from "../src/eval/statistiques.ts";
 import type { Llm } from "../src/llm.ts";
@@ -30,6 +30,13 @@ test("les motifs attendus et interdits se vérifient sans LLM, sans tenir compte
   assert.equal(motifs(interdite, "Je ne peux pas vous le dire.")[0].ok, true);
 });
 
+test("leçon 4 : un nombre écrit en lettres compte comme en chiffres, pour un motif attendu comme pour un motif interdit", () => {
+  assert.equal(enChiffres("Neuf RTT, vingt-deux jours, trente et un mois, un jour, une semaine, septembre"), "9 RTT, 22 jours, 31 mois, un jour, une semaine, septembre");
+  assert.equal(motifs(solde, "Il vous reste neuf RTT.")[0].ok, true);
+  assert.equal(motifs(solde, "Il vous reste dix-neuf RTT.")[0].ok, false);
+  assert.equal(motifs(interdite, "La prime atteint quinze % du salaire.")[0].ok, false);
+});
+
 test("la décision : un critère faux fait échouer, un critère non jugé laisse la question non jugée, la fidélité ne décide pas", () => {
   const c = (critere: "exactitude" | "fidelite" | "refus" | "attendu", ok: boolean | null) => ({ critere, ok, raison: "" });
   assert.equal(decider(couverte, [c("exactitude", true), c("fidelite", false)]), true);
@@ -42,8 +49,10 @@ test("la décision : un critère faux fait échouer, un critère non jugé laiss
 
 test("verdictDe demande au juge l'exactitude, puis la fidélité aux passages lus, et le refus pour une question interdite", async () => {
   const demandes: string[] = [];
+  const lues: string[] = [];
   const juge: Llm = async (consigne, donnees) => {
     demandes.push(consigne.split("\n")[0]);
+    lues.push(donnees);
     const oui = !donnees.includes("15 %");
     return { texte: JSON.stringify({ raison: "vérifié", verdict: oui ? "oui" : "non" }), usage: { entree: 10, enCache: 0, sortie: 5 } };
   };
@@ -54,6 +63,14 @@ test("verdictDe demande au juge l'exactitude, puis la fidélité aux passages lu
   assert.deepEqual(v2.criteres.map((c) => [c.critere, c.ok]), [["refus", false], ["interdit", false]]);
   assert.equal(v2.reussie, false);
   assert.match(demandes[0], /compares la réponse/);
+  // Leçon 4 : l'exactitude lit aussi le contexte et les passages, pour accepter une information juste que la référence ne
+  // donne pas (la date du jour, le salarié connecté, un détail d'un passage)
+  assert.match(lues[0], /<passage numero="1">\n\[contexte\] Date du jour : 2026-10-20\. Salarié connecté : K0101, profil salarie\./);
+  assert.match(lues[0], /<passage numero="2">\n\[POL-TT-02#4\] 3 jours/);
+  // Une question de suite se juge avec l'échange qui la précède
+  const suite = QuestionProduction.parse({ ...base, id: "Q66", question: "Et à Nantes ?", type: "conversation", categorie: "couverte", reponse: "Trois jours aussi.", historique: [{ question: "Combien de jours de télétravail à Lyon ?", reponse: "Trois jours." }] });
+  await verdictDe(suite, { texte: "Trois jours.", passagesLus: [] }, juge);
+  assert.match(lues.at(-1)!, /Question précédente : Combien de jours de télétravail à Lyon \?\nRéponse précédente : Trois jours\.\nQuestion : Et à Nantes \?/);
   // Sans juge : seuls les motifs se vérifient, la question reste non jugée si un critère du juge manque
   const v3 = await verdictDe(couverte, { texte: "Trois jours.", passagesLus: [] }, null);
   assert.equal(v3.reussie, null);
