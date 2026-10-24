@@ -6,6 +6,7 @@ import { sourcesCitees } from "../agent/sources.ts";
 import { personnelle, type Cle, type EnCache } from "../cache/semantique.ts";
 import { cout, type Tarifs } from "../eval/comparaison.ts";
 import type { Usage } from "../llm.ts";
+import type { Observation } from "../observabilite/observations.ts";
 import type { Echange } from "../recherche/conversation.ts";
 import type { Profil } from "../recherche/droits.ts";
 import { aDesIndices } from "../recherche/filtres-extraits.ts";
@@ -18,8 +19,9 @@ import type { Confirmations } from "./confirmations.ts";
 export type Session = { matricule: string; profil: Profil };
 
 export type SourceCitee = ReturnType<typeof enBref> & { texte: string };
+// observation (leçon 7) : l'identifiant de la question dans l'observabilité, pour que le salarié donne son avis
 // cache (leçon 6) : la réponse vient du cache sémantique, avec la similarité de la question qui l'avait reçue
-export type Fin = { usage: Usage; cout: { min: number; max: number } | null; duree_ms: number; modele: Modele; prompt: string; tours: number; cache?: number };
+export type Fin = { usage: Usage; cout: { min: number; max: number } | null; duree_ms: number; modele: Modele; prompt: string; tours: number; observation?: string; cache?: number };
 
 export type EvenementAgent =
   | { nom: "etape"; donnees: EvenementTrace }
@@ -36,6 +38,8 @@ export type DependancesAgent = {
   version: string; // celle du prompt système : v6 1a2b3c4d
   tarifs?: Tarifs; // pour le coût d'une réponse ; absent ou sans le modèle : coût inconnu (un modèle local ne coûte rien)
   inspection: boolean; // la trace part-elle au navigateur ?
+  // Leçon 7 : garder une observation de chaque question (sans son texte : observations.ts), et rendre son identifiant
+  observer?: (session: Session, observation: Omit<Observation, "pseudonyme" | "profil">) => Promise<string>;
   // Leçon 6 : le cache sémantique (cache/semantique.ts) ; lire rend aussi le vecteur de la question, réutilisé pour écrire
   cache?: {
     seuil: number;
@@ -63,13 +67,34 @@ export async function* repondreEnAgent(
   const agent = dependances.agent(session, confirmer);
   const modele = agent.modele ?? { fournisseur: "inconnu", modele: "inconnu" };
   const debut = performance.now();
+  const outilsAppeles: string[] = [];
+  // Un nom d'outil que le LLM invente (« dossier_de_K0042 ») peut porter n'importe quoi : il entre comme « inconnu »
+  const declares = new Set(agent.outils.map((o) => o.nom));
+  // Leçon 7 : l'observation de la question, enregistrée avant la fin pour que son identifiant parte avec elle. Une panne
+  // de l'observabilité ne doit jamais coûter sa réponse au salarié : elle se note dans le terminal, sans plus
+  const observer = async (o: Omit<Observation, "pseudonyme" | "profil" | "question" | "etapes" | "outils">) => {
+    if (!dependances.observer) return undefined;
+    try {
+      return await dependances.observer(session, { ...o, question, etapes: trace.etapes, outils: outilsAppeles });
+    } catch (erreur) {
+      console.error("Observation non enregistrée :", erreur instanceof Error ? erreur.message : erreur);
+      return undefined;
+    }
+  };
   const duree = () => Math.round(performance.now() - debut);
   let pourLeCache: { vecteur: number[]; cle: Cle } | undefined; // leçon 6 : de quoi écrire la réponse dans le cache
 
   const travail = avecTrace(trace, async () => {
     const contexte = { date: dependances.date(), matricule: session.matricule, profil: session.profil };
-    if (await depuisLeCache(contexte.date)) return;
-    await suivreAgent(contexte);
+    try {
+      if (await depuisLeCache(contexte.date)) return;
+      await suivreAgent(contexte);
+    } catch (erreur) {
+      // Leçon 7 : une question en erreur se compte aussi (sauf si le salarié est parti), puis l'erreur repart telle quelle
+      const nul = { entree: 0, enCache: 0, sortie: 0 };
+      if (!signal?.aborted) await observer({ statut: "erreur", duree_ms: duree(), tours: 0, usage: nul, cout: null, modele: `${modele.fournisseur} ${modele.modele}`, citees: [] });
+      throw erreur;
+    }
   });
   travail.then(
     () => canal.fermer(),
@@ -94,9 +119,10 @@ export async function* repondreEnAgent(
     canal.pousser({ nom: "texte", donnees: { texte: trouve.reponse } });
     canal.pousser({ nom: "sources", donnees: { citees: trouve.sources, inventees: [] } });
     const nul = { entree: 0, enCache: 0, sortie: 0 };
+    const id = await observer({ statut: "citee", duree_ms: duree(), tours: 0, usage: nul, cout: 0, modele: "cache", citees: trouve.sources.map((s) => s.id) });
     canal.pousser({
       nom: "fin",
-      donnees: { usage: nul, cout: { min: 0, max: 0 }, duree_ms: duree(), modele: { fournisseur: "cache", modele: "sémantique" }, prompt: dependances.version, tours: 0, cache: trouve.similarite },
+      donnees: { usage: nul, cout: { min: 0, max: 0 }, duree_ms: duree(), modele: { fournisseur: "cache", modele: "sémantique" }, prompt: dependances.version, tours: 0, cache: trouve.similarite, ...(id && { observation: id }) },
     });
     return true;
   }
@@ -107,7 +133,7 @@ export async function* repondreEnAgent(
     let ficheDOffice = ""; // la fiche lue d'office : y reprendre un nom, le poste, le service ou le site rend la réponse personnelle
     for await (const e of agir(question, agent, contexte, historique)) {
       if (signal?.aborted) return; // le salarié est parti : inutile d'aller plus loin
-      if (e.type === "appel") appels.push(e.appel);
+      if (e.type === "appel") (outilsAppeles.push(declares.has(e.appel.nom) ? e.appel.nom : "inconnu"), appels.push(e.appel));
       if (e.type === "resultat" && e.appel.id === "organigramme-d-office") ficheDOffice = e.resultat.texte;
       if (e.type === "resultat") vus.push(...(e.resultat.passages ?? []));
       if (e.type !== "reponse") continue;
@@ -126,7 +152,19 @@ export async function* repondreEnAgent(
         noter("cache-ecrit", "Réponse gardée dans le cache", { resume: "réponse générique et citée : gardée pour les questions très proches du jour" });
       }
       const prix = dependances.tarifs ? cout(e.usage, 0, `${modele.fournisseur} ${modele.modele}`, dependances.tarifs) : null;
-      canal.pousser({ nom: "fin", donnees: { usage: e.usage, cout: prix, duree_ms: duree(), modele, prompt: dependances.version, tours: e.tour } });
+      const id = await observer({
+        statut: citees.length > 0 ? "citee" : "sans-source",
+        duree_ms: duree(),
+        tours: e.tour,
+        usage: e.usage,
+        cout: prix ? prix.max : null,
+        modele: `${modele.fournisseur} ${modele.modele}`,
+        citees: citees.map((p) => p.id),
+      });
+      canal.pousser({
+        nom: "fin",
+        donnees: { usage: e.usage, cout: prix, duree_ms: duree(), modele, prompt: dependances.version, tours: e.tour, ...(id && { observation: id }) },
+      });
     }
   }
 }

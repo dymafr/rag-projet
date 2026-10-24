@@ -39,6 +39,12 @@ const DecisionHumaine = z.strictObject({
   raison: z.string().trim().min(1, "dites pourquoi").max(500, "raison : 500 caractères au plus"),
 });
 const RechercheSeule = z.strictObject({ question: Question, date: z.iso.date("date au format AAAA-MM-JJ").optional() });
+// Leçon 7 : l'avis d'un salarié sur une réponse, et un commentaire court, facultatif
+const Retour = z.strictObject({
+  observation: z.uuid("observation inconnue"),
+  note: z.union([z.literal(1), z.literal(-1)], "note : 1 ou -1"),
+  commentaire: z.string().trim().max(500, "commentaire : 500 caractères au plus").optional(),
+});
 
 // Le serveur a besoin, en plus de l'agent, du profil d'un salarié (chapitre 13), lu dans l'annuaire (null : matricule
 // inconnu), et, en mode inspection, des lectures de l'interface. web : le dossier de l'interface construite
@@ -46,6 +52,8 @@ export type DependancesServeur = DependancesAgent & {
   profil: (matricule: string) => Promise<Profil | null>;
   inspecter?: Inspection; // absent : aucune route /api (production)
   web?: string;
+  // Leçon 7 : enregistrer l'avis du salarié ; false : observation inconnue, ou d'un autre salarié
+  retour?: (observation: string, matricule: string, note: 1 | -1, commentaire: string | null) => Promise<boolean>;
 };
 
 // La politique de sécurité du contenu (CSP) de l'interface : elle ne charge que ses propres fichiers et ne parle qu'à ce
@@ -174,6 +182,16 @@ async function confirmer(req: http.IncomingMessage, res: http.ServerResponse, de
   repondreJson(res, 200, { ok: true });
 }
 
+// 5 bis. POST /retours (leçon 7) : l'avis du salarié sur une réponse. Seul celui qui a posé la question peut la noter
+async function retour(req: http.IncomingMessage, res: http.ServerResponse, dependances: DependancesServeur) {
+  const session = await lireSession(req, res, dependances);
+  if (!session) return;
+  const avis = await lireCorps(req, res, Retour);
+  if (!avis) return;
+  const ok = await dependances.retour!(avis.observation, session.matricule, avis.note, avis.commentaire || null);
+  repondreJson(res, ok ? 200 : 404, ok ? { ok: true } : { erreur: "réponse introuvable" });
+}
+
 // 6. Les routes de l'inspection. Celles qui lisent des documents dans la base passent par le profil du salarié connecté.
 // Leçon 2 : les évaluations montrent ce que leurs exécutions ont gardé, passages réservés compris (du développement)
 async function api(req: http.IncomingMessage, res: http.ServerResponse, chemin: string, dependances: DependancesServeur, inspecter: Inspection) {
@@ -196,6 +214,8 @@ async function api(req: http.IncomingMessage, res: http.ServerResponse, chemin: 
     const ok = await inspecter.etiqueter(d.execution, d.id, d.reussie, d.raison);
     return repondreJson(res, ok ? 200 : 404, ok ? { ok: true } : { erreur: "question introuvable dans cette exécution" });
   }
+  // L'observabilité (leçon 7) : les indicateurs par jour et la dérive
+  if (req.method === "GET" && chemin === "/api/observations") return repondreJson(res, 200, await inspecter.observations());
   const evaluation = req.method === "GET" ? /^\/api\/evaluations\/([\w-][\w.-]*)(?:\/questions\/([A-Z]\d{1,4}))?$/.exec(chemin) : null;
   if (evaluation) {
     const [, nom, id] = evaluation;
@@ -281,6 +301,10 @@ export function creerServeur(dependances: DependancesServeur): http.Server {
       if (req.method === "POST" && (chemin === "/ask" || chemin === "/ask/confirmation")) {
         if (!enJson(req)) return repondreJson(res, 415, { erreur: "Content-Type: application/json attendu" });
         return await (chemin === "/ask" ? ask(req, res, dependances) : confirmer(req, res, dependances));
+      }
+      if (req.method === "POST" && chemin === "/retours" && dependances.retour) {
+        if (!enJson(req)) return repondreJson(res, 415, { erreur: "Content-Type: application/json attendu" });
+        return await retour(req, res, dependances);
       }
       if (chemin.startsWith("/api/")) {
         if (!dependances.inspecter) return repondreJson(res, 404, { erreur: "inspection désactivée" });
