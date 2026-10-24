@@ -13,8 +13,8 @@ import { aDesIndices, extraireFiltres } from "./filtres-extraits.ts";
 import { fusionner } from "./fusion.ts";
 import { chercherHybride } from "./hybride.ts";
 import { chercherPleinTexte } from "./plein-texte.ts";
-import { RECHERCHE, type Reglages } from "./reglages.ts";
-import { crossEncoder, parLeLlm, reclasser, type Reclasseur } from "./rerank.ts";
+import { CANDIDATS_LLM_HEBERGE, RECHERCHE, type Reglages } from "./reglages.ts";
+import { crossEncoder, parLeLlm, reclasser, reclasseurVoyage, type Reclasseur } from "./rerank.ts";
 import { transformer } from "./transformations.ts";
 import { chercher, similarites, vecteurs, type Filtres, type Resultat } from "./vectorielle.ts";
 import { enrichir } from "./vocabulaire.ts";
@@ -26,7 +26,23 @@ export const aujourdhui = () => new Date().toLocaleDateString("sv-SE");
 // cross-encoder ne se charge qu'au premier reclassement) ; un appelant peut passer les siens, ou n'en passer aucun
 export type Outils = { llm?: Llm; crossEncoder?: Reclasseur };
 let outilsDeEnv: Required<Outils> | undefined;
-export const outilsParDefaut = (): Required<Outils> => (outilsDeEnv ??= { llm: creerLlm(), crossEncoder: crossEncoder(config.RERANK_MODEL) });
+// Chapitre 14 : le reclasseur de .env peut être celui de Voyage (RERANK_PROVIDER=voyage)
+export const outilsParDefaut = (): Required<Outils> =>
+  (outilsDeEnv ??= {
+    llm: creerLlm(),
+    crossEncoder:
+      config.RERANK_PROVIDER === "voyage" ? reclasseurVoyage(config.RERANK_MODEL, config.VOYAGE_API_KEY, config.VOYAGE_BASE_URL) : crossEncoder(config.RERANK_MODEL),
+  });
+
+// Chapitre 14, leçon 3 : les réglages de la recherche servie, ceux de RECHERCHE avec le reclassement choisi dans .env
+export const RECHERCHE_DE_PRODUCTION: Reglages = {
+  ...RECHERCHE,
+  ...(config.RECLASSEMENT && { reclassement: true, reclasseur: config.RERANK_PROVIDER === "llm" ? ("llm" as const) : ("cross-encoder" as const) }),
+};
+// Le LLM des étapes de la recherche (celui de .env), tel que le notent la trace, l'interface et les mesures, et le
+// reclasseur : ce LLM, ou le cross-encoder de .env (local ou Voyage)
+export const LLM_DE_LA_RECHERCHE = `${config.LLM_PROVIDER} ${config.LLM_MODEL}`;
+export const nomDuReclasseur = (reclasseur: Reglages["reclasseur"]) => (reclasseur === "llm" ? `llm ${LLM_DE_LA_RECHERCHE}` : `${config.RERANK_PROVIDER} ${config.RERANK_MODEL}`);
 
 // Une recherche, pour une requête : celle du mode choisi. Le plein texte cherche des mots-clés : la requête, enrichie du
 // vocabulaire de Kalyo si le réglage vocabulaire est actif (leçon 4)
@@ -47,7 +63,7 @@ export async function trouverPassages(
   k: number,
   profil: Profil,
   date = aujourdhui(),
-  reglages: Reglages = RECHERCHE,
+  reglages: Reglages = RECHERCHE_DE_PRODUCTION,
   outils: Outils = outilsParDefaut(),
   profondeur = k,
 ): Promise<Resultat[]> {
@@ -125,7 +141,9 @@ export async function trouverPassages(
   // les redites ; sinon, les premiers. Le classement continue au-delà de k quand les traces demandent une profondeur
   const rendre = Math.max(k, profondeur);
   if (reglages.reclassement) {
-    const reclasseur = reglages.reclasseur === "llm" ? parLeLlm(llm()) : outils.crossEncoder;
+    // Chapitre 14 : un modèle hébergé lit plus de candidats, et chacun en entier (reglages.ts, rerank.ts)
+    const local = config.LLM_PROVIDER === "ollama";
+    const reclasseur = reglages.reclasseur === "llm" ? (local ? parLeLlm(llm()) : parLeLlm(llm(), CANDIDATS_LLM_HEBERGE, Infinity)) : outils.crossEncoder;
     if (!reclasseur) throw new Error("Ces réglages demandent un cross-encoder : passez-le dans les outils");
     // Chapitre 14 : la trace garde la note de chaque candidat, pour voir qui le reclasseur a fait monter ou descendre
     let notes: number[] = [];
@@ -134,7 +152,7 @@ export async function trouverPassages(
     return etape("reclassement", "Reclassement", () => reclasser(question, avant, noterCandidats, rendre), (apres) => ({
       resume: `${pluriel(avant.length, "candidat noté", "candidats notés")}, ${apres.length} gardé${apres.length > 1 ? "s" : ""} ; en tête : ${apres[0]?.id ?? "aucun"}`,
       details: {
-        reclasseur: reglages.reclasseur === "llm" ? "llm" : config.RERANK_MODEL,
+        reclasseur: nomDuReclasseur(reglages.reclasseur),
         candidats: avant.map((p, i) => ({ ...enBref(p), rang_avant: i + 1, note: Number((notes[i] ?? 0).toFixed(4)), rang_apres: apres.findIndex((a) => a.id === p.id) + 1 || null })),
       },
     }));

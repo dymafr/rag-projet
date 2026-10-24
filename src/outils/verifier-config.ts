@@ -24,7 +24,7 @@ async function vecteurDeTest(): Promise<number[]> {
     return reponse.data[0].embedding;
   }
   if (config.EMBEDDING_PROVIDER === "voyage") {
-    const reponse = await fetch("https://api.voyageai.com/v1/embeddings", {
+    const reponse = await fetch(`${config.VOYAGE_BASE_URL}/embeddings`, { // chapitre 14 : l'adresse de .env
       method: "POST",
       headers: { Authorization: `Bearer ${config.VOYAGE_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({ model: config.EMBEDDING_MODEL, input: ["test"] }),

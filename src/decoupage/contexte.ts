@@ -1,5 +1,6 @@
 // Contextualiser un chunk : lui rendre ce que le découpage lui a fait perdre, avant de le vectoriser
-import type { Document } from "../ingestion/document.ts";
+import { readFile, rename, writeFile } from "node:fs/promises";
+import { empreinte, type Document } from "../ingestion/document.ts";
 import type { Llm, Usage } from "../llm.ts";
 import type { Chunk } from "./chunk.ts";
 
@@ -34,4 +35,60 @@ export async function contextualiser(document: Document, chunks: Chunk[], llm: L
     usage.sortie += reponse.usage.sortie;
   }
   return { chunks: resultat, usage };
+}
+
+// 4. Chapitre 14 : tout le corpus, pour la production (npm run decouper avec CONTEXTUALISER=oui). Les contextes se
+// gardent dans un fichier, par empreinte du document et du chunk : à la réindexation suivante, seul un chunk nouveau, ou
+// d'un document modifié, coûte un appel au LLM. PARALLELES documents à la fois ; dans un document, l'un après l'autre
+export const CONTEXTES = "donnees/contextes.json";
+const PARALLELES = 6;
+
+export async function contextualiserLeCorpus(documents: Document[], chunks: Chunk[], llm: Llm, fichier = CONTEXTES) {
+  let gardes: Record<string, string> = {};
+  try {
+    gardes = JSON.parse(await readFile(fichier, "utf8")) as Record<string, string>;
+  } catch (erreur) {
+    if ((erreur as NodeJS.ErrnoException).code !== "ENOENT") throw erreur;
+  }
+  const cle = (document: Document, chunk: Chunk) => empreinte(`${document.texte}\n${chunk.texte}`);
+  // Chaque document fait s'écrit aussitôt : une erreur au milieu (une limite de débit, une coupure) ne perd que les
+  // contextes du document qui échoue, et la commande relancée reprend où elle s'était arrêtée. Une écriture après
+  // l'autre, dans un fichier voisin renommé ensuite : jamais un fichier à moitié écrit
+  let ecriture = Promise.resolve();
+  const sauver = (contenu: Record<string, string>) =>
+    (ecriture = ecriture.then(async () => {
+      await writeFile(`${fichier}.tmp`, `${JSON.stringify(contenu, null, 1)}\n`);
+      await rename(`${fichier}.tmp`, fichier);
+    }));
+  const usage: Usage = { entree: 0, enCache: 0, sortie: 0 };
+  let appels = 0;
+  let echec = false; // après une erreur, aucun travailleur ne commence un autre document
+  const aFaire = [...documents];
+  const travailleur = async () => {
+    for (let document = aFaire.shift(); document && !echec; document = aFaire.shift()) {
+      const d = document;
+      const manquants = chunks.filter((c) => c.document === d.id && !gardes[cle(d, c)]);
+      if (manquants.length === 0) continue;
+      const fait = await contextualiser(d, manquants, llm).catch((erreur: unknown) => {
+        echec = true;
+        throw erreur;
+      });
+      for (const c of fait.chunks) gardes[cle(d, c)] = c.contexte!;
+      appels += manquants.length;
+      usage.entree += fait.usage.entree;
+      usage.enCache += fait.usage.enCache;
+      usage.sortie += fait.usage.sortie;
+      await sauver(gardes);
+    }
+  };
+  // Tous les travailleurs finissent le document en cours (et l'écrivent) avant que l'erreur remonte
+  const fins = await Promise.allSettled(Array.from({ length: PARALLELES }, travailleur));
+  const rate = fins.find((f): f is PromiseRejectedResult => f.status === "rejected");
+  if (rate) throw rate.reason;
+  const parId = new Map(documents.map((d) => [d.id, d]));
+  const resultat = chunks.map((c) => ({ ...c, contexte: gardes[cle(parId.get(c.document)!, c)] }));
+  // On ne garde que les contextes encore utilisés : ceux d'un chunk disparu partent avec lui
+  const utilises = Object.fromEntries(resultat.map((c) => [cle(parId.get(c.document)!, c), c.contexte!]));
+  await sauver(utilises);
+  return { chunks: resultat, appels, usage };
 }

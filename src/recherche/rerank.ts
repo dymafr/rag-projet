@@ -3,6 +3,7 @@
 // l'applique qu'aux quelques dizaines de candidats d'une première recherche, et l'on garde les meilleurs
 import { AutoModelForSequenceClassification, AutoTokenizer, type PreTrainedModel, type PreTrainedTokenizer } from "@huggingface/transformers";
 import { z } from "zod";
+import { avecReprises } from "../embeddings/lots.ts";
 import type { Llm } from "../llm.ts";
 import { demanderJson } from "./llm-json.ts";
 import { CANDIDATS_LLM } from "./reglages.ts";
@@ -40,6 +41,31 @@ export function crossEncoder(modele: string, lot = 10): Reclasseur {
   };
 }
 
+// 1 bis. Chapitre 14 : un reclasseur hébergé, celui de Voyage (rerank-3, rerank-3-lite). Le même principe que le
+// cross-encoder local, un modèle plus grand, servi par une API : la question et les passages partent chez Voyage, qui
+// rend une note de pertinence pour chacun (relevance_score), triée de la meilleure à la moins bonne, avec l'indice du
+// passage. On la remet dans l'ordre reçu. Facturé à l'entrée : la question compte une fois par passage
+const NotesVoyage = z.object({ data: z.array(z.object({ index: z.number().int(), relevance_score: z.number() })) });
+
+export function reclasseurVoyage(modele: string, cle: string | undefined, base = "https://ai.mongodb.com/v1"): Reclasseur {
+  return async (question, passages) => {
+    if (passages.length === 0) return [];
+    const lire = await avecReprises(async () => {
+      const reponse = await fetch(`${base}/rerank`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${cle}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ model: modele, query: question, documents: passages.map(aLire), truncation: true }),
+      });
+      // le statut HTTP reste sur l'erreur : avecReprises s'en sert pour décider d'un nouvel essai
+      if (!reponse.ok) throw Object.assign(new Error(`Voyage : HTTP ${reponse.status} ${await reponse.text()}`), { status: reponse.status });
+      return NotesVoyage.parse(await reponse.json());
+    });
+    const notes = passages.map(() => 0);
+    for (const { index, relevance_score } of lire.data) if (index >= 0 && index < notes.length) notes[index] = relevance_score;
+    return notes;
+  };
+}
+
 // 2. Le LLM du projet, en un seul appel : il reçoit la question et les candidats numérotés, et rend leurs numéros du
 // plus pertinent au moins pertinent (un classement par liste). Un candidat qu'il oublie passe après les autres, dans
 // l'ordre de la recherche. Le prompt doit tenir dans la fenêtre de contexte du modèle : Ollama la fixe selon sa version
@@ -53,10 +79,12 @@ Le plus utile est celui qui contient la réponse ; ensuite ceux qui aident ; en 
 ${FORMAT_ORDRE}`;
 const Ordre = z.object({ ordre: z.array(z.number().int()) });
 
-export function parLeLlm(llm: Llm, maximum = CANDIDATS_LLM): Reclasseur {
+// Chapitre 14 : un modèle hébergé lit les passages entiers (longueur Infinity). Coupé à 600 caractères, l'article sur le
+// champ d'application de l'avenant télétravail perdait sa dernière phrase, la seule qui parle de grève
+export function parLeLlm(llm: Llm, maximum = CANDIDATS_LLM, longueur = LONGUEUR): Reclasseur {
   return async (question, candidats) => {
     const passages = candidats.slice(0, maximum);
-    const liste = passages.map((p, i) => `<passage numero="${i + 1}">\n${aLire(p).slice(0, LONGUEUR)}\n</passage>`).join("\n");
+    const liste = passages.map((p, i) => `<passage numero="${i + 1}">\n${aLire(p).slice(0, longueur)}\n</passage>`).join("\n");
     const lu = await demanderJson(llm, CONSIGNE_ORDRE, `<question>\n${question}\n</question>\n\n<passages>\n${liste}\n</passages>`, Ordre, FORMAT_ORDRE);
     // Une note par candidat : le premier cité reçoit la plus haute ; un numéro inconnu ou répété est ignoré, sans faire
     // reculer les suivants. Les oubliés, et ceux au-delà du maximum, gardent 0 ou moins, dans l'ordre reçu

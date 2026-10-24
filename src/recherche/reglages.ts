@@ -10,6 +10,9 @@ export const RECLASSEURS = ["cross-encoder", "llm"] as const;
 // Le LLM lit tous ses candidats dans un seul prompt : au-delà de 20, le prompt risque de dépasser la fenêtre de contexte
 // d'un modèle local (rerank.ts)
 export const CANDIDATS_LLM = 20;
+// Chapitre 14 : un modèle hébergé lit sans peine 40 candidats (environ 7 000 tokens). Sur le jeu de production, le passage
+// qui répond arrivait jusqu'au 27e rang de la recherche hybride (une politique en anglais, pour une question en français)
+export const CANDIDATS_LLM_HEBERGE = 40;
 
 export type Reglages = {
   mode: (typeof MODES)[number];

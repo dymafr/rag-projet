@@ -9,7 +9,7 @@ import { schemaJson, type Outil } from "./outil.ts";
 type Element = OpenAI.Responses.ResponseInputItem;
 export type ReglagesAgent = Reglages & { include?: OpenAI.Responses.ResponseIncludable[] };
 
-const MAX_TOKENS = 4096; // voir generation/openai.ts : la réflexion d'un modèle qui raisonne compte dans cette limite
+const MAX_TOKENS = 16_000; // voir generation/openai.ts : la réflexion d'un modèle qui raisonne compte dans cette limite
 
 // strict: true : OpenAI garantit des arguments conformes au schéma (Ollama lit ce champ et l'ignore).
 // Nos propres contrôles restent nécessaires : la boucle valide toujours les arguments avec zod

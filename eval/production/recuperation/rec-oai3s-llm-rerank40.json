@@ -1,0 +1,3540 @@
+{
+  "date": "2026-10-20",
+  "configuration": {
+    "embeddings": "openai text-embedding-3-small",
+    "reclasseur": "llm anthropic claude-haiku-5-5",
+    "vocabulaire": false,
+    "transformation": null,
+    "k": 8,
+    "llm": "anthropic claude-haiku-5-5"
+  },
+  "moyennes": {
+    "succes": 0.99375,
+    "rappel": 0.9257539682539682,
+    "precision": 0.3515625,
+    "rangReciproque": 0.9824999999999999,
+    "ndcg": 0.932475732014257
+  },
+  "resultats": [
+    {
+      "id": "Q01",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.8888888888888888,
+        "precision": 1,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "FAQ-RH#2",
+        "POL-TTG-01#3",
+        "POL-TT-02#10",
+        "INT-ACTUALITES#7",
+        "INT-ERGONOMIE#1",
+        "INT-ACTUALITES#5",
+        "FAQ-RH#3",
+        "POL-TTG-01#12"
+      ],
+      "duree_ms": 6386
+    },
+    {
+      "id": "Q02",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-TT-01#8",
+        "POL-TT-01#5",
+        "POL-TT-01#12",
+        "POL-TT-01#11",
+        "POL-TT-01#7",
+        "POL-TT-01#6",
+        "POL-TP-01#7",
+        "POL-TP-01#9"
+      ],
+      "duree_ms": 5224
+    },
+    {
+      "id": "Q03",
+      "type": "multilingue",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.8888888888888888,
+        "precision": 1,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-TT-02#10",
+        "POL-TTG-01#3",
+        "FAQ-RH#2",
+        "INT-ACTUALITES#7",
+        "INT-ACTUALITES#5",
+        "INT-ERGONOMIE#1",
+        "POL-TTG-01#12",
+        "FAQ-RH#3"
+      ],
+      "duree_ms": 4640
+    },
+    {
+      "id": "Q04",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-NF-01#6",
+        "FAQ-RH#19",
+        "POL-NF-01#8",
+        "FAQ-RH#20",
+        "POL-NF-01#7",
+        "POL-NF-01#17",
+        "POL-NF-01#3",
+        "FAQ-RH#21"
+      ],
+      "duree_ms": 5605
+    },
+    {
+      "id": "Q05",
+      "type": "multilingue",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.6666666666666666,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.8403030283801005
+      },
+      "trouves": [
+        "GRP-TRV-01#10",
+        "POL-NF-01#2",
+        "GRP-TRV-01#9",
+        "POL-NF-01#8",
+        "FAQ-RH#19",
+        "POL-NF-01#6",
+        "POL-NF-01#3",
+        "POL-NF-01#19"
+      ],
+      "duree_ms": 7820
+    },
+    {
+      "id": "Q06",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 0.9852268707233874
+      },
+      "trouves": [
+        "POL-CA-01#14",
+        "FAQ-RH#11",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#12",
+        "FAQ-RH#9",
+        "POL-CA-01#18",
+        "FAQ-RH#12",
+        "INT-ESPACE-RH#6"
+      ],
+      "duree_ms": 4484
+    },
+    {
+      "id": "Q07",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "FAQ-RH#13",
+        "POL-CA-01#16",
+        "POL-CA-01#17",
+        "FAQ-RH#14",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#12",
+        "POL-CA-01#15",
+        "FAQ-RH#16"
+      ],
+      "duree_ms": 4412
+    },
+    {
+      "id": "Q08",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.9630631620373845
+      },
+      "trouves": [
+        "FAQ-RH#29",
+        "INT-CALENDRIER-PAIE#1",
+        "INT-CALENDRIER-PAIE#2",
+        "INT-CALENDRIER-PAIE#3",
+        "INT-BIEN-DEMARRER#7",
+        "INT-OUTILS#4",
+        "POL-TTG-01#14",
+        "POL-TTG-01#8"
+      ],
+      "duree_ms": 5864
+    },
+    {
+      "id": "Q09",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.8571428571428571,
+        "precision": 0.75,
+        "rangReciproque": 1,
+        "ndcg": 0.9258796410155987
+      },
+      "trouves": [
+        "FAQ-RH#23",
+        "POL-TP-01#3",
+        "POL-TP-01#2",
+        "POL-TP-01#4",
+        "POL-TP-01#11",
+        "INT-QUI-CONTACTER#3",
+        "INT-CALENDRIER-PAIE#5",
+        "INT-SITE-LYON#2"
+      ],
+      "duree_ms": 5062
+    },
+    {
+      "id": "Q10",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.8571428571428571,
+        "precision": 0.75,
+        "rangReciproque": 1,
+        "ndcg": 0.9083745556952364
+      },
+      "trouves": [
+        "POL-TTG-01#13",
+        "FAQ-RH#4",
+        "POL-TT-02#11",
+        "POL-TTG-01#5",
+        "INT-ACTUALITES#7",
+        "INT-ERGONOMIE#2",
+        "POL-TT-02#5",
+        "POL-TTG-01#12"
+      ],
+      "duree_ms": 7114
+    },
+    {
+      "id": "Q11",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-AS-01#5",
+        "FAQ-RH#33",
+        "INT-CALENDRIER-PAIE#5",
+        "POL-AS-01#6",
+        "POL-AS-01#8",
+        "POL-AS-01#4",
+        "POL-AS-01#2",
+        "INT-JOURS-FERIES#6"
+      ],
+      "duree_ms": 4297
+    },
+    {
+      "id": "Q12",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.5714285714285714,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 0.7041249493150387
+      },
+      "trouves": [
+        "INT-OUTILS#3",
+        "POL-NF-01#4",
+        "FAQ-RH#18",
+        "INT-CALENDRIER-PAIE#4",
+        "POL-NF-01#18",
+        "POL-FO-01#11",
+        "INT-ERGONOMIE#5",
+        "POL-TTG-01#7"
+      ],
+      "duree_ms": 5449
+    },
+    {
+      "id": "Q13",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.875,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "FAQ-RH#8",
+        "POL-CA-01#9",
+        "POL-HO-01#3",
+        "INT-ACTUALITES#3",
+        "POL-CA-01#12",
+        "INT-ESPACE-RH#2",
+        "POL-HO-01#2",
+        "POL-HO-01#5"
+      ],
+      "duree_ms": 4807
+    },
+    {
+      "id": "Q14",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-BIEN-DEMARRER#3",
+        "FAQ-RH#35",
+        "INT-SITE-LYON#5",
+        "INT-BIEN-DEMARRER#4",
+        "INT-BIEN-DEMARRER#2",
+        "INT-BIEN-DEMARRER#1",
+        "INT-BIEN-DEMARRER#5",
+        "INT-BIEN-DEMARRER#7"
+      ],
+      "duree_ms": 5067
+    },
+    {
+      "id": "Q15",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.75,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.8016687468910284
+      },
+      "trouves": [
+        "FAQ-RH#17",
+        "POL-CA-01#19",
+        "INT-ESPACE-RH#2",
+        "POL-TP-01#4",
+        "POL-CA-01#7",
+        "POL-CA-01#6",
+        "FAQ-RH#9",
+        "FAQ-RH#10"
+      ],
+      "duree_ms": 6014
+    },
+    {
+      "id": "Q16",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.75,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "FAQ-RH#5",
+        "POL-TTG-01#8",
+        "POL-TT-02#13",
+        "INT-ACTUALITES#7",
+        "INT-CALENDRIER-PAIE#5",
+        "INT-ERGONOMIE#5",
+        "POL-TTG-01#14",
+        "POL-TTG-01#4"
+      ],
+      "duree_ms": 5722
+    },
+    {
+      "id": "Q17",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-NF-01#15",
+        "POL-NF-01#14",
+        "FAQ-RH#22",
+        "POL-NF-01#16",
+        "POL-NF-01#17",
+        "POL-NF-01#13",
+        "POL-NF-01#2",
+        "POL-NF-01#3"
+      ],
+      "duree_ms": 6107
+    },
+    {
+      "id": "Q18",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "FAQ-RH#24",
+        "INT-VELO#2",
+        "POL-TP-01#5",
+        "POL-TP-01#6",
+        "INT-VELO#5",
+        "INT-SITE-LYON#3",
+        "INT-VELO#3",
+        "INT-VELO#1"
+      ],
+      "duree_ms": 5565
+    },
+    {
+      "id": "Q19",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-HO-01#8",
+        "POL-TT-02#14",
+        "POL-TTG-01#10",
+        "POL-TTG-01#6",
+        "INT-ERGONOMIE#4",
+        "POL-HO-01#2",
+        "POL-AS-01#1",
+        "POL-HO-01#1"
+      ],
+      "duree_ms": 7260
+    },
+    {
+      "id": "Q20",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.9197207891481876
+      },
+      "trouves": [
+        "INT-JOURS-FERIES#2",
+        "INT-JOURS-FERIES#1",
+        "INT-JOURS-FERIES#4",
+        "INT-ACTUALITES#9",
+        "POL-CA-01#3",
+        "INT-JOURS-FERIES#6",
+        "INT-JOURS-FERIES#3",
+        "POL-HO-01#7"
+      ],
+      "duree_ms": 5845
+    },
+    {
+      "id": "Q21",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-DEPART#3",
+        "INT-DEPART#2",
+        "INT-DEPART#1",
+        "INT-DEPART#4",
+        "POL-CA-01#10",
+        "INT-DEPART#6",
+        "INT-DEPART#8",
+        "POL-MU-01#8"
+      ],
+      "duree_ms": 6679
+    },
+    {
+      "id": "Q22",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-SECURITE#4",
+        "INT-OUTILS#8",
+        "INT-SECURITE#3",
+        "INT-SECURITE#2",
+        "INT-QUI-CONTACTER#1",
+        "INT-QUI-CONTACTER#4",
+        "INT-ESPACE-RH#6",
+        "INT-SECURITE#1"
+      ],
+      "duree_ms": 4366
+    },
+    {
+      "id": "Q23",
+      "type": "multilingue",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "GRP-TRV-01#9",
+        "GRP-TRV-01#16",
+        "GRP-TRV-01#10",
+        "POL-NF-01#2",
+        "GRP-TRV-01#5",
+        "GRP-TRV-01#4",
+        "GRP-TRV-01#3",
+        "GRP-TRV-01#8"
+      ],
+      "duree_ms": 6671
+    },
+    {
+      "id": "Q24",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.6666666666666666,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.7653606369886217
+      },
+      "trouves": [
+        "POL-HO-01#4",
+        "POL-HO-01#2",
+        "POL-AS-01#1",
+        "INT-BIEN-DEMARRER#3",
+        "POL-HO-01#7",
+        "FAQ-RH#3",
+        "INT-ERGONOMIE#6",
+        "FAQ-RH#2"
+      ],
+      "duree_ms": 4587
+    },
+    {
+      "id": "Q25",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-EN-01#3",
+        "POL-EN-01#2",
+        "INT-ACTUALITES#8",
+        "FAQ-RH#34",
+        "POL-EN-01#4",
+        "POL-EN-01#1",
+        "POL-EN-01#5",
+        "POL-EN-01#9"
+      ],
+      "duree_ms": 5123
+    },
+    {
+      "id": "Q26",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.75,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.8790780000963964
+      },
+      "trouves": [
+        "POL-CA-01#18",
+        "FAQ-RH#12",
+        "POL-MU-01#12",
+        "POL-MU-01#11",
+        "POL-CA-01#8",
+        "POL-CA-01#2",
+        "FAQ-RH#25",
+        "POL-CA-01#14"
+      ],
+      "duree_ms": 6255
+    },
+    {
+      "id": "Q27",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 0.5,
+        "ndcg": 0.5672074169568709
+      },
+      "trouves": [
+        "POL-FO-01#9",
+        "POL-CA-01#13",
+        "FAQ-RH#32",
+        "POL-FO-01#2",
+        "POL-FO-01#11",
+        "INT-ESPACE-RH#3",
+        "FAQ-RH#31",
+        "POL-FO-01#3"
+      ],
+      "duree_ms": 6700
+    },
+    {
+      "id": "Q28",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-SECURITE#5",
+        "INT-SECURITE#6",
+        "INT-OUTILS#7",
+        "INT-SECURITE#1",
+        "INT-SECURITE#3",
+        "INT-OUTILS#8",
+        "INT-SECURITE#2",
+        "INT-ERGONOMIE#6"
+      ],
+      "duree_ms": 6187
+    },
+    {
+      "id": "Q29",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-TP-01#4",
+        "POL-TP-01#2",
+        "FAQ-RH#23",
+        "POL-TP-01#3",
+        "INT-CALENDRIER-PAIE#5",
+        "POL-TP-01#1",
+        "POL-TP-01#11",
+        "INT-QUI-CONTACTER#3"
+      ],
+      "duree_ms": 6286
+    },
+    {
+      "id": "Q30",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-MO-01#9",
+        "POL-MO-01#6",
+        "POL-MO-01#5",
+        "POL-MO-01#7",
+        "POL-MO-01#8",
+        "POL-MO-01#1",
+        "POL-MO-01#3",
+        "POL-MO-01#4"
+      ],
+      "duree_ms": 5615
+    },
+    {
+      "id": "Q41",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.9502344167898356
+      },
+      "trouves": [
+        "POL-NF-01#21",
+        "POL-NF-01#8",
+        "POL-NF-01#19",
+        "POL-NF-01#20",
+        "POL-NF-01#4",
+        "FAQ-RH#18",
+        "INT-OUTILS#3",
+        "POL-NF-01#7"
+      ],
+      "duree_ms": 5671
+    },
+    {
+      "id": "Q42",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.8333333333333334,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.9199910385237227
+      },
+      "trouves": [
+        "INT-CALENDRIER-PAIE#4",
+        "POL-NF-01#5",
+        "INT-CALENDRIER-PAIE#2",
+        "INT-OUTILS#3",
+        "FAQ-RH#18",
+        "POL-NF-01#4",
+        "INT-CALENDRIER-PAIE#1",
+        "FAQ-RH#29"
+      ],
+      "duree_ms": 4403
+    },
+    {
+      "id": "Q43",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-JOURS-FERIES#5",
+        "INT-JOURS-FERIES#2",
+        "INT-JOURS-FERIES#1",
+        "INT-JOURS-FERIES#3",
+        "INT-ACTUALITES#9",
+        "POL-HO-01#7",
+        "INT-JOURS-FERIES#4",
+        "INT-JOURS-FERIES#6"
+      ],
+      "duree_ms": 5252
+    },
+    {
+      "id": "Q44",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.75,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-HO-01#7",
+        "INT-JOURS-FERIES#3",
+        "INT-JOURS-FERIES#2",
+        "INT-ACTUALITES#9",
+        "INT-SITE-NANTES#5",
+        "INT-SITE-LYON#5",
+        "INT-JOURS-FERIES#1",
+        "INT-JOURS-FERIES#5"
+      ],
+      "duree_ms": 5420
+    },
+    {
+      "id": "Q45",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.8,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 0.9101907216367469
+      },
+      "trouves": [
+        "INT-ACTUALITES#3",
+        "FAQ-RH#8",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#9",
+        "POL-HO-01#3",
+        "POL-CA-01#10",
+        "POL-CA-01#4",
+        "INT-ACTUALITES#4"
+      ],
+      "duree_ms": 8203
+    },
+    {
+      "id": "Q46",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.9896062251871525
+      },
+      "trouves": [
+        "FAQ-RH#6",
+        "INT-ERGONOMIE#5",
+        "POL-TTG-01#7",
+        "POL-TT-02#12",
+        "INT-ERGONOMIE#1",
+        "POL-NF-01#4",
+        "FAQ-RH#18",
+        "INT-CALENDRIER-PAIE#4"
+      ],
+      "duree_ms": 5775
+    },
+    {
+      "id": "Q47",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-TT-02#15",
+        "POL-TTG-01#11",
+        "POL-TTG-01#4",
+        "POL-CA-01#18",
+        "FAQ-RH#12",
+        "INT-VELO#6",
+        "POL-TT-02#14",
+        "POL-TTG-01#6"
+      ],
+      "duree_ms": 7904
+    },
+    {
+      "id": "Q48",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-NF-01#10",
+        "POL-NF-01#17",
+        "POL-NF-01#13",
+        "POL-MO-01#8",
+        "POL-TP-01#2",
+        "POL-NF-01#3",
+        "POL-NF-01#11",
+        "POL-NF-01#12"
+      ],
+      "duree_ms": 6460
+    },
+    {
+      "id": "Q49",
+      "type": "multilingue",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.9778585125241057
+      },
+      "trouves": [
+        "GRP-TRV-01#4",
+        "GRP-TRV-01#3",
+        "POL-NF-01#2",
+        "GRP-TRV-01#5",
+        "GRP-TRV-01#6",
+        "POL-NF-01#4",
+        "FAQ-RH#18",
+        "INT-OUTILS#3"
+      ],
+      "duree_ms": 4984
+    },
+    {
+      "id": "Q50",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-CA-01#8",
+        "POL-CA-01#18",
+        "FAQ-RH#12",
+        "POL-CA-01#4",
+        "INT-QUI-CONTACTER#2",
+        "POL-CA-01#12",
+        "POL-CA-01#6",
+        "FAQ-RH#9"
+      ],
+      "duree_ms": 7450
+    },
+    {
+      "id": "Q51",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-NF-01#18",
+        "POL-NF-01#4",
+        "POL-NF-01#3",
+        "POL-NF-01#9",
+        "POL-NF-01#5",
+        "INT-CALENDRIER-PAIE#4",
+        "POL-NF-01#6",
+        "POL-NF-01#13"
+      ],
+      "duree_ms": 6107
+    },
+    {
+      "id": "Q52",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 0.9906609666436669
+      },
+      "trouves": [
+        "INT-QUI-CONTACTER#3",
+        "POL-MU-01#13",
+        "INT-OUTILS#5",
+        "POL-MU-01#5",
+        "FAQ-RH#26",
+        "POL-MU-01#12",
+        "FAQ-RH#27",
+        "INT-DEPART#7"
+      ],
+      "duree_ms": 5696
+    },
+    {
+      "id": "Q53",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-HANDICAP#3",
+        "INT-HANDICAP#4",
+        "INT-HANDICAP#5",
+        "INT-QUI-CONTACTER#4",
+        "INT-QUI-CONTACTER#5",
+        "INT-QUI-CONTACTER#3",
+        "INT-QUI-CONTACTER#2",
+        "INT-QUI-CONTACTER#1"
+      ],
+      "duree_ms": 5638
+    },
+    {
+      "id": "Q54",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.9502344167898356
+      },
+      "trouves": [
+        "INT-SITE-LYON#6",
+        "INT-SITE-LYON#5",
+        "INT-SITE-LYON#1",
+        "INT-SITE-LYON#7",
+        "FAQ-RH#25",
+        "POL-TP-01#7",
+        "POL-TP-01#9",
+        "POL-TP-01#8"
+      ],
+      "duree_ms": 6938
+    },
+    {
+      "id": "Q55",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-MU-01#6",
+        "INT-OUTILS#5",
+        "FAQ-RH#26",
+        "POL-MU-01#13",
+        "INT-QUI-CONTACTER#3",
+        "POL-MU-01#9",
+        "POL-MU-01#10",
+        "POL-MU-01#2"
+      ],
+      "duree_ms": 6529
+    },
+    {
+      "id": "Q56",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-NF-01#12",
+        "POL-NF-01#13",
+        "POL-NF-01#11",
+        "POL-NF-01#10",
+        "POL-NF-01#1",
+        "POL-NF-01#4",
+        "POL-NF-01#3",
+        "POL-NF-01#2"
+      ],
+      "duree_ms": 6046
+    },
+    {
+      "id": "Q57",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-TT-01#10",
+        "POL-TT-01#13",
+        "POL-TT-01#11",
+        "POL-TT-01#9",
+        "POL-TT-01#3",
+        "POL-TT-01#8",
+        "POL-TT-01#4",
+        "POL-TT-01#5"
+      ],
+      "duree_ms": 6138
+    },
+    {
+      "id": "Q58",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-TT-01#11",
+        "POL-TT-01#10",
+        "POL-TT-01#8",
+        "POL-TT-01#14",
+        "POL-TT-01#1",
+        "POL-TT-01#3",
+        "POL-TT-01#13",
+        "POL-TT-01#9"
+      ],
+      "duree_ms": 5019
+    },
+    {
+      "id": "Q59",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "FAQ-RH#21",
+        "POL-NF-01#6",
+        "POL-NF-01#9",
+        "POL-NF-01#3",
+        "POL-NF-01#17",
+        "POL-NF-01#21",
+        "POL-NF-01#19",
+        "POL-MO-01#8"
+      ],
+      "duree_ms": 5150
+    },
+    {
+      "id": "Q60",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "FAQ-RH#15",
+        "POL-CA-01#17",
+        "POL-CA-01#16",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#15",
+        "POL-CA-01#7",
+        "FAQ-RH#10",
+        "POL-CA-01#6"
+      ],
+      "duree_ms": 6156
+    },
+    {
+      "id": "Q61",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-CA-01#9",
+        "POL-HO-01#5",
+        "POL-HO-01#3",
+        "FAQ-RH#8",
+        "POL-HO-01#2",
+        "INT-ACTUALITES#3",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#12"
+      ],
+      "duree_ms": 6477
+    },
+    {
+      "id": "Q62",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.6666666666666666,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.7653606369886217
+      },
+      "trouves": [
+        "POL-TTG-01#4",
+        "POL-TT-02#10",
+        "POL-TTG-01#8",
+        "POL-TT-02#13",
+        "FAQ-RH#5",
+        "POL-TTG-01#14",
+        "INT-CALENDRIER-PAIE#5",
+        "POL-TT-02#11"
+      ],
+      "duree_ms": 5631
+    },
+    {
+      "id": "L1",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-VELO#5",
+        "POL-TP-01#6",
+        "INT-VELO#2",
+        "FAQ-RH#24",
+        "POL-TP-01#5",
+        "INT-VELO#1",
+        "INT-VELO#3",
+        "INT-SITE-LYON#3"
+      ],
+      "duree_ms": 6339
+    },
+    {
+      "id": "L2",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.9896062251871525
+      },
+      "trouves": [
+        "FAQ-RH#18",
+        "POL-NF-01#4",
+        "INT-OUTILS#3",
+        "INT-CALENDRIER-PAIE#4",
+        "POL-NF-01#5",
+        "INT-DEPART#4",
+        "POL-NF-01#18",
+        "POL-NF-01#19"
+      ],
+      "duree_ms": 5617
+    },
+    {
+      "id": "V1",
+      "type": "document-scanne",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "NS-NA-2026-07#1",
+        "INT-SITE-NANTES#4",
+        "INT-VELO#3",
+        "INT-SITE-NANTES#5",
+        "INT-VELO#1",
+        "INT-VELO#4",
+        "INT-VELO#5",
+        "INT-VELO#2"
+      ],
+      "duree_ms": 7459
+    },
+    {
+      "id": "V2",
+      "type": "document-scanne",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "NS-NA-2026-07#1",
+        "INT-SITE-NANTES#4",
+        "INT-VELO#3",
+        "INT-VELO#4",
+        "INT-SITE-NANTES#5",
+        "INT-SITE-LYON#3",
+        "INT-QUI-CONTACTER#6",
+        "INT-SITE-NANTES#6"
+      ],
+      "duree_ms": 5133
+    },
+    {
+      "id": "V3",
+      "type": "document-scanne",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "NS-NA-2026-07#1",
+        "INT-SITE-NANTES#4",
+        "INT-VELO#3",
+        "INT-VELO#1",
+        "INT-SITE-LYON#3",
+        "INT-VELO#4",
+        "INT-VELO#5",
+        "INT-VELO#6"
+      ],
+      "duree_ms": 5972
+    },
+    {
+      "id": "Q63",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.9922385874580825
+      },
+      "trouves": [
+        "POL-CA-01#3",
+        "FAQ-RH#7",
+        "POL-CA-01#12",
+        "INT-ACTUALITES#4",
+        "POL-CA-01#4",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#5",
+        "POL-HO-01#5"
+      ],
+      "duree_ms": 6412
+    },
+    {
+      "id": "Q64",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-CA-01#14",
+        "FAQ-RH#11",
+        "POL-CA-01#12",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#6",
+        "FAQ-RH#9",
+        "FAQ-RH#10",
+        "POL-CA-01#7"
+      ],
+      "duree_ms": 7817
+    },
+    {
+      "id": "Q65",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.9815720279306078
+      },
+      "trouves": [
+        "POL-NF-01#16",
+        "POL-NF-01#17",
+        "FAQ-RH#22",
+        "POL-NF-01#14",
+        "POL-NF-01#15",
+        "POL-NF-01#13",
+        "POL-NF-01#3",
+        "POL-NF-01#4"
+      ],
+      "duree_ms": 5884
+    },
+    {
+      "id": "Q66",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-CSE#4",
+        "INT-SITE-NANTES#6",
+        "INT-QUI-CONTACTER#4",
+        "INT-CSE#3",
+        "INT-CSE#1",
+        "INT-SITE-LYON#7",
+        "INT-CSE#2",
+        "INT-CSE#5"
+      ],
+      "duree_ms": 5663
+    },
+    {
+      "id": "Q67",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-CSE#3",
+        "INT-CSE#1",
+        "INT-CSE#4",
+        "INT-CSE#2",
+        "INT-QUI-CONTACTER#4",
+        "INT-CSE#5",
+        "INT-SITE-NANTES#6",
+        "INT-SITE-LYON#7"
+      ],
+      "duree_ms": 4625
+    },
+    {
+      "id": "Q68",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.5,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 0.6131471927654584
+      },
+      "trouves": [
+        "INT-SITE-NANTES#2",
+        "INT-SITE-NANTES#1",
+        "INT-SITE-NANTES#6",
+        "INT-SITE-LYON#1",
+        "INT-CSE#1",
+        "INT-QUI-CONTACTER#5",
+        "INT-QUI-CONTACTER#6",
+        "INT-CSE#3"
+      ],
+      "duree_ms": 5309
+    },
+    {
+      "id": "Q69",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-SITE-LYON#4",
+        "INT-QUI-CONTACTER#6",
+        "INT-SITE-LYON#7",
+        "INT-SITE-LYON#1",
+        "INT-SITE-LYON#5",
+        "INT-SITE-LYON#2",
+        "INT-SITE-LYON#3",
+        "INT-VELO#3"
+      ],
+      "duree_ms": 6258
+    },
+    {
+      "id": "Q70",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.6666666666666666,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.8403030283801005
+      },
+      "trouves": [
+        "INT-QUI-CONTACTER#6",
+        "INT-SITE-LYON#7",
+        "INT-DEPART#5",
+        "INT-BIEN-DEMARRER#3",
+        "INT-SITE-NANTES#7",
+        "INT-QUI-CONTACTER#2",
+        "INT-QUI-CONTACTER#1",
+        "INT-SECURITE#5"
+      ],
+      "duree_ms": 5915
+    },
+    {
+      "id": "Q71",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-HANDICAP#2",
+        "INT-QUI-CONTACTER#4",
+        "INT-QUI-CONTACTER#5",
+        "INT-SITE-NANTES#6",
+        "INT-HANDICAP#5",
+        "INT-HANDICAP#4",
+        "INT-HANDICAP#3",
+        "INT-HANDICAP#1"
+      ],
+      "duree_ms": 4718
+    },
+    {
+      "id": "Q72",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.6666666666666666,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.8403030283801005
+      },
+      "trouves": [
+        "INT-DEPART#5",
+        "POL-TTG-01#7",
+        "INT-DEPART#4",
+        "INT-DEPART#1",
+        "INT-DEPART#6",
+        "INT-DEPART#8",
+        "INT-DEPART#7",
+        "INT-DEPART#2"
+      ],
+      "duree_ms": 5113
+    },
+    {
+      "id": "Q73",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-MU-01#3",
+        "FAQ-RH#27",
+        "POL-MU-01#5",
+        "INT-OUTILS#5",
+        "POL-MU-01#2",
+        "FAQ-RH#26",
+        "INT-QUI-CONTACTER#3",
+        "POL-MU-01#13"
+      ],
+      "duree_ms": 5231
+    },
+    {
+      "id": "Q74",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.9502344167898356
+      },
+      "trouves": [
+        "POL-FO-01#6",
+        "POL-FO-01#11",
+        "POL-FO-01#2",
+        "FAQ-RH#31",
+        "POL-EN-01#8",
+        "POL-FO-01#10",
+        "POL-FO-01#13",
+        "POL-FO-01#8"
+      ],
+      "duree_ms": 4760
+    },
+    {
+      "id": "Q75",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-FO-01#13",
+        "POL-FO-01#11",
+        "POL-FO-01#10",
+        "POL-FO-01#6",
+        "POL-FO-01#3",
+        "POL-FO-01#4",
+        "FAQ-RH#31",
+        "INT-ESPACE-RH#3"
+      ],
+      "duree_ms": 5378
+    },
+    {
+      "id": "Q76",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-EN-01#9",
+        "POL-EN-01#2",
+        "FAQ-RH#34",
+        "INT-ACTUALITES#8",
+        "POL-EN-01#1",
+        "POL-EN-01#6",
+        "POL-EN-01#4",
+        "POL-EN-01#3"
+      ],
+      "duree_ms": 4772
+    },
+    {
+      "id": "Q77",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-AS-01#9",
+        "POL-AS-01#2",
+        "POL-HO-01#8",
+        "POL-TTG-01#10",
+        "POL-AS-01#4",
+        "POL-AS-01#1",
+        "POL-AS-01#3",
+        "POL-AS-01#6"
+      ],
+      "duree_ms": 4761
+    },
+    {
+      "id": "Q78",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-MO-01#3",
+        "INT-ESPACE-RH#4",
+        "FAQ-RH#36",
+        "POL-MO-01#4",
+        "POL-MO-01#1",
+        "POL-MO-01#2",
+        "INT-SITE-NANTES#7",
+        "POL-MO-01#9"
+      ],
+      "duree_ms": 6536
+    },
+    {
+      "id": "Q79",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.3333333333333333,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 0.6387878864795979
+      },
+      "trouves": [
+        "INT-SECURITE#4",
+        "INT-QUI-CONTACTER#1",
+        "INT-QUI-CONTACTER#5",
+        "INT-ESPACE-RH#6",
+        "INT-SECURITE#3",
+        "INT-OUTILS#2",
+        "INT-ESPACE-RH#5",
+        "FAQ-RH#30"
+      ],
+      "duree_ms": 6104
+    },
+    {
+      "id": "Q80",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-BIEN-DEMARRER#5",
+        "INT-QUI-CONTACTER#5",
+        "INT-QUI-CONTACTER#1",
+        "INT-QUI-CONTACTER#3",
+        "POL-EN-01#2",
+        "INT-ESPACE-RH#1",
+        "INT-OUTILS#2",
+        "INT-ESPACE-RH#2"
+      ],
+      "duree_ms": 6110
+    },
+    {
+      "id": "Q81",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.8315546295836225
+      },
+      "trouves": [
+        "INT-VELO#6",
+        "POL-TT-02#15",
+        "POL-TTG-01#11",
+        "POL-TTG-01#4",
+        "FAQ-RH#12",
+        "POL-CA-01#18",
+        "INT-QUI-CONTACTER#2",
+        "INT-QUI-CONTACTER#3"
+      ],
+      "duree_ms": 6567
+    },
+    {
+      "id": "Q82",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 0,
+        "rappel": 0,
+        "precision": 0,
+        "rangReciproque": 0,
+        "ndcg": 0
+      },
+      "trouves": [
+        "POL-TTG-01#12",
+        "FAQ-RH#2",
+        "POL-TT-02#10",
+        "POL-TTG-01#3",
+        "INT-ACTUALITES#7",
+        "INT-ACTUALITES#5",
+        "FAQ-RH#3",
+        "POL-TTG-01#4"
+      ],
+      "duree_ms": 7137
+    },
+    {
+      "id": "Q83",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "MGR-EA-01#3",
+        "MGR-EA-01#6",
+        "MGR-EA-01#4",
+        "MGR-EA-01#7",
+        "POL-EN-01#5",
+        "POL-EN-01#7",
+        "MGR-EA-01#5",
+        "MGR-EA-01#2"
+      ],
+      "duree_ms": 6312
+    },
+    {
+      "id": "Q84",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "MGR-EA-01#6",
+        "MGR-EA-01#4",
+        "MGR-PR-01#2",
+        "POL-EN-01#5",
+        "MGR-EA-01#7",
+        "POL-EN-01#8",
+        "POL-EN-01#4",
+        "POL-EN-01#9"
+      ],
+      "duree_ms": 6976
+    },
+    {
+      "id": "Q85",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-EN-01#4",
+        "MGR-PR-01#2",
+        "MGR-EA-01#4",
+        "MGR-PR-01#4",
+        "MGR-EA-01#1",
+        "MGR-EA-01#2",
+        "MGR-EA-01#6",
+        "MGR-EA-01#5"
+      ],
+      "duree_ms": 5980
+    },
+    {
+      "id": "Q86",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "MGR-PR-01#2",
+        "POL-EN-01#4",
+        "MGR-PR-01#3",
+        "MGR-PR-01#4",
+        "MGR-EA-01#4",
+        "MGR-PR-01#1",
+        "MGR-PR-01#6",
+        "MGR-PR-01#5"
+      ],
+      "duree_ms": 4855
+    },
+    {
+      "id": "Q87",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "MGR-PR-01#5",
+        "MGR-PR-01#2",
+        "MGR-PR-01#3",
+        "MGR-PR-01#4",
+        "MGR-PR-01#1",
+        "MGR-EA-01#4",
+        "MGR-PR-01#6",
+        "POL-CA-01#18"
+      ],
+      "duree_ms": 6437
+    },
+    {
+      "id": "Q88",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "MGR-RE-01#11",
+        "INT-BIEN-DEMARRER#6",
+        "MGR-RE-01#8",
+        "MGR-RE-01#7",
+        "MGR-PR-01#2",
+        "MGR-RE-01#4",
+        "MGR-RE-01#5",
+        "MGR-RE-01#6"
+      ],
+      "duree_ms": 4843
+    },
+    {
+      "id": "Q89",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "MGR-RE-01#9",
+        "MGR-RE-01#8",
+        "MGR-RE-01#3",
+        "MGR-RE-01#1",
+        "MGR-RE-01#2",
+        "MGR-RE-01#5",
+        "MGR-RE-01#6",
+        "MGR-RE-01#7"
+      ],
+      "duree_ms": 5090
+    },
+    {
+      "id": "Q90",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "MGR-RE-01#6",
+        "MGR-RE-01#5",
+        "MGR-RE-01#3",
+        "MGR-RE-01#2",
+        "MGR-RE-01#8",
+        "MGR-RE-01#10",
+        "MGR-RE-01#9",
+        "INT-ERGONOMIE#6"
+      ],
+      "duree_ms": 5190
+    },
+    {
+      "id": "Q91",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-AS-01#4",
+        "POL-AS-01#3",
+        "POL-AS-01#2",
+        "POL-AS-01#9",
+        "POL-HO-01#8",
+        "POL-TTG-01#10",
+        "POL-AS-01#1",
+        "POL-AS-01#5"
+      ],
+      "duree_ms": 6209
+    },
+    {
+      "id": "Q92",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-TT-02#6",
+        "POL-TTG-01#2",
+        "POL-TT-02#2",
+        "POL-TT-02#5",
+        "POL-TT-02#7",
+        "POL-TTG-01#9",
+        "POL-TT-02#10",
+        "POL-TTG-01#3"
+      ],
+      "duree_ms": 5488
+    },
+    {
+      "id": "Q93",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.9778585125241057
+      },
+      "trouves": [
+        "TK-2026-0001#2",
+        "TK-2026-0001#1",
+        "TK-2026-0046#1",
+        "POL-AS-01#6",
+        "FAQ-RH#33",
+        "INT-JOURS-FERIES#6",
+        "TK-2026-0086#1",
+        "TK-2026-0076#1"
+      ],
+      "duree_ms": 8929
+    },
+    {
+      "id": "Q94",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.6666666666666666,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.8403030283801005
+      },
+      "trouves": [
+        "TK-2026-0005#1",
+        "POL-EN-01#2",
+        "FAQ-RH#34",
+        "INT-ACTUALITES#8",
+        "MGR-EA-01#2",
+        "POL-EN-01#1",
+        "POL-EN-01#4",
+        "POL-EN-01#6"
+      ],
+      "duree_ms": 6943
+    },
+    {
+      "id": "Q95",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "TK-2026-0079#1",
+        "POL-HO-01#6",
+        "POL-HO-01#4",
+        "POL-HO-01#2",
+        "INT-CALENDRIER-PAIE#6",
+        "INT-QUI-CONTACTER#2",
+        "INT-SITE-NANTES#6",
+        "TK-2026-0067#2"
+      ],
+      "duree_ms": 9905
+    },
+    {
+      "id": "Q96",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "TK-2026-0048#1",
+        "POL-NF-01#7",
+        "FAQ-RH#20",
+        "POL-NF-01#17",
+        "POL-NF-01#6",
+        "POL-NF-01#8",
+        "POL-NF-01#3",
+        "FAQ-RH#19"
+      ],
+      "duree_ms": 5770
+    },
+    {
+      "id": "Q97",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.25,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 0.5615443777322888
+      },
+      "trouves": [
+        "TK-2026-0052#1",
+        "TK-2026-0018#1",
+        "TK-2026-0078#1",
+        "INT-CALENDRIER-PAIE#6",
+        "POL-TT-02#15",
+        "TK-2026-0041#1",
+        "TK-2026-0084#1",
+        "TK-2026-0050#1"
+      ],
+      "duree_ms": 7898
+    },
+    {
+      "id": "Q98",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 0.9497940114929797
+      },
+      "trouves": [
+        "TK-2026-0084#1",
+        "TK-2026-0084#2",
+        "TK-2026-0002#1",
+        "FAQ-RH#28",
+        "POL-MU-01#7",
+        "POL-MU-01#13",
+        "POL-MU-01#2",
+        "POL-MU-01#1"
+      ],
+      "duree_ms": 8644
+    },
+    {
+      "id": "Q99",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "TK-2026-0075#1",
+        "POL-TTG-01#8",
+        "POL-TT-02#13",
+        "FAQ-RH#5",
+        "INT-CALENDRIER-PAIE#5",
+        "TK-2026-0030#1",
+        "TK-2026-0022#1",
+        "TK-2026-0043#1"
+      ],
+      "duree_ms": 9060
+    },
+    {
+      "id": "Q100",
+      "type": "un-passage",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-CSE#3",
+        "INT-QUI-CONTACTER#4",
+        "INT-CSE#4",
+        "INT-CSE#1",
+        "INT-CSE#2",
+        "INT-HANDICAP#6",
+        "INT-QUI-CONTACTER#1",
+        "INT-QUI-CONTACTER#5"
+      ],
+      "duree_ms": 6591
+    },
+    {
+      "id": "Q101",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.8,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 0.8381146744044311
+      },
+      "trouves": [
+        "POL-TT-02#15",
+        "POL-CA-01#18",
+        "FAQ-RH#12",
+        "POL-CA-01#8",
+        "POL-TTG-01#4",
+        "INT-ESPACE-RH#2",
+        "POL-TTG-01#11",
+        "POL-TP-01#9"
+      ],
+      "duree_ms": 7991
+    },
+    {
+      "id": "Q102",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.625,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.6664664185714394
+      },
+      "trouves": [
+        "FAQ-RH#13",
+        "POL-CA-01#16",
+        "POL-CA-01#17",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#12",
+        "FAQ-RH#14",
+        "FAQ-RH#27",
+        "POL-MU-01#5"
+      ],
+      "duree_ms": 9843
+    },
+    {
+      "id": "Q103",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.75,
+        "rangReciproque": 1,
+        "ndcg": 0.993054821523324
+      },
+      "trouves": [
+        "INT-SITE-NANTES#7",
+        "POL-NF-01#9",
+        "FAQ-RH#21",
+        "POL-NF-01#6",
+        "INT-QUI-CONTACTER#6",
+        "POL-NF-01#19",
+        "INT-SITE-NANTES#5",
+        "POL-NF-01#3"
+      ],
+      "duree_ms": 5744
+    },
+    {
+      "id": "Q104",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-AS-01#6",
+        "POL-AS-01#7",
+        "FAQ-RH#33",
+        "POL-AS-01#2",
+        "POL-AS-01#8",
+        "INT-JOURS-FERIES#6",
+        "POL-AS-01#5",
+        "POL-AS-01#9"
+      ],
+      "duree_ms": 5557
+    },
+    {
+      "id": "Q105",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.875,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-FO-01#11",
+        "POL-NF-01#9",
+        "POL-NF-01#6",
+        "POL-NF-01#10",
+        "POL-NF-01#7",
+        "FAQ-RH#21",
+        "FAQ-RH#20",
+        "POL-NF-01#17"
+      ],
+      "duree_ms": 8041
+    },
+    {
+      "id": "Q106",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-FO-01#8",
+        "POL-FO-01#11",
+        "POL-FO-01#7",
+        "POL-FO-01#9",
+        "FAQ-RH#32",
+        "INT-ESPACE-RH#3",
+        "POL-FO-01#3",
+        "FAQ-RH#31"
+      ],
+      "duree_ms": 6241
+    },
+    {
+      "id": "Q107",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 0.9725198115184918
+      },
+      "trouves": [
+        "POL-CA-01#10",
+        "INT-DEPART#4",
+        "INT-DEPART#6",
+        "POL-CA-01#4",
+        "POL-CA-01#3",
+        "INT-ACTUALITES#3",
+        "FAQ-RH#8",
+        "POL-CA-01#9"
+      ],
+      "duree_ms": 5293
+    },
+    {
+      "id": "Q108",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-MO-01#9",
+        "POL-MO-01#10",
+        "POL-MO-01#4",
+        "INT-ESPACE-RH#4",
+        "FAQ-RH#36",
+        "POL-MO-01#3",
+        "POL-MO-01#2",
+        "POL-MO-01#6"
+      ],
+      "duree_ms": 6917
+    },
+    {
+      "id": "Q109",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.75,
+        "rangReciproque": 1,
+        "ndcg": 0.9836827916213587
+      },
+      "trouves": [
+        "POL-EN-01#1",
+        "POL-EN-01#6",
+        "FAQ-RH#34",
+        "INT-ACTUALITES#8",
+        "POL-EN-01#4",
+        "POL-EN-01#2",
+        "POL-EN-01#8",
+        "POL-FO-01#12"
+      ],
+      "duree_ms": 5578
+    },
+    {
+      "id": "Q110",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.75,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.7027322484917582
+      },
+      "trouves": [
+        "POL-CA-01#3",
+        "POL-CA-01#4",
+        "POL-CA-01#12",
+        "INT-ESPACE-RH#2",
+        "FAQ-RH#7",
+        "INT-ACTUALITES#4",
+        "INT-JOURS-FERIES#1",
+        "INT-JOURS-FERIES#2"
+      ],
+      "duree_ms": 7058
+    },
+    {
+      "id": "Q111",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.625,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.776782728209684
+      },
+      "trouves": [
+        "POL-TTG-01#5",
+        "FAQ-RH#4",
+        "POL-TT-02#11",
+        "INT-SECURITE#6",
+        "INT-ERGONOMIE#2",
+        "INT-SECURITE#5",
+        "POL-TT-02#5",
+        "POL-TTG-01#13"
+      ],
+      "duree_ms": 6133
+    },
+    {
+      "id": "Q112",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.9863520113014781
+      },
+      "trouves": [
+        "POL-NF-01#5",
+        "INT-CALENDRIER-PAIE#4",
+        "FAQ-RH#18",
+        "INT-CALENDRIER-PAIE#2",
+        "INT-OUTILS#3",
+        "POL-NF-01#4",
+        "INT-CALENDRIER-PAIE#3",
+        "POL-AS-01#8"
+      ],
+      "duree_ms": 7214
+    },
+    {
+      "id": "Q113",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.75,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.8318724637288826
+      },
+      "trouves": [
+        "INT-SECURITE#6",
+        "INT-SECURITE#5",
+        "INT-OUTILS#7",
+        "INT-SECURITE#1",
+        "INT-SECURITE#4",
+        "INT-SECURITE#2",
+        "INT-SECURITE#3",
+        "INT-ERGONOMIE#6"
+      ],
+      "duree_ms": 5367
+    },
+    {
+      "id": "Q114",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.75,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.8786746795305955
+      },
+      "trouves": [
+        "INT-HANDICAP#5",
+        "INT-HANDICAP#4",
+        "INT-QUI-CONTACTER#4",
+        "INT-HANDICAP#3",
+        "INT-ERGONOMIE#5",
+        "POL-TTG-01#7",
+        "FAQ-RH#6",
+        "POL-TT-02#12"
+      ],
+      "duree_ms": 6099
+    },
+    {
+      "id": "Q115",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-QUI-CONTACTER#4",
+        "INT-CSE#3",
+        "INT-HANDICAP#6",
+        "INT-CSE#2",
+        "INT-QUI-CONTACTER#5",
+        "INT-QUI-CONTACTER#1",
+        "INT-ESPACE-RH#6",
+        "INT-QUI-CONTACTER#2"
+      ],
+      "duree_ms": 6131
+    },
+    {
+      "id": "Q116",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.75,
+        "rangReciproque": 1,
+        "ndcg": 0.9930783166417602
+      },
+      "trouves": [
+        "POL-NF-01#6",
+        "POL-NF-01#18",
+        "POL-NF-01#9",
+        "FAQ-RH#21",
+        "FAQ-RH#20",
+        "FAQ-RH#19",
+        "POL-NF-01#7",
+        "POL-NF-01#8"
+      ],
+      "duree_ms": 7556
+    },
+    {
+      "id": "Q117",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.9758154142333775
+      },
+      "trouves": [
+        "POL-CA-01#9",
+        "POL-TP-01#4",
+        "POL-TP-01#2",
+        "POL-HO-01#5",
+        "POL-HO-01#3",
+        "FAQ-RH#8",
+        "FAQ-RH#23",
+        "INT-CALENDRIER-PAIE#5"
+      ],
+      "duree_ms": 6417
+    },
+    {
+      "id": "Q118",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.9382995875816248
+      },
+      "trouves": [
+        "MGR-PR-01#3",
+        "MGR-EA-01#6",
+        "MGR-PR-01#1",
+        "MGR-EA-01#4",
+        "MGR-PR-01#4",
+        "MGR-PR-01#2",
+        "MGR-PR-01#6",
+        "MGR-PR-01#5"
+      ],
+      "duree_ms": 5019
+    },
+    {
+      "id": "Q119",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "MGR-RE-01#9",
+        "MGR-RE-01#3",
+        "INT-SITE-NANTES#2",
+        "MGR-RE-01#2",
+        "MGR-RE-01#8",
+        "MGR-RE-01#4",
+        "MGR-RE-01#5",
+        "MGR-RE-01#6"
+      ],
+      "duree_ms": 6327
+    },
+    {
+      "id": "Q120",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "MGR-PR-01#3",
+        "MGR-PR-01#5",
+        "MGR-PR-01#2",
+        "MGR-PR-01#4",
+        "MGR-EA-01#4",
+        "MGR-PR-01#1",
+        "MGR-PR-01#6",
+        "POL-EN-01#2"
+      ],
+      "duree_ms": 8650
+    },
+    {
+      "id": "Q121",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-AS-01#5",
+        "POL-AS-01#6",
+        "FAQ-RH#33",
+        "POL-AS-01#8",
+        "POL-AS-01#2",
+        "INT-CALENDRIER-PAIE#5",
+        "POL-AS-01#4",
+        "POL-AS-01#3"
+      ],
+      "duree_ms": 5450
+    },
+    {
+      "id": "Q122",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.8333333333333334,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.9340547512108834
+      },
+      "trouves": [
+        "POL-FO-01#9",
+        "INT-ESPACE-RH#3",
+        "FAQ-RH#32",
+        "POL-FO-01#4",
+        "FAQ-RH#31",
+        "POL-FO-01#3",
+        "POL-FO-01#8",
+        "POL-CA-01#13"
+      ],
+      "duree_ms": 6931
+    },
+    {
+      "id": "Q123",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "TK-2026-0007#1",
+        "TK-2026-0071#1",
+        "POL-NF-01#8",
+        "FAQ-RH#19",
+        "POL-NF-01#6",
+        "POL-NF-01#3",
+        "POL-NF-01#17",
+        "POL-NF-01#7"
+      ],
+      "duree_ms": 9231
+    },
+    {
+      "id": "Q124",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.75,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.8972754076830647
+      },
+      "trouves": [
+        "TK-2026-0029#1",
+        "TK-2026-0012#1",
+        "POL-TT-02#12",
+        "POL-TT-02#1",
+        "POL-TT-02#2",
+        "TK-2026-0065#1",
+        "POL-TT-02#16",
+        "TK-2026-0026#1"
+      ],
+      "duree_ms": 9849
+    },
+    {
+      "id": "Q125",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.6,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.8390496601388447
+      },
+      "trouves": [
+        "POL-MU-01#8",
+        "INT-DEPART#7",
+        "INT-DEPART#6",
+        "INT-DEPART#1",
+        "INT-DEPART#4",
+        "INT-DEPART#5",
+        "INT-DEPART#8",
+        "INT-DEPART#2"
+      ],
+      "duree_ms": 6311
+    },
+    {
+      "id": "Q126",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.9787431844179761
+      },
+      "trouves": [
+        "TK-2026-0039#1",
+        "TK-2026-0033#1",
+        "INT-JOURS-FERIES#5",
+        "POL-HO-01#3",
+        "POL-HO-01#2",
+        "POL-HO-01#4",
+        "TK-2026-0033#2",
+        "FAQ-RH#8"
+      ],
+      "duree_ms": 9886
+    },
+    {
+      "id": "Q127",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.8773783753384315
+      },
+      "trouves": [
+        "POL-NF-01#21",
+        "TK-2026-0054#1",
+        "TK-2026-0036#1",
+        "TK-2026-0021#1",
+        "TK-2026-0077#2",
+        "TK-2026-0077#1",
+        "POL-NF-01#19",
+        "POL-NF-01#8"
+      ],
+      "duree_ms": 9203
+    },
+    {
+      "id": "Q128",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.625,
+        "rangReciproque": 1,
+        "ndcg": 0.9720511080339677
+      },
+      "trouves": [
+        "TK-2026-0094#1",
+        "TK-2026-0069#1",
+        "POL-CA-01#19",
+        "FAQ-RH#17",
+        "INT-ESPACE-RH#2",
+        "TK-2026-0069#2",
+        "TK-2026-0094#2",
+        "TK-2026-0019#1"
+      ],
+      "duree_ms": 8228
+    },
+    {
+      "id": "Q129",
+      "type": "plusieurs-passages",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.8670870086853021
+      },
+      "trouves": [
+        "POL-AS-01#7",
+        "TK-2026-0086#1",
+        "TK-2026-0046#1",
+        "TK-2026-0067#1",
+        "POL-AS-01#6",
+        "POL-AS-01#2",
+        "POL-AS-01#4",
+        "POL-AS-01#9"
+      ],
+      "duree_ms": 10905
+    },
+    {
+      "id": "Q130",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.5,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 0.7601875334318685
+      },
+      "trouves": [
+        "POL-TT-01#10",
+        "INT-HANDICAP#4",
+        "POL-TT-01#11",
+        "POL-TT-01#13",
+        "POL-TT-01#9",
+        "POL-TT-01#4",
+        "POL-TT-01#5",
+        "POL-TT-01#6"
+      ],
+      "duree_ms": 7758
+    },
+    {
+      "id": "Q131",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-TT-01#11",
+        "POL-TT-01#8",
+        "POL-TP-01#9",
+        "POL-TP-01#7",
+        "INT-BIEN-DEMARRER#7",
+        "POL-TP-01#11",
+        "POL-TP-01#4",
+        "POL-TP-01#8"
+      ],
+      "duree_ms": 8100
+    },
+    {
+      "id": "Q132",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-TT-01#5",
+        "POL-TT-01#14",
+        "POL-TT-01#4",
+        "POL-TT-01#3",
+        "POL-TT-01#1",
+        "POL-TT-01#6",
+        "POL-TT-01#7",
+        "POL-TT-01#2"
+      ],
+      "duree_ms": 4928
+    },
+    {
+      "id": "Q133",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-HO-01#7",
+        "POL-HO-01#2",
+        "POL-HO-01#3",
+        "POL-HO-01#5",
+        "POL-HO-01#1",
+        "POL-HO-01#4",
+        "POL-HO-01#6",
+        "POL-HO-01#8"
+      ],
+      "duree_ms": 5444
+    },
+    {
+      "id": "Q134",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 0.8560023162459902
+      },
+      "trouves": [
+        "INT-CALENDRIER-PAIE#3",
+        "INT-CALENDRIER-PAIE#2",
+        "INT-CALENDRIER-PAIE#1",
+        "FAQ-RH#29",
+        "INT-BIEN-DEMARRER#7",
+        "INT-OUTILS#4",
+        "INT-DEPART#6",
+        "FAQ-RH#30"
+      ],
+      "duree_ms": 9315
+    },
+    {
+      "id": "Q135",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 0.932295706899544
+      },
+      "trouves": [
+        "INT-JOURS-FERIES#5",
+        "INT-JOURS-FERIES#2",
+        "INT-JOURS-FERIES#1",
+        "FAQ-RH#9",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#7",
+        "FAQ-RH#10",
+        "POL-CA-01#3"
+      ],
+      "duree_ms": 8581
+    },
+    {
+      "id": "Q136",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.875,
+        "rangReciproque": 1,
+        "ndcg": 0.9974262831182769
+      },
+      "trouves": [
+        "POL-TT-02#13",
+        "POL-TTG-01#8",
+        "FAQ-RH#5",
+        "INT-CALENDRIER-PAIE#5",
+        "INT-ERGONOMIE#5",
+        "POL-TTG-01#14",
+        "POL-TTG-01#4",
+        "INT-CALENDRIER-PAIE#2"
+      ],
+      "duree_ms": 8604
+    },
+    {
+      "id": "Q137",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.6666666666666666,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.6461369845040973
+      },
+      "trouves": [
+        "INT-JOURS-FERIES#2",
+        "INT-ESPACE-RH#2",
+        "FAQ-RH#9",
+        "FAQ-RH#7",
+        "FAQ-RH#10",
+        "INT-JOURS-FERIES#5",
+        "INT-JOURS-FERIES#6",
+        "POL-HO-01#7"
+      ],
+      "duree_ms": 9983
+    },
+    {
+      "id": "Q138",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-CALENDRIER-PAIE#3",
+        "INT-CALENDRIER-PAIE#1",
+        "FAQ-RH#29",
+        "INT-BIEN-DEMARRER#7",
+        "INT-OUTILS#4",
+        "INT-CALENDRIER-PAIE#2",
+        "INT-CALENDRIER-PAIE#5",
+        "INT-ACTUALITES#9"
+      ],
+      "duree_ms": 7741
+    },
+    {
+      "id": "Q139",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 0.9497940114929797
+      },
+      "trouves": [
+        "POL-AS-01#8",
+        "INT-CALENDRIER-PAIE#3",
+        "POL-AS-01#5",
+        "FAQ-RH#33",
+        "INT-CALENDRIER-PAIE#2",
+        "INT-CALENDRIER-PAIE#1",
+        "INT-CALENDRIER-PAIE#5",
+        "FAQ-RH#29"
+      ],
+      "duree_ms": 10321
+    },
+    {
+      "id": "Q140",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.75,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.8972754076830647
+      },
+      "trouves": [
+        "POL-CA-01#4",
+        "POL-CA-01#3",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#12",
+        "FAQ-RH#9",
+        "POL-CA-01#5",
+        "POL-CA-01#1",
+        "POL-CA-01#11"
+      ],
+      "duree_ms": 8527
+    },
+    {
+      "id": "Q141",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-TT-01#10",
+        "POL-TT-01#3",
+        "POL-TT-01#11",
+        "POL-TT-01#14",
+        "POL-TT-01#2",
+        "POL-TT-01#9",
+        "POL-TT-01#13",
+        "POL-TT-01#8"
+      ],
+      "duree_ms": 7035
+    },
+    {
+      "id": "Q142",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.9072278740982787
+      },
+      "trouves": [
+        "MGR-PR-01#4",
+        "MGR-PR-01#3",
+        "MGR-PR-01#2",
+        "MGR-PR-01#6",
+        "MGR-PR-01#1",
+        "MGR-PR-01#5",
+        "MGR-EA-01#4",
+        "POL-EN-01#4"
+      ],
+      "duree_ms": 7755
+    },
+    {
+      "id": "Q143",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.8322824782867448
+      },
+      "trouves": [
+        "POL-AS-01#8",
+        "POL-AS-01#6",
+        "INT-CALENDRIER-PAIE#5",
+        "FAQ-RH#33",
+        "POL-AS-01#5",
+        "FAQ-RH#29",
+        "INT-CALENDRIER-PAIE#1",
+        "INT-CALENDRIER-PAIE#2"
+      ],
+      "duree_ms": 7038
+    },
+    {
+      "id": "Q144",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.9815720279306078
+      },
+      "trouves": [
+        "TK-2026-0008#1",
+        "POL-TT-01#8",
+        "POL-TT-01#5",
+        "TK-2026-0006#1",
+        "POL-TT-01#7",
+        "POL-TT-01#6",
+        "POL-TT-01#4",
+        "POL-TT-01#11"
+      ],
+      "duree_ms": 5304
+    },
+    {
+      "id": "Q145",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.8571428571428571,
+        "precision": 0.75,
+        "rangReciproque": 1,
+        "ndcg": 0.8782436857994318
+      },
+      "trouves": [
+        "TK-2026-0030#1",
+        "TK-2026-0022#1",
+        "TK-2026-0008#1",
+        "TK-2026-0026#2",
+        "POL-TT-02#13",
+        "POL-TTG-01#8",
+        "FAQ-RH#5",
+        "POL-TTG-01#14"
+      ],
+      "duree_ms": 9145
+    },
+    {
+      "id": "Q146",
+      "type": "date-version",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.8519590445170673
+      },
+      "trouves": [
+        "TK-2026-0017#1",
+        "TK-2026-0045#1",
+        "POL-TT-01#9",
+        "TK-2026-0008#1",
+        "TK-2026-0026#1",
+        "TK-2026-0045#2",
+        "TK-2026-0059#1",
+        "POL-TT-01#8"
+      ],
+      "duree_ms": 8038
+    },
+    {
+      "id": "Q147",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.9238850086262381
+      },
+      "trouves": [
+        "POL-CA-01#16",
+        "FAQ-RH#13",
+        "POL-CA-01#17",
+        "POL-CA-01#15",
+        "FAQ-RH#14",
+        "POL-CA-01#12",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#7"
+      ],
+      "duree_ms": 6610
+    },
+    {
+      "id": "Q148",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-NF-01#6",
+        "POL-NF-01#9",
+        "FAQ-RH#21",
+        "POL-NF-01#3",
+        "POL-NF-01#17",
+        "POL-NF-01#19",
+        "POL-NF-01#21",
+        "POL-FO-01#11"
+      ],
+      "duree_ms": 5765
+    },
+    {
+      "id": "Q149",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 0.5,
+        "ndcg": 0.685119786912534
+      },
+      "trouves": [
+        "FAQ-RH#2",
+        "POL-TT-02#10",
+        "POL-TTG-01#3",
+        "INT-ACTUALITES#7",
+        "INT-ACTUALITES#5",
+        "INT-ERGONOMIE#1",
+        "POL-TTG-01#12",
+        "FAQ-RH#3"
+      ],
+      "duree_ms": 7861
+    },
+    {
+      "id": "Q150",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-SITE-LYON#3",
+        "INT-VELO#4",
+        "INT-SITE-NANTES#4",
+        "NS-NA-2026-07#1",
+        "INT-VELO#3",
+        "INT-SITE-LYON#7",
+        "INT-SITE-LYON#5",
+        "INT-BIEN-DEMARRER#3"
+      ],
+      "duree_ms": 6281
+    },
+    {
+      "id": "Q151",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-CA-01#4",
+        "INT-ACTUALITES#4",
+        "POL-CA-01#3",
+        "FAQ-RH#7",
+        "POL-CA-01#12",
+        "POL-CA-01#5",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#7"
+      ],
+      "duree_ms": 7951
+    },
+    {
+      "id": "Q152",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.9651954696014428
+      },
+      "trouves": [
+        "POL-HO-01#2",
+        "POL-HO-01#4",
+        "POL-CA-01#9",
+        "POL-HO-01#3",
+        "FAQ-RH#8",
+        "INT-ACTUALITES#3",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#12"
+      ],
+      "duree_ms": 6932
+    },
+    {
+      "id": "Q153",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-CA-01#14",
+        "FAQ-RH#11",
+        "INT-ESPACE-RH#2",
+        "POL-CA-01#12",
+        "INT-QUI-CONTACTER#2",
+        "FAQ-RH#9",
+        "POL-CA-01#6",
+        "INT-ESPACE-RH#6"
+      ],
+      "duree_ms": 5018
+    },
+    {
+      "id": "Q154",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-NF-01#8",
+        "POL-NF-01#17",
+        "POL-NF-01#6",
+        "FAQ-RH#19",
+        "POL-NF-01#3",
+        "POL-NF-01#2",
+        "POL-NF-01#7",
+        "FAQ-RH#20"
+      ],
+      "duree_ms": 5790
+    },
+    {
+      "id": "Q155",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-AS-01#5",
+        "POL-AS-01#4",
+        "FAQ-RH#33",
+        "INT-CALENDRIER-PAIE#5",
+        "POL-AS-01#2",
+        "POL-AS-01#9",
+        "POL-AS-01#6",
+        "POL-AS-01#8"
+      ],
+      "duree_ms": 4214
+    },
+    {
+      "id": "Q156",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-MU-01#5",
+        "POL-MU-01#4",
+        "FAQ-RH#27",
+        "INT-OUTILS#5",
+        "INT-QUI-CONTACTER#3",
+        "POL-MU-01#13",
+        "FAQ-RH#26",
+        "POL-MU-01#2"
+      ],
+      "duree_ms": 5152
+    },
+    {
+      "id": "Q157",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "INT-SITE-NANTES#5",
+        "INT-JOURS-FERIES#3",
+        "INT-SITE-LYON#5",
+        "INT-SITE-NANTES#3",
+        "INT-SITE-NANTES#4",
+        "NS-NA-2026-07#1",
+        "INT-SITE-NANTES#1",
+        "INT-SITE-NANTES#6"
+      ],
+      "duree_ms": 6250
+    },
+    {
+      "id": "Q158",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.125,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "MGR-PR-01#3",
+        "MGR-PR-01#2",
+        "MGR-EA-01#4",
+        "MGR-PR-01#1",
+        "MGR-PR-01#4",
+        "MGR-PR-01#6",
+        "MGR-PR-01#5",
+        "MGR-EA-01#6"
+      ],
+      "duree_ms": 7104
+    },
+    {
+      "id": "Q159",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.9502344167898356
+      },
+      "trouves": [
+        "MGR-RE-01#4",
+        "MGR-RE-01#3",
+        "POL-MO-01#2",
+        "INT-SITE-NANTES#2",
+        "MGR-RE-01#2",
+        "MGR-RE-01#1",
+        "MGR-RE-01#8",
+        "MGR-RE-01#9"
+      ],
+      "duree_ms": 4875
+    },
+    {
+      "id": "Q160",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.5,
+        "precision": 0.125,
+        "rangReciproque": 0.2,
+        "ndcg": 0.2940806813328203
+      },
+      "trouves": [
+        "POL-EN-01#9",
+        "POL-EN-01#2",
+        "INT-ACTUALITES#8",
+        "FAQ-RH#34",
+        "MGR-EA-01#2",
+        "POL-EN-01#3",
+        "POL-CA-01#18",
+        "POL-HO-01#8"
+      ],
+      "duree_ms": 7077
+    },
+    {
+      "id": "Q161",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.75,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.7467866000122104
+      },
+      "trouves": [
+        "TK-2026-0067#2",
+        "TK-2026-0067#1",
+        "POL-NF-01#12",
+        "POL-AS-01#6",
+        "FAQ-RH#33",
+        "TK-2026-0046#1",
+        "TK-2026-0076#1",
+        "TK-2026-0086#1"
+      ],
+      "duree_ms": 6763
+    },
+    {
+      "id": "Q162",
+      "type": "conversation",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 1
+      },
+      "trouves": [
+        "POL-NF-01#18",
+        "TK-2026-0080#1",
+        "POL-NF-01#3",
+        "POL-NF-01#20",
+        "POL-NF-01#5",
+        "INT-CALENDRIER-PAIE#4",
+        "TK-2026-0040#1",
+        "TK-2026-0020#1"
+      ],
+      "duree_ms": 5559
+    },
+    {
+      "id": "Q163",
+      "type": "multilingue",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.6666666666666666,
+        "precision": 0.25,
+        "rangReciproque": 1,
+        "ndcg": 0.8403030283801005
+      },
+      "trouves": [
+        "GRP-TRV-01#9",
+        "POL-NF-01#2",
+        "GRP-TRV-01#10",
+        "POL-NF-01#7",
+        "FAQ-RH#20",
+        "POL-NF-01#6",
+        "POL-NF-01#8",
+        "FAQ-RH#19"
+      ],
+      "duree_ms": 5366
+    },
+    {
+      "id": "Q164",
+      "type": "multilingue",
+      "mesures": {
+        "succes": 1,
+        "rappel": 0.6666666666666666,
+        "precision": 0.5,
+        "rangReciproque": 1,
+        "ndcg": 0.7706821224896205
+      },
+      "trouves": [
+        "TK-2026-0090#1",
+        "FAQ-RH#31",
+        "POL-FO-01#3",
+        "POL-FO-01#4",
+        "POL-FO-01#9",
+        "FAQ-RH#32",
+        "POL-FO-01#10",
+        "POL-FO-01#11"
+      ],
+      "duree_ms": 4999
+    },
+    {
+      "id": "Q165",
+      "type": "document-scanne",
+      "mesures": {
+        "succes": 1,
+        "rappel": 1,
+        "precision": 0.375,
+        "rangReciproque": 1,
+        "ndcg": 0.9049495058460971
+      },
+      "trouves": [
+        "NS-NA-2026-07#1",
+        "INT-SITE-NANTES#2",
+        "INT-QUI-CONTACTER#6",
+        "INT-SITE-NANTES#4",
+        "INT-VELO#3",
+        "INT-SITE-NANTES#6",
+        "INT-SITE-NANTES#5",
+        "INT-QUI-CONTACTER#4"
+      ],
+      "duree_ms": 6740
+    }
+  ]
+}

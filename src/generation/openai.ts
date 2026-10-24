@@ -9,7 +9,7 @@ import { ReponseRhea, type DemandeJson } from "./structure.ts";
 
 // Assez pour quelques phrases. Un modèle qui raisonne compte ses tokens de réflexion dans cette limite, et peut l'épuiser
 // avant d'écrire : la réponse revient alors coupée (incomplete). Il faut alors augmenter la limite
-const MAX_TOKENS = 4096;
+const MAX_TOKENS = 16_000; // chapitre 14 : GPT-6 raisonne par défaut, et sa réflexion compte dans cette limite
 
 // Des réglages pour le modèle local. Une température de 0 fait choisir à chaque pas le token le plus probable : la réponse
 // change très peu d'une exécution à l'autre. Sans réflexion, un modèle qui sait réfléchir répond tout de suite.
