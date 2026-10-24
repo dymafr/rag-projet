@@ -11,11 +11,12 @@ import { creerFile, echouer, prendre, recuperer, terminer, type Tache } from "..
 const ATTENTE_MS = 30_000;
 
 // Une étape : un outil du projet, lancé comme on le lancerait à la main, avec le même environnement (DATABASE_URL…).
+// --env-file-if-exists : en développement, .env ; dans un conteneur (leçon 10), il n'y en a pas, tout vient du compose.
 // detached : l'étape a son propre groupe de processus, et le Ctrl+C du terminal n'atteint que le travailleur, qui la
 // laisse finir (windowsHide : sous Windows, sans ouvrir de fenêtre à elle)
 function etape(outil: string, args: string[] = []): Promise<void> {
   return new Promise((fini, echec) => {
-    const enfant = spawn(process.execPath, ["--env-file=.env", `src/outils/${outil}`, ...args], { detached: true, windowsHide: true });
+    const enfant = spawn(process.execPath, ["--env-file-if-exists=.env", `src/outils/${outil}`, ...args], { detached: true, windowsHide: true });
     let sortie = "";
     let erreurs = "";
     enfant.stdout.on("data", (morceau) => (sortie += morceau));

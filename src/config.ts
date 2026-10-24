@@ -1,7 +1,19 @@
 // Lecture et validation de la configuration du projet, lue dans le fichier .env
+import { readFileSync } from "node:fs";
 import { z } from "zod";
 
 z.config(z.locales.fr()); // messages d'erreur en français
+
+// Chapitre 14, leçon 10 : en production, un secret arrive dans un fichier (les secrets de Docker Compose, montés dans
+// /run/secrets), jamais dans l'image, ni dans git, ni dans la configuration du conteneur (docker inspect ne le montre pas).
+// NOM_FILE donne le chemin du fichier qui contient NOM, comme pour les images officielles (POSTGRES_PASSWORD_FILE). On le
+// recopie dans process.env : les SDK d'Anthropic et d'OpenAI, et pg pour PGPASSWORD, y lisent leur clé. Les processus que
+// Rhéa lance elle-même (les étapes du travailleur) en héritent : c'est voulu, ce sont les mêmes outils
+export const LUS_DANS_UN_FICHIER = ["ANTHROPIC_API_KEY", "OPENAI_API_KEY", "VOYAGE_API_KEY", "DATABASE_URL", "PGPASSWORD"] as const;
+for (const nom of LUS_DANS_UN_FICHIER) {
+  const fichier = process.env[`${nom}_FILE`];
+  if (fichier && !process.env[nom]) process.env[nom] = readFileSync(fichier, "utf8").trim();
+}
 
 const Schema = z
   .object({
