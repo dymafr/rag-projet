@@ -1,12 +1,16 @@
 // Ce que l'interface d'inspection lit en plus des réponses (chapitre 14) : les salariés de démonstration, la configuration,
-// l'index et une recherche seule, sans LLM qui rédige. Tout ce qui touche aux documents passe par basePour : la sécurité
-// par ligne du chapitre 13 s'applique à l'interface comme à la recherche. Ces routes n'existent qu'en mode inspection :
-// en production, elles en diraient trop (le prompt, les réglages, l'annuaire)
+// l'index et une recherche seule, sans LLM qui rédige. Tout ce qui lit les documents de la base passe par basePour : la
+// sécurité par ligne du chapitre 13 s'applique à l'interface comme à la recherche. Leçon 2 : les évaluations, elles,
+// montrent ce que leurs exécutions ont gardé, passages réservés compris. Ces routes n'existent qu'en mode inspection :
+// en production, elles en diraient trop (le prompt, les réglages, l'annuaire, les évaluations)
+import { readdir, readFile, stat } from "node:fs/promises";
+import { join } from "node:path";
 import type pg from "pg";
 import { APPELS_PAR_OUTIL, TOKENS_MAX, TOURS_MAX } from "../agent/boucle.ts";
 import { config } from "../config.ts";
 import { nomDuModele } from "../embeddings/fournisseurs.ts";
 import type { Tarifs } from "../eval/comparaison.ts";
+import type { Execution, ResultatQuestion } from "../eval/production.ts";
 import { MODELE_DU_SEUIL, SEUIL } from "../generation/abstention.ts";
 import { BUDGET_PASSAGES, PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { basePour, type Profil } from "../recherche/droits.ts";
@@ -32,6 +36,27 @@ export type DocumentIndexe = {
 export type PassageIndexe = { id: string; document: string; titres: string[]; texte: string; taille: number; type: string; acces: string; date_effet: string; date_fin: string | null };
 export type Recherche = { passages: (ReturnType<typeof enBref> & { texte: string })[]; trace: EtapeTracee[] };
 
+// Une exécution d'évaluation sans ses résultats, et une question en bref : de quoi lister sans tout charger
+export type ResumeExecution = Omit<Execution, "resultats">;
+export type QuestionEnBref = {
+  id: string;
+  question: string;
+  type: string;
+  categorie: string;
+  profil: Profil;
+  matricule: string;
+  reussie: boolean | null;
+  criteres: { critere: string; ok: boolean | null }[];
+  duree_ms: number;
+  cout: number | null;
+  outils: string[];
+  citees: number;
+  inventees: number;
+  erreur: boolean;
+};
+// "cache" : une exécution du jeu caché, dont on ne lit que les scores (leçon 5) ; null : inconnue
+export type DetailExecution = { resume: ResumeExecution; questions: QuestionEnBref[] };
+
 // Ce que rend GET /api/configuration. L'interface en recopie la forme (web/src/types.ts), chaque champ venu après la
 // leçon 1 en facultatif : elle marche ainsi à chaque étape du chapitre
 export type ConfigurationRhea = {
@@ -56,15 +81,96 @@ export type Inspection = {
   passagesDuDocument: (document: string, profil: Profil) => Promise<PassageIndexe[]>;
   passage: (id: string, profil: Profil) => Promise<PassageIndexe | null>;
   rechercher: (question: string, date: string, profil: Profil) => Promise<Recherche>;
+  evaluations: () => Promise<ResumeExecution[]>;
+  evaluation: (nom: string) => Promise<DetailExecution | "cache" | null>;
+  resultat: (nom: string, id: string) => Promise<ResultatQuestion | "cache" | null>;
 };
+
+export const RESULTATS = "eval/production/resultats";
+
+// Les exécutions d'évaluation, lues sur le disque. Une exécution complète pèse plusieurs mégaoctets (toutes les traces) :
+// on la garde en mémoire tant que son fichier ne change pas
+export function lecteurDExecutions(dossier = RESULTATS) {
+  const enMemoire = new Map<string, { modifie: number; execution: Execution }>();
+  const lire = async (nom: string): Promise<Execution | null> => {
+    if (!/^[\w-][\w.-]*$/.test(nom)) return null; // un nom de dossier simple : rien qui sorte de RESULTATS
+    const fichier = join(dossier, nom, "execution.json");
+    try {
+      const { mtimeMs } = await stat(fichier);
+      const garde = enMemoire.get(nom);
+      if (garde?.modifie === mtimeMs) return garde.execution;
+      const execution = JSON.parse(await readFile(fichier, "utf8")) as Execution;
+      enMemoire.set(nom, { modifie: mtimeMs, execution });
+      return execution;
+    } catch (erreur) {
+      if ((erreur as NodeJS.ErrnoException).code === "ENOENT") return null;
+      throw erreur;
+    }
+  };
+  return {
+    async resumes(): Promise<ResumeExecution[]> {
+      let noms: string[];
+      try {
+        noms = await readdir(dossier);
+      } catch {
+        return []; // aucune évaluation encore
+      }
+      const resumes: ResumeExecution[] = [];
+      for (const nom of noms) {
+        try {
+          resumes.push(JSON.parse(await readFile(join(dossier, nom, "resume.json"), "utf8")) as ResumeExecution);
+        } catch {
+          // un dossier sans résumé (une exécution qui vient de commencer) : ignoré
+        }
+      }
+      return resumes.sort((a, b) => (a.date === b.date ? a.nom.localeCompare(b.nom) : b.date.localeCompare(a.date)));
+    },
+    lire,
+  };
+}
+
+const enBrefQuestion = (r: ResultatQuestion): QuestionEnBref => ({
+  id: r.question.id,
+  question: r.question.question,
+  type: r.question.type,
+  categorie: r.question.categorie,
+  profil: r.question.profil,
+  matricule: r.question.matricule,
+  reussie: r.verdict.reussie,
+  criteres: r.verdict.criteres.map(({ critere, ok }) => ({ critere, ok })),
+  duree_ms: r.obtenu.duree_ms,
+  cout: r.obtenu.cout,
+  outils: r.obtenu.outils,
+  citees: r.obtenu.citees.length,
+  inventees: r.obtenu.inventees.length,
+  erreur: r.obtenu.erreur !== undefined,
+});
 
 // Les dates en AAAA-MM-JJ : le client pg rend un objet Date pour une colonne date, à minuit heure locale
 const jour = (d: unknown) => (d instanceof Date ? d.toLocaleDateString("sv-SE") : d === null ? null : String(d));
 const COLONNES = "id, document, titres, texte, taille, type, acces, date_effet, date_fin";
 const enPassage = (r: Record<string, unknown>) => ({ ...r, date_effet: jour(r.date_effet), date_fin: jour(r.date_fin) }) as PassageIndexe;
 
-export function inspectionDe(pool: pg.Pool, autres: { version: string; tarifs?: Tarifs }): Inspection {
+export function inspectionDe(pool: pg.Pool, autres: { version: string; tarifs?: Tarifs; resultats?: string }): Inspection {
+  const executions = lecteurDExecutions(autres.resultats);
   return {
+    evaluations: () => executions.resumes(),
+
+    async evaluation(nom) {
+      const execution = await executions.lire(nom);
+      if (!execution) return null;
+      if (execution.jeu === "cache") return "cache";
+      const { resultats, ...resume } = execution;
+      return { resume, questions: resultats.map(enBrefQuestion) };
+    },
+
+    async resultat(nom, id) {
+      const execution = await executions.lire(nom);
+      if (!execution) return null;
+      if (execution.jeu === "cache") return "cache";
+      return execution.resultats.find((r) => r.question.id === id) ?? null;
+    },
+
     async salaries() {
       const { rows } = await pool.query<FicheSalarie>("SELECT matricule, prenom, nom, role, site, service, poste FROM salaries ORDER BY matricule");
       return rows;

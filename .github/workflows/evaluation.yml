@@ -41,10 +41,13 @@ jobs:
       - run: npm test
       - run: npm run web:construire # chapitre 14 : l'interface se construit
       - run: npm run db:up
+      - run: npm run donnees:rh # chapitre 14, leçon 2 : l'annuaire (la table salaries, que lit eval:jeu) et les soldes
       - run: npm run ingest
       - run: npm run decouper
       - run: npm run indexer
       - run: npm run eval:verifier
+      # Chapitre 14, leçon 2 : le jeu de travail est juste pour cette base (profils, passages attendus, dates)
+      - run: npm run eval:jeu
       # Échoue si une moyenne passe sous son minimum (eval/minimums.json). --sans-llm : sans les filtres extraits de la
       # question ni la condensation des questions de suite, que Rhéa demande au LLM (les questions qui en ont besoin
       # échouent ici, les minimums en tiennent compte)

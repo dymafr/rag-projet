@@ -365,6 +365,9 @@ test("les routes d'inspection lisent avec le profil du salarié connecté, et ne
     passagesDuDocument: async (document, profil) => (profils.push(profil), document === "FAQ-RH" ? [] : []),
     passage: async (id, profil) => (profils.push(profil), id === "FAQ-RH#2" ? { id, document: "FAQ-RH", titres: [], texte: faq.texte, taille: 9, type: "faq", acces: "tous", date_effet: "2026-03-01", date_fin: null } : null),
     rechercher: async (question, date, profil) => (profils.push(`${profil} ${date} ${question}`), { passages: [], trace: [] }),
+    evaluations: async () => [],
+    evaluation: async (nom) => (nom === "caché" ? "cache" : null),
+    resultat: async (nom) => (nom === "secret" ? "cache" : null),
   };
   await avecServeur(serveurDeTest({ inspecter }), async (adresse) => {
     assert.equal((await (await fetch(`${adresse}/api/salaries`)).json())[0].matricule, "K0101");
@@ -377,6 +380,11 @@ test("les routes d'inspection lisent avec le profil du salarié connecté, et ne
     const recherche = await fetch(`${adresse}/api/rechercher`, { method: "POST", headers: { ...ENTETES_JSON }, body: JSON.stringify({ question: "Télétravail ?" }) });
     assert.equal(recherche.status, 200);
     assert.equal((await lire("/api/inconnue")).status, 404);
+    // Une évaluation du jeu caché ne livre ni sa liste de questions, ni une question
+    assert.deepEqual(await (await fetch(`${adresse}/api/evaluations`)).json(), []);
+    assert.equal((await fetch(`${adresse}/api/evaluations/secret/questions/H001`)).status, 403);
+    assert.equal((await fetch(`${adresse}/api/evaluations/base/questions/Q01`)).status, 404);
+    assert.equal((await fetch(`${adresse}/api/evaluations/..%2Fsecret`)).status, 404);
   });
   assert.deepEqual(profils, ["manager", "manager", "manager", "manager", "salarie 2026-10-20 Télétravail ?"]);
 });
