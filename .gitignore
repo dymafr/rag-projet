@@ -9,3 +9,6 @@ eval/traces/
 eval/production/a-relire/
 journal/
 web/dist/
+# Chapitre 15, leçon 5 : les secrets et la configuration de production
+secrets/
+.env.production
