@@ -1,5 +1,103 @@
 [
   {
+    "id": "H007",
+    "reponse": "d9df33312da9",
+    "reussie": false,
+    "raison": "Deux mois au plus, juste ; mais « un départ en janvier 2026 » alors que la date du jour est le 20 octobre 2026",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "H057",
+    "reponse": "fb837742b90d",
+    "reussie": false,
+    "raison": "Propose un jour de RTT à un salarié en heures, qui n'en a pas",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "H071",
+    "reponse": "c2f96ea4f7f6",
+    "reussie": true,
+    "raison": "Visa remboursé, passeport non ; NDF-03 est bien l'outil de déclaration de Kalyo, même à l'étranger (GRP-TRV-01#3)",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "H100",
+    "reponse": "dc8fef2b4dd6",
+    "reussie": true,
+    "raison": "La règle (un mois avant le début du congé) et les deux échéances ; « dès maintenant » est la réponse du ticket pour le troisième",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "H122",
+    "reponse": "6681d985809f",
+    "reussie": true,
+    "raison": "Refuse de deviner le crédit d'heures ; les mandats cités viennent de documents ouverts à tous",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "I002",
+    "reponse": "20ff9c6d094e",
+    "reussie": true,
+    "raison": "Pas de CP, code FOR, justificatif : la réponse ; le cas hors temps de travail est traité à part",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "I037",
+    "reponse": "203f611cdc61",
+    "reussie": false,
+    "raison": "Les services de Nantes, juste ; mais affirme ne trouver aucune règle sur le changement de site, alors que la politique mobilité existe",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "I092",
+    "reponse": "94608169b9aa",
+    "reussie": true,
+    "raison": "Plafond de 2 500 €, deux devis, ticket Mobilité, deux jours de congé ; la mobilité acceptée va de soi dans la suite de la conversation",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "I092",
+    "reponse": "40758b8c256d",
+    "reussie": true,
+    "raison": "Plafond de 2 500 €, devis, ticket Mobilité, jours de congé : la mobilité acceptée va de soi dans la suite de la conversation",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "I102",
+    "reponse": "a6aad918d559",
+    "reussie": true,
+    "raison": "Avion : la politique du groupe ; pour le reste du déplacement en France, la politique de Kalyo reste bien la référence (GRP-TRV-01#3)",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "I103",
+    "reponse": "c1f664e8e2f7",
+    "reussie": true,
+    "raison": "Non, la politique voyages du groupe pour l'étranger : la réponse à la question posée",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "I130",
+    "reponse": "6714ddcce011",
+    "reussie": true,
+    "raison": "Ne dévoile rien de la grille réservée aux managers ; ne donne que les droits du salarié (compte rendu, commentaires)",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "I146",
+    "reponse": "74649561caac",
+    "reussie": true,
+    "raison": "172,15 € et son calcul ; la condition des premiers kilomètres de l'année est celle que rend l'outil",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "I155",
+    "reponse": "6c9c65fec212",
+    "reussie": false,
+    "raison": "Les bons noms, mais des soldes dits « à ce jour (20 octobre) » alors qu'ils datent du 28 septembre",
+    "date": "2026-10-21"
+  },
+  {
     "id": "Q02",
     "reponse": "57e9df8f638e",
     "reussie": true,

@@ -48,7 +48,7 @@ test("agir exécute l'appel demandé, renvoie son résultat au LLM, puis rend sa
   );
   const liste = await etapes(agir("Combien de jours ?", { llm, outils: [recherche], systeme: "Tu es Rhéa." }, contexte));
   assert.deepEqual(liste.map((e) => e.type), ["appel", "resultat", "reponse"]);
-  assert.match(recus[0][0].role === "utilisateur" ? recus[0][0].texte : "", /^Date du jour : 2026-10-13\n\nQuestion : Combien de jours \?$/);
+  assert.match(recus[0][0].role === "utilisateur" ? recus[0][0].texte : "", /^Date du jour : mardi 13 octobre 2026 \(2026-10-13\)\n\nQuestion : Combien de jours \?$/);
   const resultat = recus[1][2];
   assert.equal(resultat.role, "outil");
   assert.ok(resultat.role === "outil" && resultat.id === "a1" && resultat.texte.includes('source="FAQ-RH#2"'));
@@ -129,7 +129,7 @@ test("le message dit le profil d'un manager ou du service RH, pas celui d'un sal
   const { llm, recus } = fauxLlm({ texte: "Voici le barème [MGR-PR-01#3]." });
   await etapes(agir("Quel est le barème des primes ?", { llm, outils: [recherche], systeme: "" }, { ...contexte, profil: "manager" }));
   const message = recus[0][0].role === "utilisateur" ? recus[0][0].texte : "";
-  assert.match(message, /^Profil du salarié connecté : manager\. Il a le droit de lire tout ce que rendent tes outils, y compris un passage réservé\.\nDate du jour : 2026-10-13\n\nQuestion : /);
+  assert.match(message, /^Profil du salarié connecté : manager\. Il a le droit de lire tout ce que rendent tes outils, y compris un passage réservé\.\nDate du jour : mardi 13 octobre 2026 \(2026-10-13\)\n\nQuestion : /);
 });
 
 test("chercher_documents balise les passages par leur source, ou dit qu'aucun n'est assez proche", async () => {

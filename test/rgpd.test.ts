@@ -121,4 +121,13 @@ test("destinations : tout reste ici avec la configuration locale ; un fournisseu
     "les serveurs d'Anthropic (modele-heberge)",
     "les serveurs d'Ollama (modèle vision:cloud)",
   ]);
+  // Chapitre 14 : le reclassement par le LLM et la contextualisation partent chez leur fournisseur ; leçon 5 : le LLM des
+  // étapes de la recherche aussi
+  assert.equal(destinations(local).find((d) => d.brique === "reclassement")?.ou, "aucun (RECLASSEMENT=non)");
+  const etapes = destinations({ ...local, LLM_PROVIDER: "anthropic", LLM_MODEL: "grand", RECLASSEMENT: true, RERANK_PROVIDER: "llm", LLM_RECHERCHE_PROVIDER: "openai", LLM_RECHERCHE_MODEL: "petit", CONTEXTUALISER: true });
+  assert.deepEqual(etapes.filter((d) => /contextualisation|reclassement|filtres/.test(d.brique)).map((d) => `${d.brique} : ${d.ou}`), [
+    "contextualisation des passages : les serveurs d'OpenAI (petit)",
+    "reclassement : les serveurs d'OpenAI (petit)",
+    "filtres extraits et condensation : les serveurs d'OpenAI (petit)",
+  ]);
 });

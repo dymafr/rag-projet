@@ -7,6 +7,11 @@ const Schema = z
   .object({
     LLM_PROVIDER: z.enum(["anthropic", "openai", "ollama"]).default("anthropic"),
     LLM_MODEL: z.string().min(1, "indiquez le modèle qui rédige les réponses"),
+    // Chapitre 14, leçon 5 : le LLM des étapes de la recherche (filtres extraits, condensation, reclassement par le LLM)
+    // et du contexte des chunks (leçon 3), s'il n'est pas celui qui rédige. Elles lisent beaucoup de tokens pour une tâche
+    // simple : le plus petit modèle y suffit. Absent : LLM_PROVIDER et LLM_MODEL
+    LLM_RECHERCHE_PROVIDER: z.enum(["anthropic", "openai", "ollama"]).optional(),
+    LLM_RECHERCHE_MODEL: z.string().min(1).optional(),
     JUGE_MODEL: z.string().optional(), // le modèle du juge d'évaluation ; vide ou absent : LLM_MODEL
     // Chapitre 14 : le juge peut venir d'un autre fournisseur que celui qui rédige (un juge juge moins bien son propre
     // fournisseur) ; absent : LLM_PROVIDER
@@ -41,7 +46,12 @@ const Schema = z
   .superRefine((env, ctx) => {
     // Chaque fournisseur utilisé doit avoir sa clé
     const cles = { anthropic: "ANTHROPIC_API_KEY", openai: "OPENAI_API_KEY", voyage: "VOYAGE_API_KEY" } as const;
-    for (const fournisseur of new Set([env.LLM_PROVIDER, env.JUGE_PROVIDER ?? env.LLM_PROVIDER, env.EMBEDDING_PROVIDER, env.RERANK_PROVIDER])) {
+    // Leçon 5 : le LLM de la recherche se règle en entier ou pas du tout
+    if (Boolean(env.LLM_RECHERCHE_PROVIDER) !== Boolean(env.LLM_RECHERCHE_MODEL)) {
+      ctx.addIssue({ code: "custom", path: ["LLM_RECHERCHE_MODEL"], message: "LLM_RECHERCHE_PROVIDER et LLM_RECHERCHE_MODEL vont ensemble" });
+    }
+    const recherche = env.LLM_RECHERCHE_PROVIDER ? [env.LLM_RECHERCHE_PROVIDER] : [];
+    for (const fournisseur of new Set([env.LLM_PROVIDER, ...recherche, env.JUGE_PROVIDER ?? env.LLM_PROVIDER, env.EMBEDDING_PROVIDER, env.RERANK_PROVIDER])) {
       if (fournisseur === "transformers" || fournisseur === "ollama" || fournisseur === "llm") continue; // local, ou le LLM déjà vérifié
       const cle = cles[fournisseur];
       if (!env[cle]) {
