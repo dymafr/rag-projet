@@ -70,6 +70,7 @@ export type ConfigurationRhea = {
   seuil: { valeur: number; plancher: number | null; mesureAvec: string; aJour: boolean }; // plancher null : non mesuré pour ce modèle
   budget: { passagesDemandes: number; tokens: number };
   agent: { toursMax: number; tokensMax: number; appelsParOutil: number; recherche: string; verification: boolean };
+  cache: { actif: boolean; seuil: number };
   prompt: string;
   index: { passages: number; modele: string | null; stockage: string | null };
   destinations: ReturnType<typeof destinations>;
@@ -211,6 +212,7 @@ export function inspectionDe(pool: pg.Pool, autres: { version: string; tarifs?: 
         seuil: { valeur: SEUIL, plancher: plancherMesure(nomDuModele()) ? plancherPour(nomDuModele()) : null, mesureAvec: MODELE_DU_SEUIL, aJour: MODELE_DU_SEUIL === nomDuModele() },
         budget: { passagesDemandes: PASSAGES_DEMANDES, tokens: BUDGET_PASSAGES },
         agent: { toursMax: TOURS_MAX, tokensMax: TOKENS_MAX, appelsParOutil: APPELS_PAR_OUTIL, recherche: "secours", verification: config.VERIFICATION },
+        cache: { actif: config.CACHE_SEMANTIQUE, seuil: config.CACHE_SEUIL },
         prompt: autres.version,
         index: { passages: rows[0].n, modele: indexation?.modele ?? null, stockage: indexation?.stockage ?? null },
         destinations: destinations(config),

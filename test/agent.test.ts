@@ -238,7 +238,10 @@ test("agentClaude déclare les outils avec input_schema et refuse une réponse c
   assert.equal(texte, "Je vous en prie.");
   assert.equal(requetes[0].tools[0].name, "chercher_documents");
   assert.deepEqual(requetes[0].tools[0].input_schema.required, ["requete"]);
+  // Chapitre 14 : les consignes (et les outils, avant elles) marquées pour le cache de prompt
+  assert.deepEqual(requetes[0].system, [{ type: "text", text: "Tu es Rhéa.", cache_control: { type: "ephemeral" } }]);
   await assert.rejects(llm("", [{ role: "utilisateur", texte: "?" }], [recherche]), /max_tokens/);
+  assert.equal(requetes[1].system, undefined); // des consignes vides ne partent pas (un bloc de texte vide est refusé)
 });
 
 // Leçon 5 : les garde-fous

@@ -42,6 +42,14 @@ const Schema = z
     // Chapitre 14, leçon 4 : vérifier chaque réponse contre ses sources avant de la rendre (un appel au LLM de plus). Non
     // par défaut : mesurée sur le jeu de travail, elle retirait plus de réponses justes qu'elle n'en corrigeait de fausses
     VERIFICATION: z.stringbool({ truthy: ["oui", "true", "1"], falsy: ["non", "false", "0"] }).default(false),
+    // Chapitre 14, leçon 6 : le cache sémantique, et la similarité au-dessus de laquelle une question reçoit la réponse
+    // d'une autre. 0,92 avec bge-m3, le modèle local par défaut (npm run cache:mesurer, 20 octobre 2026) : 6 reformulations
+    // sur 15 reconnues, aucune réponse fausse ; deux questions différentes montent à 0,846 (un repas client à Paris, à
+    // Berlin), et à 0,881 sur les 560 questions du jeu de travail (21 octobre : deux questions sur le maintien du salaire
+    // en maladie), sous 0,92 encore. Avec text-embedding-3-small, les similarités sont plus basses : 0,88 (6 sur 15, la
+    // paire la plus proche à 0,823). À mesurer de nouveau pour tout autre modèle d'embedding, et quand le jeu grandit
+    CACHE_SEMANTIQUE: z.stringbool({ truthy: ["oui", "true", "1"], falsy: ["non", "false", "0"] }).default(false),
+    CACHE_SEUIL: z.coerce.number().min(0.5).max(1).default(0.92),
   })
   .superRefine((env, ctx) => {
     // Chaque fournisseur utilisé doit avoir sa clé

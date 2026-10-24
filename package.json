@@ -38,6 +38,7 @@
     "serveur": "npm run web:construire --silent && node --env-file=.env src/outils/lancer-serveur.ts",
     "travailleur": "node --env-file=.env src/outils/travailleur.ts",
     "tache": "node --env-file=.env src/outils/tache.ts",
+    "cache:mesurer": "node --env-file=.env src/outils/mesurer-cache.ts",
     "web": "vite web",
     "web:construire": "vite build web",
     "eval:generer": "node --env-file=.env src/outils/generer-questions.ts",
