@@ -1,0 +1,109 @@
+# Rhéa en production (chapitre 14, leçon 10) : la base, puis les migrations et l'ingestion, qui tournent une fois et
+# s'arrêtent, puis le serveur et le travailleur. Chaque service attend que les précédents soient prêts.
+# Lancement : docker compose -f compose.production.yaml up -d --build ; arrêt : docker compose -f compose.production.yaml down
+# Avant : écrire les secrets dans secrets/ (un fichier par secret, jamais versionné), et la configuration dans
+# .env.production (sans aucune clé : voir .env.production.example)
+name: rhea
+
+# Ce que partagent les services qui exécutent Rhéa : l'image, la configuration, les secrets, et les garde-fous du conteneur
+x-rhea: &rhea
+  build: .
+  image: rhea:production
+  env_file: .env.production
+  environment:
+    DATABASE_URL: postgres://rhea@db:5432/rhea # sans mot de passe : il arrive par PGPASSWORD_FILE
+    PGPASSWORD_FILE: /run/secrets/mot_de_passe_base
+    ANTHROPIC_API_KEY_FILE: /run/secrets/anthropic_api_key
+    OPENAI_API_KEY_FILE: /run/secrets/openai_api_key
+    VOYAGE_API_KEY_FILE: /run/secrets/voyage_api_key
+  secrets: [mot_de_passe_base, anthropic_api_key, openai_api_key, voyage_api_key]
+  init: true # Node n'est pas fait pour tourner en PID 1 : un init lui transmet les signaux d'arrêt
+  user: node
+  read_only: true # le système de fichiers du conteneur ne s'écrit pas ; seuls les volumes ci-dessous
+  tmpfs: [/tmp]
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  volumes:
+    - ./corpus:/app/corpus:ro # les documents, mis à jour sans reconstruire l'image
+    # le registre des effacements (chapitre 13) : relu à chaque ingestion, complété par la tâche effacer du travailleur
+    - ./effacements.json:/app/effacements.json
+    - fichiers:/app/donnees # documents.jsonl, chunks.jsonl, la clé du journal
+    - journal:/app/journal
+    - modeles:/app/node_modules/@huggingface/transformers/.cache
+
+services:
+  db:
+    image: pgvector/pgvector:0.8.7-pg18-trixie
+    shm_size: 1gb # un gros index HNSW se construit en parallèle dans la mémoire partagée (64 Mo par défaut)
+    environment:
+      POSTGRES_USER: rhea
+      POSTGRES_DB: rhea
+      POSTGRES_PASSWORD_FILE: /run/secrets/mot_de_passe_base
+    secrets: [mot_de_passe_base]
+    volumes:
+      - base:/var/lib/postgresql # PostgreSQL 18 : le volume se monte ici, et non plus sur /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -U rhea -d rhea"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+    # Aucun port publié : seuls les autres services du compose atteignent la base
+
+  migrations:
+    <<: *rhea
+    command: ["node", "src/outils/migrer.ts"]
+    depends_on:
+      db: { condition: service_healthy }
+    restart: "no"
+
+  # L'ingestion au démarrage : incrémentale, elle ne revectorise que ce qui a changé depuis la dernière fois
+  ingestion:
+    <<: *rhea
+    command: ["sh", "-c", "node src/outils/ingest.ts && node src/outils/decouper.ts && node src/outils/indexer.ts"]
+    depends_on:
+      migrations: { condition: service_completed_successfully }
+    restart: "no"
+
+  api:
+    <<: *rhea
+    command: ["node", "src/outils/lancer-serveur.ts"]
+    environment:
+      DATABASE_URL: postgres://rhea@db:5432/rhea
+      PGPASSWORD_FILE: /run/secrets/mot_de_passe_base
+      ANTHROPIC_API_KEY_FILE: /run/secrets/anthropic_api_key
+      OPENAI_API_KEY_FILE: /run/secrets/openai_api_key
+      VOYAGE_API_KEY_FILE: /run/secrets/voyage_api_key
+      HOST: 0.0.0.0 # dans le conteneur ; c'est le port publié ci-dessous qui décide qui l'atteint
+      INSPECTION: "non" # en production, ni trace ni routes /api : elles en diraient trop
+    ports:
+      - "127.0.0.1:3000:3000" # cette machine seulement : un proxy HTTPS (nginx, Caddy…) l'expose, avec l'authentification
+    depends_on:
+      ingestion: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/sante').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+
+  travailleur:
+    <<: *rhea
+    command: ["node", "src/outils/travailleur.ts"]
+    depends_on:
+      ingestion: { condition: service_completed_successfully }
+    restart: unless-stopped
+    stop_grace_period: 2m # le temps de finir une réindexation en cours
+
+secrets:
+  mot_de_passe_base: { file: ./secrets/mot_de_passe_base }
+  anthropic_api_key: { file: ./secrets/anthropic_api_key }
+  openai_api_key: { file: ./secrets/openai_api_key }
+  voyage_api_key: { file: ./secrets/voyage_api_key }
+
+volumes:
+  base:
+  fichiers:
+  journal:
+  modeles:

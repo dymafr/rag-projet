@@ -46,7 +46,7 @@ jobs:
       # Chapitre 14, leçon 5 : le jeu caché n'a pas changé depuis qu'il a été figé (sans base, sans rien lire de son contenu)
       - run: npm run eval:jeu -- --jeu cache --empreinte
       - run: npm run db:up
-      - run: npm run donnees:rh # chapitre 14, leçon 2 : l'annuaire (la table salaries, que lit eval:jeu) et les soldes
+      - run: npm run migrer # chapitre 14, leçon 10 : l'annuaire, les rôles, la file, les observations
       - run: npm run ingest
       - run: npm run decouper
       - run: npm run indexer
@@ -108,7 +108,7 @@ jobs:
           restore-keys: contextes-
       - run: cp .env.example .env
       - run: npm run db:up
-      - run: npm run donnees:rh
+      - run: npm run migrer
       - run: npm run ingest
       - run: npm run decouper
       - run: npm run indexer

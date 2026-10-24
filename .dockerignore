@@ -1,0 +1,14 @@
+# Ce que docker build n'envoie jamais : les secrets, les données de travail, ce qui se reconstruit
+.env
+.env.*
+secrets/
+node_modules/
+donnees/
+journal/
+web/dist/
+eval/production/resultats/
+eval/production/recuperation/
+eval/production/a-relire/
+eval/traces/
+.git/
+.cache/

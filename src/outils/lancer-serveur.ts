@@ -114,8 +114,10 @@ const serveur = creerServeur({
     return { ok: base, base, llm: modelesDeProduction, disjoncteurs: etatDesDisjoncteurs(), questions: limiteur.etat };
   },
 });
-// 127.0.0.1 : le serveur ne répond qu'à cette machine, pas au reste du réseau
-serveur.listen(PORT, "127.0.0.1", () => {
+// 127.0.0.1 : le serveur ne répond qu'à cette machine, pas au reste du réseau. Leçon 10 : dans un conteneur, HOST=0.0.0.0,
+// pour que Docker puisse lui passer les requêtes ; c'est alors le port publié par le compose qui décide qui l'atteint
+const HOTE = process.env.HOST ?? "127.0.0.1";
+serveur.listen(PORT, HOTE, () => {
   const mode = config.INSPECTION ? "mode inspection : chaque étape est visible dans l'interface" : "inspection désactivée";
   console.log(`Rhéa écoute sur http://localhost:${PORT} (prompt ${version}, ${config.LLM_PROVIDER} ${config.LLM_MODEL}, ${mode})`);
 });
