@@ -1,0 +1,1225 @@
+/* Le pipeline : le bilan, la cascade des étapes, le détail d'une étape et les rendus propres à chaque étape. Deux
+   conteneurs : pipeline (le détail à côté de la liste quand il y a la place) et liste (une ligne ou deux par étape) */
+
+.pipeline {
+  container: pipeline / inline-size;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--surface);
+}
+
+.pipeline-vide {
+  justify-content: center;
+}
+
+/* Les couleurs de chaque famille, posées une fois sur la ligne ou le détail */
+.famille-recherche {
+  --famille: var(--f-recherche);
+  --famille-doux: var(--f-recherche-doux);
+  --famille-texte: var(--f-recherche-texte);
+}
+
+.famille-llm {
+  --famille: var(--f-llm);
+  --famille-doux: var(--f-llm-doux);
+  --famille-texte: var(--f-llm-texte);
+}
+
+.famille-decision {
+  --famille: var(--f-decision);
+  --famille-doux: var(--f-decision-doux);
+  --famille-texte: var(--f-decision-texte);
+}
+
+.famille-outil {
+  --famille: var(--f-outil);
+  --famille-doux: var(--f-outil-doux);
+  --famille-texte: var(--f-outil-texte);
+}
+
+.famille-autre {
+  --famille: var(--f-autre);
+  --famille-doux: var(--f-autre-doux);
+  --famille-texte: var(--f-autre-texte);
+}
+
+/* Le bilan */
+.pipeline-entete {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-bottom: 1px solid var(--bordure);
+  flex: none;
+}
+
+.mesure {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: var(--e-3) var(--e-4);
+  min-width: 0;
+  border-right: 1px solid var(--bordure);
+}
+
+.mesure:last-child {
+  border-right: 0;
+}
+
+.mesure-libelle {
+  font-size: var(--taille-1);
+  color: var(--texte-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--graisse-moyenne);
+  white-space: nowrap;
+}
+
+.mesure-valeur {
+  font-size: var(--taille-5);
+  font-weight: var(--graisse-forte);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mesure-detail {
+  font-size: var(--taille-1);
+  color: var(--texte-3);
+  line-height: 1.35;
+}
+
+.mesure.alerte .mesure-valeur {
+  color: var(--erreur);
+}
+
+.mesure-barre {
+  display: block;
+  height: 3px;
+  border-radius: var(--r-rond);
+  background: var(--barre-fond);
+  overflow: hidden;
+  margin: 2px 0 1px;
+}
+
+.mesure-barre span {
+  display: block;
+  height: 100%;
+  background: var(--f-llm);
+}
+
+@container pipeline (max-width: 560px) {
+  .pipeline-entete {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .mesure:nth-child(3) {
+    border-right: 0;
+  }
+
+  .mesure:nth-child(n + 4) {
+    border-top: 1px solid var(--bordure);
+  }
+}
+
+/* Le corps : la liste, et le détail en dessous (étroit) ou à côté (large) */
+.pipeline-corps {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.pipeline-corps.avec-detail {
+  grid-template-rows: minmax(150px, 40%) minmax(0, 1fr);
+}
+
+@container pipeline (min-width: 820px) {
+  .pipeline-corps.avec-detail {
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: minmax(360px, 48%) minmax(0, 1fr);
+  }
+
+  .pipeline-corps.avec-detail .detail-etape {
+    border-top: 0;
+    border-left: 1px solid var(--bordure);
+  }
+}
+
+.pipeline-liste {
+  container: liste / inline-size;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* La cascade */
+.cascade-entete,
+.cascade-ligne {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(90px, 34%) 58px;
+  align-items: center;
+  gap: var(--e-3);
+  padding: 0 var(--e-4) 0 var(--e-3);
+}
+
+.cascade-entete {
+  height: 28px;
+  flex: none;
+  border-bottom: 1px solid var(--bordure);
+  background: var(--surface-2);
+  font-size: var(--taille-1);
+  color: var(--texte-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--graisse-moyenne);
+}
+
+.cascade-entete > span:first-child {
+  padding-left: 22px;
+}
+
+.cascade-entete-duree {
+  text-align: right;
+}
+
+.cascade-graduations {
+  position: relative;
+  height: 100%;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.cascade-graduation {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.cascade-graduation:first-child {
+  transform: translate(0, -50%);
+}
+
+.cascade-graduation:last-child {
+  transform: translate(-100%, -50%);
+}
+
+.cascade-graduation:nth-child(2),
+.cascade-graduation:nth-child(4) {
+  display: none;
+}
+
+@container liste (min-width: 1000px) {
+  .cascade-graduation:nth-child(2),
+  .cascade-graduation:nth-child(4) {
+    display: block;
+  }
+}
+
+.cascade-lignes {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--e-2) 0;
+  /* Les repères de quart de la cascade, sur toute la hauteur */
+  background-image: none;
+}
+
+.cascade-ligne {
+  position: relative;
+  height: var(--hauteur-ligne);
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.cascade-ligne::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  border-radius: 0 2px 2px 0;
+  background: transparent;
+}
+
+.cascade-ligne:hover {
+  background: var(--survol);
+}
+
+.cascade-ligne.choisie {
+  background: var(--accent-doux);
+}
+
+.cascade-ligne.choisie::before {
+  background: var(--accent);
+}
+
+.cascade-ligne:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+  border-radius: var(--r-1);
+}
+
+.cascade-nom {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cascade-basculer,
+.cascade-basculer-vide {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  color: var(--texte-3);
+  border-radius: var(--r-1);
+}
+
+.cascade-basculer:hover {
+  background: var(--actif);
+  color: var(--texte);
+}
+
+.cascade-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: var(--r-1);
+  color: var(--famille);
+  background: var(--famille-doux);
+}
+
+.statut-erreur .cascade-icone {
+  color: var(--erreur);
+  background: var(--erreur-doux);
+}
+
+.statut-interrompue .cascade-icone {
+  color: var(--texte-3);
+  background: var(--surface-3);
+}
+
+.cascade-textes {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e-3);
+  min-width: 0;
+  margin-left: 4px;
+}
+
+.cascade-titre {
+  font-size: var(--taille-3);
+  font-weight: var(--graisse-moyenne);
+  white-space: nowrap;
+  flex: none;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cascade-resume {
+  font-size: var(--taille-2);
+  color: var(--texte-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.statut-erreur .cascade-titre,
+.statut-erreur .cascade-resume {
+  color: var(--erreur);
+}
+
+.statut-en-cours .cascade-resume,
+.statut-interrompue .cascade-resume {
+  font-style: italic;
+}
+
+/* Une liste étroite (le panneau de la conversation) : le résumé passe sous le titre, la cascade se resserre */
+@container liste (max-width: 759px) {
+  .cascade-ligne {
+    height: 42px;
+  }
+
+  .cascade-entete,
+  .cascade-ligne {
+    grid-template-columns: minmax(0, 1fr) minmax(64px, 28%) 50px;
+    gap: var(--e-2);
+  }
+
+  .cascade-textes {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    line-height: 1.3;
+  }
+
+  .cascade-titre {
+    max-width: none;
+  }
+}
+
+.cascade-piste {
+  position: relative;
+  height: 100%;
+  background-image: linear-gradient(to right, var(--bordure) 1px, transparent 1px);
+  background-size: 25% 100%;
+  background-position: 0 0;
+  border-right: 1px solid var(--bordure);
+}
+
+.cascade-barre {
+  position: absolute;
+  top: 50%;
+  height: 10px;
+  transform: translateY(-50%);
+  border-radius: 2px;
+  background: var(--famille);
+  opacity: 0.85;
+  min-width: 2px;
+}
+
+.statut-en-cours .cascade-barre {
+  opacity: 0.45;
+  background-image: repeating-linear-gradient(-45deg, transparent 0 4px, color-mix(in srgb, var(--surface) 45%, transparent) 4px 8px);
+}
+
+.statut-interrompue .cascade-barre {
+  background: transparent;
+  border: 1px dashed var(--texte-3);
+  opacity: 0.8;
+}
+
+.statut-erreur .cascade-barre {
+  background: var(--erreur-trait);
+}
+
+.cascade-instant {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: var(--famille);
+  border-radius: 1px;
+  box-shadow: 0 0 0 2px var(--surface);
+}
+
+.cascade-ligne:hover .cascade-instant,
+.cascade-ligne.choisie .cascade-instant {
+  box-shadow: none;
+}
+
+.cascade-duree {
+  text-align: right;
+  font-size: var(--taille-2);
+  color: var(--texte-2);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Le détail d'une étape */
+.detail-etape {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-top: 1px solid var(--bordure);
+  background: var(--surface);
+}
+
+.detail-entete {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-3);
+  padding: var(--e-3) var(--e-3) var(--e-3) var(--e-4);
+  border-bottom: 1px solid var(--bordure);
+  flex: none;
+  box-shadow: inset 3px 0 0 var(--famille);
+}
+
+.detail-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-2);
+  background: var(--famille-doux);
+  color: var(--famille);
+  flex: none;
+}
+
+.detail-titres {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-titres h3 {
+  font-size: var(--taille-4);
+  overflow-wrap: anywhere;
+}
+
+.detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px var(--e-2);
+  font-size: var(--taille-2);
+  color: var(--texte-3);
+  margin-top: 2px;
+}
+
+.detail-entete > .pastille {
+  margin-top: 4px;
+}
+
+.detail-corps {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--e-4) var(--e-5) var(--e-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-5);
+}
+
+.detail-corps:focus {
+  outline: none;
+}
+
+.detail-resume {
+  font-size: var(--taille-3);
+  color: var(--texte);
+  padding: var(--e-3) var(--e-4);
+  border-radius: var(--r-2);
+  background: var(--surface-2);
+  border: 1px solid var(--bordure);
+  overflow-wrap: anywhere;
+}
+
+.detail-resume.erreur {
+  background: var(--erreur-doux);
+  color: var(--erreur);
+  border-color: color-mix(in srgb, var(--erreur-trait) 30%, transparent);
+}
+
+.detail-brut {
+  border-top: 1px solid var(--bordure);
+  padding-top: var(--e-4);
+}
+
+.detail-brut summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-2);
+  cursor: pointer;
+  font-size: var(--taille-2);
+  color: var(--texte-2);
+  font-weight: var(--graisse-moyenne);
+  list-style: none;
+  border-radius: var(--r-1);
+  padding: 2px var(--e-2) 2px 0;
+}
+
+.detail-brut summary::-webkit-details-marker {
+  display: none;
+}
+
+.detail-brut[open] .detail-brut-chevron,
+.bulle-outil[open] .bulle-chevron {
+  transform: rotate(90deg);
+}
+
+.detail-brut[open] summary {
+  margin-bottom: var(--e-3);
+}
+
+/* Les rendus */
+.rendu-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+  min-width: 0;
+}
+
+.rendu-section-entete {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e-3);
+  flex-wrap: wrap;
+}
+
+.rendu-section-entete h4 {
+  font-size: var(--taille-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texte-2);
+}
+
+.rendu-section-actions {
+  margin-left: auto;
+}
+
+.rendu-vide {
+  font-size: var(--taille-3);
+}
+
+.rendu-entete-ligne {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+  align-items: center;
+}
+
+.note-rendu {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-3);
+  padding: var(--e-3) var(--e-4);
+  border-radius: var(--r-2);
+  background: var(--info-doux);
+  color: var(--texte-2);
+  font-size: var(--taille-3);
+  line-height: 1.5;
+}
+
+.note-rendu .icone {
+  margin-top: 2px;
+  color: var(--info);
+}
+
+.note-rendu.alerte {
+  background: var(--alerte-doux);
+}
+
+.note-rendu.alerte .icone {
+  color: var(--alerte);
+}
+
+.filtres-etape {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+  align-items: center;
+}
+
+.mots-cherches {
+  display: inline-block;
+  line-height: 1.5;
+  font-family: var(--police-mono);
+  font-size: var(--taille-2);
+  background: var(--code-fond);
+  padding: 2px 6px;
+  border-radius: var(--r-1);
+  border: 1px solid var(--bordure);
+}
+
+.formule {
+  font-family: var(--police-mono);
+  font-size: var(--taille-2);
+  color: var(--texte-2);
+}
+
+/* Les tokens d'un appel au LLM */
+.jetons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  border: 1px solid var(--bordure);
+  border-radius: var(--r-2);
+  overflow: hidden;
+}
+
+.jeton {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: var(--e-3) var(--e-4);
+  border-right: 1px solid var(--bordure);
+  margin-right: -1px;
+  background: var(--surface-2);
+}
+
+.jeton-libelle {
+  font-size: var(--taille-1);
+  color: var(--texte-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.jeton-valeur {
+  font-size: var(--taille-4);
+  font-weight: var(--graisse-forte);
+}
+
+.jeton-detail {
+  font-size: var(--taille-1);
+  color: var(--texte-3);
+}
+
+/* La conversation envoyée au LLM */
+.conversation-envoyee {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+}
+
+.bulle {
+  border-radius: var(--r-3);
+  padding: var(--e-3) var(--e-4);
+  border: 1px solid var(--bordure);
+  font-size: var(--taille-3);
+  min-width: 0;
+}
+
+.bulle-role {
+  display: block;
+  font-size: var(--taille-1);
+  color: var(--texte-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--graisse-forte);
+  margin-bottom: var(--e-2);
+}
+
+.bulle-texte {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.55;
+}
+
+.bulle-utilisateur {
+  background: var(--accent-doux);
+  border-color: color-mix(in srgb, var(--accent) 20%, transparent);
+  margin-left: var(--e-8);
+}
+
+.bulle-assistant {
+  background: var(--f-llm-doux);
+  border-color: color-mix(in srgb, var(--f-llm) 20%, transparent);
+  margin-right: var(--e-8);
+}
+
+.bulle-derniere {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.bulle-appels {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+  margin-top: var(--e-2);
+}
+
+.bulle-appels li {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  flex-wrap: wrap;
+  font-size: var(--taille-2);
+}
+
+.appel-args {
+  font-size: var(--taille-1);
+  overflow-wrap: anywhere;
+}
+
+.bulle-outil {
+  background: var(--f-outil-doux);
+  border-color: color-mix(in srgb, var(--f-outil) 20%, transparent);
+  margin-right: var(--e-8);
+  padding: 0;
+}
+
+.bulle-outil summary {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  padding: var(--e-3) var(--e-4);
+  cursor: pointer;
+  list-style: none;
+  border-radius: var(--r-3);
+}
+
+.bulle-outil summary::-webkit-details-marker {
+  display: none;
+}
+
+.bulle-outil summary .bulle-role {
+  margin: 0;
+}
+
+.bulle-outil[open] summary {
+  border-bottom: 1px solid color-mix(in srgb, var(--f-outil) 20%, transparent);
+  border-radius: var(--r-3) var(--r-3) 0 0;
+}
+
+.bulle-outil > .pastilles-ligne,
+.bulle-outil > .bloc-texte {
+  margin: var(--e-3) var(--e-4);
+}
+
+.bulle-erreur {
+  background: var(--erreur-doux);
+}
+
+.appels-demandes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+}
+
+.appel-entete {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  margin-bottom: var(--e-2);
+  color: var(--f-outil-texte);
+}
+
+.texte-rendu {
+  padding: var(--e-4);
+  border: 1px solid var(--bordure);
+  border-radius: var(--r-2);
+  background: var(--surface);
+}
+
+.texte-rendu .texte-riche {
+  font-size: var(--taille-3);
+}
+
+.texte-rendu.ecarte {
+  background: var(--surface-2);
+  color: var(--texte-2);
+}
+
+/* Les outils proposés au LLM */
+.liste-outils {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--e-3);
+}
+
+.outil-carte {
+  border: 1px solid var(--bordure);
+  border-radius: var(--r-2);
+  padding: var(--e-3) var(--e-4);
+  background: var(--surface-2);
+}
+
+.outil-carte-entete {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  flex-wrap: wrap;
+  color: var(--f-outil-texte);
+  margin-bottom: var(--e-2);
+}
+
+.outil-carte-entete .mono {
+  color: var(--texte);
+}
+
+.outil-carte-description {
+  font-size: var(--taille-2);
+  color: var(--texte-2);
+  line-height: 1.5;
+}
+
+.liste-textes,
+.liste-requetes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+}
+
+.liste-requetes {
+  list-style: decimal;
+  padding-left: 1.4em;
+  font-size: var(--taille-3);
+}
+
+/* Le seuil d'abstention */
+.jauge-seuil {
+  padding: var(--e-4) var(--e-5) var(--e-3);
+  border: 1px solid var(--bordure);
+  border-radius: var(--r-3);
+  background: var(--surface-2);
+}
+
+.jauge-legende {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: var(--taille-3);
+  margin-bottom: var(--e-7);
+}
+
+.jauge-piste {
+  position: relative;
+  height: 12px;
+  border-radius: var(--r-rond);
+  background: var(--barre-fond);
+}
+
+.jauge-rempli {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--ok-trait);
+}
+
+.sous-le-seuil .jauge-rempli {
+  background: var(--alerte-trait);
+}
+
+.jauge-repere {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--texte);
+  border-radius: 1px;
+}
+
+.jauge-repere-etiquette {
+  position: absolute;
+  bottom: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--taille-1);
+  font-weight: var(--graisse-forte);
+  white-space: nowrap;
+  color: var(--texte);
+}
+
+.jauge-graduations {
+  position: relative;
+  height: 18px;
+  margin-top: var(--e-3);
+  font-size: var(--taille-1);
+  color: var(--texte-3);
+}
+
+.jauge-graduations span {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.jauge-graduations span:first-child {
+  transform: none;
+}
+
+.jauge-graduations span:last-child {
+  transform: translateX(-100%);
+}
+
+.decision {
+  display: flex;
+  gap: var(--e-4);
+  align-items: flex-start;
+  padding: var(--e-4);
+  border-radius: var(--r-3);
+  border: 1px solid;
+}
+
+.decision-ok {
+  background: var(--ok-doux);
+  border-color: color-mix(in srgb, var(--ok-trait) 35%, transparent);
+  color: var(--ok);
+}
+
+.decision-abstention {
+  background: var(--alerte-doux);
+  border-color: color-mix(in srgb, var(--alerte-trait) 40%, transparent);
+  color: var(--alerte);
+}
+
+.decision-titre {
+  font-weight: var(--graisse-forte);
+}
+
+.decision-texte {
+  color: var(--texte-2);
+  font-size: var(--taille-3);
+  margin-top: 2px;
+}
+
+/* Le budget de passages */
+.budget {
+  padding: var(--e-4) var(--e-5);
+  border: 1px solid var(--bordure);
+  border-radius: var(--r-3);
+  background: var(--surface-2);
+}
+
+.budget-legende {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--e-3);
+  flex-wrap: wrap;
+  font-size: var(--taille-3);
+  margin-bottom: var(--e-3);
+}
+
+.budget-barre {
+  display: flex;
+  height: 18px;
+  border-radius: var(--r-1);
+  overflow: hidden;
+  background: var(--barre-fond);
+  gap: 2px;
+}
+
+.budget-segment {
+  height: 100%;
+  min-width: 2px;
+}
+
+.budget-libre {
+  height: 100%;
+  background-image: repeating-linear-gradient(-45deg, transparent 0 5px, var(--bordure) 5px 6px);
+}
+
+.teinte-0 {
+  background: var(--f-recherche);
+}
+
+.teinte-1 {
+  background: color-mix(in srgb, var(--f-recherche) 70%, var(--surface));
+}
+
+.teinte-2 {
+  background: var(--f-llm);
+}
+
+.teinte-3 {
+  background: color-mix(in srgb, var(--f-llm) 65%, var(--surface));
+}
+
+.teinte-4 {
+  background: var(--f-outil);
+}
+
+.teinte-5 {
+  background: color-mix(in srgb, var(--f-outil) 65%, var(--surface));
+}
+
+.budget-puce {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  margin-right: var(--e-3);
+  vertical-align: 1px;
+}
+
+/* Les rangs : mouvements et pente de la fusion */
+.mouvement {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  font-size: var(--taille-2);
+  font-weight: var(--graisse-moyenne);
+  white-space: nowrap;
+  padding: 0 4px;
+  border-radius: var(--r-1);
+}
+
+.mouvement-monte {
+  color: var(--ok);
+  background: var(--ok-doux);
+}
+
+.mouvement-descend {
+  color: var(--erreur);
+  background: var(--erreur-doux);
+}
+
+.mouvement-stable {
+  color: var(--texte-3);
+}
+
+.mouvement-ecarte,
+.mouvement-nouveau {
+  color: var(--texte-3);
+  font-style: italic;
+}
+
+.rang-origine {
+  display: inline-block;
+  min-width: 18px;
+  margin-right: var(--e-2);
+  color: var(--texte);
+}
+
+.pente {
+  position: relative;
+  border: 1px solid var(--bordure);
+  border-radius: var(--r-3);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.pente-colonne {
+  position: absolute;
+  top: 8px;
+  transform: translateX(-50%);
+  font-size: var(--taille-1);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texte-3);
+  font-weight: var(--graisse-forte);
+  white-space: nowrap;
+}
+
+.pente-traits {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.pente-trait {
+  fill: none;
+  stroke-width: 1.75;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.75;
+  transition: opacity var(--duree-courte) var(--courbe);
+}
+
+.trait-vectoriel {
+  stroke: var(--f-recherche);
+}
+
+.trait-plein-texte {
+  stroke: var(--f-decision);
+}
+
+.pente-trait.absent {
+  stroke-dasharray: 3 3;
+  opacity: 0.35;
+}
+
+.pente.avec-survol .pente-trait,
+.pente.avec-survol .pente-rang,
+.pente.avec-survol .pente-passage {
+  opacity: 0.2;
+}
+
+.pente.avec-survol .en-avant {
+  opacity: 1;
+}
+
+.pente-rang {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  min-width: 22px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: var(--r-rond);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--taille-1);
+  font-weight: var(--graisse-forte);
+  background: var(--surface);
+  border: 1.5px solid;
+  transition: opacity var(--duree-courte) var(--courbe);
+}
+
+.rang-vectoriel {
+  border-color: var(--f-recherche);
+  color: var(--f-recherche-texte);
+}
+
+.rang-plein-texte {
+  border-color: var(--f-decision);
+  color: var(--f-decision-texte);
+}
+
+.pente-rang.absent {
+  border-style: dashed;
+  color: var(--texte-3);
+  border-color: var(--texte-3);
+}
+
+.pente-passage {
+  position: absolute;
+  transform: translateY(-50%);
+  height: 22px;
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  padding: 0 var(--e-3) 0 2px;
+  border-radius: var(--r-rond);
+  background: var(--surface);
+  border: 1px solid var(--bordure-forte);
+  font-size: var(--taille-1);
+  min-width: 0;
+  transition: opacity var(--duree-courte) var(--courbe);
+}
+
+.pente-passage-rang {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  border-radius: var(--r-rond);
+  background: var(--accent);
+  color: #fff;
+  font-weight: var(--graisse-forte);
+  font-size: 10px;
+  flex: none;
+}
+
+:root[data-theme="sombre"] .pente-passage-rang {
+  color: #0c0f14;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="clair"]) .pente-passage-rang {
+    color: #0c0f14;
+  }
+}
+
+/* Avant, après (la condensation) */
+.avant-apres {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: var(--e-3);
+  align-items: stretch;
+}
+
+.avant-apres-bloc {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+  padding: var(--e-3) var(--e-4);
+  border-radius: var(--r-2);
+  border: 1px solid var(--bordure);
+  background: var(--surface-2);
+  font-size: var(--taille-3);
+}
+
+.avant-apres-bloc.mis-en-avant {
+  border-color: color-mix(in srgb, var(--f-recherche) 40%, transparent);
+  background: var(--f-recherche-doux);
+}
+
+.avant-apres-fleche {
+  display: flex;
+  align-items: center;
+  color: var(--texte-3);
+}

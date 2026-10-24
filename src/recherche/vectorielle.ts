@@ -1,6 +1,7 @@
 // Recherche vectorielle dans PostgreSQL : les k chunks les plus proches de la question, filtrés par leurs métadonnées
 import pgvector from "pgvector/pg";
 import type { Base } from "../stockage/base.ts";
+import { enBref, etape, nombre, pluriel } from "../trace/trace.ts";
 
 export type Filtres = {
   sites?: string[]; // au moins un de ces sites
@@ -47,10 +48,13 @@ export function requete(vecteur: number[], k: number, filtres: Filtres) {
   return { sql, valeurs };
 }
 
+// Chapitre 14 : chaque recherche se note dans la trace de la question en cours, avec ses filtres et ses candidats
 export async function chercher(base: Base, vecteur: number[], k: number, filtres: Filtres): Promise<Resultat[]> {
   const { sql, valeurs } = requete(vecteur, k, filtres);
-  const { rows } = await base.query<Resultat>(sql, valeurs);
-  return rows;
+  return etape("recherche-vectorielle", "Recherche vectorielle", async () => (await base.query<Resultat>(sql, valeurs)).rows, (rows) => ({
+    resume: rows.length ? `${pluriel(rows.length, "candidat")}, le plus proche à ${nombre(rows[0].score)} (cosinus)` : "aucun candidat",
+    details: { k, filtres, candidats: rows.map(enBref) },
+  }));
 }
 
 // La similarité cosinus de passages donnés par leur identifiant : pour ceux qu'une autre recherche a trouvés (chapitre 9)
