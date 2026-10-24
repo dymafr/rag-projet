@@ -3,9 +3,11 @@
 // rendue au fil de l'eau (un générateur), pour que la ligne de commande ou le serveur l'affichent
 import { z } from "zod";
 import { finDuMessage } from "../generation/prompt.ts";
+import { pourLeTerminal } from "../ingestion/secrets.ts";
 import type { Usage } from "../llm.ts";
 import type { Echange } from "../recherche/conversation.ts";
 import type { Profil } from "../recherche/droits.ts";
+import { apercu, enBref, etape, nombre, noter, pluriel, type Modele } from "../trace/trace.ts";
 import type { AppelOutil, LlmAgent, Message } from "./llm-agent.ts";
 import type { Contexte, Outil, ResultatOutil } from "./outil.ts";
 
@@ -73,6 +75,7 @@ export type Agent = {
   appelsParOutil?: number;
   confirmer?: (appel: AppelOutil, resume: string) => Promise<boolean>;
   journaliser?: (entree: EntreeJournal) => Promise<void>;
+  modele?: Modele; // chapitre 14 : le fournisseur et le modèle du LLM, pour la trace de chaque tour
 };
 
 export type Etape =
@@ -126,7 +129,25 @@ const ajouter = (total: Usage, usage: Usage) => {
   total.entree += usage.entree;
   total.enCache += usage.enCache;
   total.sortie += usage.sortie;
+  if (usage.ecritCache !== undefined) total.ecritCache = (total.ecritCache ?? 0) + usage.ecritCache; // chapitre 14
 };
+
+// Chapitre 14 : un message de la conversation, tel que la trace le garde (le texte entier, les passages par leur source)
+const enTrace = (m: Message) =>
+  m.role === "outil"
+    ? { role: m.role, nom: m.nom, texte: m.texte, passages: (m.passages ?? []).map((p) => p.id), erreur: m.erreur }
+    : m.role === "assistant"
+      ? { role: m.role, texte: m.texte, appels: m.appels }
+      : { role: m.role, texte: m.texte };
+
+// Une ligne pour la trace : ce qu'a donné un appel d'outil
+function resumer({ resultat, erreur, statut }: Execution): string {
+  if (statut === "refusé" || statut === "limite") return `${statut} : ${apercu(resultat.texte.replace(/\s+/g, " "), 120)}`;
+  if (erreur) return `erreur : ${apercu(resultat.texte.replace(/\s+/g, " "), 120)}`;
+  const passages = resultat.passages ?? [];
+  if (passages.length > 0) return `${pluriel(passages.length, "passage")}, le premier ${passages[0].id} (${nombre(passages[0].score)})`;
+  return apercu(resultat.texte.replace(/\s+/g, " "), 120);
+}
 
 // historique : les échanges précédents de la conversation (chapitre 9, leçon 8). L'agent les lit tels quels : il n'a pas
 // besoin d'une question condensée, il écrit lui-même ses requêtes
@@ -156,13 +177,34 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
     appelsFaits.set(appel.nom, n);
     const connu = agent.outils.find((o) => o.nom === appel.nom);
     const action = connu?.aConfirmer !== undefined;
-    let execution: Execution;
-    if (n > appelsParOutil) {
-      execution = { resultat: { texte: `Limite atteinte : ${appelsParOutil} appels de ${appel.nom} pour cette question. Répondez avec ce que vous avez.` }, erreur: true, statut: "limite" };
-    } else if (action && nonFiableLu) {
-      bloquee = true; // la règle de deux : l'action n'est même pas proposée au salarié
-      execution = { resultat: { texte: "Action refusée : un ticket a été lu pour cette question (règle de deux)." }, erreur: false, statut: "refusé", detail: "règle de deux : un ticket a été lu" };
-    } else execution = await executer(appel, agent.outils, contexte, agent.confirmer);
+    // Chapitre 14 : l'appel devient une étape de la trace ; la recherche qu'il lance s'y range, comme ses enfants
+    const execution = await etape(
+      "outil",
+      `Outil ${appel.nom}`,
+      async (): Promise<Execution> => {
+        if (n > appelsParOutil) {
+          return { resultat: { texte: `Limite atteinte : ${appelsParOutil} appels de ${appel.nom} pour cette question. Répondez avec ce que vous avez.` }, erreur: true, statut: "limite" };
+        }
+        if (action && nonFiableLu) {
+          bloquee = true; // la règle de deux : l'action n'est même pas proposée au salarié
+          return { resultat: { texte: "Action refusée : un ticket a été lu pour cette question (règle de deux)." }, erreur: false, statut: "refusé", detail: "règle de deux : un ticket a été lu" };
+        }
+        return executer(appel, agent.outils, contexte, agent.confirmer);
+      },
+      (e) => ({
+        resume: resumer(e),
+        details: {
+          tour,
+          appel,
+          statut: e.statut,
+          erreur: e.erreur,
+          ...(e.detail && { cause: pourLeTerminal(e.detail) }), // gardée hors du prompt, mais utile à qui inspecte
+          nonFiable: e.resultat.nonFiable ?? false,
+          passages: (e.resultat.passages ?? []).map(enBref),
+          texte: e.resultat.texte, // ce que le LLM lira
+        },
+      }),
+    );
     const { resultat, erreur, statut, detail } = execution;
     if (resultat.nonFiable) nonFiableLu = true;
     const duree = performance.now() - debut;
@@ -186,11 +228,29 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
 
   // Une recherche imposée par le code. Elle entre dans la conversation comme si le LLM l'avait demandée
   async function* imposerRecherche(tour: number, id: string): AsyncGenerator<Etape> {
-    const requete = historique.length > 0 && agent.condenser ? await agent.condenser(question, historique) : question;
+    const condenser = agent.condenser;
+    const requete =
+      historique.length > 0 && condenser
+        ? await etape("condensation", "Condensation de la question", () => condenser(question, historique), (q) => ({
+            resume: q === question ? "la question se comprend seule" : `« ${apercu(q, 140)} »`,
+            details: { question, autonome: q, echanges: historique.length },
+          }))
+        : question;
     const appel: AppelOutil = { id, nom: "chercher_documents", arguments: { requete } };
     messages.push({ role: "assistant", texte: "", appels: [appel] });
     yield* traiter(appel, tour);
   }
+
+  // Chapitre 14 : la trace garde ce que le LLM reçoit avant toute question, ses consignes et la liste de ses outils
+  noter("prompt-systeme", "Consignes et outils du LLM", {
+    resume: `${pluriel(agent.systeme.length, "caractère")} de consignes, ${pluriel(agent.outils.length, "outil")}`,
+    details: { systeme: agent.systeme, outils: agent.outils.map((o) => ({ nom: o.nom, description: o.description, action: o.aConfirmer !== undefined })) },
+  });
+  // La fin de la question : la réponse, notée dans la trace avec le total des tokens
+  const repondre = (tour: number, texte: string, raison: string): Etape => {
+    noter("reponse", "Réponse", { resume: `${raison}, ${texte.length} caractères`, details: { tour, raison, texte, usage: { ...usage } } });
+    return { type: "reponse", tour, texte, usage };
+  };
 
   // 0. Une recherche d'office, comme dans le pipeline du chapitre 9 : le LLM ne peut plus décider de ne pas chercher (tour 0)
   const recherche = agent.recherche ?? "libre";
@@ -206,35 +266,53 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
     const dernier = tour > 1 && (tour === toursMax || budgetEpuise);
     if (dernier) {
       messages.push({ role: "utilisateur", texte: DERNIER_TOUR });
-      yield { type: "limite", tour, raison: budgetEpuise ? "tokens" : "tours" };
+      const raison = budgetEpuise ? "tokens" : "tours";
+      noter("limite", "Dernier tour, sans outil", { resume: raison === "tokens" ? `budget de ${tokensMax} tokens atteint` : `${toursMax} tours au plus`, details: { tour, raison } });
+      yield { type: "limite", tour, raison };
     }
-    // 2. Le LLM lit toute la conversation : la question, ses demandes précédentes et leurs résultats
-    const reponse = await agent.llm(agent.systeme, messages, agent.outils, { sansOutil: dernier });
+    // 2. Le LLM lit toute la conversation : la question, ses demandes précédentes et leurs résultats. Chapitre 14 : le tour
+    // se note dans la trace, avec la conversation telle qu'elle est partie et ce que le LLM a rendu
+    const reponse = await etape(
+      "tour-llm",
+      `Tour ${tour} : le LLM`,
+      () => agent.llm(agent.systeme, messages, agent.outils, { sansOutil: dernier }),
+      (r) => ({
+        resume: r.appels.length > 0 ? `demande ${r.appels.map((a) => a.nom).join(", ")}` : `répond (${r.texte.length} caractères)`,
+        usage: r.usage,
+        ...(agent.modele && { modele: agent.modele }),
+        details: { tour, sansOutil: dernier, messages: messages.map(enTrace), appels: r.appels, texte: r.texte },
+      }),
+    );
     ajouter(usage, reponse.usage);
     // 3. La recherche de secours : au premier tour, le LLM a répondu sans appeler aucun outil. Sa réponse est écartée (ses
     // tokens sont dépensés) ; le code cherche, et le LLM répond au tour suivant avec les passages
     if (recherche === "secours" && tour === 1 && reponse.appels.length === 0 && tour < toursMax) {
+      noter("recherche-de-secours", "Recherche de secours", {
+        resume: "le LLM a répondu sans chercher : sa réponse est écartée, le code cherche à sa place",
+        details: { reponseEcartee: reponse.texte },
+      });
       yield* imposerRecherche(1, "recherche-de-secours");
       continue;
     }
     messages.push({ role: "assistant", texte: reponse.texte, appels: reponse.appels, brut: reponse.brut });
     // 4. Aucune demande d'appel : il a répondu. Au dernier tour, une demande n'est plus exécutée : la boucle répond à sa place
     if (reponse.appels.length === 0 || dernier || tour === toursMax) {
-      const texte = reponse.appels.length === 0 ? reponse.texte : RECHERCHE_INACHEVEE;
-      yield { type: "reponse", tour, texte, usage };
+      yield reponse.appels.length === 0 ? repondre(tour, reponse.texte, "le LLM répond") : repondre(tour, RECHERCHE_INACHEVEE, "recherche inachevée");
       return;
     }
     // 5. Sinon, chaque appel demandé est traité (un LLM peut en demander plusieurs à la fois)
     let refus = false;
     for (const appel of reponse.appels) {
-      for await (const etape of traiter(appel, tour)) {
-        if (etape.type === "resultat" && etape.statut === "refusé") refus = true;
-        yield etape;
+      for await (const e of traiter(appel, tour)) {
+        if (e.type === "resultat" && e.statut === "refusé") refus = true;
+        yield e;
       }
     }
     // 6. Une action refusée : la boucle répond elle-même. Rendre la parole au LLM, c'est le laisser affirmer l'avoir faite
     if (refus) {
-      yield { type: "reponse", tour, texte: bloquee ? REGLE_DE_DEUX : "Je n'ai rien fait : vous n'avez pas confirmé l'action demandée.", usage };
+      yield bloquee
+        ? repondre(tour, REGLE_DE_DEUX, "action refusée (règle de deux)")
+        : repondre(tour, "Je n'ai rien fait : vous n'avez pas confirmé l'action demandée.", "action non confirmée");
       return;
     }
   }

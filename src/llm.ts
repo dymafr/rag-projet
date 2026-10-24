@@ -5,6 +5,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import OpenAI from "openai";
 import { config } from "./config.ts";
 import { conseilOllama, ollama } from "./ollama.ts";
+import { apercu, etape } from "./trace/trace.ts";
 
 // enCache : tokens d'entrée relus dans le cache ; ecritCache (chapitre 11) : tokens d'entrée écrits dans le cache, facturés
 // plus cher que les autres par certains fournisseurs, absent quand le fournisseur ne le dit pas
@@ -82,5 +83,16 @@ function appelOllama(modele: string): Llm {
 
 const APPELS = { anthropic: appelAnthropic, openai: appelOpenAI, ollama: appelOllama };
 
-// modele : celui de .env par défaut ; le juge d'évaluation peut en prendre un autre, chez le même fournisseur
-export const creerLlm = (modele = config.LLM_MODEL): Llm => APPELS[config.LLM_PROVIDER](modele);
+// modele : celui de .env par défaut ; le juge d'évaluation peut en prendre un autre, chez le même fournisseur.
+// Chapitre 14 : chaque appel se note dans la trace de la question en cours, s'il y en a une (trace.ts), avec ses tokens
+export function creerLlm(modele = config.LLM_MODEL): Llm {
+  const appeler = APPELS[config.LLM_PROVIDER](modele);
+  const quel = { fournisseur: config.LLM_PROVIDER, modele };
+  return (debut, fin) =>
+    etape("appel-llm", "Appel au LLM", () => appeler(debut, fin), ({ texte, usage }) => ({
+      resume: `${usage.entree} tokens en entrée, ${usage.sortie} en sortie`,
+      usage,
+      modele: quel,
+      details: { consigne: apercu(debut, 6000), message: apercu(fin, 6000), reponse: apercu(texte, 6000) },
+    }));
+}

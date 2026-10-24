@@ -1,0 +1,257 @@
+/* Les jetons de design de l'interface : couleurs, typographie, espacements, rayons, ombres. Tout le reste de la feuille
+   de style les utilise ; le thème sombre ne redéfinit que les couleurs et les ombres. */
+
+:root {
+  /* Typographie : la police du système, des chiffres tabulaires, les identifiants en chasse fixe */
+  --police: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --police-mono: ui-monospace, "Cascadia Code", "SF Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --taille-1: 11px;
+  --taille-2: 12px;
+  --taille-3: 13px;
+  --taille-4: 14px;
+  --taille-5: 16px;
+  --taille-6: 18px;
+  --taille-7: 22px;
+  --taille-8: 28px;
+  --interligne: 1.5;
+  --interligne-serre: 1.3;
+  --graisse-moyenne: 500;
+  --graisse-forte: 600;
+
+  /* Espacements : une grille de 4 px */
+  --e-1: 2px;
+  --e-2: 4px;
+  --e-3: 8px;
+  --e-4: 12px;
+  --e-5: 16px;
+  --e-6: 20px;
+  --e-7: 24px;
+  --e-8: 32px;
+  --e-9: 48px;
+
+  /* Rayons */
+  --r-1: 4px;
+  --r-2: 6px;
+  --r-3: 8px;
+  --r-4: 12px;
+  --r-rond: 999px;
+
+  /* Mouvement : court, et rien du tout si le système le demande (base.css) */
+  --duree-courte: 100ms;
+  --duree: 160ms;
+  --courbe: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Gabarit */
+  --hauteur-barre: 52px;
+  --largeur-nav: 212px;
+  --largeur-nav-etroite: 60px;
+  --hauteur-ligne: 32px;
+
+  /* Couleurs : thème clair */
+  color-scheme: light;
+  --fond: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #f4f6f9;
+  --surface-3: #eaeef3;
+  --survol: rgba(16, 24, 40, 0.045);
+  --actif: rgba(16, 24, 40, 0.085);
+  --bordure: #e2e6ec;
+  --bordure-forte: #cbd2dc;
+  --texte: #151b25;
+  --texte-2: #465062;
+  --texte-3: #5f6a7a;
+  --texte-inverse: #ffffff;
+
+  --accent: #4152cc;
+  --accent-survol: #3443b3;
+  --accent-doux: #edf0fd;
+  --accent-texte: #3341ad;
+  --focus: #4152cc;
+  --selection: #dfe4fb;
+
+  --ombre-1: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --ombre-2: 0 6px 16px rgba(16, 24, 40, 0.08), 0 1px 3px rgba(16, 24, 40, 0.06);
+  --ombre-3: 0 20px 48px rgba(16, 24, 40, 0.18), 0 4px 12px rgba(16, 24, 40, 0.08);
+  --voile: rgba(15, 20, 30, 0.32);
+
+  --ok: #1c7039;
+  --ok-doux: #e6f4eb;
+  --ok-trait: #2f9e55;
+  --alerte: #8a5300;
+  --alerte-doux: #fcf1dc;
+  --alerte-trait: #dc951c;
+  --erreur: #b42323;
+  --erreur-doux: #fdecea;
+  --erreur-trait: #e5484d;
+  --info: #2357b5;
+  --info-doux: #e8f0fd;
+
+  /* Une couleur par famille d'étape, discrète : l'icône, le trait de la cascade, un fond très léger */
+  --f-recherche: #2f7fd8;
+  --f-recherche-doux: #e9f2fc;
+  --f-recherche-texte: #1c5ba6;
+  --f-llm: #7b55dd;
+  --f-llm-doux: #f2edfd;
+  --f-llm-texte: #5935bb;
+  --f-decision: #d08912;
+  --f-decision-doux: #fcf2df;
+  --f-decision-texte: #855000;
+  --f-outil: #2b9658;
+  --f-outil-doux: #e5f4eb;
+  --f-outil-texte: #1b6e40;
+  --f-autre: #7a8494;
+  --f-autre-doux: #eff1f4;
+  --f-autre-texte: #4c5564;
+
+  --barre-fond: #e7ebf0;
+  --code-fond: #f6f8fa;
+  --json-cle: #6a3fc4;
+  --json-texte: #1c7039;
+  --json-nombre: #a8500a;
+  --json-mot: #2357b5;
+  --json-nul: #6f7988;
+
+  /* Les séries des graphiques (validées : écart de couleur, daltonisme, contraste) ; les statuts gardent leurs jetons */
+  --serie-1: #2f7fd8;
+  --serie-2: #d08912;
+  --serie-neutre: #a3abb7;
+}
+
+/* Le thème sombre : choisi dans l'interface, ou celui du système quand l'interface suit le système */
+:root[data-theme="sombre"] {
+  color-scheme: dark;
+  --fond: #0c0f14;
+  --surface: #13171e;
+  --surface-2: #181d25;
+  --surface-3: #20262f;
+  --survol: rgba(255, 255, 255, 0.045);
+  --actif: rgba(255, 255, 255, 0.085);
+  --bordure: #252c37;
+  --bordure-forte: #353f4e;
+  --texte: #e6e9ef;
+  --texte-2: #b3bbc9;
+  --texte-3: #8c96a7;
+  --texte-inverse: #0c0f14;
+
+  --accent: #7e8ff4;
+  --accent-survol: #97a5f7;
+  --accent-doux: #1d2340;
+  --accent-texte: #a9b4fa;
+  --focus: #8fa0f7;
+  --selection: #262e52;
+
+  --ombre-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --ombre-2: 0 6px 16px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --ombre-3: 0 20px 48px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
+  --voile: rgba(0, 0, 0, 0.55);
+
+  --ok: #66d293;
+  --ok-doux: #11251a;
+  --ok-trait: #3fb36b;
+  --alerte: #f1b65c;
+  --alerte-doux: #2a2011;
+  --alerte-trait: #d9952c;
+  --erreur: #ff8f8f;
+  --erreur-doux: #2e1617;
+  --erreur-trait: #e5484d;
+  --info: #8cc2fa;
+  --info-doux: #132235;
+
+  --f-recherche: #4f9ff0;
+  --f-recherche-doux: #13212f;
+  --f-recherche-texte: #8fc4fa;
+  --f-llm: #9c7ff0;
+  --f-llm-doux: #1d1832;
+  --f-llm-texte: #c3adfb;
+  --f-decision: #e3a03b;
+  --f-decision-doux: #282010;
+  --f-decision-texte: #f2c47e;
+  --f-outil: #43bb76;
+  --f-outil-doux: #10231a;
+  --f-outil-texte: #88dcab;
+  --f-autre: #8b95a5;
+  --f-autre-doux: #1b2028;
+  --f-autre-texte: #b3bbc9;
+
+  --barre-fond: #232a34;
+  --code-fond: #0f1318;
+  --json-cle: #c3adfb;
+  --json-texte: #88dcab;
+  --json-nombre: #f2b37a;
+  --json-mot: #8fc4fa;
+  --json-nul: #8b95a5;
+
+  --serie-1: #3584dc;
+  --serie-2: #c27f1c;
+  --serie-neutre: #5a6474;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="clair"]) {
+    color-scheme: dark;
+    --fond: #0c0f14;
+    --surface: #13171e;
+    --surface-2: #181d25;
+    --surface-3: #20262f;
+    --survol: rgba(255, 255, 255, 0.045);
+    --actif: rgba(255, 255, 255, 0.085);
+    --bordure: #252c37;
+    --bordure-forte: #353f4e;
+    --texte: #e6e9ef;
+    --texte-2: #b3bbc9;
+    --texte-3: #8c96a7;
+    --texte-inverse: #0c0f14;
+
+    --accent: #7e8ff4;
+    --accent-survol: #97a5f7;
+    --accent-doux: #1d2340;
+    --accent-texte: #a9b4fa;
+    --focus: #8fa0f7;
+    --selection: #262e52;
+
+    --ombre-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --ombre-2: 0 6px 16px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
+    --ombre-3: 0 20px 48px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
+    --voile: rgba(0, 0, 0, 0.55);
+
+    --ok: #66d293;
+    --ok-doux: #11251a;
+    --ok-trait: #3fb36b;
+    --alerte: #f1b65c;
+    --alerte-doux: #2a2011;
+    --alerte-trait: #d9952c;
+    --erreur: #ff8f8f;
+    --erreur-doux: #2e1617;
+    --erreur-trait: #e5484d;
+    --info: #8cc2fa;
+    --info-doux: #132235;
+
+    --f-recherche: #4f9ff0;
+    --f-recherche-doux: #13212f;
+    --f-recherche-texte: #8fc4fa;
+    --f-llm: #9c7ff0;
+    --f-llm-doux: #1d1832;
+    --f-llm-texte: #c3adfb;
+    --f-decision: #e3a03b;
+    --f-decision-doux: #282010;
+    --f-decision-texte: #f2c47e;
+    --f-outil: #43bb76;
+    --f-outil-doux: #10231a;
+    --f-outil-texte: #88dcab;
+    --f-autre: #8b95a5;
+    --f-autre-doux: #1b2028;
+    --f-autre-texte: #b3bbc9;
+
+    --barre-fond: #232a34;
+    --code-fond: #0f1318;
+    --json-cle: #c3adfb;
+    --json-texte: #88dcab;
+    --json-nombre: #f2b37a;
+    --json-mot: #8fc4fa;
+    --json-nul: #8b95a5;
+
+    --serie-1: #3584dc;
+    --serie-2: #c27f1c;
+    --serie-neutre: #5a6474;
+  }
+}

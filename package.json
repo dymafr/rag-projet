@@ -5,7 +5,7 @@
   "scripts": {
     "rag": "node --env-file=.env premier-rag.ts",
     "verifier": "node --env-file=.env src/outils/verifier-config.ts",
-    "typecheck": "tsc -p .",
+    "typecheck": "tsc -p . && tsc -p web",
     "db:up": "docker compose up -d --wait",
     "db:down": "docker compose down",
     "db:psql": "docker compose exec db psql -U rhea -d rhea",
@@ -35,7 +35,11 @@
     "prompt": "node --env-file=.env src/outils/afficher-prompt.ts",
     "repondre": "node --env-file=.env src/outils/repondre.ts",
     "seuils": "node --env-file=.env src/outils/seuils.ts",
-    "serveur": "node --env-file=.env src/outils/lancer-serveur.ts",
+    "serveur": "npm run web:construire --silent && node --env-file=.env src/outils/lancer-serveur.ts",
+    "travailleur": "node --env-file=.env src/outils/travailleur.ts",
+    "tache": "node --env-file=.env src/outils/tache.ts",
+    "web": "vite web",
+    "web:construire": "vite build web",
     "eval:generer": "node --env-file=.env src/outils/generer-questions.ts",
     "eval:verifier": "node --env-file=.env src/outils/verifier-jeu.ts",
     "eval:recherche": "node --env-file=.env src/outils/evaluer-recherche.ts",
@@ -95,7 +99,13 @@
     "@electric-sql/pglite-pgvector": "^0.0.9",
     "@types/node": "^26.6.3",
     "@types/pg": "^8.23.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "@types/turndown": "^5.0.6",
-    "typescript": "^7.0.2"
+    "@vitejs/plugin-react": "6.1.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "typescript": "^7.0.2",
+    "vite": "8.3.4"
   }
 }
