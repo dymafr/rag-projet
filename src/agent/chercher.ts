@@ -6,6 +6,7 @@ import { horsCorpus, meilleurScore, SEUIL } from "../generation/abstention.ts";
 import { baliser, BUDGET_PASSAGES, choisir, estimerTokens, estUnTicket } from "../generation/prompt.ts";
 import type { Profil } from "../recherche/droits.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
+import { enBref, nombre, noter, pluriel } from "../trace/trace.ts";
 import { definirOutil } from "./outil.ts";
 
 export type Chercher = (requete: string, date: string, profil: Profil) => Promise<Resultat[]>;
@@ -32,14 +33,29 @@ export const chercherDocuments = (chercher: Chercher) =>
     async executer({ requete }, contexte) {
       // Le profil vient du contexte, jamais des arguments : le LLM choisit quoi chercher, pas où il a le droit de chercher
       const resultats = await chercher(requete, contexte.date, contexte.profil);
-      // Le seuil d'abstention du chapitre 7 : loin de tout passage, mieux vaut le dire au LLM que lui donner du hors sujet
-      if (horsCorpus(resultats)) {
+      // Le seuil d'abstention du chapitre 7 : loin de tout passage, mieux vaut le dire au LLM que lui donner du hors sujet.
+      // Chapitre 14 : la décision se note dans la trace
+      const loin = horsCorpus(resultats);
+      noter("seuil", "Seuil d'abstention", {
+        resume: `meilleur score ${nombre(meilleurScore(resultats))} ${loin ? "<" : "≥"} seuil ${nombre(SEUIL, 2)} : ${loin ? "aucun passage rendu" : "passages rendus"}`,
+        details: { meilleur: Number(meilleurScore(resultats).toFixed(4)), seuil: SEUIL, horsCorpus: loin },
+      });
+      if (loin) {
         const meilleur = meilleurScore(resultats).toFixed(3);
         const texte = `Aucun passage assez proche de « ${requete} » (meilleur score ${meilleur}, sous le seuil de ${SEUIL}). La documentation ne traite peut-être pas cette question : cherchez autrement, ou dites-le au salarié.`;
         return { texte, passages: [] };
       }
       // Le budget du chapitre 7, à chaque recherche : les passages les plus proches, tant qu'ils tiennent
-      const { passages } = choisir(resultats, BUDGET_PASSAGES, estimerTokens);
+      const { passages, ecartes, total } = choisir(resultats, BUDGET_PASSAGES, estimerTokens);
+      noter("budget", "Budget de passages", {
+        resume: `${pluriel(passages.length, "passage gardé", "passages gardés")} (${total} tokens estimés sur ${BUDGET_PASSAGES}), ${ecartes.length} écarté${ecartes.length > 1 ? "s" : ""} faute de place`,
+        details: {
+          budget: BUDGET_PASSAGES,
+          total,
+          gardes: passages.map((p, i) => ({ ...enBref(p), tokens: estimerTokens(baliser(p, i + 1)) })),
+          ecartes: ecartes.map(enBref),
+        },
+      });
       // Chapitre 13 : un ticket est un texte écrit par un salarié ; la boucle de l'agent en tient compte (règle de deux)
       return { texte: passages.map((p) => baliser(p)).join("\n\n"), passages, nonFiable: passages.some(estUnTicket) };
     },

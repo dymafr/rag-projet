@@ -6,3 +6,4 @@ donnees/
 eval/candidates.json
 eval/traces/
 journal/
+web/dist/

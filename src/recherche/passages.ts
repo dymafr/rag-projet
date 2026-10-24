@@ -6,6 +6,7 @@ import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
 import { creerLlm, type Llm } from "../llm.ts";
 import type { Base } from "../stockage/base.ts";
 import { lireIndexation } from "../stockage/schema.ts";
+import { enBref, etape, nombre, noter, pluriel } from "../trace/trace.ts";
 import { basePour, NIVEAUX, type Connexions, type Profil } from "./droits.ts";
 import { mmr } from "./diversite.ts";
 import { aDesIndices, extraireFiltres } from "./filtres-extraits.ts";
@@ -64,11 +65,31 @@ export async function trouverPassages(
   // passent par une base restreinte au profil (droits.ts) : la sécurité par ligne double le filtre
   const base = basePour(pool, profil);
   const filtres: Filtres = { enVigueurLe: date, acces: NIVEAUX[profil] };
-  const extraits = reglages.filtresExtraits && aDesIndices(question) ? await extraireFiltres(question, date, llm()) : {};
+  // Chapitre 14 : la trace dit quels niveaux la recherche a le droit de lire, jamais ce que ce filtre écarte (le nombre
+  // de passages écartés suffirait à révéler qu'un document réservé existe : chapitre 13)
+  noter("droits", "Droits du lecteur", {
+    resume: `profil ${profil} : niveaux ${NIVEAUX[profil].join(", ")} ; textes en vigueur le ${date}`,
+    details: { profil, niveaux: NIVEAUX[profil], enVigueurLe: date, requete: question },
+  });
+  let extraits: Pick<Filtres, "enVigueurLe" | "types"> = {};
+  if (reglages.filtresExtraits && aDesIndices(question)) {
+    extraits = await etape("filtres-extraits", "Filtres extraits de la question", () => extraireFiltres(question, date, llm()), (f) => ({
+      resume: Object.keys(f).length > 0 ? `appliqués : ${JSON.stringify(f)}` : "le LLM n'a retenu aucun filtre",
+      details: { extraits: f },
+    }));
+  } else if (reglages.filtresExtraits) {
+    noter("filtres-extraits", "Filtres extraits de la question", { resume: "aucun indice de date ni de type de document : pas d'appel au LLM", details: { extraits: {} } });
+  }
   // 2. Les requêtes : la question, ou ce que le LLM en a fait. Plusieurs formulations ou sous-questions : la question
   // d'origine est cherchée aussi (une seule fois, si le LLM la rend telle quelle)
-  let requetes = reglages.transformation ? await transformer(question, reglages.transformation, llm()) : [question];
-  if (reglages.transformation === "multiplier" || reglages.transformation === "decomposer") requetes = [...new Set([question, ...requetes])];
+  const transformation = reglages.transformation;
+  let requetes = transformation
+    ? await etape("transformation", "Transformation de la question", () => transformer(question, transformation, llm()), (r) => ({
+        resume: `${transformation} : ${pluriel(r.length, "requête")}`,
+        details: { transformation, requetes: r },
+      }))
+    : [question];
+  if (transformation === "multiplier" || transformation === "decomposer") requetes = [...new Set([question, ...requetes])];
   // 3. Une recherche par requête. Quand une étape choisira ensuite parmi des candidats (la fusion de plusieurs requêtes,
   // le reclassement, MMR), chaque recherche en propose reglages.candidats ; sinon, les k premiers suffisent (ou la
   // profondeur demandée par les traces)
@@ -81,11 +102,18 @@ export async function trouverPassages(
   };
   let listes = await chercherTout({ ...filtres, ...extraits }); // extraits : une date, des types, jamais un niveau d'accès
   // Un filtre extrait à tort peut écarter tous les passages : dans ce cas, on cherche sans les filtres extraits
-  if (Object.keys(extraits).length > 0 && listes.every((l) => l.length === 0)) listes = await chercherTout(filtres);
+  if (Object.keys(extraits).length > 0 && listes.every((l) => l.length === 0)) {
+    noter("filtres-extraits-ecartes", "Filtres extraits écartés", { resume: "aucun passage avec les filtres extraits : nouvelle recherche sans eux" });
+    listes = await chercherTout(filtres);
+  }
   let resultats = listes[0];
   if (listes.length > 1) {
     const parId = new Map(listes.flat().map((r) => [r.id, r]));
     resultats = fusionner(listes.map((l) => l.map((r) => r.id))).slice(0, n).map((id) => parId.get(id)!);
+    noter("fusion-requetes", "Fusion des requêtes", {
+      resume: `${listes.length} recherches fusionnées : ${pluriel(resultats.length, "candidat")}`,
+      details: { requetes, candidats: resultats.map(enBref) },
+    });
   }
   // 4. Le score de chaque passage doit être sa similarité cosinus avec la question : c'est elle que compare le seuil
   // d'abstention du chapitre 7. Le plein texte donne un score BM25, sans maximum ; après une transformation, les scores
@@ -99,18 +127,44 @@ export async function trouverPassages(
   if (reglages.reclassement) {
     const reclasseur = reglages.reclasseur === "llm" ? parLeLlm(llm()) : outils.crossEncoder;
     if (!reclasseur) throw new Error("Ces réglages demandent un cross-encoder : passez-le dans les outils");
-    return reclasser(question, resultats, reclasseur, rendre);
+    // Chapitre 14 : la trace garde la note de chaque candidat, pour voir qui le reclasseur a fait monter ou descendre
+    let notes: number[] = [];
+    const noterCandidats: Reclasseur = async (q, passages) => (notes = await reclasseur(q, passages));
+    const avant = resultats;
+    return etape("reclassement", "Reclassement", () => reclasser(question, avant, noterCandidats, rendre), (apres) => ({
+      resume: `${pluriel(avant.length, "candidat noté", "candidats notés")}, ${apres.length} gardé${apres.length > 1 ? "s" : ""} ; en tête : ${apres[0]?.id ?? "aucun"}`,
+      details: {
+        reclasseur: reglages.reclasseur === "llm" ? "llm" : config.RERANK_MODEL,
+        candidats: avant.map((p, i) => ({ ...enBref(p), rang_avant: i + 1, note: Number((notes[i] ?? 0).toFixed(4)), rang_apres: apres.findIndex((a) => a.id === p.id) + 1 || null })),
+      },
+    }));
   }
   if (reglages.diversite !== null) {
-    const v = await vecteurs(base, resultats.map((r) => r.id));
-    return mmr(resultats.map((r) => ({ ...r, vecteur: v.get(r.id)! })), rendre, reglages.diversite);
+    const lambda = reglages.diversite;
+    const avant = resultats;
+    return etape(
+      "diversite",
+      "Diversité (MMR)",
+      async () => {
+        const v = await vecteurs(base, avant.map((r) => r.id));
+        return mmr(avant.map((r) => ({ ...r, vecteur: v.get(r.id)! })), rendre, lambda);
+      },
+      (apres) => ({ resume: `${pluriel(apres.length, "passage gardé", "passages gardés")} sur ${avant.length}, lambda ${nombre(lambda, 2)}`, details: { lambda, gardes: apres.map(enBref) } }),
+    );
   }
   return resultats.slice(0, rendre);
 }
 
 // Les mêmes passages, avec pour score leur similarité cosinus avec la question
-async function avecSimilarites(base: Base, question: string, resultats: Resultat[]): Promise<Resultat[]> {
-  const [vecteur] = await vectoriser([question], "requete");
-  const scores = new Map((await similarites(base, vecteur, resultats.map((r) => r.id))).map((r) => [r.id, r.score]));
-  return resultats.map((r) => ({ ...r, score: scores.get(r.id)! }));
+function avecSimilarites(base: Base, question: string, resultats: Resultat[]): Promise<Resultat[]> {
+  return etape(
+    "similarites",
+    "Similarités avec la question",
+    async () => {
+      const [vecteur] = await vectoriser([question], "requete");
+      const scores = new Map((await similarites(base, vecteur, resultats.map((r) => r.id))).map((r) => [r.id, r.score]));
+      return resultats.map((r) => ({ ...r, score: scores.get(r.id)! }));
+    },
+    (notes) => ({ resume: `${pluriel(notes.length, "passage noté", "passages notés")} par leur cosinus avec la question`, details: { passages: notes.map(enBref) } }),
+  );
 }

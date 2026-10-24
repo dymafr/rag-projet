@@ -12,22 +12,15 @@ import { parseArgs } from "node:util";
 import { agir, TOURS_MAX, type Recherche } from "../agent/boucle.ts";
 import { journalJsonl } from "../agent/journal.ts";
 import type { AppelOutil } from "../agent/llm-agent.ts";
-import { chercherDocuments } from "../agent/chercher.ts";
 import { DOSSIER_TEXTES, outilsFichiers } from "../agent/fichiers.ts";
-import { creerLlmAgent } from "../agent/llm-agent.ts";
-import { calculerIndemniteKm, consulterProfil, consulterSolde, ouvrirTicket } from "../agent/outils-rh.ts";
-import { consulterOrganigramme } from "../agent/organigramme.ts";
-import { interrogerSoldes } from "../agent/soldes-sql.ts";
+import { assemblerRhea, outilsDeRhea, PROMPT_AGENT } from "../agent/rhea.ts";
 import { fichiersCites, sourcesCitees } from "../agent/sources.ts";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
-import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
 import { pourLeTerminal } from "../ingestion/secrets.ts";
-import { creerLlm } from "../llm.ts";
-import { condenser, type Echange } from "../recherche/conversation.ts";
 import { profilDeSession } from "../recherche/droits.ts";
-import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
+import { aujourdhui } from "../recherche/passages.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 
 const { values, positionals } = parseArgs({
@@ -53,19 +46,12 @@ if (!question || !/^\d{4}-\d{2}-\d{2}$/.test(values.date) || !Number.isInteger(t
   process.exit(1);
 }
 
-const systeme = await lirePromptSysteme(surFichiers ? "prompts/rhea-fichiers.md" : "prompts/rhea-agent.md");
-// Leçon 7 : sur fichiers, les trois outils d'un agent de code remplacent la recherche de Rhéa
-const recherches = surFichiers ? outilsFichiers(DOSSIER_TEXTES) : [chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date))];
-const outils = [
-  ...recherches,
-  consulterSolde(pool),
-  consulterProfil(pool),
-  consulterOrganigramme(pool), // chapitre 12, leçon 2
-  interrogerSoldes(pool, creerLlm()), // chapitre 12, leçon 3
-  calculerIndemniteKm(),
-  ouvrirTicket(pool),
-];
-const llmSimple = creerLlm(); // le LLM sans outils, pour condenser une question de suite (chapitre 9)
+const systeme = await lirePromptSysteme(surFichiers ? "prompts/rhea-fichiers.md" : PROMPT_AGENT);
+// Chapitre 14 : les outils de Rhéa, ceux du serveur et de l'évaluation. Chapitre 10, leçon 7 : sur fichiers, les trois
+// outils d'un agent de code remplacent la recherche de Rhéa
+const outils = surFichiers
+  ? [...outilsFichiers(DOSSIER_TEXTES), ...outilsDeRhea(pool).filter((o) => o.nom !== "chercher_documents")]
+  : outilsDeRhea(pool);
 
 // La confirmation, dans le terminal : le salarié lit l'action et répond. Sans terminal (une commande lancée par un script),
 // personne ne peut répondre : l'action est refusée, sauf avec --oui
@@ -83,21 +69,18 @@ async function confirmer(_appel: AppelOutil, action: string): Promise<boolean> {
   terminal.close();
   return /^o(ui)?$/i.test(reponse.trim());
 }
-const agent = {
-  llm: creerLlmAgent(),
-  outils,
+// Chapitre 12, leçon 2 : avec un salarié connecté, sa fiche de l'organigramme d'office (son manager, sa chaîne). Essai
+// du 17 octobre : à « Qui est mon manager ? », le modèle local répondait sans appeler l'outil, faute de savoir qui est le
+// salarié ; pour un collègue nommé, il l'appelait de lui-même. assemblerRhea le fait dès qu'un matricule est donné
+const agent = assemblerRhea(outils, {
   systeme: systeme.texte,
+  matricule: values.matricule,
   toursMax,
   // La recherche imposée passe par chercher_documents : sur fichiers, le LLM décide seul
   recherche: (surFichiers ? "libre" : values.recherche) as Recherche,
-  condenser: (question: string, historique: Echange[]) => condenser(question, historique, llmSimple),
   confirmer,
   journaliser: journalJsonl(),
-  // Chapitre 12, leçon 2 : avec un salarié connecté, sa fiche de l'organigramme d'office (son manager, sa chaîne). Essai
-  // du 17 octobre : à « Qui est mon manager ? », le modèle local répondait sans appeler l'outil, faute de savoir qui
-  // est le salarié ; pour un collègue nommé, il l'appelait de lui-même
-  appelsDOffice: values.matricule ? [{ id: "organigramme-d-office", nom: "consulter_organigramme", arguments: { personne: null } }] : [],
-};
+});
 
 const secondes = (ms: number) => (ms / 1000).toFixed(1);
 // Ce que l'outil a rendu, en une ligne : les passages et le meilleur d'entre eux, ou le début du texte
