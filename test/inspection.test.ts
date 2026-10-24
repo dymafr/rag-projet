@@ -1,6 +1,9 @@
 // Les documents de l'inspection, lus dans PostgreSQL avec les droits du profil : leur format sert directement à l'interface.
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { PGlite } from "@electric-sql/pglite";
 import { vector } from "@electric-sql/pglite-pgvector";
 import type pg from "pg";
@@ -10,12 +13,13 @@ import { insererParLots, ligne } from "../src/stockage/chunks.ts";
 import { creerTable } from "../src/stockage/schema.ts";
 import { nomsDesSites } from "../web/src/outils/format.ts";
 
+Object.assign(process.env, {
+  LLM_PROVIDER: "ollama", LLM_MODEL: "factice", EMBEDDING_PROVIDER: "transformers", EMBEDDING_MODEL: "factice",
+  DATABASE_URL: "postgres://factice@localhost/factice",
+});
+const { inspectionDe, lecteurDExecutions } = await import("../src/api/inspection.ts");
+
 test("l'index rend les sites comme une liste, avec plusieurs passages, un seul site ou aucun, sous les droits du profil", async () => {
-  Object.assign(process.env, {
-    LLM_PROVIDER: "ollama", LLM_MODEL: "factice", EMBEDDING_PROVIDER: "transformers", EMBEDDING_MODEL: "factice",
-    DATABASE_URL: "postgres://factice@localhost/factice",
-  });
-  const { inspectionDe } = await import("../src/api/inspection.ts");
   const base = await PGlite.create({ extensions: { vector } });
   try {
     await base.exec("CREATE EXTENSION vector");
@@ -49,5 +53,31 @@ test("l'index rend les sites comme une liste, avec plusieurs passages, un seul s
     assert.equal((await inspection.documents("manager"))[0].document, "MGR-PRIVE");
   } finally {
     await base.close();
+  }
+});
+
+test("la liste des évaluations garde les scores sans proposer les exécutions qui ne peuvent pas être comparées", async () => {
+  const dossier = await mkdtemp(join(tmpdir(), "rhea-evaluations-"));
+  try {
+    for (const [nom, jeu, fichier] of [
+      ["complete", "travail", true],
+      ["resume-seul", "travail", false],
+      ["cachee", "cache", true],
+    ] as const) {
+      const chemin = join(dossier, nom);
+      const resume = { nom, jeu, date: "2026-10-20" };
+      await mkdir(chemin);
+      await writeFile(join(chemin, "resume.json"), JSON.stringify(resume));
+      if (fichier) await writeFile(join(chemin, "execution.json"), JSON.stringify({ ...resume, resultats: [] }));
+    }
+    const lecteur = lecteurDExecutions(dossier);
+    assert.deepEqual((await lecteur.resumes()).map((r) => [r.nom, r.detailsDisponibles]), [
+      ["cachee", false], ["complete", true], ["resume-seul", false],
+    ]);
+    assert.equal(await lecteur.lire("resume-seul"), null);
+    const inspection = inspectionDe({} as pg.Pool, { version: "test", resultats: dossier });
+    assert.equal(await inspection.evaluation("cachee"), "cache");
+  } finally {
+    await rm(dossier, { recursive: true, force: true });
   }
 });
