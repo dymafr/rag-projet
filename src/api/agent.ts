@@ -4,7 +4,9 @@
 import { agir, type Agent } from "../agent/boucle.ts";
 import { sourcesCitees } from "../agent/sources.ts";
 import { personnelle, type Cle, type EnCache } from "../cache/semantique.ts";
+import { duFournisseur } from "../charge/disjoncteur.ts";
 import { cout, type Tarifs } from "../eval/comparaison.ts";
+import { horsCorpus } from "../generation/abstention.ts";
 import type { Usage } from "../llm.ts";
 import type { Observation } from "../observabilite/observations.ts";
 import type { Echange } from "../recherche/conversation.ts";
@@ -19,9 +21,10 @@ import type { Confirmations } from "./confirmations.ts";
 export type Session = { matricule: string; profil: Profil };
 
 export type SourceCitee = ReturnType<typeof enBref> & { texte: string };
+// degrade (leçon 8) : aucun LLM n'a pu répondre, Rhéa a rendu les passages les plus proches à la place d'une réponse
 // observation (leçon 7) : l'identifiant de la question dans l'observabilité, pour que le salarié donne son avis
 // cache (leçon 6) : la réponse vient du cache sémantique, avec la similarité de la question qui l'avait reçue
-export type Fin = { usage: Usage; cout: { min: number; max: number } | null; duree_ms: number; modele: Modele; prompt: string; tours: number; observation?: string; cache?: number };
+export type Fin = { usage: Usage; cout: { min: number; max: number } | null; duree_ms: number; modele: Modele; prompt: string; tours: number; degrade?: boolean; observation?: string; cache?: number };
 
 export type EvenementAgent =
   | { nom: "etape"; donnees: EvenementTrace }
@@ -38,6 +41,10 @@ export type DependancesAgent = {
   version: string; // celle du prompt système : v6 1a2b3c4d
   tarifs?: Tarifs; // pour le coût d'une réponse ; absent ou sans le modèle : coût inconnu (un modèle local ne coûte rien)
   inspection: boolean; // la trace part-elle au navigateur ?
+  // Leçon 8 : la recherche seule, sans aucun LLM, pour dégrader proprement quand aucun ne répond ; et le plancher du
+  // modèle d'embedding (leçon 4), sous lequel aucun passage n'est montré (absent : le seuil d'abstention du chapitre 7)
+  passagesSeuls?: (question: string, session: Session, date: string) => Promise<Resultat[]>;
+  plancher?: number;
   // Leçon 7 : garder une observation de chaque question (sans son texte : observations.ts), et rendre son identifiant
   observer?: (session: Session, observation: Omit<Observation, "pseudonyme" | "profil">) => Promise<string>;
   // Leçon 6 : le cache sémantique (cache/semantique.ts) ; lire rend aussi le vecteur de la question, réutilisé pour écrire
@@ -48,6 +55,15 @@ export type DependancesAgent = {
     ecrire: (vecteur: number[], cle: Cle, reponse: string, sources: SourceCitee[]) => Promise<void>;
   };
 };
+
+// Les messages du mode dégradé (leçon 8) : dire ce qui se passe, et ce que le salarié peut faire
+export const DEGRADE_AVEC_PASSAGES =
+  "Je ne peux pas rédiger de réponse pour le moment : le service qui les rédige ne répond pas. Voici les passages de la " +
+  "documentation les plus proches de votre question ; vérifiez qu'ils correspondent bien à votre cas.";
+export const DEGRADE_SANS_PASSAGE =
+  "Je ne peux pas répondre pour le moment : le service qui rédige les réponses ne répond pas. Réessayez dans quelques " +
+  "minutes, ou ouvrez un ticket dans l'espace RH.";
+export const PASSAGES_DEGRADES = 3;
 
 export async function* repondreEnAgent(
   question: string,
@@ -90,10 +106,36 @@ export async function* repondreEnAgent(
       if (await depuisLeCache(contexte.date)) return;
       await suivreAgent(contexte);
     } catch (erreur) {
-      // Leçon 7 : une question en erreur se compte aussi (sauf si le salarié est parti), puis l'erreur repart telle quelle
+      if (!duFournisseur(erreur) || !dependances.passagesSeuls || signal?.aborted) {
+        const nul = { entree: 0, enCache: 0, sortie: 0 };
+        if (!signal?.aborted) await observer({ statut: "erreur", duree_ms: duree(), tours: 0, usage: nul, cout: null, modele: `${modele.fournisseur} ${modele.modele}`, citees: [] });
+        throw erreur;
+      }
+      // Leçon 8 : aucun LLM ne répond (panne, surcharge, disjoncteurs ouverts). Plutôt qu'une erreur, les passages les
+      // plus proches, trouvés sans LLM. Une autre erreur (un bogue) repart telle quelle, ci-dessus. Sous le plancher,
+      // rien ne vaut la peine d'être montré
+      let passages: Resultat[];
+      try {
+        passages = await dependances.passagesSeuls(question, session, contexte.date);
+      } catch (seconde) {
+        // La recherche seule échoue aussi (la base, les embeddings) : la question est observée en erreur, comme ci-dessus
+        const nul = { entree: 0, enCache: 0, sortie: 0 };
+        if (!signal?.aborted) await observer({ statut: "erreur", duree_ms: duree(), tours: 0, usage: nul, cout: null, modele: `${modele.fournisseur} ${modele.modele}`, citees: [] });
+        throw seconde;
+      }
+      const proches = horsCorpus(passages, dependances.plancher) ? [] : passages.slice(0, PASSAGES_DEGRADES);
+      noter("degradation", "Réponse dégradée", {
+        resume: `aucun LLM disponible : ${pluriel(proches.length, "passage rendu", "passages rendus")} sans réponse rédigée`,
+        details: { erreur: erreur instanceof Error ? erreur.message.slice(0, 300) : String(erreur), passages: proches.map(enBref) },
+      });
+      canal.pousser({ nom: "texte", donnees: { texte: proches.length > 0 ? DEGRADE_AVEC_PASSAGES : DEGRADE_SANS_PASSAGE } });
+      canal.pousser({ nom: "sources", donnees: { citees: proches.map((p) => ({ ...enBref(p), texte: p.texte })), inventees: [] } });
       const nul = { entree: 0, enCache: 0, sortie: 0 };
-      if (!signal?.aborted) await observer({ statut: "erreur", duree_ms: duree(), tours: 0, usage: nul, cout: null, modele: `${modele.fournisseur} ${modele.modele}`, citees: [] });
-      throw erreur;
+      const id = await observer({ statut: "degradee", duree_ms: duree(), tours: 0, usage: nul, cout: null, modele: `${modele.fournisseur} ${modele.modele}`, citees: proches.map((p) => p.id) });
+      canal.pousser({
+        nom: "fin",
+        donnees: { usage: nul, cout: null, duree_ms: duree(), modele, prompt: dependances.version, tours: 0, degrade: true, ...(id && { observation: id }) },
+      });
     }
   });
   travail.then(
@@ -151,19 +193,21 @@ export async function* repondreEnAgent(
         await dependances.cache.ecrire(pourLeCache.vecteur, pourLeCache.cle, e.texte, sources);
         noter("cache-ecrit", "Réponse gardée dans le cache", { resume: "réponse générique et citée : gardée pour les questions très proches du jour" });
       }
-      const prix = dependances.tarifs ? cout(e.usage, 0, `${modele.fournisseur} ${modele.modele}`, dependances.tarifs) : null;
+      // Le modèle qui a vraiment répondu : celui de repli, s'il a pris le relais (leçon 8)
+      const actuel = agent.modele ?? modele;
+      const prix = dependances.tarifs ? cout(e.usage, 0, `${actuel.fournisseur} ${actuel.modele}`, dependances.tarifs) : null;
       const id = await observer({
         statut: citees.length > 0 ? "citee" : "sans-source",
         duree_ms: duree(),
         tours: e.tour,
         usage: e.usage,
         cout: prix ? prix.max : null,
-        modele: `${modele.fournisseur} ${modele.modele}`,
+        modele: `${actuel.fournisseur} ${actuel.modele}`,
         citees: citees.map((p) => p.id),
       });
       canal.pousser({
         nom: "fin",
-        donnees: { usage: e.usage, cout: prix, duree_ms: duree(), modele, prompt: dependances.version, tours: e.tour, ...(id && { observation: id }) },
+        donnees: { usage: e.usage, cout: prix, duree_ms: duree(), modele: actuel, prompt: dependances.version, tours: e.tour, ...(id && { observation: id }) },
       });
     }
   }

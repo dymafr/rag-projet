@@ -12,6 +12,10 @@ const Schema = z
     // simple : le plus petit modèle y suffit. Absent : LLM_PROVIDER et LLM_MODEL
     LLM_RECHERCHE_PROVIDER: z.enum(["anthropic", "openai", "ollama"]).optional(),
     LLM_RECHERCHE_MODEL: z.string().min(1).optional(),
+    // Chapitre 14, leçon 8 : le fournisseur de repli, quand le principal ne répond plus ; absent : pas de repli pour
+    // l'agent (les étapes de la recherche se replient sur lui s'il est chez un autre fournisseur : production.ts)
+    LLM_REPLI_PROVIDER: z.enum(["anthropic", "openai", "ollama"]).optional(),
+    LLM_REPLI_MODEL: z.string().min(1).optional(),
     JUGE_MODEL: z.string().optional(), // le modèle du juge d'évaluation ; vide ou absent : LLM_MODEL
     // Chapitre 14 : le juge peut venir d'un autre fournisseur que celui qui rédige (un juge juge moins bien son propre
     // fournisseur) ; absent : LLM_PROVIDER
@@ -59,7 +63,12 @@ const Schema = z
       ctx.addIssue({ code: "custom", path: ["LLM_RECHERCHE_MODEL"], message: "LLM_RECHERCHE_PROVIDER et LLM_RECHERCHE_MODEL vont ensemble" });
     }
     const recherche = env.LLM_RECHERCHE_PROVIDER ? [env.LLM_RECHERCHE_PROVIDER] : [];
-    for (const fournisseur of new Set([env.LLM_PROVIDER, ...recherche, env.JUGE_PROVIDER ?? env.LLM_PROVIDER, env.EMBEDDING_PROVIDER, env.RERANK_PROVIDER])) {
+    // Le repli se règle en entier ou pas du tout
+    if (Boolean(env.LLM_REPLI_PROVIDER) !== Boolean(env.LLM_REPLI_MODEL)) {
+      ctx.addIssue({ code: "custom", path: ["LLM_REPLI_MODEL"], message: "LLM_REPLI_PROVIDER et LLM_REPLI_MODEL vont ensemble" });
+    }
+    const repli = env.LLM_REPLI_PROVIDER ? [env.LLM_REPLI_PROVIDER] : [];
+    for (const fournisseur of new Set([env.LLM_PROVIDER, ...recherche, ...repli, env.JUGE_PROVIDER ?? env.LLM_PROVIDER, env.EMBEDDING_PROVIDER, env.RERANK_PROVIDER])) {
       if (fournisseur === "transformers" || fournisseur === "ollama" || fournisseur === "llm") continue; // local, ou le LLM déjà vérifié
       const cle = cles[fournisseur];
       if (!env[cle]) {

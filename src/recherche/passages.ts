@@ -1,9 +1,10 @@
 // Les passages qui serviront à répondre, parmi les textes en vigueur ce jour-là que le lecteur a le droit de lire
 // (chapitre 13). Au chapitre 6, la recherche vectorielle seule ; le chapitre 9 ajoute d'autres étapes, chacune mesurée
 // sur le jeu d'évaluation avant d'entrer dans les réglages de Rhéa (reglages.ts)
+import { llmDeRecherche } from "../charge/production.ts";
 import { config } from "../config.ts";
 import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
-import { creerLlm, type Llm } from "../llm.ts";
+import type { Llm } from "../llm.ts";
 import type { Base } from "../stockage/base.ts";
 import { lireIndexation } from "../stockage/schema.ts";
 import { enBref, etape, nombre, noter, pluriel } from "../trace/trace.ts";
@@ -29,8 +30,8 @@ let outilsDeEnv: Required<Outils> | undefined;
 // Chapitre 14 : le reclasseur de .env peut être celui de Voyage (RERANK_PROVIDER=voyage)
 export const outilsParDefaut = (): Required<Outils> =>
   (outilsDeEnv ??= {
-    // Leçon 5 : le LLM des étapes de la recherche (LLM_RECHERCHE_*, sinon celui de .env)
-    llm: creerLlm(config.LLM_RECHERCHE_MODEL ?? config.LLM_MODEL, config.LLM_RECHERCHE_PROVIDER ?? config.LLM_PROVIDER),
+    // Leçon 5 : le LLM des étapes de la recherche (LLM_RECHERCHE_*, sinon celui de .env) ; leçon 8 : avec le repli
+    llm: llmDeRecherche(),
     crossEncoder:
       config.RERANK_PROVIDER === "voyage" ? reclasseurVoyage(config.RERANK_MODEL, config.VOYAGE_API_KEY, config.VOYAGE_BASE_URL) : crossEncoder(config.RERANK_MODEL),
   });
