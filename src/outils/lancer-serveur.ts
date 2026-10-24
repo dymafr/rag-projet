@@ -10,14 +10,15 @@ import { config } from "../config.ts";
 import { pool } from "../db.ts";
 import { nomDuModele } from "../embeddings/fournisseurs.ts";
 import { lireTarifs } from "../eval/comparaison.ts";
-import { MODELE_DU_SEUIL } from "../generation/abstention.ts";
+import { plancherMesure } from "../generation/abstention.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
 import { profilDuSalarie } from "../recherche/droits.ts";
 import { aujourdhui } from "../recherche/passages.ts";
 
 const PORT = Number(process.env.PORT ?? 3000);
-if (nomDuModele() !== MODELE_DU_SEUIL) {
-  console.warn(`Attention : le seuil d'abstention a été mesuré avec ${MODELE_DU_SEUIL}, pas avec ${nomDuModele()}. Relancez npm run seuils`);
+// Leçon 4 : l'agent applique le plancher d'abstention du modèle d'embedding configuré (abstention.ts, PLANCHERS)
+if (!plancherMesure(nomDuModele())) {
+  console.warn(`Attention : aucun plancher d'abstention mesuré pour ${nomDuModele()} : l'agent recevra les passages de toute question, même hors sujet (abstention.ts)`);
 }
 const systeme = await lirePromptSysteme(PROMPT_AGENT);
 const version = `v${systeme.version} ${systeme.empreinte}`;

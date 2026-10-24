@@ -14,8 +14,8 @@ export const interrogerSoldes = (pool: Pool, llm: Llm) =>
   definirOutil({
     nom: "interroger_soldes",
     description:
-      "Répond aux questions chiffrées sur les soldes de congés payés et de RTT : combien de salariés, quelle moyenne, quel " +
-      "total, qui a le plus ou le moins. Écrit une requête SQL en lecture seule et l'exécute avec les droits du salarié " +
+      "Répond aux questions chiffrées sur les soldes de congés payés et de RTT, et sur les salariés (site, service, temps de " +
+      "travail, forfait jours) : combien de salariés, quelle moyenne, quel total, qui a le plus ou le moins. Écrit une requête SQL en lecture seule et l'exécute avec les droits du salarié " +
       "connecté : ses propres soldes, ceux de son équipe s'il est manager, ceux de tous s'il est au service RH. Pour son " +
       "seul solde, consulter_solde suffit.",
     parametres: z.object({

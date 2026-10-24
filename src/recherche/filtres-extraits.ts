@@ -22,7 +22,7 @@ const Extraits = z.strictObject({
 
 const FORMAT = `Réponds uniquement avec un objet JSON : {"date": "AAAA-MM-JJ" ou null, "types": ["…"] ou null}`;
 const consigne = (aujourdhui: string) => `Tu extrais d'une question de salarié les filtres de recherche qu'elle précise elle-même. Nous sommes le ${aujourdhui}.
-- date : si la question porte sur une autre période qu'aujourd'hui (« en janvier 2026 », « l'an dernier », « avant mars »), une date située dans cette période, au format AAAA-MM-JJ ; sinon null.
+- date : si la question porte sur une autre période qu'aujourd'hui (« en janvier 2026 », « l'an dernier », « avant mars »), une date située dans cette période, au format AAAA-MM-JJ ; sinon null. Une année qui ne fait que nommer ce dont on parle (« les primes 2025 seront versées quand ? », « les CP acquis l'an dernier qui me restent »), sans demander la règle de cette époque, ne compte pas : null.
 - types : si la question demande un type de document précis, parmi ${TYPES.join(", ")} (« dans la FAQ » : faq ; « selon l'accord » : accord) ; sinon null.
 N'invente rien : au moindre doute, null.
 ${FORMAT}`;

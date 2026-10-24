@@ -5,7 +5,9 @@ import { parseArgs } from "node:util";
 import { TOURS_MAX } from "../agent/boucle.ts";
 import { chercherDocuments } from "../agent/chercher.ts";
 import { pool } from "../db.ts";
+import { nomDuModele } from "../embeddings/fournisseurs.ts";
 import { agentMastra, reglagesMastra } from "../frameworks/mastra.ts";
+import { plancherPour } from "../generation/abstention.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
 import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
@@ -14,7 +16,7 @@ const { values, positionals } = parseArgs({ allowPositionals: true, options: { d
 const question = positionals.join(" ");
 if (!question) throw new Error('Posez une question : npm run mastra -- "Combien de jours de télétravail par semaine ?"');
 
-const recherche = chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date));
+const recherche = chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date), plancherPour(nomDuModele()));
 const systeme = await lirePromptSysteme("prompts/rhea-agent.md");
 // Aucun salarié connecté : le profil le plus restreint, les documents ouverts à tous (chapitre 13)
 const agent = agentMastra([recherche], { date: values.date, profil: "salarie" }, systeme.texte);

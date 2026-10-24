@@ -123,6 +123,7 @@ export type ResultatQuestion = {
     citees: string[];
     inventees: string[];
     passagesVus: string[]; // tous les passages rendus par les outils, dans l'ordre
+    lus?: { id: string; texte: string }[]; // leur texte, pour rejuger sans relancer Rhéa (leçon 4)
     outils: string[]; // les outils appelés, dans l'ordre
     usage: Usage;
     cout: number | null;

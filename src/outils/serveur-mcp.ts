@@ -7,6 +7,8 @@ import { serveStdio } from "@modelcontextprotocol/server/stdio";
 import { chercherDocuments } from "../agent/chercher.ts";
 import { calculerIndemniteKm } from "../agent/outils-rh.ts";
 import { pool } from "../db.ts";
+import { nomDuModele } from "../embeddings/fournisseurs.ts";
+import { plancherPour } from "../generation/abstention.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { pourLeTerminal } from "../ingestion/secrets.ts";
 import { creerServeurMcp } from "../mcp/serveur.ts";
@@ -17,7 +19,7 @@ console.log = console.error;
 
 // Les outils de lecture qui ne dépendent d'aucun salarié : la recherche, le calcul d'indemnité. Le solde et le profil
 // demanderaient de savoir qui est au bout ; le ticket, son accord (leçon 5)
-const outils = [chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date)), calculerIndemniteKm()];
+const outils = [chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date), plancherPour(nomDuModele())), calculerIndemniteKm()];
 
 // serveStdio sert les deux générations du protocole : celle de 2025 (une poignée de main initialize) et celle de 2026.
 // Le client ne dit pas qui l'utilise : le profil le plus restreint, les documents ouverts à tous (chapitre 13)
