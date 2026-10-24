@@ -1,9 +1,11 @@
 // Les outils métier de Rhéa : le solde de congés du salarié connecté, l'indemnité d'un trajet en voiture personnelle,
-// l'ouverture d'un ticket dans l'espace RH. Le LLM choisit l'outil et écrit les arguments ; l'identité du salarié, elle,
+// l'ouverture d'un ticket dans l'espace RH, et (chapitre 14) le calendrier. Le LLM choisit l'outil et écrit les arguments ; l'identité du salarié, elle,
 // vient toujours du contexte (la session), jamais d'un argument : sinon, une question bien tournée suffirait pour lire
 // le solde d'un collègue ou ouvrir un ticket à son nom
 import { z } from "zod";
+import { baliser } from "../generation/prompt.ts";
 import { detail, indemnite } from "../rh/bareme.ts";
+import { calendrier, libelleDuJour, lireJoursFeries } from "../rh/calendrier.ts";
 import { CATEGORIES, lireProfil, lireSolde, moisRevolus, ouvrirDemande } from "../rh/donnees.ts";
 import type { Base } from "../stockage/base.ts";
 import { definirOutil, type Contexte } from "./outil.ts";
@@ -86,6 +88,48 @@ export const calculerIndemniteKm = () =>
         "la tranche change : l'outil de notes de frais cumule les kilomètres et applique la bonne. Barème indicatif de la " +
         "politique notes de frais (POL-NF-01, article 9) ; le barème publié par l'administration fiscale fait foi."
       return { texte };
+    },
+  });
+
+// Chapitre 14, leçon 5 : le calendrier. Les jours fériés viennent de la page de l'intranet indexée (INT-JOURS-FERIES),
+// pas du code : si le service RH la met à jour, l'outil suit à la prochaine indexation. Le résultat est une fiche
+// citable, comme celle de l'organigramme
+const JOURS_MAX = 92;
+export const consulterCalendrier = (base: Base) =>
+  definirOutil({
+    nom: "consulter_calendrier",
+    description:
+      "Donne les jours d'une période : la date, le jour de la semaine, les week-ends et les jours fériés de Kalyo (chômés " +
+      `ou travaillés), et le nombre de jours ouvrés (du lundi au vendredi, hors jours fériés chômés), sur ${JOURS_MAX} jours au plus. ` +
+      "À appeler pour compter des jours de congé, situer un pont ou un délai, ou savoir quel jour tombe une date : ne faites " +
+      "jamais ce calcul vous-même. Renvoie une fiche balisée, à citer par sa source entre crochets.",
+    parametres: z.object({
+      du: z.iso.date().describe("Le premier jour de la période, AAAA-MM-JJ"),
+      au: z.iso.date().describe("Le dernier jour de la période (inclus), AAAA-MM-JJ"),
+    }),
+    async executer({ du, au }) {
+      const jours = (Date.parse(au) - Date.parse(du)) / 86_400_000 + 1;
+      if (jours < 1 || jours > JOURS_MAX) return { texte: `Période refusée : de 1 à ${JOURS_MAX} jours, du premier au dernier jour inclus.` };
+      const { rows } = await base.query<{ texte: string }>("SELECT texte FROM chunks WHERE document = 'INT-JOURS-FERIES' ORDER BY id");
+      const feries = rows.flatMap((r) => lireJoursFeries(r.texte));
+      const annees = new Set(feries.map((f) => f.date.slice(0, 4)));
+      const c = calendrier(du, au, feries);
+      const lignes = c.jours.map((j) => `- ${j.libelle} : ${j.statut}${j.fete ? ` (${j.fete})` : ""}`);
+      const inconnues = [...new Set([du.slice(0, 4), au.slice(0, 4)])].filter((a) => !annees.has(a));
+      const passage = {
+        id: `CALENDRIER-${du}-${au}#1`,
+        document: `CALENDRIER-${du}-${au}`,
+        titres: ["Calendrier de Kalyo", `du ${libelleDuJour(du)} au ${libelleDuJour(au)}`],
+        texte: [
+          ...lignes,
+          `Jours ouvrés (du lundi au vendredi, hors jours fériés chômés) : ${c.ouvres}.`,
+          inconnues.length
+            ? `Attention : la documentation ne donne pas les jours fériés de ${inconnues.join(" et ")} ; seuls les week-ends sont comptés pour cette année.`
+            : "Jours fériés : page « Jours fériés » de l'intranet (INT-JOURS-FERIES).",
+        ].join("\n"),
+        score: 1,
+      };
+      return { texte: baliser(passage), passages: [passage] };
     },
   });
 

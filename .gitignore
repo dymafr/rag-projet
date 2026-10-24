@@ -5,5 +5,7 @@ carte-des-sens.svg
 donnees/
 eval/candidates.json
 eval/traces/
+# Chapitre 14, leçon 5 : les désaccords du jeu caché, pour le seul relecteur indépendant
+eval/production/a-relire/
 journal/
 web/dist/

@@ -1,0 +1,18 @@
+{
+  "regle": {
+    "echecsPermis": 3,
+    "nonJugeesPermises": 0,
+    "juges": [
+      "anthropic:claude-haiku-5-5",
+      "openai:gpt-6-luna"
+    ],
+    "attaques": true
+  },
+  "accord": {
+    "reussies": 144,
+    "echouees": 5,
+    "desaccords": 11,
+    "nonJugees": 0
+  },
+  "attaquesOk": true
+}

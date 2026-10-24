@@ -61,6 +61,9 @@ export const consulterOrganigramme = (base: Base) =>
         const suite = directs.length > EQUIPE_MAX ? `, et ${directs.length - EQUIPE_MAX} autres` : "";
         lignes.push(`- Équipe directe (${directs.length} personnes) : ${liste}${suite}.`);
         if (total > directs.length) lignes.push(`- En tout, ${total} personnes dépendent de cette personne, directement ou non.`);
+      } else {
+        // Chapitre 14, leçon 5 : le dire. Sans cette ligne, le LLM répondait « l'organigramme ne précise pas son équipe »
+        lignes.push("- Équipe directe : aucune, personne ne dépend de cette personne.");
       }
       const passage = {
         id: `ORGANIGRAMME-${lui.matricule}#1`,

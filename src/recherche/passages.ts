@@ -29,7 +29,8 @@ let outilsDeEnv: Required<Outils> | undefined;
 // Chapitre 14 : le reclasseur de .env peut être celui de Voyage (RERANK_PROVIDER=voyage)
 export const outilsParDefaut = (): Required<Outils> =>
   (outilsDeEnv ??= {
-    llm: creerLlm(),
+    // Leçon 5 : le LLM des étapes de la recherche (LLM_RECHERCHE_*, sinon celui de .env)
+    llm: creerLlm(config.LLM_RECHERCHE_MODEL ?? config.LLM_MODEL, config.LLM_RECHERCHE_PROVIDER ?? config.LLM_PROVIDER),
     crossEncoder:
       config.RERANK_PROVIDER === "voyage" ? reclasseurVoyage(config.RERANK_MODEL, config.VOYAGE_API_KEY, config.VOYAGE_BASE_URL) : crossEncoder(config.RERANK_MODEL),
   });
@@ -39,9 +40,9 @@ export const RECHERCHE_DE_PRODUCTION: Reglages = {
   ...RECHERCHE,
   ...(config.RECLASSEMENT && { reclassement: true, reclasseur: config.RERANK_PROVIDER === "llm" ? ("llm" as const) : ("cross-encoder" as const) }),
 };
-// Le LLM des étapes de la recherche (celui de .env), tel que le notent la trace, l'interface et les mesures, et le
-// reclasseur : ce LLM, ou le cross-encoder de .env (local ou Voyage)
-export const LLM_DE_LA_RECHERCHE = `${config.LLM_PROVIDER} ${config.LLM_MODEL}`;
+// Le LLM des étapes de la recherche, tel que le notent la trace, l'interface et les mesures (leçon 5 : LLM_RECHERCHE_*,
+// sinon celui de .env), et le reclasseur : ce LLM, ou le cross-encoder de .env (local ou Voyage)
+export const LLM_DE_LA_RECHERCHE = `${config.LLM_RECHERCHE_PROVIDER ?? config.LLM_PROVIDER} ${config.LLM_RECHERCHE_MODEL ?? config.LLM_MODEL}`;
 export const nomDuReclasseur = (reclasseur: Reglages["reclasseur"]) => (reclasseur === "llm" ? `llm ${LLM_DE_LA_RECHERCHE}` : `${config.RERANK_PROVIDER} ${config.RERANK_MODEL}`);
 
 // Une recherche, pour une requête : celle du mode choisi. Le plein texte cherche des mots-clés : la requête, enrichie du

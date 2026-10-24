@@ -76,6 +76,7 @@
     "eval:jeu": "node --env-file=.env src/outils/verifier-production.ts",
     "eval:taille": "node src/outils/dimensionner.ts",
     "eval:doublons": "node --env-file=.env src/outils/doublons.ts",
+    "eval:barriere": "node --env-file=.env src/outils/barriere.ts",
     "organigramme": "node --env-file=.env src/outils/organigramme.ts",
     "sql": "node --env-file=.env src/outils/sql.ts",
     "scans": "node --env-file=.env src/outils/scans.ts",
