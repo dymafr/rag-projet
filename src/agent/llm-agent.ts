@@ -26,11 +26,12 @@ export type ReponseAgent = { texte: string; appels: AppelOutil[]; usage: Usage; 
 export type OptionsAppel = { sansOutil?: boolean };
 export type LlmAgent = (systeme: string, messages: Message[], outils: Outil[], options?: OptionsAppel) => Promise<ReponseAgent>;
 
-// Le fournisseur de .env. OpenAI et Ollama passent par l'API Responses ; avec OpenAI, la réflexion d'un modèle qui
-// raisonne revient chiffrée, pour qu'on puisse la renvoyer sans que la conversation soit gardée chez OpenAI (store: false)
-export function creerLlmAgent(modele = config.LLM_MODEL): LlmAgent {
-  if (config.LLM_PROVIDER === "openai") return agentResponses(new OpenAI(), modele, { include: ["reasoning.encrypted_content"] });
-  if (config.LLM_PROVIDER === "ollama") {
+// Le fournisseur de .env (chapitre 14 : ou un autre, pour le repli). OpenAI et Ollama passent par l'API Responses ; avec
+// OpenAI, la réflexion d'un modèle qui raisonne revient chiffrée, pour qu'on puisse la renvoyer sans que la conversation
+// soit gardée chez OpenAI (store: false)
+export function creerLlmAgent(modele = config.LLM_MODEL, fournisseur = config.LLM_PROVIDER): LlmAgent {
+  if (fournisseur === "openai") return agentResponses(new OpenAI(), modele, { include: ["reasoning.encrypted_content"] });
+  if (fournisseur === "ollama") {
     const llm = agentResponses(ollama, modele, LOCAL);
     return (systeme, messages, outils, options) => llm(systeme, messages, outils, options).catch(conseilSiErreurOllama);
   }

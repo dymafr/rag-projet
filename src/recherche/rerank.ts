@@ -4,7 +4,9 @@
 import { AutoModelForSequenceClassification, AutoTokenizer, type PreTrainedModel, type PreTrainedTokenizer } from "@huggingface/transformers";
 import { z } from "zod";
 import { avecReprises } from "../embeddings/lots.ts";
+import { pourLeTerminal } from "../ingestion/secrets.ts";
 import type { Llm } from "../llm.ts";
+import { apercu, noter } from "../trace/trace.ts";
 import { demanderJson } from "./llm-json.ts";
 import { CANDIDATS_LLM } from "./reglages.ts";
 import type { Resultat } from "./vectorielle.ts";
@@ -85,7 +87,13 @@ export function parLeLlm(llm: Llm, maximum = CANDIDATS_LLM, longueur = LONGUEUR)
   return async (question, candidats) => {
     const passages = candidats.slice(0, maximum);
     const liste = passages.map((p, i) => `<passage numero="${i + 1}">\n${aLire(p).slice(0, longueur)}\n</passage>`).join("\n");
-    const lu = await demanderJson(llm, CONSIGNE_ORDRE, `<question>\n${question}\n</question>\n\n<passages>\n${liste}\n</passages>`, Ordre, FORMAT_ORDRE);
+    // Chapitre 14, leçon 8 : reclasser améliore la recherche, mais n'est pas indispensable. Si l'appel échoue malgré le
+    // repli (un prompt refusé par le filtre du fournisseur, par exemple), on garde l'ordre de la recherche plutôt que de
+    // faire échouer toute la recherche ; la trace le dit
+    const lu = await demanderJson(llm, CONSIGNE_ORDRE, `<question>\n${question}\n</question>\n\n<passages>\n${liste}\n</passages>`, Ordre, FORMAT_ORDRE).catch((erreur) => {
+      noter("reclassement-impossible", "Reclassement impossible", { resume: `ordre de la recherche gardé : ${apercu(pourLeTerminal(erreur instanceof Error ? erreur.message : erreur), 160)}` });
+      return null;
+    });
     // Une note par candidat : le premier cité reçoit la plus haute ; un numéro inconnu ou répété est ignoré, sans faire
     // reculer les suivants. Les oubliés, et ceux au-delà du maximum, gardent 0 ou moins, dans l'ordre reçu
     const notes = candidats.map((_, i) => -i / candidats.length);

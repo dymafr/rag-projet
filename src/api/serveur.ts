@@ -6,6 +6,7 @@ import { readFile } from "node:fs/promises";
 import http from "node:http";
 import { extname, resolve, sep } from "node:path";
 import { z } from "zod";
+import { Abandonnee, Sature, type Limiteur } from "../charge/limiteur.ts";
 import { pourLeTerminal } from "../ingestion/secrets.ts";
 import { TOURS } from "../recherche/conversation.ts";
 import type { Profil } from "../recherche/droits.ts";
@@ -52,6 +53,8 @@ export type DependancesServeur = DependancesAgent & {
   profil: (matricule: string) => Promise<Profil | null>;
   inspecter?: Inspection; // absent : aucune route /api (production)
   web?: string;
+  limiteur?: Limiteur; // leçon 8 : au plus tant de questions à la fois, puis une file bornée ; au-delà, 503
+  sante?: () => Promise<{ ok: boolean } & Record<string, unknown>>; // leçon 8 : GET /sante, pour la surveillance et Docker
   // Leçon 7 : enregistrer l'avis du salarié ; false : observation inconnue, ou d'un autre salarié
   retour?: (observation: string, matricule: string, note: 1 | -1, commentaire: string | null) => Promise<boolean>;
 };
@@ -101,8 +104,8 @@ async function lireCorps<T>(req: http.IncomingMessage, res: http.ServerResponse,
 // 2. Un événement SSE : son nom, ses données en JSON sur une ligne, et une ligne vide qui le termine
 export const evenementSSE = (nom: string, donnees: unknown) => `event: ${nom}\ndata: ${JSON.stringify(donnees)}\n\n`;
 
-const repondreJson = (res: http.ServerResponse, statut: number, corps: unknown) =>
-  void res.writeHead(statut, { ...EN_TETES, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }).end(JSON.stringify(corps));
+const repondreJson = (res: http.ServerResponse, statut: number, corps: unknown, entetes: Record<string, string> = {}) =>
+  void res.writeHead(statut, { ...EN_TETES, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...entetes }).end(JSON.stringify(corps));
 
 // 3. Qui pose la question (chapitre 13). Ce projet n'a pas de vraie connexion : l'en-tête X-Matricule la simule. En
 // production, l'identité viendrait d'une session ou d'un jeton vérifiés, jamais d'une valeur que le client choisit.
@@ -135,7 +138,22 @@ async function ask(req: http.IncomingMessage, res: http.ServerResponse, dependan
   if (!session) return;
   const demande = await lireCorps(req, res, Demande);
   if (!demande) return;
-  await repondreEnFluxSSE(req, res, dependances, session, demande);
+  // Leçon 8 : une place parmi les questions en cours, ou la file d'attente ; pleine, un refus immédiat et poli, avec le
+  // délai après lequel réessayer (Retry-After), plutôt qu'une attente sans fin
+  if (!dependances.limiteur) return repondreEnFluxSSE(req, res, dependances, session, demande);
+  // Un salarié qui part pendant l'attente (onglet fermé) quitte la file ; parti juste avant que vienne son tour, il ne
+  // reçoit rien : sa place passe aussitôt au suivant
+  const depart = new AbortController();
+  res.on("close", () => depart.abort());
+  try {
+    await dependances.limiteur.avecPlace(async () => {
+      if (!res.destroyed) await repondreEnFluxSSE(req, res, dependances, session, demande);
+    }, depart.signal);
+  } catch (erreur) {
+    if (erreur instanceof Abandonnee) return;
+    if (!(erreur instanceof Sature)) throw erreur;
+    repondreJson(res, 503, { erreur: "Rhéa reçoit trop de questions en ce moment : réessayez dans quelques secondes." }, { "Retry-After": "10" });
+  }
 }
 
 async function repondreEnFluxSSE(req: http.IncomingMessage, res: http.ServerResponse, dependances: DependancesServeur, session: Session, demande: z.infer<typeof Demande>) {
@@ -305,6 +323,11 @@ export function creerServeur(dependances: DependancesServeur): http.Server {
       if (req.method === "POST" && chemin === "/retours" && dependances.retour) {
         if (!enJson(req)) return repondreJson(res, 415, { erreur: "Content-Type: application/json attendu" });
         return await retour(req, res, dependances);
+      }
+      // Leçon 8 : l'état du service, sans détail sensible, pour la surveillance (et le contrôle de santé de Docker, leçon 10)
+      if (req.method === "GET" && chemin === "/sante" && dependances.sante) {
+        const sante = await dependances.sante();
+        return repondreJson(res, sante.ok ? 200 : 503, sante);
       }
       if (chemin.startsWith("/api/")) {
         if (!dependances.inspecter) return repondreJson(res, 404, { erreur: "inspection désactivée" });

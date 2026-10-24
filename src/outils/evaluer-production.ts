@@ -12,6 +12,7 @@ import { parseArgs } from "node:util";
 import { agir } from "../agent/boucle.ts";
 import { assemblerRhea, outilsDeRhea, PROMPT_AGENT } from "../agent/rhea.ts";
 import { sourcesCitees } from "../agent/sources.ts";
+import { pourEvaluer } from "../charge/production.ts";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
 import { nomDuModele } from "../embeddings/fournisseurs.ts";
@@ -28,6 +29,8 @@ import { aujourdhui, RECHERCHE_DE_PRODUCTION } from "../recherche/passages.ts";
 import { decrire } from "../recherche/options.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 import { avecTrace, Trace } from "../trace/trace.ts";
+
+pourEvaluer(); // leçon 8 : un seul modèle mesuré, sans disjoncteur ni repli (charge/production.ts)
 
 const { values } = parseArgs({
   options: {

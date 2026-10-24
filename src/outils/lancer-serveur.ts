@@ -7,16 +7,20 @@ import { Confirmations } from "../api/confirmations.ts";
 import { inspectionDe } from "../api/inspection.ts";
 import { creerServeur } from "../api/serveur.ts";
 import { chercherEnCache, creerCache, garder, viderLeCache } from "../cache/semantique.ts";
+import { Limiteur } from "../charge/limiteur.ts";
+import { etatDesDisjoncteurs, modelesDeProduction } from "../charge/production.ts";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
 import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
 import { lireTarifs } from "../eval/comparaison.ts";
-import { plancherMesure } from "../generation/abstention.ts";
+import { plancherMesure, plancherPour } from "../generation/abstention.ts";
+import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
 import { caviarder } from "../ingestion/secrets.ts";
 import { creerObservations, enregistrer, retour, sansMatricule, sourcesSansMatricule } from "../observabilite/observations.ts";
 import { profilDuSalarie } from "../recherche/droits.ts";
-import { aujourdhui } from "../recherche/passages.ts";
+import { aujourdhui, trouverPassages } from "../recherche/passages.ts";
+import { RECHERCHE } from "../recherche/reglages.ts";
 import { lireIndexation } from "../stockage/schema.ts";
 
 const PORT = Number(process.env.PORT ?? 3000);
@@ -29,6 +33,14 @@ const version = `v${systeme.version} ${systeme.empreinte}`;
 const tarifs = await lireTarifs();
 const outils = outilsDeRhea(pool); // créés une fois ; chaque question assemble son agent, pour son salarié
 const journaliser = journalJsonl(); // chaque appel d'outil au journal, pseudonymisé (chapitre 13)
+// Leçon 8 : 4 questions à la fois au plus, 20 en attente derrière (à régler selon les limites de débit du fournisseur).
+// Une valeur qui n'est pas un entier (une faute de frappe dans .env) arrête le serveur : sinon le limiteur ne limiterait plus
+const entier = (nom: string, defaut: number, minimum: number) => {
+  const valeur = Number(process.env[nom] || defaut); // absente ou vide : la valeur par défaut
+  if (!Number.isInteger(valeur) || valeur < minimum) throw new Error(`${nom} : un entier d'au moins ${minimum} attendu, reçu « ${process.env[nom]} »`);
+  return valeur;
+};
+const limiteur = new Limiteur(entier("QUESTIONS_SIMULTANEES", 4, 1), entier("QUESTIONS_EN_ATTENTE", 20, 0));
 // Leçon 7 : une observation par question, le salarié sous un pseudonyme (la clé du journal, chapitre 13)
 await creerObservations(pool);
 const cle = await cleDuJournal();
@@ -52,6 +64,8 @@ if (config.CACHE_SEMANTIQUE) {
     viderLeCache(pool, aujourdhui()).catch(() => {});
   }, 60_000).unref();
 }
+// La recherche seule, sans aucun LLM (ni filtres extraits, ni condensation), pour le mode dégradé
+const SANS_LLM = { ...RECHERCHE, filtresExtraits: false, condensation: false };
 const serveur = creerServeur({
   agent: (session, confirmer) => assemblerRhea(outils, { systeme: systeme.texte, matricule: session.matricule, confirmer, journaliser }),
   confirmations: new Confirmations(),
@@ -62,6 +76,7 @@ const serveur = creerServeur({
   inspection: config.INSPECTION,
   inspecter: config.INSPECTION ? inspectionDe(pool, { version, tarifs }) : undefined,
   web: "web/dist",
+  limiteur,
   cache: config.CACHE_SEMANTIQUE
     ? {
         seuil: config.CACHE_SEUIL,
@@ -89,6 +104,15 @@ const serveur = creerServeur({
   // (et un matricule qu'il cite passe sous pseudonyme ; un nom écrit en toutes lettres, lui, reste : un texte libre se relit)
   retour: (observation, matricule, note, commentaire) =>
     retour(pool, observation, pseudonyme(matricule, cle), note, commentaire && sansMatricule(caviarder(commentaire).texte, (m) => pseudonyme(m, cle))),
+  passagesSeuls: (question, session, date) => trouverPassages(pool, question, PASSAGES_DEMANDES, session.profil, date, SANS_LLM),
+  plancher: plancherPour(nomDuModele()),
+  // La base répond-elle ? Et l'état des fournisseurs (disjoncteurs) et de la file des questions, sans rien de sensible
+  sante: async () => {
+    // Une base qui ne répond plus (sans refuser la connexion) ne fait pas attendre la surveillance : 3 s au plus
+    const delai = new Promise<boolean>((fini) => setTimeout(fini, 3000, false).unref());
+    const base = await Promise.race([pool.query("SELECT 1").then(() => true, () => false), delai]);
+    return { ok: base, base, llm: modelesDeProduction, disjoncteurs: etatDesDisjoncteurs(), questions: limiteur.etat };
+  },
 });
 // 127.0.0.1 : le serveur ne répond qu'à cette machine, pas au reste du réseau
 serveur.listen(PORT, "127.0.0.1", () => {

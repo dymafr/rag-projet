@@ -64,6 +64,7 @@ export type DetailExecution = { resume: ResumeExecution; questions: QuestionEnBr
 // leçon 1 en facultatif : elle marche ainsi à chaque étape du chapitre
 export type ConfigurationRhea = {
   generation: { fournisseur: string; modele: string };
+  repli: { fournisseur: string; modele: string } | null;
   juge: { fournisseur: string; modele: string };
   embeddings: { fournisseur: string; modele: string; dimensions: number | null; nom: string };
   reclasseur: { fournisseur: string; modele: string; actif: boolean };
@@ -209,6 +210,7 @@ export function inspectionDe(pool: pg.Pool, autres: { version: string; tarifs?: 
       const { rows } = await pool.query<{ n: number }>("SELECT count(*)::int AS n FROM chunks");
       return {
         generation: { fournisseur: config.LLM_PROVIDER, modele: config.LLM_MODEL },
+        repli: config.LLM_REPLI_PROVIDER && config.LLM_REPLI_MODEL ? { fournisseur: config.LLM_REPLI_PROVIDER, modele: config.LLM_REPLI_MODEL } : null,
         juge: { fournisseur: config.JUGE_PROVIDER ?? config.LLM_PROVIDER, modele: config.JUGE_MODEL || config.LLM_MODEL },
         embeddings: { fournisseur: config.EMBEDDING_PROVIDER, modele: config.EMBEDDING_MODEL, dimensions: indexation?.dimension ?? null, nom: nomDuModele() },
         reclasseur: {

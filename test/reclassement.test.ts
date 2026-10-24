@@ -35,3 +35,11 @@ test("le LLM ne lit que les premiers candidats : les suivants restent derrière,
   assert.deepEqual(ids(resultats), ["B#1", "A#1", "C#1"]);
   assert.ok(!prompts[0].includes("C#1")); // le troisième n'est pas dans le prompt
 });
+
+test("chapitre 14, leçon 8 : si le LLM refuse ou tombe, l'ordre de la recherche est gardé, sans faire échouer la recherche", async () => {
+  const refus: Llm = async () => {
+    throw new Error("400 Invalid prompt: your prompt was flagged");
+  };
+  const resultats = await reclasser("question", [passage("A#1"), passage("B#1"), passage("C#1")], parLeLlm(refus), 2);
+  assert.deepEqual(ids(resultats), ["A#1", "B#1"]);
+});

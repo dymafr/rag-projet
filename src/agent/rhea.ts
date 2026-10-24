@@ -3,17 +3,16 @@
 // les salariés utilisent. Avant ce chapitre, le serveur servait encore le pipeline du chapitre 7, pendant que la ligne de
 // commande et l'évaluation utilisaient l'agent : deux Rhéa différentes
 import type pg from "pg";
+import { llmAgentDeProduction, llmDeProduction, llmDeRecherche } from "../charge/production.ts";
 import { config } from "../config.ts";
 import { nomDuModele } from "../embeddings/fournisseurs.ts";
 import { plancherPour } from "../generation/abstention.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { verifierReponse } from "../generation/verification.ts";
-import { creerLlm } from "../llm.ts";
 import { condenser } from "../recherche/conversation.ts";
 import { trouverPassages } from "../recherche/passages.ts";
 import type { Agent, Recherche } from "./boucle.ts";
 import { chercherDocuments } from "./chercher.ts";
-import { creerLlmAgent } from "./llm-agent.ts";
 import { consulterOrganigramme } from "./organigramme.ts";
 import { calculerIndemniteKm, consulterCalendrier, consulterProfil, consulterSolde, ouvrirTicket } from "./outils-rh.ts";
 import { interrogerSoldes } from "./soldes-sql.ts";
@@ -37,7 +36,7 @@ export function outilsDeRhea(pool: pg.Pool) {
     consulterSolde(pool),
     consulterProfil(pool),
     consulterOrganigramme(pool), // chapitre 12, leçon 2
-    interrogerSoldes(pool, creerLlm()), // chapitre 12, leçon 3
+    interrogerSoldes(pool, llmDeProduction()), // chapitre 12, leçon 3 ; leçon 8 : avec le repli
     calculerIndemniteKm(),
     consulterCalendrier(pool), // leçon 5
     ouvrirTicket(pool),
@@ -46,10 +45,15 @@ export function outilsDeRhea(pool: pg.Pool) {
 
 export function assemblerRhea(outils: Agent["outils"], options: OptionsRhea): Agent {
   // Le LLM sans outils, pour condenser une question de suite (chapitre 9) ; leçon 5 : celui des étapes de la recherche
-  const llmSimple = creerLlm(config.LLM_RECHERCHE_MODEL ?? config.LLM_MODEL, config.LLM_RECHERCHE_PROVIDER ?? config.LLM_PROVIDER);
+  const llmSimple = llmDeRecherche();
+  // Leçon 8 : le LLM de .env derrière son disjoncteur, avec son repli. Le modèle de la trace (et du coût) est celui qui
+  // répond vraiment : le repli, s'il a pris le relais
+  const { llm, modele } = llmAgentDeProduction();
   return {
-    llm: creerLlmAgent(),
-    modele: { fournisseur: config.LLM_PROVIDER, modele: config.LLM_MODEL }, // pour la trace et le coût de chaque réponse
+    llm,
+    get modele() {
+      return modele();
+    },
     outils,
     systeme: options.systeme,
     toursMax: options.toursMax,
