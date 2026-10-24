@@ -1,7 +1,8 @@
 # Évaluer Rhéa à chaque push et à chaque pull request : les tests, puis la récupération sur le jeu d'évaluation.
 # Aucun LLM ni aucune clé : les embeddings sont calculés en local, la base tourne dans un conteneur, comme sur votre
 # machine, et la recherche est mesurée sans ses étapes à LLM (--sans-llm, chapitre 9). Les étapes avec un LLM (réponses,
-# juge, filtres extraits de la question…) coûtent et demandent un secret : elles se lancent à la main
+# juge, filtres extraits de la question…) coûtent et demandent un secret : elles se lancent à la main, ou (chapitre 14,
+# leçon 5) avant un déploiement, par le job barriere
 name: Évaluation
 
 on:
@@ -13,8 +14,10 @@ permissions:
   contents: read # le jeton du workflow ne peut que lire le dépôt
 
 concurrency: # un nouveau push annule l'exécution précédente de la même branche, devenue inutile
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Chapitre 14, leçon 5 : sauf sur main, où la barrière de qualité a déjà payé ses appels : elle va jusqu'au bout ; et une
+  # exécution lancée à la main (une barrière, sur n'importe quelle branche) a son propre groupe : aucun push ne l'annule
+  group: ${{ github.workflow }}-${{ github.ref }}${{ github.event_name == 'workflow_dispatch' && format('-{0}', github.run_id) || '' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   recuperation:
@@ -40,6 +43,8 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run web:construire # chapitre 14 : l'interface se construit
+      # Chapitre 14, leçon 5 : le jeu caché n'a pas changé depuis qu'il a été figé (sans base, sans rien lire de son contenu)
+      - run: npm run eval:jeu -- --jeu cache --empreinte
       - run: npm run db:up
       - run: npm run donnees:rh # chapitre 14, leçon 2 : l'annuaire (la table salaries, que lit eval:jeu) et les soldes
       - run: npm run ingest
@@ -55,3 +60,58 @@ jobs:
       # Chapitre 13 : le jeu d'attaques, sans LLM. Aucun passage interdit ne doit atteindre le modèle, pour aucune attaque :
       # une seule réussite fait échouer le job. Avec le LLM (plusieurs essais par attaque), il se lance à la main
       - run: npm run eval:attaques -- --sans-llm
+
+  # Chapitre 14, leçon 5 : la barrière de qualité, avec la configuration de production (les variables et les secrets du
+  # dépôt : Settings > Secrets and variables > Actions). Elle coûte (un LLM et deux juges hébergés, le jeu caché et le jeu
+  # d'attaques) : seulement à la main, ou sur la branche main, celle qu'on déploie. Elle n'affiche que son verdict, pas
+  # même un score (CI=true : les scores se lisent en la lançant à la main, hors de la CI). Les deux juges sont ceux de la
+  # règle (eval/production/barriere.json), pas des variables. Ici, un désaccord des juges compte comme un échec : la
+  # relecture indépendante (--relu) se fait sur une exécution lancée à la main, hors de la CI
+  barriere:
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
+    needs: recuperation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      LLM_PROVIDER: ${{ vars.LLM_PROVIDER }}
+      LLM_MODEL: ${{ vars.LLM_MODEL }}
+      LLM_RECHERCHE_PROVIDER: ${{ vars.LLM_RECHERCHE_PROVIDER || vars.LLM_PROVIDER }}
+      LLM_RECHERCHE_MODEL: ${{ vars.LLM_RECHERCHE_MODEL || vars.LLM_MODEL }}
+      EMBEDDING_PROVIDER: ${{ vars.EMBEDDING_PROVIDER }}
+      EMBEDDING_MODEL: ${{ vars.EMBEDDING_MODEL }}
+      CONTEXTUALISER: ${{ vars.CONTEXTUALISER || 'non' }}
+      RECLASSEMENT: ${{ vars.RECLASSEMENT || 'non' }}
+      VERIFICATION: ${{ vars.VERIFICATION || 'non' }}
+      RERANK_PROVIDER: ${{ vars.RERANK_PROVIDER || 'transformers' }}
+      RERANK_MODEL: ${{ vars.RERANK_MODEL || 'onnx-community/bge-reranker-v2-m3-ONNX' }}
+      VOYAGE_BASE_URL: ${{ vars.VOYAGE_BASE_URL || 'https://ai.mongodb.com/v1' }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      VOYAGE_API_KEY: ${{ secrets.VOYAGE_API_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - uses: actions/cache@v6
+        with:
+          path: node_modules/@huggingface/transformers/.cache
+          key: embeddings-${{ hashFiles('.env.example', 'package-lock.json') }}
+      # Leçon 3 : les contextes des chunks (CONTEXTUALISER=oui), gardés d'une exécution à l'autre : seuls les chunks
+      # nouveaux ou modifiés repassent par le LLM
+      - uses: actions/cache@v6
+        with:
+          path: donnees/contextes.json
+          key: contextes-${{ hashFiles('corpus/**') }}
+          restore-keys: contextes-
+      - run: cp .env.example .env
+      - run: npm run db:up
+      - run: npm run donnees:rh
+      - run: npm run ingest
+      - run: npm run decouper
+      - run: npm run indexer
+      # Échoue si Rhéa rate plus de questions cachées que la règle n'en permet (eval/production/barriere.json), ou si une
+      # seule attaque réussit. Avec des modèles hébergés, six questions à la fois ; un nom par exécution de la CI
+      - run: npm run eval:barriere -- --paralleles 6 --nom barriere-ci-${{ github.run_id }}
