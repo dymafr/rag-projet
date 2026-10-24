@@ -31,6 +31,13 @@ const Demande = z.strictObject(
   "attendu : un objet JSON avec la clé question, et l'historique s'il y en a un",
 );
 const Accord = z.strictObject({ id: z.uuid("identifiant de confirmation invalide"), accord: z.boolean("accord : true ou false") });
+// Leçon 4 : la décision humaine sur un désaccord entre deux juges
+const DecisionHumaine = z.strictObject({
+  execution: z.string().regex(/^[\w-][\w.-]*$/, "exécution : un nom simple"),
+  id: z.string().regex(/^[A-Z]\d{1,4}$/, "identifiant de question invalide"),
+  reussie: z.boolean("reussie : true ou false"),
+  raison: z.string().trim().min(1, "dites pourquoi").max(500, "raison : 500 caractères au plus"),
+});
 const RechercheSeule = z.strictObject({ question: Question, date: z.iso.date("date au format AAAA-MM-JJ").optional() });
 
 // Le serveur a besoin, en plus de l'agent, du profil d'un salarié (chapitre 13), lu dans l'annuaire (null : matricule
@@ -174,6 +181,21 @@ async function api(req: http.IncomingMessage, res: http.ServerResponse, chemin: 
   if (req.method === "GET" && chemin === "/api/configuration") return repondreJson(res, 200, await inspecter.configuration());
   // Les évaluations (leçon 2). Celles du jeu caché ne se lisent que par leurs scores, dans la liste (leçon 5)
   if (req.method === "GET" && chemin === "/api/evaluations") return repondreJson(res, 200, await inspecter.evaluations());
+  // Les désaccords entre deux juges, et la décision humaine (leçon 4)
+  if (req.method === "GET" && chemin === "/api/desaccords") {
+    const parametres = new URL(req.url ?? "/", "http://localhost").searchParams;
+    const [a, b] = [parametres.get("a") ?? "", parametres.get("b") ?? ""];
+    if (![a, b].every((n) => /^[\w-][\w.-]*$/.test(n))) return repondreJson(res, 400, { erreur: "a et b : deux noms d'exécution" });
+    const lu = await inspecter.desaccords(a, b);
+    return lu ? repondreJson(res, 200, lu) : repondreJson(res, 404, { erreur: "exécution introuvable, ou du jeu caché" });
+  }
+  if (req.method === "POST" && chemin === "/api/etiquettes") {
+    if (!enJson(req)) return repondreJson(res, 415, { erreur: "Content-Type: application/json attendu" });
+    const d = await lireCorps(req, res, DecisionHumaine);
+    if (!d) return;
+    const ok = await inspecter.etiqueter(d.execution, d.id, d.reussie, d.raison);
+    return repondreJson(res, ok ? 200 : 404, ok ? { ok: true } : { erreur: "question introuvable dans cette exécution" });
+  }
   const evaluation = req.method === "GET" ? /^\/api\/evaluations\/([\w-][\w.-]*)(?:\/questions\/([A-Z]\d{1,4}))?$/.exec(chemin) : null;
   if (evaluation) {
     const [, nom, id] = evaluation;

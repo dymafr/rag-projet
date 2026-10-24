@@ -23,6 +23,8 @@ Règles :
 - N'ajoute aucun filtre pour limiter aux lignes du salarié connecté : la base ne montre déjà que celles qu'il a le droit de voir.
 - « moi », « mon solde » : matricule = le matricule du salarié connecté. « mon équipe » : manager = son matricule.
 - Compare les noms et les services sans tenir compte de la casse (ILIKE). Arrondis une moyenne avec round(…, 1).
+- « Qui a le plus », « le moins » : rends toutes les lignes à égalité, avec une comparaison au maximum (ou au minimum),
+  jamais ORDER BY … LIMIT 1, qui n'en garderait qu'une.
 - Réponds uniquement par la requête, dans un bloc \`\`\`sql.
 
 Exemples :
@@ -32,7 +34,8 @@ SELECT count(*) AS salaries FROM ${VUE} WHERE site = 'lyon' AND temps_travail < 
 \`\`\`
 Question : Quel service a le plus de RTT restants en moyenne ?
 \`\`\`sql
-SELECT service, round(avg(rtt_restants), 1) AS moyenne FROM ${VUE} WHERE forfait_jours GROUP BY service ORDER BY moyenne DESC LIMIT 1;
+WITH moyennes AS (SELECT service, round(avg(rtt_restants), 1) AS moyenne FROM ${VUE} WHERE forfait_jours GROUP BY service)
+SELECT service, moyenne FROM moyennes WHERE moyenne = (SELECT max(moyenne) FROM moyennes);
 \`\`\``;
 
 // La requête dans un bloc ```sql, ou, à défaut, tout le texte

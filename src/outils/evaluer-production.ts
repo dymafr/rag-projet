@@ -121,6 +121,7 @@ async function evaluer(q: QuestionProduction): Promise<ResultatQuestion> {
   // Pas de confirmation : une action demandée pendant l'évaluation est refusée, rien ne s'écrit dans l'espace RH
   const agent = assemblerRhea(outils, { systeme: systeme.texte, matricule: q.matricule });
   const vus: Resultat[] = [];
+  const autres: { id: string; texte: string }[] = []; // leçon 4 : ce que rendent les outils sans passage (une fiche, un solde)
   const outilsAppeles: string[] = [];
   let texte = "";
   let usage: Usage = { entree: 0, enCache: 0, sortie: 0 };
@@ -132,6 +133,7 @@ async function evaluer(q: QuestionProduction): Promise<ResultatQuestion> {
       for await (const e of agir(q.question, agent, { date: q.date, matricule: q.matricule, profil: q.profil }, q.historique ?? [])) {
         if (e.type === "appel") outilsAppeles.push(e.appel.nom);
         if (e.type === "resultat") vus.push(...(e.resultat.passages ?? []));
+        if (e.type === "resultat" && !e.erreur && !e.resultat.passages?.length) autres.push({ id: e.appel.nom, texte: e.resultat.texte });
         if (e.type === "reponse") ({ texte, usage, tours } = { texte: e.texte, usage: e.usage, tours: e.tour });
       }
     });
@@ -140,7 +142,9 @@ async function evaluer(q: QuestionProduction): Promise<ResultatQuestion> {
   }
   const duree_ms = Math.round(performance.now() - t0);
   const { citees, inventees } = sourcesCitees(texte, vus);
-  const passagesLus = [...new Map(vus.map((p) => [p.id, { id: p.id, texte: p.texte }])).values()];
+  // Le juge lit les passages, et (leçon 4) ce qu'ont rendu les autres outils : sans eux, un fait tiré de la fiche du salarié
+  // (son site, son temps de travail) lui paraîtrait inventé
+  const passagesLus = [...new Map(vus.map((p) => [p.id, { id: p.id, texte: p.texte }])).values(), ...autres];
   // Le juge peut tomber en panne aussi (Ollama surchargé, limite de débit) : la question reste alors non jugée, et compte
   // comme un échec de suite, plutôt que d'arrêter toute l'exécution
   let verdict: ResultatQuestion["verdict"] = { reussie: null, criteres: [] };
@@ -159,6 +163,7 @@ async function evaluer(q: QuestionProduction): Promise<ResultatQuestion> {
       citees: citees.map((p) => p.id),
       inventees,
       passagesVus: [...new Set(vus.map((p) => p.id))],
+      lus: passagesLus,
       outils: outilsAppeles,
       usage,
       cout: prix ? prix.max : null,

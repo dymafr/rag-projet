@@ -24,12 +24,13 @@ test("requete numérote chaque filtre après le vecteur de la question", () => {
 
 test("requete garde la version en vigueur à la date demandée, avec une seule valeur pour les deux comparaisons", () => {
   const { sql, valeurs } = requete([0.6, 0.8], 5, { enVigueurLe: "2026-01-15", acces: ["tous"] });
-  assert.match(sql, /WHERE date_effet <= \$2 AND \(date_fin IS NULL OR date_fin > \$2\)/);
+  // Chapitre 14 : un ticket n'est pas une version en vigueur, c'est une trace ; la date de vigueur ne l'écarte pas
+  assert.match(sql, /WHERE \(type = 'ticket' OR \(date_effet <= \$2 AND \(date_fin IS NULL OR date_fin > \$2\)\)\)/);
   assert.deepEqual(valeurs, ["[0.6,0.8]", "2026-01-15", ["tous"]]);
 });
 
-test("requete ne garde que les documents dont l'accès est permis", () => {
-  const { sql, valeurs } = requete([0.6, 0.8], 5, { enVigueurLe: "2026-10-05", acces: ["tous"] });
-  assert.match(sql, /WHERE date_effet <= \$2 AND \(date_fin IS NULL OR date_fin > \$2\) AND acces = ANY\(\$3\)/);
-  assert.deepEqual(valeurs, ["[0.6,0.8]", "2026-10-05", ["tous"]]);
+test("requete ne garde que les documents dont l'accès est permis, et rien d'écrit après le jour de la question", () => {
+  const { sql, valeurs } = requete([0.6, 0.8], 5, { enVigueurLe: "2026-06-30", existeLe: "2026-10-05", acces: ["tous"] });
+  assert.match(sql, /WHERE \(type = 'ticket' OR \(date_effet <= \$2 AND \(date_fin IS NULL OR date_fin > \$2\)\)\) AND date_effet <= \$3 AND acces = ANY\(\$4\)/);
+  assert.deepEqual(valeurs, ["[0.6,0.8]", "2026-06-30", "2026-10-05", ["tous"]]);
 });

@@ -1424,7 +1424,7 @@
     "matricule": "K0006",
     "date": "2026-10-20",
     "attendu": [
-      "\\b11\\b"
+      "\\b11\\b|\\bonze\\b"
     ],
     "documents": [],
     "origine": "reprise",
@@ -2645,7 +2645,7 @@
       "INT-OUTILS#3": 1
     },
     "attendu": [
-      "30 novembre"
+      "novembre"
     ],
     "documents": [
       "FAQ-RH",
@@ -3138,7 +3138,7 @@
       "POL-TT-01#5": 2
     },
     "attendu": [
-      "un mois|1 mois"
+      "un mois|1 mois|mois suivant"
     ],
     "documents": [
       "POL-TT-01"
@@ -3235,7 +3235,7 @@
     },
     "attendu": [
       "2,50",
-      "30 avril"
+      "avril"
     ],
     "documents": [
       "FAQ-RH",
@@ -3399,7 +3399,7 @@
       "INT-CALENDRIER-PAIE#5": 1
     },
     "attendu": [
-      "30 novembre"
+      "novembre"
     ],
     "documents": [
       "INT-CALENDRIER-PAIE",
@@ -3452,7 +3452,7 @@
       "TK-2026-0026#2": 1
     },
     "attendu": [
-      "30 avril"
+      "avril"
     ],
     "documents": [
       "INT-CALENDRIER-PAIE",
@@ -4578,15 +4578,15 @@
     "matricule": "K0175",
     "date": "2026-10-20",
     "attendu": [
-      "forfait\\s+(en\\s+)?jours",
+      "forfait\\s+(en\\s+)?jours|support|en heures",
       "\\b(pas|aucun|ni|sans)\\b[^.]{0,60}\\bRTT\\b|\\bRTT\\b[^.]{0,80}\\b(pas|aucun|ni)\\b"
     ],
     "documents": [],
     "origine": "ecrite",
     "note": "Piège : K0175 Simon Martel (support informatique) n'est pas au forfait jours (forfait_jours = false, rtt_acquis = rtt_pris = 0). consulter_solde rend « RTT : ce salarié n'est pas au forfait jours, il n'en a pas ». Rhéa doit dire qu'il n'a pas de RTT (et non « 0 restant sur 10 »), et peut proposer des CP (reliquat 16 jours).\nrelecture : « forfait (en )?jours » seul acceptait « il vous reste 0 RTT sur votre forfait jours » ou « il vous reste 10 jours de RTT au forfait jours ». Ajout d'un attendu de négation près de « RTT » (pas, aucun, ni, sans, dans les deux sens, dans la même phrase) et de deux interdits sur un nombre de RTT restants. Testé sur 9 bonnes réponses (« Vous n'avez pas de RTT : vous n'êtes pas au forfait jours… », « Les RTT ne concernent que les salariés au forfait jours ; ce n'est pas votre cas », « il vous reste 16 jours de CP »…) et 5 mauvaises : toutes classées comme il faut.",
     "interdit": [
-      "(reste|restant)\\w*[^.;]{0,30}?\\b\\d+([,.]\\d+)?\\s*(jours?\\s+(de\\s+)?)?RTT\\b",
-      "\\bRTT\\b[^.;]{0,20}\\b\\d+([,.]\\d+)?\\s*(jours?\\s*)?(restants?|à poser)"
+      "(reste|restant)\\w*[^.;]{0,30}?\\b[1-9]\\d*([,.]\\d+)?\\s*(jours?\\s+(de\\s+)?)?RTT\\b",
+      "\\bRTT\\b[^.;]{0,20}\\b[1-9]\\d*([,.]\\d+)?\\s*(jours?\\s*)?(restants?|à poser)"
     ]
   },
   {

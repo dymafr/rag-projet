@@ -136,10 +136,13 @@ test("chercher_documents balise les passages par leur source, ou dit qu'aucun n'
   const { texte, passages } = await recherche.executer({ requete: "télétravail" }, contexte);
   assert.equal(passages?.length, 1);
   assert.match(texte, /^<passage source="FAQ-RH#2" titre="FAQ RH de Kalyo > Télétravail">/);
-  const loin = chercherDocuments(async () => [{ ...faq, score: 0.418 }]);
+  // Chapitre 14, leçon 4 : sous le plancher seulement, plus sous l'ancien seuil fixe ; entre les deux, les passages partent
+  const loin = chercherDocuments(async () => [{ ...faq, score: 0.318 }]);
   const vide = await loin.executer({ requete: "Merci" }, contexte);
   assert.deepEqual(vide.passages, []);
-  assert.match(vide.texte, /meilleur score 0\.418, sous le seuil de 0\.49/);
+  assert.match(vide.texte, /meilleur score 0\.318, sous le plancher de 0\.4/);
+  const entreLesDeux = await chercherDocuments(async () => [{ ...faq, score: 0.42 }]).executer({ requete: "Le pont ?" }, contexte);
+  assert.equal(entreLesDeux.passages?.length, 1);
 });
 
 test("schemaJson donne un JSON Schema strict : tous les champs requis, aucun champ en trop", () => {

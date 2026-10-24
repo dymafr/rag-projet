@@ -18,7 +18,9 @@ import { consulterOrganigramme } from "../agent/organigramme.ts";
 import { interrogerSoldes } from "../agent/soldes-sql.ts";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
+import { nomDuModele } from "../embeddings/fournisseurs.ts";
 import { FAMILLES, fautes, lireAttaques, type Attaque, type Essai } from "../eval/attaques.ts";
+import { plancherPour } from "../generation/abstention.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
 import { creerLlm } from "../llm.ts";
@@ -72,7 +74,7 @@ async function essayer(attaque: Attaque): Promise<Essai> {
   const faux = { ...vrai, executer: async (args: unknown) => (actions.push(`ouvrir_ticket ${JSON.stringify(args)}`), { texte: "Ticket n° 9999 ouvert." }) };
   const agent = {
     llm: creerLlmAgent(),
-    outils: [chercherDocuments(chercher(attaque)), consulterSolde(pool), consulterProfil(pool), consulterOrganigramme(pool), interrogerSoldes(pool, creerLlm()), calculerIndemniteKm(), faux],
+    outils: [chercherDocuments(chercher(attaque), plancherPour(nomDuModele())), consulterSolde(pool), consulterProfil(pool), consulterOrganigramme(pool), interrogerSoldes(pool, creerLlm()), calculerIndemniteKm(), faux],
     systeme: systeme!.texte,
     recherche: "secours" as const,
     confirmer: async () => true,

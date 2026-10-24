@@ -3,6 +3,7 @@
 // rendue au fil de l'eau (un générateur), pour que la ligne de commande ou le serveur l'affichent
 import { z } from "zod";
 import { finDuMessage } from "../generation/prompt.ts";
+import { ABSTENTION_NON_APPUYEE, relance, type PassageCite, type Verification } from "../generation/verification.ts";
 import { pourLeTerminal } from "../ingestion/secrets.ts";
 import type { Usage } from "../llm.ts";
 import type { Echange } from "../recherche/conversation.ts";
@@ -10,6 +11,7 @@ import type { Profil } from "../recherche/droits.ts";
 import { apercu, enBref, etape, nombre, noter, pluriel, type Modele } from "../trace/trace.ts";
 import type { AppelOutil, LlmAgent, Message } from "./llm-agent.ts";
 import type { Contexte, Outil, ResultatOutil } from "./outil.ts";
+import { normaliserCitations } from "./sources.ts";
 
 // Un tour : un appel au LLM. Au-delà de TOURS_MAX, la boucle s'arrête : un agent qui tourne en rond coûte sans rien rendre.
 // Le dernier tour se fait sans outil (leçon 4) : le LLM doit répondre avec ce qu'il a déjà trouvé
@@ -76,6 +78,8 @@ export type Agent = {
   confirmer?: (appel: AppelOutil, resume: string) => Promise<boolean>;
   journaliser?: (entree: EntreeJournal) => Promise<void>;
   modele?: Modele; // chapitre 14 : le fournisseur et le modèle du LLM, pour la trace de chaque tour
+  // Chapitre 14, leçon 4 : vérifier la réponse avant de la rendre (generation/verification.ts) ; absent : pas de vérification
+  verifier?: (question: string, reponse: string, preuves: PassageCite[]) => Promise<Verification>;
 };
 
 export type Etape =
@@ -166,6 +170,11 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
   const appelsParOutil = agent.appelsParOutil ?? APPELS_PAR_OUTIL;
   const appelsFaits = new Map<string, number>();
   let nonFiableLu = false; // un outil a-t-il rendu un texte écrit par un tiers ?
+  // Leçon 4 : de quoi vérifier la réponse. Les passages rendus par les outils, et le texte des outils qui n'en rendent pas
+  // (un solde, une fiche, un calcul : le LLM peut s'en servir sans citer de passage)
+  const passagesLus = new Map<string, string>();
+  const autresResultats: PassageCite[] = [];
+  let relancee = false; // une seule relance après une réponse non appuyée
   let bloquee = false; // une action a-t-elle été refusée par la règle de deux ?
 
   // Un appel d'outil : la limite d'appels, l'exécution (avec la confirmation s'il le faut), le journal, puis le résultat
@@ -207,6 +216,8 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
     );
     const { resultat, erreur, statut, detail } = execution;
     if (resultat.nonFiable) nonFiableLu = true;
+    for (const p of resultat.passages ?? []) passagesLus.set(p.id, p.texte);
+    if (!erreur && !resultat.passages?.length) autresResultats.push({ id: appel.nom, texte: resultat.texte });
     const duree = performance.now() - debut;
     const args = appel.arguments;
     await agent.journaliser?.({
@@ -294,7 +305,39 @@ export async function* agir(question: string, agent: Agent, contexte: Contexte, 
       yield* imposerRecherche(1, "recherche-de-secours");
       continue;
     }
+    // Leçon 4 : une source recopiée avec un numéro de plus redevient celle du passage lu (sources.ts)
+    if (reponse.appels.length === 0) reponse.texte = normaliserCitations(reponse.texte, passagesLus);
     messages.push({ role: "assistant", texte: reponse.texte, appels: reponse.appels, brut: reponse.brut });
+    // 4 bis. Leçon 4 : une réponse se vérifie avant d'être rendue, contre tout ce que les outils ont rendu (les passages lus,
+    // cités ou non, et les autres résultats) et contre le contexte de la question : sans la date du jour ni le salarié
+    // connecté, « nous sommes le 20 octobre » ou « vous, comme manager » paraîtraient inventés. Une affirmation importante
+    // non établie : une relance, avec les affirmations en cause, s'il reste un tour ; sinon, l'abstention
+    if (reponse.appels.length === 0 && agent.verifier) {
+      const situation = { id: "contexte", texte: `Date du jour : ${contexte.date}. Salarié connecté : ${contexte.matricule ?? "non identifié"}, profil ${contexte.profil}.` };
+      const preuves = [situation, ...[...passagesLus].map(([id, texte]) => ({ id, texte })), ...autresResultats];
+      const verifier = agent.verifier;
+      const v = await etape("verification", "Vérification de la réponse", () => verifier(question, reponse.texte, preuves), (v) => {
+        const appuyees = v.affirmations.filter((a) => a.appuyee).length;
+        const graves = v.affirmations.filter((a) => !a.appuyee && a.importante).length;
+        return {
+          resume: v.illisible
+            ? "vérificateur illisible : réponse rendue sans vérification"
+            : v.affirmations.length === 0
+              ? "aucune affirmation à vérifier (un refus, une abstention)"
+              : `${pluriel(appuyees, "affirmation appuyée", "affirmations appuyées")} sur ${v.affirmations.length}${graves > 0 ? `, ${pluriel(graves, "importante non établie", "importantes non établies")}` : ""}`,
+          details: { affirmations: v.affirmations, preuves: preuves.map((p) => p.id), relancee },
+        };
+      });
+      if (!v.appuyee) {
+        if (!relancee && tour < toursMax) {
+          relancee = true;
+          messages.push({ role: "utilisateur", texte: relance(v) });
+          continue;
+        }
+        yield repondre(tour, ABSTENTION_NON_APPUYEE, "réponse non appuyée par les passages");
+        return;
+      }
+    }
     // 4. Aucune demande d'appel : il a répondu. Au dernier tour, une demande n'est plus exécutée : la boucle répond à sa place
     if (reponse.appels.length === 0 || dernier || tour === toursMax) {
       yield reponse.appels.length === 0 ? repondre(tour, reponse.texte, "le LLM répond") : repondre(tour, RECHERCHE_INACHEVEE, "recherche inachevée");

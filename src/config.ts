@@ -34,6 +34,9 @@ const Schema = z
     // Chapitre 14 : le mode inspection. Le serveur envoie alors à l'interface la trace de chaque étape (passages, prompt,
     // tokens) et ouvre ses routes /api. Utile pour développer ; à couper en production (non), où il en dirait trop
     INSPECTION: z.stringbool({ truthy: ["oui", "true", "1"], falsy: ["non", "false", "0"] }).default(true),
+    // Chapitre 14, leçon 4 : vérifier chaque réponse contre ses sources avant de la rendre (un appel au LLM de plus). Non
+    // par défaut : mesurée sur le jeu de travail, elle retirait plus de réponses justes qu'elle n'en corrigeait de fausses
+    VERIFICATION: z.stringbool({ truthy: ["oui", "true", "1"], falsy: ["non", "false", "0"] }).default(false),
   })
   .superRefine((env, ctx) => {
     // Chaque fournisseur utilisé doit avoir sa clé

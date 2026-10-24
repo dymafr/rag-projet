@@ -1,0 +1,310 @@
+[
+  {
+    "id": "Q02",
+    "reponse": "57e9df8f638e",
+    "reussie": true,
+    "raison": "Deux jours au plus, fixés avec le manager, déclarés dans l'espace RH : la règle de l'accord en vigueur en janvier 2026",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "Q15",
+    "reponse": "b2af387bbd3d",
+    "reussie": true,
+    "raison": "L'essentiel y est (un à six mois, code CSS, deux mois avant, accord du manager) ; le rôle du service RH est simplifié, sans erreur qui nuise",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q15",
+    "reponse": "f7542016c235",
+    "reussie": true,
+    "raison": "L'essentiel y est (un à six mois, code CSS, deux mois avant, accord du manager) ; le rôle du service RH est simplifié, sans erreur qui nuise",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q17",
+    "reponse": "92f24e5dd5ab",
+    "reussie": true,
+    "raison": "Règle du barème (puissance, distance annuelle) et accord du manager ; le tarif de la référence n'était qu'un exemple",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q17",
+    "reponse": "9986ff22f6be",
+    "reussie": false,
+    "raison": "Donne 0,316 € par km comme tarif le plus bas : c'est le coefficient d'une tranche qui ajoute une part fixe (1 065 €)",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q24",
+    "reponse": "68bf9fbe54c6",
+    "reussie": true,
+    "raison": "Le régime du salarié (forfait jours) est complet et juste, les plages fixes de l'autre régime sont données ; seules les plages variables manquent",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q24",
+    "reponse": "1f4919c3b2cd",
+    "reussie": true,
+    "raison": "Régime du salarié complet et juste, plages fixes de l'autre régime données ; seules les plages variables manquent",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q24",
+    "reponse": "dca418bf6994",
+    "reussie": true,
+    "raison": "Les deux régimes et les plages fixes ; seules les plages variables manquent (même décision qu'en h7)",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "Q27",
+    "reponse": "8968bc1af7f2",
+    "reussie": true,
+    "raison": "Payé pendant la formation : juste ; le délai d'un mois vient de la FAQ, qui contredit la politique (incohérence de la documentation)",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q28",
+    "reponse": "cf73a32da4f1",
+    "reussie": true,
+    "raison": "Réponse juste et complète sur la question posée ; le partage de connexion, hors sujet, est présenté comme obligatoire au lieu de recommandé",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q29",
+    "reponse": "73b278569690",
+    "reussie": true,
+    "raison": "Au prorata du temps de travail sous un mi-temps, sur la base de 60 % : l'essentiel ; la prudence sur le montant ne contredit rien",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q43",
+    "reponse": "67b259f4ea52",
+    "reussie": false,
+    "raison": "Annonce le lundi 13 juillet comme un pont qui reste alors que la date du jour est le 20 octobre",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q47",
+    "reponse": "c44d8c0251e8",
+    "reussie": false,
+    "raison": "Confond les plages de joignabilité avec les heures de travail et restreint à tort la présomption d'accident du travail",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q48",
+    "reponse": "e4e7a6cff8af",
+    "reussie": true,
+    "raison": "Condition essentielle juste ; la prudence ajoutée (accord préalable du surclassement) s'appuie sur un passage",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q49",
+    "reponse": "1a4acb3894ee",
+    "reussie": false,
+    "raison": "La démarche finit par « soumettez votre NDF-03 » : elle laisse croire que le vol se déclare, alors que l'agence paie directement",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q55",
+    "reponse": "87a5565f0a6d",
+    "reussie": true,
+    "raison": "Tiers payant, espace adhérent, renouvelée au 1er janvier : l'essentiel ; le ticket proposé en dernier recours est secondaire",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q57",
+    "reponse": "6fb6f48dc91d",
+    "reussie": false,
+    "raison": "Donne 200 € mais dit ne pas pouvoir le confirmer, et prétend à tort que la date de l'avenant manque",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q84",
+    "reponse": "c401d0acb675",
+    "reussie": true,
+    "raison": "Dire que la demande sera examinée à la revue d'avril décrit la procédure sans rien promettre",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q85",
+    "reponse": "66ecd65d371a",
+    "reussie": true,
+    "raison": "Trois à cinq objectifs ; la date de la prochaine fixation est une déduction juste du calendrier",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q87",
+    "reponse": "074f628166d7",
+    "reussie": true,
+    "raison": "Plus de 30 jours, réduction au prorata ; les absences protégées citées (CP, RTT) excluent bien la maladie",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q88",
+    "reponse": "f7c522536f8e",
+    "reussie": false,
+    "raison": "Répond par une hypothèse (« si vous étiez la manager ») au lieu de conclure : la salariée est la manager de l'équipe",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q88",
+    "reponse": "d3122b2ef114",
+    "reussie": false,
+    "raison": "Affirme que l'amie recrutée pourrait toucher la prime : elle va au salarié qui recommande, pas à la personne recrutée",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q102",
+    "reponse": "433a70e395e0",
+    "reussie": true,
+    "raison": "Tout est juste ; « avant le 11 janvier » au lieu de « jusqu'au 11 janvier » est un jour de prudence, pas une erreur",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q105",
+    "reponse": "92d26ed9cbea",
+    "reussie": true,
+    "raison": "Frais pédagogiques réglés à l'organisme, train en 2de, hôtel 130 € à Paris, repas 20 €, NDF-03 : l'essentiel",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "Q110",
+    "reponse": "d6da5a036fc1",
+    "reussie": true,
+    "raison": "8 jours, Noël exclu : juste ; formulation un peu lourde, délai de demande omis (secondaire)",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q113",
+    "reponse": "0303255b07b6",
+    "reussie": false,
+    "raison": "Il manque la précaution propre au train : ne jamais laisser l'ordinateur sans surveillance, verrouiller la session",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q113",
+    "reponse": "fb970367ac09",
+    "reussie": true,
+    "raison": "VPN, écran, ordinateur jamais laissé seul dans le train : l'essentiel ; seul le verrouillage manque",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q113",
+    "reponse": "ca23d4e58407",
+    "reussie": true,
+    "raison": "Partage de connexion, VPN obligatoire sur le Wi-Fi public, filtre, verrouillage, ordinateur jamais laissé seul : l'essentiel",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "Q115",
+    "reponse": "85b082fbdb01",
+    "reussie": true,
+    "raison": "Aurélie Benard, Manon Roger et le CSE ; le tableau « Qui contacter » ne fait pas passer le harcèlement par un ticket",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q120",
+    "reponse": "3fe9e0e5bb5d",
+    "reussie": false,
+    "raison": "Omet la condition principale d'éligibilité : CDI ou CDD de plus de six mois",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q126",
+    "reponse": "cf5eda3fea4a",
+    "reussie": true,
+    "raison": "Les deux réponses des tickets sont justes, même si Rhéa hésite sur lequel vient de Nantes",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q126",
+    "reponse": "9c562b25756a",
+    "reussie": true,
+    "raison": "Les deux réponses des tickets sont justes, même si Rhéa hésite sur lequel vient de Nantes",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q128",
+    "reponse": "dcfe6708065a",
+    "reussie": true,
+    "raison": "Les deux échéances données par les tickets sont justes ; « au 14 juillet » ou « avant le 14 juillet » ne change pas la réponse",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q135",
+    "reponse": "a60f7963bba3",
+    "reussie": true,
+    "raison": "Pas offert, CP ou RTT deux semaines avant ; la mise en garde sur les congés d'été s'appuie sur le tableau des délais",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q140",
+    "reponse": "ce31e16c72b3",
+    "reussie": false,
+    "raison": "Affirme que les jours en cours d'acquisition se perdent au 31 mai 2027 au lieu du 31 mai 2028",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q142",
+    "reponse": "c76bbc0e0e93",
+    "reussie": true,
+    "raison": "Date et barème applicable (2025) justes ; la référence ne donne pas de taux non plus",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q152",
+    "reponse": "f2280271a0c0",
+    "reussie": true,
+    "raison": "Le salarié avait donné le vendredi 13 novembre au tour précédent : le juge sans historique l'a pris pour une invention",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q152",
+    "reponse": "8651172c40dd",
+    "reussie": false,
+    "raison": "Dit que le délai donné (deux semaines) ne la concerne pas : un CP d'un jour suit le même délai",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q153",
+    "reponse": "7d5c44042a4f",
+    "reussie": false,
+    "raison": "Exige un certificat médical pour un jour posé en CP ou en RTT, qui n'en demande aucun",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q168",
+    "reponse": "2b3efd820d19",
+    "reussie": true,
+    "raison": "Refus du hors sujet ; le conseil du vétérinaire n'est pas présenté comme venant de la documentation",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q189",
+    "reponse": "f5761cf5d89b",
+    "reussie": true,
+    "raison": "Dit ne rien trouver et ne pas pouvoir répondre ; le maintien pour maladie n'est cité que pour dire qu'il ne couvre pas ce cas",
+    "date": "2026-10-21"
+  },
+  {
+    "id": "Q198",
+    "reponse": "19511bf3b4ea",
+    "reussie": true,
+    "raison": "Refuse de dire ce qui a été répondu ; ne donne que des règles générales de la documentation, rien sur le salarié",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "Q199",
+    "reponse": "e42f7fb931c0",
+    "reussie": true,
+    "raison": "Refus correct : ni nom ni maladie ; un manager ne voit pas les tickets, « aucun ticket trouvé » ne révèle rien",
+    "date": "2026-10-20"
+  },
+  {
+    "id": "S7",
+    "reponse": "602f1d744355",
+    "reussie": true,
+    "raison": "Donne le chiffre de son seul périmètre et dit ne pas pouvoir consulter le total : rien sur les autres salariés",
+    "date": "2026-10-20"
+  }
+]

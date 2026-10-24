@@ -10,11 +10,13 @@ import { APPELS_PAR_OUTIL, TOKENS_MAX, TOURS_MAX } from "../agent/boucle.ts";
 import { config } from "../config.ts";
 import { nomDuModele } from "../embeddings/fournisseurs.ts";
 import type { Tarifs } from "../eval/comparaison.ts";
+import { desaccords, etiqueter, lireEtiquettes, type Desaccord, type Etiquette } from "../eval/etiquettes.ts";
 import type { Execution, ResultatQuestion } from "../eval/production.ts";
-import { MODELE_DU_SEUIL, SEUIL } from "../generation/abstention.ts";
+import { empreinte } from "../eval/reponses.ts";
+import { MODELE_DU_SEUIL, plancherMesure, plancherPour, SEUIL } from "../generation/abstention.ts";
 import { BUDGET_PASSAGES, PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { basePour, type Profil } from "../recherche/droits.ts";
-import { LLM_DE_LA_RECHERCHE, RECHERCHE_DE_PRODUCTION, trouverPassages } from "../recherche/passages.ts";
+import { aujourdhui, LLM_DE_LA_RECHERCHE, RECHERCHE_DE_PRODUCTION, trouverPassages } from "../recherche/passages.ts";
 import { RECHERCHE } from "../recherche/reglages.ts";
 import { destinations } from "../rgpd/localisation.ts";
 import { lireIndexation } from "../stockage/schema.ts";
@@ -65,9 +67,9 @@ export type ConfigurationRhea = {
   embeddings: { fournisseur: string; modele: string; dimensions: number | null; nom: string };
   reclasseur: { fournisseur: string; modele: string; actif: boolean };
   recherche: typeof RECHERCHE;
-  seuil: { valeur: number; mesureAvec: string; aJour: boolean };
+  seuil: { valeur: number; plancher: number | null; mesureAvec: string; aJour: boolean }; // plancher null : non mesuré pour ce modèle
   budget: { passagesDemandes: number; tokens: number };
-  agent: { toursMax: number; tokensMax: number; appelsParOutil: number; recherche: string };
+  agent: { toursMax: number; tokensMax: number; appelsParOutil: number; recherche: string; verification: boolean };
   prompt: string;
   index: { passages: number; modele: string | null; stockage: string | null };
   destinations: ReturnType<typeof destinations>;
@@ -84,6 +86,9 @@ export type Inspection = {
   evaluations: () => Promise<ResumeExecution[]>;
   evaluation: (nom: string) => Promise<DetailExecution | "cache" | null>;
   resultat: (nom: string, id: string) => Promise<ResultatQuestion | "cache" | null>;
+  // Leçon 4 : les désaccords entre deux juges (les mêmes réponses), et la décision humaine sur l'un d'eux
+  desaccords: (a: string, b: string) => Promise<{ desaccords: Desaccord[]; etiquettes: Etiquette[] } | null>;
+  etiqueter: (a: string, id: string, reussie: boolean, raison: string) => Promise<boolean>;
 };
 
 export const RESULTATS = "eval/production/resultats";
@@ -156,6 +161,21 @@ export function inspectionDe(pool: pg.Pool, autres: { version: string; tarifs?: 
   return {
     evaluations: () => executions.resumes(),
 
+    async desaccords(a, b) {
+      const [ea, eb] = [await executions.lire(a), await executions.lire(b)];
+      if (!ea || !eb || ea.jeu === "cache" || eb.jeu === "cache") return null;
+      return { desaccords: desaccords(ea, eb), etiquettes: await lireEtiquettes() };
+    },
+
+    // L'étiquette porte sur le texte de la réponse dans l'exécution a (la même dans b, par construction des désaccords)
+    async etiqueter(a, id, reussie, raison) {
+      const execution = await executions.lire(a);
+      const r = execution?.jeu === "travail" ? execution.resultats.find((x) => x.question.id === id) : undefined;
+      if (!r) return false;
+      await etiqueter({ id, reponse: empreinte(r.obtenu.texte), reussie, raison, date: aujourdhui() });
+      return true;
+    },
+
     async evaluation(nom) {
       const execution = await executions.lire(nom);
       if (!execution) return null;
@@ -188,9 +208,9 @@ export function inspectionDe(pool: pg.Pool, autres: { version: string; tarifs?: 
           actif: RECHERCHE_DE_PRODUCTION.reclassement,
         },
         recherche: RECHERCHE_DE_PRODUCTION,
-        seuil: { valeur: SEUIL, mesureAvec: MODELE_DU_SEUIL, aJour: MODELE_DU_SEUIL === nomDuModele() },
+        seuil: { valeur: SEUIL, plancher: plancherMesure(nomDuModele()) ? plancherPour(nomDuModele()) : null, mesureAvec: MODELE_DU_SEUIL, aJour: MODELE_DU_SEUIL === nomDuModele() },
         budget: { passagesDemandes: PASSAGES_DEMANDES, tokens: BUDGET_PASSAGES },
-        agent: { toursMax: TOURS_MAX, tokensMax: TOKENS_MAX, appelsParOutil: APPELS_PAR_OUTIL, recherche: "secours" },
+        agent: { toursMax: TOURS_MAX, tokensMax: TOKENS_MAX, appelsParOutil: APPELS_PAR_OUTIL, recherche: "secours", verification: config.VERIFICATION },
         prompt: autres.version,
         index: { passages: rows[0].n, modele: indexation?.modele ?? null, stockage: indexation?.stockage ?? null },
         destinations: destinations(config),

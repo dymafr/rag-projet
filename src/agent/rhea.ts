@@ -4,7 +4,10 @@
 // commande et l'évaluation utilisaient l'agent : deux Rhéa différentes
 import type pg from "pg";
 import { config } from "../config.ts";
+import { nomDuModele } from "../embeddings/fournisseurs.ts";
+import { plancherPour } from "../generation/abstention.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
+import { verifierReponse } from "../generation/verification.ts";
 import { creerLlm } from "../llm.ts";
 import { condenser } from "../recherche/conversation.ts";
 import { trouverPassages } from "../recherche/passages.ts";
@@ -29,7 +32,8 @@ export type OptionsRhea = {
 // Les outils ne dépendent que de la base : on les crée une fois, et chaque question les réutilise
 export function outilsDeRhea(pool: pg.Pool) {
   return [
-    chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date)),
+    // Leçon 4 : le plancher de similarité du modèle d'embedding de .env
+    chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date), plancherPour(nomDuModele())),
     consulterSolde(pool),
     consulterProfil(pool),
     consulterOrganigramme(pool), // chapitre 12, leçon 2
@@ -51,6 +55,8 @@ export function assemblerRhea(outils: Agent["outils"], options: OptionsRhea): Ag
     condenser: (question, historique) => condenser(question, historique, llmSimple),
     confirmer: options.confirmer,
     journaliser: options.journaliser,
+    // Leçon 4 : avec VERIFICATION=oui, chaque réponse vérifiée contre ses sources avant d'être rendue
+    ...(config.VERIFICATION && { verifier: (question: string, reponse: string, preuves: { id: string; texte: string }[]) => verifierReponse(llmSimple, question, reponse, preuves) }),
     // Chapitre 12, leçon 2 : avec un salarié connecté, sa fiche de l'organigramme d'office (son manager, sa chaîne)
     appelsDOffice: options.matricule ? [{ id: "organigramme-d-office", nom: "consulter_organigramme", arguments: { personne: null } }] : [],
   };

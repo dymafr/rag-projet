@@ -80,7 +80,8 @@ export async function trouverPassages(
   // n'est appelé que si la question contient un indice (une année, un mois, un type de document…). Toutes les requêtes
   // passent par une base restreinte au profil (droits.ts) : la sécurité par ligne double le filtre
   const base = basePour(pool, profil);
-  const filtres: Filtres = { enVigueurLe: date, acces: NIVEAUX[profil] };
+  // existeLe (chapitre 14) : une date extraite de la question remplace enVigueurLe, jamais le jour de la question
+  const filtres: Filtres = { enVigueurLe: date, existeLe: date, acces: NIVEAUX[profil] };
   // Chapitre 14 : la trace dit quels niveaux la recherche a le droit de lire, jamais ce que ce filtre écarte (le nombre
   // de passages écartés suffirait à révéler qu'un document réservé existe : chapitre 13)
   noter("droits", "Droits du lecteur", {

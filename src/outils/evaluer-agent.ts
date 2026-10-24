@@ -20,8 +20,10 @@ import { interrogerSoldes } from "../agent/soldes-sql.ts";
 import { fichiersCites, sourcesCitees } from "../agent/sources.ts";
 import { config } from "../config.ts";
 import { pool } from "../db.ts";
+import { nomDuModele } from "../embeddings/fournisseurs.ts";
 import type { FichierAgent, TraceAgent } from "../eval/agent.ts";
 import { lireJeu } from "../eval/jeu.ts";
+import { plancherPour } from "../generation/abstention.ts";
 import { PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
 import { creerLlm } from "../llm.ts";
@@ -52,7 +54,7 @@ const systeme = await lirePromptSysteme(values.prompt ?? (surFichiers ? "prompts
 // Les outils de Rhéa, sans salarié connecté : les questions du jeu ne parlent de la situation de personne. Un ticket
 // demandé par erreur ne s'ouvrirait pas : sans salarié, l'outil ne fait rien. Profil salarie : les documents ouverts à tous
 // Leçon 7 : sur fichiers, les trois outils d'un agent de code remplacent la recherche de Rhéa
-const recherches = surFichiers ? outilsFichiers(DOSSIER_TEXTES) : [chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date))];
+const recherches = surFichiers ? outilsFichiers(DOSSIER_TEXTES) : [chercherDocuments((requete, date, profil) => trouverPassages(pool, requete, PASSAGES_DEMANDES, profil, date), plancherPour(nomDuModele()))];
 const outils = [
   ...recherches,
   consulterSolde(pool),
