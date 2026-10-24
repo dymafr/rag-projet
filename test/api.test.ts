@@ -370,6 +370,7 @@ test("les routes d'inspection lisent avec le profil du salarié connecté, et ne
     resultat: async (nom) => (nom === "secret" ? "cache" : null),
     desaccords: async () => null,
     etiqueter: async () => false,
+    observations: async () => ({ jours: [], derive: { recents: { questions: 0, sansSource: null, meilleurScore: null, negatifs: null }, avant: { questions: 0, sansSource: null, meilleurScore: null, negatifs: null }, alertes: [] } }),
   };
   await avecServeur(serveurDeTest({ inspecter }), async (adresse) => {
     assert.equal((await (await fetch(`${adresse}/api/salaries`)).json())[0].matricule, "K0101");
