@@ -15,6 +15,7 @@ import type { Execution, ResultatQuestion } from "../eval/production.ts";
 import { empreinte } from "../eval/reponses.ts";
 import { MODELE_DU_SEUIL, plancherMesure, plancherPour, SEUIL } from "../generation/abstention.ts";
 import { BUDGET_PASSAGES, PASSAGES_DEMANDES } from "../generation/prompt.ts";
+import { derive, parJour, type Jour } from "../observabilite/observations.ts";
 import { basePour, type Profil } from "../recherche/droits.ts";
 import { aujourdhui, LLM_DE_LA_RECHERCHE, RECHERCHE_DE_PRODUCTION, trouverPassages } from "../recherche/passages.ts";
 import { RECHERCHE } from "../recherche/reglages.ts";
@@ -87,6 +88,7 @@ export type Inspection = {
   evaluations: () => Promise<ResumeExecution[]>;
   evaluation: (nom: string) => Promise<DetailExecution | "cache" | null>;
   resultat: (nom: string, id: string) => Promise<ResultatQuestion | "cache" | null>;
+  observations: () => Promise<{ jours: Jour[]; derive: ReturnType<typeof derive> }>; // leçon 7
   // Leçon 4 : les désaccords entre deux juges (les mêmes réponses), et la décision humaine sur l'un d'eux
   desaccords: (a: string, b: string) => Promise<{ desaccords: Desaccord[]; etiquettes: Etiquette[] } | null>;
   etiqueter: (a: string, id: string, reussie: boolean, raison: string) => Promise<boolean>;
@@ -175,6 +177,11 @@ export function inspectionDe(pool: pg.Pool, autres: { version: string; tarifs?: 
       if (!r) return false;
       await etiqueter({ id, reponse: empreinte(r.obtenu.texte), reussie, raison, date: aujourdhui() });
       return true;
+    },
+
+    async observations() {
+      const jours = await parJour(pool, 60);
+      return { jours, derive: derive(jours, aujourdhui()) };
     },
 
     async evaluation(nom) {

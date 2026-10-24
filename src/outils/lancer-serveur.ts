@@ -1,7 +1,7 @@
 // Lancer le serveur de Rhéa : l'interface sur http://localhost:3000, et POST /ask pour les programmes
 // Lancement : npm run serveur (Ctrl+C pour l'arrêter). npm run serveur construit d'abord l'interface (web/ → web/dist)
 // Chapitre 14 : le serveur sert l'agent complet, celui de npm run agent et de l'évaluation, assemblé une seule fois
-import { journalJsonl } from "../agent/journal.ts";
+import { cleDuJournal, journalJsonl, pseudonyme } from "../agent/journal.ts";
 import { assemblerRhea, outilsDeRhea, PROMPT_AGENT } from "../agent/rhea.ts";
 import { Confirmations } from "../api/confirmations.ts";
 import { inspectionDe } from "../api/inspection.ts";
@@ -13,6 +13,8 @@ import { nomDuModele, vectoriser } from "../embeddings/fournisseurs.ts";
 import { lireTarifs } from "../eval/comparaison.ts";
 import { plancherMesure } from "../generation/abstention.ts";
 import { lirePromptSysteme } from "../generation/systeme.ts";
+import { caviarder } from "../ingestion/secrets.ts";
+import { creerObservations, enregistrer, retour, sansMatricule, sourcesSansMatricule } from "../observabilite/observations.ts";
 import { profilDuSalarie } from "../recherche/droits.ts";
 import { aujourdhui } from "../recherche/passages.ts";
 import { lireIndexation } from "../stockage/schema.ts";
@@ -27,6 +29,9 @@ const version = `v${systeme.version} ${systeme.empreinte}`;
 const tarifs = await lireTarifs();
 const outils = outilsDeRhea(pool); // créés une fois ; chaque question assemble son agent, pour son salarié
 const journaliser = journalJsonl(); // chaque appel d'outil au journal, pseudonymisé (chapitre 13)
+// Leçon 7 : une observation par question, le salarié sous un pseudonyme (la clé du journal, chapitre 13)
+await creerObservations(pool);
+const cle = await cleDuJournal();
 // Leçon 6 : le cache sémantique, si .env le demande. Sa clé comprend la version de l'index : recalculée chaque minute, elle
 // change dès qu'une réindexation (le travailleur) modifie un passage, et le cache ne sert plus les anciennes réponses
 let versionDeLIndex = "";
@@ -78,6 +83,12 @@ const serveur = creerServeur({
         ecrire: (vecteur, cle, reponse, sources) => garder(pool, vecteur, cle, reponse, sources),
       }
     : undefined,
+  observer: (session, o) =>
+    enregistrer(pool, { ...o, citees: sourcesSansMatricule(o.citees, (m) => pseudonyme(m, cle)), pseudonyme: pseudonyme(session.matricule, cle), profil: session.profil }, cle),
+  // Un commentaire est un texte libre : un secret collé par erreur y est caviardé (chapitre 13)
+  // (et un matricule qu'il cite passe sous pseudonyme ; un nom écrit en toutes lettres, lui, reste : un texte libre se relit)
+  retour: (observation, matricule, note, commentaire) =>
+    retour(pool, observation, pseudonyme(matricule, cle), note, commentaire && sansMatricule(caviarder(commentaire).texte, (m) => pseudonyme(m, cle))),
 });
 // 127.0.0.1 : le serveur ne répond qu'à cette machine, pas au reste du réseau
 serveur.listen(PORT, "127.0.0.1", () => {
