@@ -18,9 +18,9 @@ export type AJuger = { question: string; reponse: string; passages: { numero: nu
 // strictObject) laisse passer une clé en trop : un modèle en ajoute parfois une, sans que son verdict soit faux
 export const Verdict = z.object({ raison: z.string().min(1), verdict: z.enum(["oui", "non"]) });
 
-const FORMAT = `Réponds uniquement avec un objet JSON : {"raison": "ce que tu as vérifié, en une ou deux phrases", "verdict": "oui" ou "non"}`;
+export const FORMAT = `Réponds uniquement avec un objet JSON : {"raison": "ce que tu as vérifié, en une ou deux phrases", "verdict": "oui" ou "non"}`;
 
-const passages = (a: AJuger) => a.passages.map((p) => `<passage numero="${p.numero}">\n${p.texte}\n</passage>`).join("\n");
+export const passages = (a: AJuger) => a.passages.map((p) => `<passage numero="${p.numero}">\n${p.texte}\n</passage>`).join("\n");
 
 // Pour chaque critère : la consigne, identique d'un appel à l'autre (le début du prompt), et les données (la fin)
 export const CRITERES: Record<Critere, { consigne: string; donnees: (a: AJuger) => string }> = {
@@ -94,8 +94,10 @@ export function coupe(prompt: string, tokensComptes: number): boolean {
 
 // Un essai, puis un second si le verdict est illisible. Après deux échecs, le verdict reste null : la réponse
 // est comptée comme non jugée, plutôt que d'arrêter toute l'évaluation
-export async function juger(llm: Llm, critere: Critere, aJuger: AJuger): Promise<Jugement> {
-  const { consigne, donnees } = CRITERES[critere];
+export const juger = (llm: Llm, critere: Critere, aJuger: AJuger) => jugerAvec(llm, CRITERES[critere], aJuger);
+
+// Chapitre 14 : la même chose avec une autre consigne (le juge du jeu de production a la sienne pour l'exactitude)
+export async function jugerAvec(llm: Llm, { consigne, donnees }: (typeof CRITERES)[Critere], aJuger: AJuger): Promise<Jugement> {
   const usage: Usage = { entree: 0, enCache: 0, sortie: 0 };
   let rappel = "";
   for (let essai = 1; essai <= 2; essai++) {

@@ -2,7 +2,7 @@
 // requête qu'il a choisie. Les passages sont balisés comme au chapitre 7, et se citent par leur source : l'agent peut
 // chercher plusieurs fois, des numéros se répéteraient d'une recherche à l'autre
 import { z } from "zod";
-import { horsCorpus, meilleurScore, SEUIL } from "../generation/abstention.ts";
+import { horsCorpus, meilleurScore, PLANCHER } from "../generation/abstention.ts";
 import { baliser, BUDGET_PASSAGES, choisir, estimerTokens, estUnTicket } from "../generation/prompt.ts";
 import type { Profil } from "../recherche/droits.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
@@ -11,7 +11,9 @@ import { definirOutil } from "./outil.ts";
 
 export type Chercher = (requete: string, date: string, profil: Profil) => Promise<Resultat[]>;
 
-export const chercherDocuments = (chercher: Chercher) =>
+// plancher (chapitre 14, leçon 4) : celui du modèle d'embedding configuré, que chaque appelant passe (plancherPour) ;
+// absent, celui du modèle local
+export const chercherDocuments = (chercher: Chercher, plancher = PLANCHER) =>
   definirOutil({
     nom: "chercher_documents",
     description:
@@ -33,16 +35,16 @@ export const chercherDocuments = (chercher: Chercher) =>
     async executer({ requete }, contexte) {
       // Le profil vient du contexte, jamais des arguments : le LLM choisit quoi chercher, pas où il a le droit de chercher
       const resultats = await chercher(requete, contexte.date, contexte.profil);
-      // Le seuil d'abstention du chapitre 7 : loin de tout passage, mieux vaut le dire au LLM que lui donner du hors sujet.
-      // Chapitre 14 : la décision se note dans la trace
-      const loin = horsCorpus(resultats);
-      noter("seuil", "Seuil d'abstention", {
-        resume: `meilleur score ${nombre(meilleurScore(resultats))} ${loin ? "<" : "≥"} seuil ${nombre(SEUIL, 2)} : ${loin ? "aucun passage rendu" : "passages rendus"}`,
-        details: { meilleur: Number(meilleurScore(resultats).toFixed(4)), seuil: SEUIL, horsCorpus: loin },
+      // Loin de tout passage, mieux vaut le dire au LLM que lui donner du hors sujet. Chapitre 14, leçon 4 : sous un plancher
+      // seulement (abstention.ts) ; au-dessus, le LLM lit les passages et dit s'ils ne répondent pas. La décision se note dans la trace
+      const loin = horsCorpus(resultats, plancher);
+      noter("seuil", "Plancher de similarité", {
+        resume: `meilleur score ${nombre(meilleurScore(resultats))} ${loin ? "<" : "≥"} plancher ${nombre(plancher, 2)} : ${loin ? "aucun passage rendu" : "passages rendus"}`,
+        details: { meilleur: Number(meilleurScore(resultats).toFixed(4)), seuil: plancher, horsCorpus: loin },
       });
       if (loin) {
         const meilleur = meilleurScore(resultats).toFixed(3);
-        const texte = `Aucun passage assez proche de « ${requete} » (meilleur score ${meilleur}, sous le seuil de ${SEUIL}). La documentation ne traite peut-être pas cette question : cherchez autrement, ou dites-le au salarié.`;
+        const texte = `Aucun passage assez proche de « ${requete} » (meilleur score ${meilleur}, sous le plancher de ${plancher}). La documentation ne traite peut-être pas cette question : cherchez autrement, ou dites-le au salarié.`;
         return { texte, passages: [] };
       }
       // Le budget du chapitre 7, à chaque recherche : les passages les plus proches, tant qu'ils tiennent
