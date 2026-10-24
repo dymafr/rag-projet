@@ -7,8 +7,10 @@ import type { Citation, Generation, Morceau } from "./generateur.ts";
 import { finDuMessage, type PromptAugmente } from "./prompt.ts";
 import { ReponseRhea, type DemandeJson } from "./structure.ts";
 
-// La réflexion, active d'office sur certains modèles, compte dans cette limite, comme le texte de la réponse
-const MAX_TOKENS = 4096;
+// La réflexion, active d'office sur certains modèles, compte dans cette limite, comme le texte de la réponse. Chapitre 14 :
+// Opus 5.5 réfléchit toujours, sans réglage pour l'en empêcher ; 4 096 tokens ne suffisaient plus. Seuls les tokens
+// écrits se paient : une limite haute ne coûte rien de plus
+const MAX_TOKENS = 16_000;
 
 // 1. Un passage devient un bloc search_result. Claude cite des blocs de texte entiers :
 // un bloc par paragraphe donne des citations plus précises qu'un seul bloc pour tout le passage
@@ -42,9 +44,12 @@ export function lireReponse(blocs: Anthropic.ContentBlock[]) {
   return { texte, citations };
 }
 
+// entree : toute l'entrée, comme chez OpenAI ; dont enCache relus dans le cache et (chapitre 14) ecritCache écrits dans le
+// cache, facturés plus cher que l'entrée (eval/tarifs.json, ecritureCache)
 export function usageDe({ input_tokens, cache_creation_input_tokens, cache_read_input_tokens, output_tokens }: Anthropic.Usage) {
   const enCache = cache_read_input_tokens ?? 0;
-  return { entree: input_tokens + (cache_creation_input_tokens ?? 0) + enCache, enCache, sortie: output_tokens };
+  const ecrits = cache_creation_input_tokens ?? null; // null : l'API ne l'a pas dit
+  return { entree: input_tokens + (ecrits ?? 0) + enCache, enCache, sortie: output_tokens, ...(ecrits !== null && { ecritCache: ecrits }) };
 }
 
 // 3. L'appel : le prompt système, puis un seul message avec les blocs des passages, la date du jour et la question.
