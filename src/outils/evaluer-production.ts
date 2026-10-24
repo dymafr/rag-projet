@@ -21,9 +21,8 @@ import { lirePromptSysteme } from "../generation/systeme.ts";
 import { pourLeTerminal } from "../ingestion/secrets.ts";
 import { creerLlm, type Usage } from "../llm.ts";
 import { profilDuSalarie } from "../recherche/droits.ts";
-import { aujourdhui } from "../recherche/passages.ts";
+import { aujourdhui, RECHERCHE_DE_PRODUCTION } from "../recherche/passages.ts";
 import { decrire } from "../recherche/options.ts";
-import { RECHERCHE } from "../recherche/reglages.ts";
 import type { Resultat } from "../recherche/vectorielle.ts";
 import { avecTrace, Trace } from "../trace/trace.ts";
 
@@ -60,8 +59,9 @@ await mkdir(dossier, { recursive: true });
 const systeme = await lirePromptSysteme(PROMPT_AGENT);
 const outils = outilsDeRhea(pool);
 const tarifs = await lireTarifs();
-// Le juge : JUGE_MODEL, chez le fournisseur de .env
-const juge = values["sans-juge"] ? null : creerLlm(config.JUGE_MODEL || config.LLM_MODEL);
+// Le juge : JUGE_MODEL chez JUGE_PROVIDER (chapitre 14 : un autre fournisseur que celui qui rédige, de préférence)
+const fournisseurDuJuge = config.JUGE_PROVIDER ?? config.LLM_PROVIDER;
+const juge = values["sans-juge"] ? null : creerLlm(config.JUGE_MODEL || config.LLM_MODEL, fournisseurDuJuge);
 const cleTarif = `${config.LLM_PROVIDER} ${config.LLM_MODEL}`;
 
 // Une exécution à reprendre : les questions déjà faites, si le jeu n'a pas changé entre-temps
@@ -80,11 +80,11 @@ const faites = new Set(resultats.map((r) => r.question.id));
 const debut = performance.now();
 const configuration: Execution["configuration"] = {
   generation: cleTarif,
-  juge: juge ? `${config.LLM_PROVIDER} ${config.JUGE_MODEL || config.LLM_MODEL}` : "aucun",
+  juge: juge ? `${fournisseurDuJuge} ${config.JUGE_MODEL || config.LLM_MODEL}` : "aucun",
   embeddings: nomDuModele(),
-  reclasseur: RECHERCHE.reclassement ? config.RERANK_MODEL : null,
+  reclasseur: !RECHERCHE_DE_PRODUCTION.reclassement ? null : config.RERANK_PROVIDER === "llm" ? `llm ${config.LLM_PROVIDER} ${config.LLM_MODEL}` : `${config.RERANK_PROVIDER} ${config.RERANK_MODEL}`,
   prompt: `v${systeme.version} ${systeme.empreinte}`,
-  recherche: decrire(RECHERCHE),
+  recherche: decrire(RECHERCHE_DE_PRODUCTION),
 };
 
 // Enregistrer : d'abord dans un fichier voisin, puis le renommer. Une coupure en pleine écriture ne laisse jamais un

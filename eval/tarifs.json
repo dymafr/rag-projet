@@ -1,9 +1,28 @@
 {
-  "date": "2026-10-16",
-  "source": "https://developers.openai.com/api/docs/pricing",
+  "date": "2026-10-20",
+  "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+  "autresSources": [
+    "https://developers.openai.com/api/docs/pricing",
+    "https://www.mongodb.com/docs/voyageai/management/billing/"
+  ],
   "modeles": {
+    "anthropic claude-fable-5-1": { "entree": 10, "enCache": 0.25, "ecritureCache": 12.5, "sortie": 50 },
+    "anthropic claude-opus-5-5": { "entree": 4, "enCache": 0.2, "ecritureCache": 5, "sortie": 20 },
+    "anthropic claude-sonnet-5-5": { "entree": 2, "enCache": 0.1, "ecritureCache": 2.5, "sortie": 10 },
+    "anthropic claude-haiku-5-5": { "entree": 0.1, "enCache": 0.01, "ecritureCache": 0.125, "sortie": 0.5 },
     "openai gpt-6-luna": { "entree": 0.1, "enCache": 0.01, "ecritureCache": 0.125, "sortie": 0.5 },
     "openai gpt-6.1-sol": { "entree": 2, "enCache": 0.1, "ecritureCache": 2.5, "sortie": 10 }
+  },
+  "embeddings": {
+    "openai text-embedding-3-small": 0.02,
+    "openai text-embedding-3-large": 0.13,
+    "voyage voyage-4-lite": 0.02,
+    "voyage voyage-4": 0.06,
+    "voyage voyage-4-large": 0.12
+  },
+  "reclasseurs": {
+    "voyage rerank-3-lite": 0.02,
+    "voyage rerank-3": 0.05
   },
   "fileSearchPour1000": 2.5
 }

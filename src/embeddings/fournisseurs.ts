@@ -11,13 +11,17 @@ import { normaliser } from "./similarite.ts";
 // La question d'un salarié (requête) ou un passage du corpus (document) : certains modèles les encodent différemment
 export type Usage = "requete" | "document";
 export type Embedder = (textes: string[], usage: Usage) => Promise<number[][]>;
-type Reglages = Pick<Config, "EMBEDDING_PROVIDER" | "EMBEDDING_MODEL" | "EMBEDDING_DIMENSIONS" | "VOYAGE_API_KEY">;
+type Reglages = Pick<Config, "EMBEDDING_PROVIDER" | "EMBEDDING_MODEL" | "EMBEDDING_DIMENSIONS" | "VOYAGE_API_KEY"> & Partial<Pick<Config, "VOYAGE_BASE_URL">>;
 
 const TAILLE_LOT = 32; // textes envoyés par appel
 
-// Les modèles de la famille e5 attendent un préfixe qui dit si le texte est une requête ou un document
-const prefixe = (modele: string, usage: Usage) =>
-  /e5/i.test(modele) ? (usage === "requete" ? "query: " : "passage: ") : "";
+// Les modèles de la famille e5 attendent un préfixe qui dit si le texte est une requête ou un document. Chapitre 14 :
+// EmbeddingGemma aussi, avec les siens (la tâche, puis la requête ; un titre, puis le texte)
+const prefixe = (modele: string, usage: Usage) => {
+  if (/e5/i.test(modele)) return usage === "requete" ? "query: " : "passage: ";
+  if (/embeddinggemma/i.test(modele)) return usage === "requete" ? "task: search result | query: " : "title: none | text: ";
+  return "";
+};
 
 // Modèle local, chargé au premier appel. Vecteur d'un texte : son premier token (cls) avec BGE, la moyenne sinon
 function appelTransformers(r: Reglages): Embedder {
@@ -39,10 +43,11 @@ function appelOpenAI(r: Reglages): Embedder {
   };
 }
 
-// Voyage : input_type indique au modèle s'il encode une requête ou un document
+// Voyage : input_type indique au modèle s'il encode une requête ou un document. Chapitre 14 : l'adresse vient de .env
+// (VOYAGE_BASE_URL), l'API ayant rejoint MongoDB Atlas (ai.mongodb.com, ou eu.ai.mongodb.com pour rester en Europe)
 function appelVoyage(r: Reglages): Embedder {
   return async (textes, usage) => {
-    const reponse = await fetch("https://api.voyageai.com/v1/embeddings", {
+    const reponse = await fetch(`${r.VOYAGE_BASE_URL ?? "https://ai.mongodb.com/v1"}/embeddings`, {
       method: "POST",
       headers: { Authorization: `Bearer ${r.VOYAGE_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({

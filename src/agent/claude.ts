@@ -6,7 +6,7 @@ import { blocDeRecherche, usageDe } from "../generation/claude.ts";
 import type { AppelOutil, LlmAgent, Message } from "./llm-agent.ts";
 import { schemaJson, type Outil } from "./outil.ts";
 
-const MAX_TOKENS = 4096; // voir generation/claude.ts
+const MAX_TOKENS = 16_000; // voir generation/claude.ts : la réflexion d'Opus 5.5 compte dans cette limite (chapitre 14)
 
 export const outilClaude = (outil: Outil): Anthropic.Tool => ({
   name: outil.nom,

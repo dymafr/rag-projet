@@ -18,8 +18,12 @@ export function centile(valeurs: number[], p: number): number {
 export const Tarifs = z.object({
   date: z.iso.date(),
   source: z.url(),
+  autresSources: z.array(z.url()).optional(), // chapitre 14 : une page de prix par fournisseur
   // ecritureCache : le prix d'un token d'entrée écrit dans le cache, s'il est facturé à part (plus cher que l'entrée)
   modeles: z.record(z.string(), z.object({ entree: z.number(), enCache: z.number(), ecritureCache: z.number().optional(), sortie: z.number() })),
+  // Chapitre 14 : les embeddings et les reclasseurs ne facturent que l'entrée, par million de tokens
+  embeddings: z.record(z.string(), z.number()).optional(),
+  reclasseurs: z.record(z.string(), z.number()).optional(),
   fileSearchPour1000: z.number(),
 });
 export type Tarifs = z.infer<typeof Tarifs>;

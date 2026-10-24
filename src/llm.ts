@@ -4,6 +4,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import OpenAI from "openai";
 import { config } from "./config.ts";
+import { usageDe } from "./generation/claude.ts";
 import { conseilOllama, ollama } from "./ollama.ts";
 import { apercu, etape } from "./trace/trace.ts";
 
@@ -13,6 +14,10 @@ export type Usage = { entree: number; enCache: number; sortie: number; ecritCach
 export type Llm = (debut: string, fin: string) => Promise<{ texte: string; usage: Usage }>;
 
 const MAX_TOKENS = 1024; // de quoi répondre, même si le modèle réfléchit avant
+// Chapitre 14 : un modèle hébergé qui réfléchit avant de répondre (toujours, pour Opus 5.5 ; par défaut, pour GPT-6) compte
+// sa réflexion dans cette limite. Avec 1 024 tokens, un verdict du juge pouvait ne jamais arriver. La limite ne se paie
+// pas : seuls les tokens écrits sont facturés
+const MAX_TOKENS_HEBERGE = 16_000;
 
 // Claude : le bloc marqué cache_control est gardé quelques minutes ; relu par l'appel suivant, il coûte bien moins cher
 function appelAnthropic(modele: string): Llm {
@@ -20,7 +25,7 @@ function appelAnthropic(modele: string): Llm {
   return async (debut, fin) => {
     const reponse = await client.messages.create({
       model: modele,
-      max_tokens: MAX_TOKENS,
+      max_tokens: MAX_TOKENS_HEBERGE,
       messages: [
         {
           role: "user",
@@ -31,10 +36,10 @@ function appelAnthropic(modele: string): Llm {
         },
       ],
     });
+    // Une réponse coupée par la limite, ou refusée, n'est pas une réponse : mieux vaut une erreur qu'un texte tronqué
+    if (reponse.stop_reason === "max_tokens" || reponse.stop_reason === "refusal") throw new Error(`Réponse interrompue : ${reponse.stop_reason}`);
     const texte = reponse.content.flatMap((bloc) => (bloc.type === "text" ? [bloc.text] : [])).join("");
-    const { input_tokens, cache_creation_input_tokens, cache_read_input_tokens, output_tokens } = reponse.usage;
-    const enCache = cache_read_input_tokens ?? 0;
-    return { texte, usage: { entree: input_tokens + (cache_creation_input_tokens ?? 0) + enCache, enCache, sortie: output_tokens } };
+    return { texte, usage: usageDe(reponse.usage) }; // les tokens écrits dans le cache comptés à part (chapitre 14)
   };
 }
 
@@ -45,7 +50,9 @@ function appelOpenAI(modele: string): Llm {
   return async (debut, fin) => {
     const document = { type: "input_text" as const, text: debut, prompt_cache_breakpoint: { mode: "explicit" as const } };
     const input = [{ role: "user" as const, content: [document] }, { role: "user" as const, content: fin }];
-    const reponse = await client.responses.create({ model: modele, input, max_output_tokens: MAX_TOKENS, store: false }); // sinon OpenAI garde la réponse ; Rhéa n'en a pas besoin
+    const reponse = await client.responses.create({ model: modele, input, max_output_tokens: MAX_TOKENS_HEBERGE, store: false }); // sinon OpenAI garde la réponse ; Rhéa n'en a pas besoin
+    // Comme chez Claude : une réponse coupée par la limite, ou par le filtre du fournisseur, n'est pas une réponse
+    if (reponse.status === "incomplete") throw new Error(`Réponse interrompue : ${reponse.incomplete_details?.reason ?? "incomplète"}`);
     const usage = reponse.usage;
     const ecrits = usage?.input_tokens_details?.cache_write_tokens; // chapitre 11 : tokens écrits dans le cache, facturés à part
     return {
@@ -83,11 +90,11 @@ function appelOllama(modele: string): Llm {
 
 const APPELS = { anthropic: appelAnthropic, openai: appelOpenAI, ollama: appelOllama };
 
-// modele : celui de .env par défaut ; le juge d'évaluation peut en prendre un autre, chez le même fournisseur.
-// Chapitre 14 : chaque appel se note dans la trace de la question en cours, s'il y en a une (trace.ts), avec ses tokens
-export function creerLlm(modele = config.LLM_MODEL): Llm {
-  const appeler = APPELS[config.LLM_PROVIDER](modele);
-  const quel = { fournisseur: config.LLM_PROVIDER, modele };
+// modele : celui de .env par défaut ; le juge d'évaluation peut en prendre un autre, et (chapitre 14) chez un autre
+// fournisseur. Chaque appel se note dans la trace de la question en cours, s'il y en a une (trace.ts), avec ses tokens
+export function creerLlm(modele = config.LLM_MODEL, fournisseur = config.LLM_PROVIDER): Llm {
+  const appeler = APPELS[fournisseur](modele);
+  const quel = { fournisseur, modele };
   return (debut, fin) =>
     etape("appel-llm", "Appel au LLM", () => appeler(debut, fin), ({ texte, usage }) => ({
       resume: `${usage.entree} tokens en entrée, ${usage.sortie} en sortie`,

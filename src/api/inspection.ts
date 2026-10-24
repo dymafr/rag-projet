@@ -14,7 +14,7 @@ import type { Execution, ResultatQuestion } from "../eval/production.ts";
 import { MODELE_DU_SEUIL, SEUIL } from "../generation/abstention.ts";
 import { BUDGET_PASSAGES, PASSAGES_DEMANDES } from "../generation/prompt.ts";
 import { basePour, type Profil } from "../recherche/droits.ts";
-import { trouverPassages } from "../recherche/passages.ts";
+import { LLM_DE_LA_RECHERCHE, RECHERCHE_DE_PRODUCTION, trouverPassages } from "../recherche/passages.ts";
 import { RECHERCHE } from "../recherche/reglages.ts";
 import { destinations } from "../rgpd/localisation.ts";
 import { lireIndexation } from "../stockage/schema.ts";
@@ -181,10 +181,13 @@ export function inspectionDe(pool: pg.Pool, autres: { version: string; tarifs?: 
       const { rows } = await pool.query<{ n: number }>("SELECT count(*)::int AS n FROM chunks");
       return {
         generation: { fournisseur: config.LLM_PROVIDER, modele: config.LLM_MODEL },
-        juge: { fournisseur: config.LLM_PROVIDER, modele: config.JUGE_MODEL || config.LLM_MODEL },
+        juge: { fournisseur: config.JUGE_PROVIDER ?? config.LLM_PROVIDER, modele: config.JUGE_MODEL || config.LLM_MODEL },
         embeddings: { fournisseur: config.EMBEDDING_PROVIDER, modele: config.EMBEDDING_MODEL, dimensions: indexation?.dimension ?? null, nom: nomDuModele() },
-        reclasseur: { fournisseur: "transformers", modele: config.RERANK_MODEL, actif: RECHERCHE.reclassement },
-        recherche: RECHERCHE,
+        reclasseur: {
+          ...(config.RERANK_PROVIDER === "llm" ? { fournisseur: "llm", modele: LLM_DE_LA_RECHERCHE } : { fournisseur: config.RERANK_PROVIDER, modele: config.RERANK_MODEL }),
+          actif: RECHERCHE_DE_PRODUCTION.reclassement,
+        },
+        recherche: RECHERCHE_DE_PRODUCTION,
         seuil: { valeur: SEUIL, mesureAvec: MODELE_DU_SEUIL, aJour: MODELE_DU_SEUIL === nomDuModele() },
         budget: { passagesDemandes: PASSAGES_DEMANDES, tokens: BUDGET_PASSAGES },
         agent: { toursMax: TOURS_MAX, tokensMax: TOKENS_MAX, appelsParOutil: APPELS_PAR_OUTIL, recherche: "secours" },

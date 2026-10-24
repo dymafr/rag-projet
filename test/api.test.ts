@@ -441,3 +441,9 @@ test("streamerAvecClaude signale un refus avec son explication", async () => {
   const client = clientClaude([], { stop_reason: "refusal", stop_details: { explanation: "contenu refusé" }, usage: { input_tokens: 900, output_tokens: 0 } });
   await assert.rejects(morceaux(streamerAvecClaude(client, "modele-test", prompt)), /Réponse interrompue : refusal \(contenu refusé\)/);
 });
+
+test("Claude : les tokens écrits dans le cache comptent dans l'entrée et à part, pour leur prix (chapitre 14)", async () => {
+  const client = clientClaude([], { stop_reason: "end_turn", usage: { input_tokens: 100, cache_creation_input_tokens: 700, cache_read_input_tokens: 0, output_tokens: 12 } });
+  const liste = await morceaux(streamerAvecClaude(client, "modele-test", prompt));
+  assert.deepEqual(liste.at(-1), { type: "fin", usage: { entree: 800, enCache: 0, sortie: 12, ecritCache: 700 } });
+});

@@ -5,12 +5,14 @@ import { writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import { config } from "../config.ts";
 import type { Chunk } from "../decoupage/chunk.ts";
+import { CONTEXTES, contextualiserLeCorpus } from "../decoupage/contexte.ts";
 import { lireDocuments } from "../decoupage/corpus.ts";
 import { decouperFixe } from "../decoupage/fixe.ts";
 import { enCaracteres, mesureDuModele } from "../decoupage/mesure.ts";
 import { decouperSemantique } from "../decoupage/semantique.ts";
 import { decouperDocument } from "../decoupage/structure.ts";
 import { vectoriser } from "../embeddings/fournisseurs.ts";
+import { creerLlm } from "../llm.ts";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -24,9 +26,9 @@ const { values, positionals } = parseArgs({
 const taille = Number(values.taille);
 const chevauchement = Number(values.chevauchement);
 
-// La mesure : les tokens du modèle d'embedding, ou les caractères
-const modele = values.unite === "caracteres" ? { mesure: enCaracteres, limite: Infinity, estimee: false } : await mesureDuModele(config);
-const unite = values.unite === "caracteres" ? "caractères" : modele.estimee ? "tokens (estimés)" : "tokens";
+// La mesure : les tokens (chapitre 14 : toujours ceux du même tokenizer, mesure.ts), ou les caractères
+const modele = values.unite === "caracteres" ? { mesure: enCaracteres, limite: Infinity } : await mesureDuModele(config);
+const unite = values.unite === "caracteres" ? "caractères" : "tokens";
 const apercu = (texte: string) => texte.replace(/\n+/g, " ↵ ");
 const secondes = (debut: number) => ((performance.now() - debut) / 1000).toFixed(1);
 // Un chunk qui contient un titre ailleurs qu'au début mélange deux sections
@@ -82,7 +84,14 @@ if (positionals[0]) {
 } else {
   // Tout le corpus : les chunks de chaque document, écrits dans donnees/chunks.jsonl
   const debut = performance.now();
-  const chunks: Chunk[] = documents.flatMap((document) => decouperDocument(document, taille, modele.mesure));
+  let chunks: Chunk[] = documents.flatMap((document) => decouperDocument(document, taille, modele.mesure));
+  // Chapitre 14 : en production, chaque chunk est précédé d'une ou deux phrases qui le situent dans son document (chapitre
+  // 5, leçon 5), rédigées par le LLM de .env et gardées d'une fois sur l'autre (decoupage/contexte.ts)
+  if (config.CONTEXTUALISER) {
+    const fait = await contextualiserLeCorpus(documents, chunks, creerLlm());
+    chunks = fait.chunks;
+    console.log(`Contextes : ${fait.appels} chunks contextualisés par ${config.LLM_PROVIDER} ${config.LLM_MODEL} (${fait.usage.entree} tokens en entrée, dont ${fait.usage.enCache} relus dans le cache), les autres repris de ${CONTEXTES}`);
+  }
   await writeFile("donnees/chunks.jsonl", chunks.map((chunk) => `${JSON.stringify(chunk)}\n`).join(""));
   const tailles = chunks.map((chunk) => chunk.taille).sort((a, b) => a - b);
   console.log(`${documents.length} documents, ${chunks.length} chunks écrits dans donnees/chunks.jsonl en ${secondes(debut)} s`);

@@ -17,8 +17,8 @@ function parOllama(modele: string, url: string): Omit<Destination, "brique"> {
 }
 
 export function destinations(c: Config): Destination[] {
-  const llm = (brique: string, modele: string): Destination =>
-    c.LLM_PROVIDER === "ollama" ? { brique, ...parOllama(modele, c.OLLAMA_BASE_URL) } : { brique, ou: `${SERVEURS[c.LLM_PROVIDER]} (${modele})`, locale: false };
+  const llm = (brique: string, modele: string, fournisseur = c.LLM_PROVIDER): Destination =>
+    fournisseur === "ollama" ? { brique, ...parOllama(modele, c.OLLAMA_BASE_URL) } : { brique, ou: `${SERVEURS[fournisseur]} (${modele})`, locale: false };
   const embeddings: Destination =
     c.EMBEDDING_PROVIDER === "transformers"
       ? { brique: "embeddings", ou: `cette machine (Transformers.js, ${c.EMBEDDING_MODEL})`, locale: true }
@@ -30,9 +30,17 @@ export function destinations(c: Config): Destination[] {
   const base = new URL(c.DATABASE_URL.replace(/^postgres(ql)?:/, "http:")).hostname;
   return [
     llm("génération", c.LLM_MODEL),
-    llm("juge d'évaluation", c.JUGE_MODEL || c.LLM_MODEL),
+    llm("juge d'évaluation", c.JUGE_MODEL || c.LLM_MODEL, c.JUGE_PROVIDER ?? c.LLM_PROVIDER), // chapitre 14 : son fournisseur à lui
     embeddings,
-    { brique: "reclassement", ou: `cette machine (Transformers.js, ${c.RERANK_MODEL})`, locale: true },
+    // Chapitre 14, leçon 3 : avec CONTEXTUALISER=oui, npm run decouper envoie tout le corpus au LLM qui situe chaque passage
+    ...(c.CONTEXTUALISER ? [llm("contextualisation des passages", c.LLM_MODEL)] : []),
+    !c.RECLASSEMENT // chapitre 14, leçon 3 : sans reclassement, aucun passage ne part chez un reclasseur
+      ? { brique: "reclassement", ou: "aucun (RECLASSEMENT=non)", locale: true }
+      : c.RERANK_PROVIDER === "voyage"
+      ? { brique: "reclassement", ou: `${SERVEURS.voyage} (${c.RERANK_MODEL})`, locale: false } // chapitre 14
+      : c.RERANK_PROVIDER === "llm" // chapitre 14 : le LLM lui-même
+        ? llm("reclassement", c.LLM_MODEL)
+        : { brique: "reclassement", ou: `cette machine (Transformers.js, ${c.RERANK_MODEL})`, locale: true },
     ...(vision ? [{ brique: "vision", ...parOllama(vision, c.OLLAMA_BASE_URL) }] : []),
     // Le RAG géré du chapitre 11 : les documents ouverts à tous, envoyés par npm run store:creer
     ...(c.FILE_SEARCH_MODEL ? [{ brique: "file_search (npm run store:…)", ou: `les serveurs d'OpenAI (${c.FILE_SEARCH_MODEL})`, locale: false }] : []),
