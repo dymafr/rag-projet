@@ -4,6 +4,7 @@ import OpenAI from "openai";
 import { pipeline, type FeatureExtractionPipeline } from "@huggingface/transformers";
 import { config, type Config } from "../config.ts";
 import { conseilOllama, ollama } from "../ollama.ts";
+import { apercu, etape, pluriel } from "../trace/trace.ts";
 import { avecReprises, parLots } from "./lots.ts";
 import { normaliser } from "./similarite.ts";
 
@@ -77,10 +78,18 @@ export function creerEmbedder(reglages: Reglages = config): Embedder {
   const appel = APPELS[reglages.EMBEDDING_PROVIDER](reglages);
   // Les reprises servent aux API distantes (limite de débit, panne passagère), pas à un modèle local
   const distant = reglages.EMBEDDING_PROVIDER === "openai" || reglages.EMBEDDING_PROVIDER === "voyage";
-  return async (textes, usage) => {
+  const calculer = async (textes: string[], usage: Usage) => {
     const vecteurs = await parLots(textes, TAILLE_LOT, (lot) => (distant ? avecReprises(() => appel(lot, usage)) : appel(lot, usage)));
     return vecteurs.map(normaliser); // longueur 1 : ensuite, le produit scalaire suffit
   };
+  // Chapitre 14 : un calcul de vecteurs se note dans la trace de la question en cours, s'il y en a une
+  const modele = { fournisseur: reglages.EMBEDDING_PROVIDER, modele: reglages.EMBEDDING_MODEL };
+  return (textes, usage) =>
+    etape("embedding", usage === "requete" ? "Vecteur de la requête" : "Vecteurs des passages", () => calculer(textes, usage), (vecteurs) => ({
+      resume: `${pluriel(vecteurs.length, "vecteur")} de ${vecteurs[0]?.length ?? 0} dimensions`,
+      modele,
+      details: { textes: textes.map((t) => apercu(t, 300)), dimensions: vecteurs[0]?.length ?? 0, nature: usage },
+    }));
 }
 
 // L'embedder configuré dans .env, celui qu'utilise tout le projet

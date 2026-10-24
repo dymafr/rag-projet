@@ -39,6 +39,7 @@ jobs:
       - run: cp .env.example .env
       - run: npm run typecheck
       - run: npm test
+      - run: npm run web:construire # chapitre 14 : l'interface se construit
       - run: npm run db:up
       - run: npm run ingest
       - run: npm run decouper

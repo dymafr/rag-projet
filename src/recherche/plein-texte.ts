@@ -3,6 +3,7 @@
 // (Solvéa) écrit dans la question trouve les passages qui le contiennent (leur rang dépend aussi des autres mots), mais
 // un synonyme ou une paraphrase ne trouve rien
 import type { Base } from "../stockage/base.ts";
+import { enBref, etape, nombre, pluriel } from "../trace/trace.ts";
 import { conditions, type Filtres, type Resultat } from "./vectorielle.ts";
 
 // Les deux réglages de BM25, à leurs valeurs habituelles. k1 : à quelle vitesse un mot répété cesse de rapporter des
@@ -52,6 +53,9 @@ export function requetePleinTexte(question: string, k: number, filtres: Filtres)
 // score : le score BM25, qui ne se compare pas à une similarité cosinus (il n'a pas de maximum)
 export async function chercherPleinTexte(base: Base, question: string, k: number, filtres: Filtres): Promise<Resultat[]> {
   const { sql, valeurs } = requetePleinTexte(question, k, filtres);
-  const { rows } = await base.query<Resultat>(sql, valeurs);
-  return rows;
+  // Chapitre 14 : la recherche se note dans la trace de la question en cours, avec les mots cherchés et ses candidats
+  return etape("recherche-plein-texte", "Recherche plein texte", async () => (await base.query<Resultat>(sql, valeurs)).rows, (rows) => ({
+    resume: rows.length ? `${pluriel(rows.length, "candidat")}, le premier à ${nombre(rows[0].score, 2)} (BM25)` : "aucun passage ne contient ces mots",
+    details: { mots: question, k, filtres, candidats: rows.map(enBref) },
+  }));
 }

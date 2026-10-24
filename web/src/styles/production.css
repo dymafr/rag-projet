@@ -1,0 +1,830 @@
+/* La mise en production : la santé du service, l'avis du salarié, la réponse dégradée, l'observabilité et ses graphiques,
+   les désaccords entre juges, et les rendus des nouvelles étapes (vérification, cache, repli) */
+
+/* La santé du service, dans la barre du haut */
+.etat-serveur-conteneur {
+  position: relative;
+}
+
+.etat-serveur.cliquable {
+  cursor: pointer;
+  transition: border-color var(--duree-courte) var(--courbe);
+}
+
+.etat-serveur.cliquable:hover {
+  border-color: var(--bordure-forte);
+}
+
+.etat-serveur.cliquable > .icone {
+  color: var(--texte-3);
+}
+
+.detail-sante {
+  top: calc(100% + 6px);
+  right: 0;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  padding: var(--e-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+}
+
+.detail-sante-entete {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+}
+
+.detail-sante-entete .muet {
+  margin-left: auto;
+}
+
+.detail-sante-liste {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-sante-liste > div {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: var(--e-3);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--bordure);
+  font-size: var(--taille-3);
+  align-items: center;
+}
+
+.detail-sante-liste > div:last-child {
+  border-bottom: 0;
+}
+
+.detail-sante-liste dt {
+  color: var(--texte-3);
+}
+
+.detail-sante-liste dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+  align-items: center;
+  min-width: 0;
+}
+
+.detail-sante-file {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+
+.remplissage {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) auto;
+  gap: var(--e-3);
+  align-items: center;
+  font-size: var(--taille-2);
+}
+
+.remplissage-piste {
+  height: 6px;
+  border-radius: var(--r-rond);
+  background: var(--barre-fond);
+  overflow: hidden;
+}
+
+.remplissage-piste span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: inherit;
+}
+
+.remplissage-piste span.plein {
+  background: var(--erreur-trait);
+}
+
+.detail-sante-lien {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-2);
+  font-size: var(--taille-3);
+  align-self: flex-start;
+}
+
+/* La réponse dégradée et l'avis du salarié */
+.bandeau-degrade {
+  display: flex;
+  gap: var(--e-3);
+  align-items: flex-start;
+  padding: var(--e-3) var(--e-4);
+  border-radius: var(--r-3);
+  border: 1px solid color-mix(in srgb, var(--alerte-trait) 45%, transparent);
+  background: var(--alerte-doux);
+  color: var(--alerte);
+  font-size: var(--taille-3);
+}
+
+.bandeau-degrade p + p {
+  color: var(--texte-2);
+  margin-top: 2px;
+}
+
+.avis {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+}
+
+.avis-ligne {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--e-2) var(--e-3);
+}
+
+.avis-question {
+  font-size: var(--taille-2);
+  color: var(--texte-3);
+}
+
+.avis-absent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-2);
+}
+
+.bouton-avis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 28px;
+  border-radius: var(--r-2);
+  border: 1px solid var(--bordure);
+  color: var(--texte-3);
+  transition:
+    background-color var(--duree-courte) var(--courbe),
+    color var(--duree-courte) var(--courbe),
+    border-color var(--duree-courte) var(--courbe);
+}
+
+.bouton-avis.bas .icone {
+  transform: rotate(180deg);
+}
+
+.bouton-avis:hover:not(:disabled) {
+  background: var(--survol);
+  color: var(--texte);
+}
+
+.bouton-avis.choisi.oui {
+  background: var(--ok-doux);
+  border-color: color-mix(in srgb, var(--ok-trait) 45%, transparent);
+  color: var(--ok);
+}
+
+.bouton-avis.choisi.non {
+  background: var(--erreur-doux);
+  border-color: color-mix(in srgb, var(--erreur-trait) 45%, transparent);
+  color: var(--erreur);
+}
+
+.avis-etat {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-2);
+}
+
+.avis-etat .ok-texte {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-1);
+}
+
+.avis-commentaire {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+
+.avis-commentaire textarea {
+  width: 100%;
+}
+
+.avis-commentaire-pied,
+.formulaire-etiquette-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--e-2);
+}
+
+.avis-commentaire-pied .compteur-champ {
+  margin-right: auto;
+}
+
+.compteur-champ {
+  font-size: var(--taille-1);
+  color: var(--texte-3);
+  font-variant-numeric: tabular-nums;
+  align-self: flex-end;
+}
+
+.compteur-champ.plein,
+.erreur-texte {
+  color: var(--erreur);
+}
+
+.erreur-texte {
+  font-size: var(--taille-2);
+  margin-right: auto;
+}
+
+/* Les rendus des nouvelles étapes */
+.decision-bloquee {
+  background: var(--erreur-doux);
+  border-color: color-mix(in srgb, var(--erreur-trait) 45%, transparent);
+  color: var(--erreur);
+}
+
+.decision-info {
+  background: var(--info-doux);
+  border-color: color-mix(in srgb, var(--info) 25%, transparent);
+  color: var(--info);
+}
+
+.affirmations {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+
+.affirmations li {
+  display: flex;
+  gap: var(--e-3);
+  padding: var(--e-3) var(--e-4);
+  border-radius: var(--r-2);
+  border: 1px solid var(--bordure);
+  background: var(--surface-2);
+}
+
+.affirmations li.etablie .affirmation-icone {
+  color: var(--ok);
+}
+
+/* Importante et non établie : elle bloque la réponse */
+.affirmations li.bloquante {
+  background: var(--erreur-doux);
+  border-color: color-mix(in srgb, var(--erreur-trait) 45%, transparent);
+  box-shadow: inset 3px 0 0 var(--erreur-trait);
+}
+
+.affirmations li.bloquante .affirmation-icone,
+.affirmations li.bloquante .affirmation-raison .fort {
+  color: var(--erreur);
+}
+
+/* Un détail non établi : un avertissement discret, qui ne bloque rien */
+.affirmations li.detail {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--alerte-trait) 55%, transparent);
+}
+
+.affirmations li.detail .affirmation-icone,
+.affirmations li.detail .affirmation-raison .fort {
+  color: var(--alerte);
+}
+
+.affirmation-etiquette {
+  display: inline-block;
+  margin-left: var(--e-2);
+  padding: 0 6px;
+  border-radius: var(--r-1);
+  background: var(--surface-3);
+  color: var(--texte-2);
+  font-size: var(--taille-1);
+  font-weight: var(--graisse-moyenne);
+  vertical-align: 1px;
+}
+
+.affirmation-etiquette.bloquante {
+  background: var(--erreur-trait);
+  color: #fff;
+}
+
+.preuves {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+
+.preuves li {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+  flex-wrap: wrap;
+}
+
+.preuve-citee {
+  font-size: var(--taille-2);
+  color: var(--ok);
+  font-weight: var(--graisse-moyenne);
+}
+
+.affirmation-icone {
+  display: inline-flex;
+  margin-top: 2px;
+}
+
+.affirmation-texte {
+  font-size: var(--taille-3);
+  line-height: 1.5;
+}
+
+.affirmation-raison {
+  font-size: var(--taille-2);
+  color: var(--texte-2);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+.repli {
+  display: flex;
+  align-items: center;
+  gap: var(--e-4);
+  flex-wrap: wrap;
+  padding: var(--e-4);
+  border-radius: var(--r-3);
+  border: 1px solid var(--bordure);
+  background: var(--surface-2);
+}
+
+.repli > .icone {
+  color: var(--texte-3);
+}
+
+.repli-modele {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+  align-items: flex-start;
+}
+
+.repli-modele.indisponible .pastille {
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+/* L'observabilité */
+.tuiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--e-3);
+}
+
+@media (max-width: 1100px) {
+  .tuiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.tuile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--e-4);
+  border-radius: var(--r-3);
+  border: 1px solid var(--bordure);
+  background: var(--surface);
+  box-shadow: var(--ombre-1);
+  min-width: 0;
+}
+
+.tuile-libelle {
+  font-size: var(--taille-2);
+  color: var(--texte-3);
+}
+
+.tuile-valeur {
+  font-size: var(--taille-7);
+  font-weight: var(--graisse-forte);
+  font-variant-numeric: proportional-nums;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.tuile-detail {
+  font-size: var(--taille-2);
+  color: var(--texte-3);
+}
+
+.tuile.alerte .tuile-valeur {
+  color: var(--erreur);
+}
+
+.grille-graphiques {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--e-4);
+}
+
+@media (max-width: 1200px) {
+  .grille-graphiques {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.carte-graphique .carte-corps {
+  padding: var(--e-4) var(--e-4) var(--e-3);
+}
+
+.graphique {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+
+.graphique-entete {
+  display: flex;
+  flex-direction: column;
+}
+
+.graphique-titre {
+  font-size: var(--taille-4);
+  font-weight: var(--graisse-forte);
+}
+
+.graphique-sous-titre {
+  font-size: var(--taille-2);
+  color: var(--texte-3);
+}
+
+.graphique-legende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2) var(--e-4);
+  font-size: var(--taille-2);
+  color: var(--texte-2);
+}
+
+.graphique-legende li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-2);
+}
+
+.legende-cle {
+  display: inline-block;
+  flex: none;
+}
+
+.legende-cle.aire {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.legende-cle.ligne {
+  width: 14px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.graphique-cadre {
+  position: relative;
+  width: 100%;
+  border-radius: var(--r-2);
+}
+
+.graphique-cadre svg {
+  display: block;
+  overflow: visible;
+}
+
+.graphique-grille {
+  stroke: var(--bordure);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.graphique-zero {
+  stroke: var(--bordure-forte);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.graphique-axe {
+  font-size: 11px;
+  fill: var(--texte-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.graphique-reference {
+  stroke: var(--texte-3);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.graphique-reference-texte {
+  fill: var(--texte-2);
+}
+
+.graphique-repere {
+  stroke: var(--texte-3);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.graphique-point {
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.graphique-estompe {
+  opacity: 0.45;
+}
+
+.graphique-capture {
+  fill: transparent;
+  cursor: crosshair;
+}
+
+.graphique-infobulle {
+  position: absolute;
+  transform: translate(-50%, 0);
+  pointer-events: none;
+  min-width: 160px;
+  padding: var(--e-3) var(--e-4);
+  border-radius: var(--r-2);
+  background: var(--surface);
+  border: 1px solid var(--bordure-forte);
+  box-shadow: var(--ombre-2);
+  font-size: var(--taille-2);
+  z-index: 2;
+}
+
+.graphique-infobulle-date {
+  color: var(--texte-3);
+  margin-bottom: var(--e-2);
+}
+
+.graphique-infobulle-ligne {
+  display: flex;
+  align-items: center;
+  gap: var(--e-3);
+}
+
+.graphique-infobulle-ligne strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.graphique-infobulle-ligne span:last-child {
+  color: var(--texte-2);
+}
+
+.derive {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--e-5);
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .derive {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.tableau-derive th[scope="row"] {
+  font-weight: var(--graisse-moyenne);
+  text-align: left;
+  color: var(--texte);
+  position: static;
+  background: none;
+  font-size: var(--taille-3);
+  padding: 7px var(--e-4);
+  border-bottom: 1px solid var(--bordure);
+}
+
+.derive-alertes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+}
+
+.derive-liste {
+  list-style: disc;
+  padding-left: 1.2em;
+  margin-top: var(--e-2);
+  color: var(--texte-2);
+  font-size: var(--taille-3);
+}
+
+.ecart {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-weight: var(--graisse-moyenne);
+}
+
+.ecart.bon {
+  color: var(--ok);
+}
+
+.ecart.mauvais {
+  color: var(--erreur);
+}
+
+.tableau-jours > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  padding: var(--e-4) var(--e-5);
+  cursor: pointer;
+  list-style: none;
+  font-weight: var(--graisse-forte);
+  font-size: var(--taille-4);
+}
+
+.tableau-jours > summary::-webkit-details-marker {
+  display: none;
+}
+
+.tableau-jours[open] .detail-brut-chevron {
+  transform: rotate(90deg);
+}
+
+.tableau-jours .tableau-defilant {
+  margin: 0 var(--e-5) var(--e-5);
+}
+
+/* Les désaccords entre juges */
+.desaccords {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+}
+
+.desaccords-entete {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--e-4);
+  flex-wrap: wrap;
+}
+
+.desaccords-entete h2 {
+  font-size: var(--taille-6);
+}
+
+.liste-desaccords {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+}
+
+.carte-desaccord .carte-corps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-4);
+}
+
+.carte-desaccord.tranchee {
+  opacity: 0.92;
+}
+
+.desaccord-entete {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e-3);
+  flex-wrap: wrap;
+}
+
+.desaccord-question {
+  flex: 1;
+  min-width: 240px;
+  font-weight: var(--graisse-moyenne);
+}
+
+.desaccord-reponse,
+.desaccord-juges > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+}
+
+.desaccord-juges {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--e-4);
+}
+
+.raisons-juge {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-2);
+  font-size: var(--taille-3);
+  color: var(--texte-2);
+  line-height: 1.5;
+}
+
+.etiquette-posee {
+  display: flex;
+  gap: var(--e-3);
+  align-items: flex-start;
+  padding: var(--e-3) var(--e-4);
+  border-radius: var(--r-3);
+  border: 1px solid;
+}
+
+.etiquette-posee > div {
+  flex: 1;
+}
+
+.etiquette-posee.ok {
+  background: var(--ok-doux);
+  border-color: color-mix(in srgb, var(--ok-trait) 35%, transparent);
+  color: var(--ok);
+}
+
+.etiquette-posee.ko {
+  background: var(--erreur-doux);
+  border-color: color-mix(in srgb, var(--erreur-trait) 35%, transparent);
+  color: var(--erreur);
+}
+
+.etiquette-posee p + p {
+  color: var(--texte-2);
+}
+
+.formulaire-etiquette {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-3);
+  padding-top: var(--e-4);
+  border-top: 1px solid var(--bordure);
+}
+
+.formulaire-etiquette textarea {
+  width: 100%;
+}
+
+.choix-verdict {
+  display: flex;
+  align-items: center;
+  gap: var(--e-2);
+  border: 0;
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.choix-verdict legend {
+  float: left;
+  margin-right: var(--e-3);
+}
+
+.choix {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-2);
+  height: 30px;
+  padding: 0 var(--e-4);
+  border-radius: var(--r-2);
+  border: 1px solid var(--bordure-forte);
+  font-size: var(--taille-3);
+  font-weight: var(--graisse-moyenne);
+  cursor: pointer;
+  background: var(--surface);
+}
+
+.choix input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.choix:has(input:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.choix.actif.ok {
+  background: var(--ok-doux);
+  border-color: var(--ok-trait);
+  color: var(--ok);
+}
+
+.choix.actif.ko {
+  background: var(--erreur-doux);
+  border-color: var(--erreur-trait);
+  color: var(--erreur);
+}
+
+@media (max-width: 1100px) {
+  .desaccord-juges {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

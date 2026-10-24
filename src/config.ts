@@ -19,6 +19,9 @@ const Schema = z
     VOYAGE_API_KEY: z.string().optional(),
     OLLAMA_BASE_URL: z.url().default("http://localhost:11434"),
     DATABASE_URL: z.string().regex(/^postgres(ql)?:\/\//, "attendu : postgres://utilisateur:mot-de-passe@hôte:port/base"),
+    // Chapitre 14 : le mode inspection. Le serveur envoie alors à l'interface la trace de chaque étape (passages, prompt,
+    // tokens) et ouvre ses routes /api. Utile pour développer ; à couper en production (non), où il en dirait trop
+    INSPECTION: z.stringbool({ truthy: ["oui", "true", "1"], falsy: ["non", "false", "0"] }).default(true),
   })
   .superRefine((env, ctx) => {
     // Chaque fournisseur utilisé doit avoir sa clé
