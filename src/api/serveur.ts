@@ -167,10 +167,21 @@ async function confirmer(req: http.IncomingMessage, res: http.ServerResponse, de
   repondreJson(res, 200, { ok: true });
 }
 
-// 6. Les routes de l'inspection. Celles qui lisent des documents passent par le profil du salarié connecté
+// 6. Les routes de l'inspection. Celles qui lisent des documents dans la base passent par le profil du salarié connecté.
+// Leçon 2 : les évaluations montrent ce que leurs exécutions ont gardé, passages réservés compris (du développement)
 async function api(req: http.IncomingMessage, res: http.ServerResponse, chemin: string, dependances: DependancesServeur, inspecter: Inspection) {
   if (req.method === "GET" && chemin === "/api/salaries") return repondreJson(res, 200, await inspecter.salaries());
   if (req.method === "GET" && chemin === "/api/configuration") return repondreJson(res, 200, await inspecter.configuration());
+  // Les évaluations (leçon 2). Celles du jeu caché ne se lisent que par leurs scores, dans la liste (leçon 5)
+  if (req.method === "GET" && chemin === "/api/evaluations") return repondreJson(res, 200, await inspecter.evaluations());
+  const evaluation = req.method === "GET" ? /^\/api\/evaluations\/([\w-][\w.-]*)(?:\/questions\/([A-Z]\d{1,4}))?$/.exec(chemin) : null;
+  if (evaluation) {
+    const [, nom, id] = evaluation;
+    const lu = id ? await inspecter.resultat(nom, id) : await inspecter.evaluation(nom);
+    if (lu === "cache") return repondreJson(res, 403, { erreur: "jeu caché : on n'en lit que les scores, pour ne jamais régler Rhéa dessus" });
+    if (!lu) return repondreJson(res, 404, { erreur: id ? "question introuvable dans cette évaluation" : "évaluation introuvable" });
+    return repondreJson(res, 200, lu);
+  }
   const routes: [string, RegExp, (session: Session, m: RegExpMatchArray) => Promise<void>][] = [
     ["GET", /^\/api\/documents$/, async (s) => repondreJson(res, 200, await inspecter.documents(s.profil))],
     ["GET", /^\/api\/documents\/([A-Z0-9-]{2,40})$/, async (s, m) => {
